@@ -309,6 +309,7 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
 .badge.hist{background:rgba(251,191,36,.22);color:#fbbf24;border:1px solid rgba(251,191,36,.5);font-size:10.5px}
 .badge.due{background:rgba(255,77,109,.22);color:#ff4d6d;border:1px solid rgba(255,77,109,.5);font-size:11px;font-weight:800}
 .badge.cleared{background:rgba(141,255,63,.22);color:#8dff3f;border:1px solid rgba(141,255,63,.5);font-size:11px;font-weight:800}
+.badge.archive{background:rgba(139,149,201,.15);color:#8b95c9;border:1px solid rgba(139,149,201,.4);font-size:9.5px}
 .mini{border:none;cursor:pointer;background:rgba(255,255,255,.08);color:#fff;
   padding:5px 9px;border-radius:8px;font-size:12px;transition:.15s;}
 .mini:hover{background:#22e6ff;color:#04050a}
@@ -346,7 +347,6 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
 .pw-cell{display:flex;align-items:center;gap:6px;}
 .pw-value{font-family:monospace;font-weight:700;color:#8dff3f;background:rgba(0,0,0,.3);padding:3px 8px;border-radius:6px;letter-spacing:1px;}
 .pw-hidden{color:#8b95c9;letter-spacing:3px;}
-/* Due popup specific */
 .due-hero{padding:18px;border-radius:18px;text-align:center;
   background:linear-gradient(135deg,rgba(255,77,109,.15),rgba(255,138,43,.10));
   border:1.5px solid rgba(255,77,109,.5);margin-bottom:14px;}
@@ -447,9 +447,10 @@ window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
 
 <script>
 /* ============================================================
-   Computer Campus — Agent Banking System (v5 Final)
+   Computer Campus — Agent Banking System (v5.2 Final)
    + Online Support
-   + Customer Due Ledger (auto-calculated, DB-persisted)
+   + Customer Due Ledger
+   + Persistent Transaction History (settled model)
    ============================================================ */
 
 const BRANCHES = {
@@ -630,7 +631,6 @@ function startSupabaseListener(){
       const remote = payload.new && payload.new.data;
       if(!remote) return;
       
-      /* Own-save echo suppression — only via token */
       if(remote.__saveToken && recentTokens.has(remote.__saveToken)){
         return;
       }
@@ -656,7 +656,6 @@ function startSupabaseListener(){
       else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') updateConnStatus('offline');
       else if(status === 'CLOSED') updateConnStatus('offline');
     });
-  /* Expose set for saveDB to register own tokens */
   window.__recentSaveTokens = recentTokens;
 }
 
@@ -695,11 +694,31 @@ async function saveDB(){
   if(supabaseReady) await saveToSupabase(db);
 }
 
+/* ✅ v5.2: Rollover keeps all txs, marks them settled */
 function performDailyRollover(force){
   const today = todayStr();
   const last = db.lastBaseDate || '';
   if(!force && last === today) return false;
 
+  /* Step 1: Compute current live state (uses unsettled txs only) */
+  recomputeLive();
+
+  /* Step 2: Save end-of-day snapshot for the PREVIOUS date (or today if base is old) */
+  if(!db.dailyClose) db.dailyClose = {};
+  const snapshotDate = last || today;
+  db.dailyClose[snapshotDate] = { accounts:{}, vault:{} };
+  Object.keys(BRANCHES).forEach(br=>{
+    const la = db.liveAccounts[br] || {bank:0,cash:0,other:0};
+    db.dailyClose[snapshotDate].accounts[br] = {
+      bank:  Number(la.bank)  || 0,
+      cash:  Number(la.cash)  || 0,
+      other: Number(la.other) || 0
+    };
+    db.dailyClose[snapshotDate].vault[br] = {};
+    DENOMS.forEach(d => { db.dailyClose[snapshotDate].vault[br][d] = Number(db.liveVault[br]?.[d]) || 0; });
+  });
+
+  /* Step 3: Freeze base = current live state */
   Object.keys(BRANCHES).forEach(br=>{
     const la = db.liveAccounts[br] || {bank:0,cash:0,other:0};
     db.baseAccounts[br] = {
@@ -707,18 +726,17 @@ function performDailyRollover(force){
       cash:  Number(la.cash)  || 0,
       other: Number(la.other) || 0
     };
-    const lv = db.liveVault[br] || {};
     db.baseVault[br] = {};
-    DENOMS.forEach(d => { db.baseVault[br][d] = Number(lv[d]) || 0; });
+    DENOMS.forEach(d => { db.baseVault[br][d] = Number(db.liveVault[br]?.[d]) || 0; });
   });
 
-  /* ✅ keep pending branch transfers; drop only settled txns */
-  db.txs = (db.txs || []).filter(t => t.type === 'branch_transfer' && !t.accepted);
+  /* ✅ Step 4: Mark ALL existing txs as SETTLED — kept forever in db.txs */
+  (db.txs || []).forEach(t => { t.settled = true; });
 
   db.lastBaseDate = today;
 
-  if(!db.dailyClose) db.dailyClose = {};
-  db.dailyClose[today] = { accounts:{}, vault:{} };
+  /* Reset dailyClose for today (will be re-filled by live state) */
+  if(!db.dailyClose[today]) db.dailyClose[today] = { accounts:{}, vault:{} };
   Object.keys(BRANCHES).forEach(br=>{
     db.dailyClose[today].accounts[br] = {
       bank:  Number(db.baseAccounts[br].bank)  || 0,
@@ -798,6 +816,10 @@ function normalizeDB(){
       if(u) t.userUsername = u.username;
     }
     if(!t.custBranch) t.custBranch = t.branch;
+    /* v5.2: legacy txs without settled flag — leave as settled if date < lastBaseDate */
+    if(typeof t.settled !== 'boolean'){
+      t.settled = (t.date && t.date < (db.lastBaseDate || todayStr())) ? true : false;
+    }
   });
   (db.users || []).forEach(u=>{ if(u.branch === 'kalaroja') u.branch = 'kalaroa'; });
 }
@@ -879,6 +901,8 @@ function migrateOldDB(old){
   };
   window.db = db;
 }
+
+/* ✅ v5.2: recomputeLive applies ONLY unsettled txs */
 function recomputeLive(){
   Object.keys(BRANCHES).forEach(b=>{
     db.liveVault[b] = {};
@@ -890,6 +914,7 @@ function recomputeLive(){
     };
   });
   (db.txs || []).forEach(tx => {
+    if(tx.settled) return;   /* baked into base already */
     if(tx.type === 'branch_transfer'){
       applyTxToLive(tx, +1, 'send');
       if(tx.accepted === true){ applyTxToLive(tx, +1, 'accept'); }
@@ -908,11 +933,29 @@ function syncLiveCashFromVault(){
   });
 }
 
+/* ✅ v5.2: Reverse a settled tx's effect directly on base */
+function reverseSettledTx(tx){
+  if(!tx || !tx.settled) return;
+  const rv = db.liveVault, ra = db.liveAccounts;
+  try{
+    db.liveVault = db.baseVault;
+    db.liveAccounts = db.baseAccounts;
+    if(tx.type === 'branch_transfer'){
+      applyTxToLive(tx, -1, 'send');
+      if(tx.accepted === true){ applyTxToLive(tx, -1, 'accept'); }
+    } else {
+      applyTxToLive(tx, -1, undefined);
+    }
+  } finally {
+    db.liveVault = rv;
+    db.liveAccounts = ra;
+  }
+}
+
 /* ============================================================
-   DUE LEDGER — Customer Due Tracking
+   DUE LEDGER
    ============================================================ */
 
-/** Calculate due for a customer account number */
 function calculateCustomerDue(accountNo){
   const res = { paid:0, refund:0, net:0, count:0 };
   if(!accountNo) return res;
@@ -936,7 +979,6 @@ function calculateCustomerDue(accountNo){
   return res;
 }
 
-/** Recalculate all customer dues and persist into DB */
 function recalcAllCustomerDues(save){
   let changed = false;
   (DB().customers || []).forEach(c => {
@@ -955,7 +997,6 @@ function recalcAllCustomerDues(save){
   return changed;
 }
 
-/** Update a single customer's due and persist */
 function updateCustomerDueInDB(accountNo, save){
   if(!accountNo) return;
   const acc = String(accountNo).trim();
@@ -971,16 +1012,13 @@ function updateCustomerDueInDB(accountNo, save){
   return c;
 }
 
-/** Show due popup for a customer (called from everywhere a customer is picked) */
 function showDuePopup(customer, opts){
   opts = opts || {};
   if(!customer) return;
   const due = calculateCustomerDue(customer.accountNo || customer.supportAcc);
   const isDue    = due.net > 0;
   const cleared  = due.net <= 0 && due.count > 0;
-  const noTxn    = due.count === 0;
 
-  /* Skip silently if user only wants due cases and there's no due */
   if(!opts.force && !isDue) return;
 
   let heroClass = 'due-hero';
@@ -1106,13 +1144,16 @@ function readNotes(scope, prefix){
   return o;
 }
 function noteSum(o){ let s=0; if(!o) return 0; for(const k in o) s += (Number(o[k])||0) * Number(k); return s; }
+
 function adjustNotes(target, notes, sign){
   if(!notes || !target) return;
   for(const k in notes){
-    target[k] = (target[k]||0) + sign * (Number(notes[k])||0);
-    if(target[k] < 0) target[k] = 0;
+    const before = Number(target[k]) || 0;
+    const delta  = sign * (Number(notes[k]) || 0);
+    target[k] = before + delta;
   }
 }
+
 function noteDetailHTML(notes){
   const keys = Object.keys(notes||{}).filter(k => notes[k] > 0).sort((a,b)=> b-a);
   if(!keys.length) return '<span style="color:#8b95c9">—</span>';
@@ -1453,7 +1494,7 @@ function renderDateBanner(){
   box.innerHTML = `
     <div class="date-mode-banner">
       <span>📅</span>
-      <span>আপনি <b>${toBn(dashDate)}</b> তারিখের ডাটা দেখছেন।</span>
+      <span>আপনি <b>${toBn(dashDate)}</b> তারিখের ডাটা দেখছেন। (সব লেনদেন সংরক্ষিত)</span>
       <button class="close-mode" id="btnExitDateMode">🔄 আজকের ড্যাশবোর্ডে ফিরুন</button>
     </div>`;
   document.getElementById('btnExitDateMode').addEventListener('click', () => {
@@ -1464,7 +1505,6 @@ function renderDateBanner(){
   });
 }
 
-/* ✅ Due Section — Outstanding customers list */
 function renderDueSection(){
   const box = document.getElementById('dueSection');
   if(!box) return;
@@ -1660,14 +1700,38 @@ function renderVault(bf){
   const scopeLabel = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
   const v = getVaultForDate(dashDate, bf);
   const totals = v.totals;
-  const items = DENOMS.map(d => `
-    <div class="vault-item">
-      <div class="d">৳ ${toBn(d)}</div>
-      <div class="c">${toBn(totals[d])}</div>
-    </div>`).join('');
+
+  const branches = bf === 'all' ? Object.keys(BRANCHES) : [bf];
+  const baseEmpty = branches.every(br => {
+    const bv = db.baseVault?.[br] || {};
+    return DENOMS.every(d => !Number(bv[d]));
+  });
+
+  const items = DENOMS.map(d => {
+    const n = Number(totals[d]) || 0;
+    const isNeg = n < 0;
+    return `
+      <div class="vault-item" style="${isNeg?'border-color:rgba(255,77,109,.6);background:rgba(255,77,109,.08)':''}">
+        <div class="d">৳ ${toBn(d)}</div>
+        <div class="c" style="${isNeg?'color:#ff4d6d':''}">${toBn(n)}</div>
+      </div>`;
+  }).join('');
+
   const totalAmt = DENOMS.reduce((s,d)=> s + d*totals[d], 0);
   const totalNotes = DENOMS.reduce((s,d)=> s + totals[d], 0);
+  const hasNegative = DENOMS.some(d => Number(totals[d]) < 0);
+
+  const warnBanner = baseEmpty ? `
+    <div class="date-mode-banner" style="border-color:rgba(255,77,109,.5);background:linear-gradient(90deg,rgba(255,77,109,.12),rgba(255,138,43,.08));color:#ff4d6d">
+      ⚠️ <b>শুরুর ভল্ট সেটআপ করা হয়নি!</b> এই কারণে নোটের হিসাব ০ থেকে নিচে যেতে পারছে না।
+      <button class="close-mode" id="btnFixBase" style="background:rgba(255,77,109,.2);border-color:rgba(255,77,109,.5);color:#ff4d6d">⚙️ এখনই সেটআপ</button>
+    </div>` : (hasNegative ? `
+    <div class="date-mode-banner" style="border-color:rgba(255,203,43,.5);background:linear-gradient(90deg,rgba(255,203,43,.12),rgba(255,138,43,.08));color:#ffcb2b">
+      ⚠️ <b>কিছু নোট ঋণাত্মক (লাল) দেখাচ্ছে।</b> এর মানে ভল্টে সেট নোটের চেয়ে বেশি খরচ হয়েছে — শুরুর ভল্ট বা লেনদেন মিলিয়ে দেখুন।
+    </div>` : '');
+
   $('#vaultSection').innerHTML = `
+    ${warnBanner}
     <div class="section-title">
       <span class="bar"></span>
       🗄️ ভল্ট নোট ইনভেন্টরি — ${esc(scopeLabel)}
@@ -1680,6 +1744,14 @@ function renderVault(bf){
         <span>মোট মান: <b class="rgb" style="font-size:19px">৳ ${fmt(totalAmt)}</b></span>
       </div>
     </div>`;
+
+  const fixBtn = document.getElementById('btnFixBase');
+  if(fixBtn){
+    fixBtn.addEventListener('click', () => {
+      if(session.role === 'admin') openBranchSetup();
+      else toast('শাখা সেটআপ শুধু অ্যাডমিন করতে পারবে');
+    });
+  }
 }
 
 function renderBalances(bf, st){
@@ -1761,7 +1833,8 @@ function openBranchSetup(){
     <div class="accept-head" style="margin-bottom:16px">
       <div style="font-size:13.5px;line-height:1.9">
         ⚙️ <b>শাখা সেটআপ</b><br>
-        যেকোনো শাখার বর্তমান ব্যালেন্স ও ভল্ট নোট সেট করুন।
+        যেকোনো শাখার বর্তমান ব্যালেন্স ও ভল্ট নোট সেট করুন।<br>
+        <b style="color:#ffcb2b">💡 নোট:</b> এখানে সেট করা মান <b>নতুন base</b> হিসেবে কাজ করবে। পুরোনো লেনদেনের হিস্ট্রি <b>অক্ষত থাকবে</b>।
       </div>
     </div>
     <div class="form-row">
@@ -1857,11 +1930,17 @@ function openBranchSetup(){
         const cash = DENOMS.reduce((s,d)=> s + vaultNotes[d]*d, 0);
 
         DB().baseAccounts[br] = { bank, cash, other };
-        DB().liveAccounts[br] = { bank, cash, other };
         DB().baseVault[br] = {};
         DENOMS.forEach(d => { DB().baseVault[br][d] = vaultNotes[d]; });
-        DB().liveVault[br] = {};
-        DENOMS.forEach(d => { DB().liveVault[br][d] = vaultNotes[d]; });
+
+        /* All existing txs stay settled; new base replaces the running state */
+        (DB().txs || []).forEach(t => {
+          if(t.branch === br || t.from === br || t.to === br || t.custBranch === br){
+            t.settled = true;
+          }
+        });
+
+        DB().lastBaseDate = todayStr();
 
         if(!DB().dailyClose) DB().dailyClose = {};
         const d0 = todayStr();
@@ -1869,6 +1948,7 @@ function openBranchSetup(){
         DB().dailyClose[d0].accounts[br] = { bank, cash, other };
         DB().dailyClose[d0].vault[br] = { ...vaultNotes };
 
+        recomputeLive();
         await saveDB();
         close();
         renderDashboard();
@@ -1985,11 +2065,8 @@ function openSetupWizard(){
         const cash = DENOMS.reduce((s,d)=> s + vaultNotes[d]*d, 0);
 
         DB().baseAccounts[br] = { bank, cash, other };
-        DB().liveAccounts[br] = { bank, cash, other };
         DB().baseVault[br] = {};
         DENOMS.forEach(d => { DB().baseVault[br][d] = vaultNotes[d]; });
-        DB().liveVault[br] = {};
-        DENOMS.forEach(d => { DB().liveVault[br][d] = vaultNotes[d]; });
 
         if(!DB().dailyClose) DB().dailyClose = {};
         const d0 = todayStr();
@@ -2000,6 +2077,7 @@ function openSetupWizard(){
         DB().lastBaseDate = d0;
         DB().__firstSetupDone = true;
 
+        recomputeLive();
         await saveDB();
         close();
         renderDashboard();
@@ -2023,7 +2101,8 @@ function openBackupModal(){
   openModal({
     title: '💾 ব্যাকআপ / রিস্টোর',
     bodyHTML: `
-      <div class="accept-head">📦 পূর্ণ ডেটাবেস JSON ফাইলে ডাউনলোড করুন বা রিস্টোর করুন।</div>
+      <div class="accept-head">📦 পূর্ণ ডেটাবেস JSON ফাইলে ডাউনলোড করুন বা রিস্টোর করুন।<br>
+      <b>সব লেনদেন চিরস্থায়ীভাবে এই ফাইলে থাকবে।</b></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
         <button class="btn green" id="bk_down" style="flex:1;min-width:160px">📥 ডাউনলোড</button>
         <button class="btn" id="bk_up_btn" style="flex:1;min-width:160px">📤 রিস্টোর</button>
@@ -2033,7 +2112,8 @@ function openBackupModal(){
       <div class="field" style="margin-top:16px">
         <label>ডেটাবেস স্ট্যাটাস</label>
         <div style="font-size:12.5px;color:#8b95c9;line-height:1.9">
-          • লেনদেন: <b style="color:#8dff3f">${toBn(DB().txs.length)}</b><br>
+          • মোট লেনদেন: <b style="color:#8dff3f">${toBn(DB().txs.length)}</b><br>
+          • আর্কাইভড: <b style="color:#8b95c9">${toBn((DB().txs||[]).filter(t=>t.settled).length)}</b><br>
           • গ্রাহক: <b style="color:#8dff3f">${toBn(DB().customers.length)}</b><br>
           • বকেয়াধারী: <b style="color:#ff4d6d">${toBn(DB().customers.filter(c=>(c.supportDue||0)>0).length)}</b><br>
           • শেষ base তারিখ: <b>${toBn(DB().lastBaseDate || '-')}</b><br>
@@ -2082,7 +2162,6 @@ function openBackupModal(){
   });
 }
 
-/* লেনদেন মডাল helpers */
 function branchOpts(sel){
   return Object.entries(BRANCHES).map(([k,v]) =>
     `<option value="${k}" ${k===sel?'selected':''}>${v.name}</option>`).join('');
@@ -2132,7 +2211,7 @@ function openTxModal(type, editId){
   else baseBranch = session.branch;
   if(!BRANCHES[baseBranch]) baseBranch = 'kalaroa';
   const baseCustBranch = editing ? (editing.custBranch || editing.branch) : (isAdmin ? baseBranch : session.branch);
-  const showBranchToggle = !!cfg.cust;
+  const showBranchToggle = !!cfg.cust && type !== 'support';
   const activeBranchForForm = baseCustBranch;
   const showCust = cfg.cust;
   const showDir  = !!cfg.dir;
@@ -2140,11 +2219,9 @@ function openTxModal(type, editId){
   const showOnline = !!cfg.online;
   const showOnlineSupport = !!cfg.onlineSupport;
   const isTransfer = type === 'branch_transfer';
+  const isSupportType = type === 'support';
 
   const initialDir = editing ? editing.dir : (cfg.primary);
-
-  /* ✅ Support — hide branch toggle (bank-side txn, not customer branch) */
-  const isSupportType = type === 'support';
 
   const body = `
     <div class="form-row">
@@ -2158,12 +2235,17 @@ function openTxModal(type, editId){
       ` : showBank ? `
         <div class="field"><label>ব্যাংক</label>
           <select id="f_bank">${bankOpts(editing ? editing.bank : 'al_arafah_kalaroa')}</select></div>
-        ${showBranchToggle ? '' : `
+        ${(showBranchToggle || isSupportType) ? `
         <div class="field"><label>লেনদেনকারী শাখা</label>
           ${isAdmin ? `<select id="f_branch">${branchOpts(baseBranch)}</select>`
                     : `<input type="text" id="f_branch" value="${BRANCHES[baseBranch].name}" disabled>`}
-        </div>`}
-      ` : (showBranchToggle || isSupportType) ? '' : `
+        </div>` : ''}
+      ` : (showBranchToggle || isSupportType) ? `
+        <div class="field"><label>লেনদেনকারী শাখা</label>
+          ${isAdmin ? `<select id="f_branch">${branchOpts(baseBranch)}</select>`
+                    : `<input type="text" id="f_branch" value="${BRANCHES[baseBranch].name}" disabled>`}
+        </div>
+      ` : `
         <div class="field"><label>লেনদেনকারী শাখা</label>
           ${isAdmin ? `<select id="f_branch">${branchOpts(baseBranch)}</select>`
                     : `<input type="text" id="f_branch" value="${BRANCHES[baseBranch].name}" disabled>`}
@@ -2173,7 +2255,7 @@ function openTxModal(type, editId){
           <select id="f_dir">${dirOptions(type, initialDir)}</select>
         </div>` : ''}
     </div>
-    ${showBranchToggle && !isSupportType ? `
+    ${showBranchToggle ? `
     <div class="cust-branch-toggle">
       <div class="toggle-title">🏦 গ্রাহকের শাখা</div>
       <div class="branch-toggle-row">
@@ -2318,9 +2400,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   const hasOnline = !!cfg.online;
   const hasOnlineSupport = !!cfg.onlineSupport;
   const hasBranchToggle = !!cfg.cust && type !== 'support';
-  const isSupportType = type === 'support';
 
-  /* ✅ Inline due box for support form */
   const dueInlineBox = wrap.querySelector('#dueInlineBox');
 
   function refreshInlineDue(){
@@ -2417,7 +2497,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
 
     const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
     if(isOnlineSup){
-      /* ✅ clear any stale notes when entering online mode */
       wrap.querySelectorAll('[id^="out_"]').forEach(i => i.value = '');
       wrap.querySelectorAll('[id^="in_"]').forEach(i => i.value = '');
       if(notesCols) notesCols.style.display = 'none';
@@ -2461,7 +2540,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       else if(dir === 'out'){ outCol.classList.remove('disabled'); inCol.classList.add('disabled'); clearNotes('in'); }
       else { outCol.classList.remove('disabled'); inCol.classList.remove('disabled'); }
     } else if(type === 'support'){
-      /* ✅ both columns active for support (paid + refund together) */
       outCol.classList.remove('disabled');
       inCol.classList.remove('disabled');
     }
@@ -2577,7 +2655,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   }
   renderPending();
 
-  /* ✅ Suggestion dropdown */
   const searchEl = wrap.querySelector('#f_search');
   const sugEl = wrap.querySelector('#f_suggest');
   if(searchEl){
@@ -2619,10 +2696,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
             updateCrossBranchNote();
           }
           refreshInlineDue();
-          /* ✅ Auto-popup for due */
           const due = calculateCustomerDue(c.accountNo);
           if(due.net > 0){
-            /* Slight delay so fields update visually first */
             setTimeout(() => showDuePopup(c, { force:false }), 150);
           }
         });
@@ -2630,7 +2705,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     });
   }
 
-  /* ✅ Manual due check button */
   const checkDueBtn = wrap.querySelector('#f_checkDue');
   if(checkDueBtn){
     checkDueBtn.addEventListener('click', () => {
@@ -2650,7 +2724,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     });
   }
 
-  /* ✅ Live inline due refresh */
   ['#f_acc', '#f_name'].forEach(sel => {
     const el = wrap.querySelector(sel);
     if(el) el.addEventListener('input', () => {
@@ -2815,7 +2888,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       custBranch = (hiddenCustB && hiddenCustB.value) ? hiddenCustB.value : txnBranch;
     } else custBranch = txnBranch;
 
-    /* ✅ Support: custBranch = txnBranch (single branch) */
     if(type === 'support'){
       const bs = wrap.querySelector('#f_branch');
       const br = bs ? bs.value : (session.role === 'admin' ? (viewBranch === 'all' ? 'kalaroa' : viewBranch) : session.branch);
@@ -2861,7 +2933,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       createdAt: editing ? editing.createdAt : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       accepted: type === 'branch_transfer' ? false : true,
-      acceptedDate: null, acceptedBy: null, acceptedByUsername: null, acceptedAt: null
+      acceptedDate: null, acceptedBy: null, acceptedByUsername: null, acceptedAt: null,
+      settled: false
     };
 
     if(cfg.cust && (tx.custAcc || tx.custName)){
@@ -2877,21 +2950,30 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         tx.acceptedBy = DB().txs[i].acceptedBy;
         tx.acceptedByUsername = DB().txs[i].acceptedByUsername;
         tx.acceptedAt = DB().txs[i].acceptedAt;
+        /* ✅ v5.2: If old was settled, reverse its effect on base before replacing */
+        if(DB().txs[i].settled){
+          reverseSettledTx(DB().txs[i]);
+          tx.settled = false;  /* new version is fresh, unsettled */
+        } else {
+          tx.settled = false;
+        }
         DB().txs[i] = tx;
       }
-    } else DB().txs.push(tx);
+    } else {
+      tx.settled = false;
+      DB().txs.push(tx);
+    }
 
-    /* ✅ Recalculate due for this customer */
     if(type === 'support' && tx.custAcc){
       updateCustomerDueInDB(tx.custAcc, false);
     }
 
+    recomputeLive();
     await saveDB();
     close();
     renderDashboard();
     toast('✅ সংরক্ষিত — ৳' + fmt(txAmount));
 
-    /* ✅ Auto-show updated due popup after support save */
     if(type === 'support' && tx.custAcc){
       setTimeout(() => {
         const c = DB().customers.find(x => x.accountNo === tx.custAcc);
@@ -2923,17 +3005,21 @@ async function acceptTransfer(id, wrap, type, close){
 
 async function deleteTx(id){
   const t = DB().txs.find(x => x.id === id);
+  if(!t) return;
+  /* ✅ v5.2: If settled, reverse on base first */
+  if(t.settled){
+    reverseSettledTx(t);
+  }
   DB().txs = DB().txs.filter(x => x.id !== id);
-  /* ✅ refresh due for affected customer */
-  if(t && t.type === 'support' && t.custAcc){
+  if(t.type === 'support' && t.custAcc){
     updateCustomerDueInDB(t.custAcc, false);
   }
+  recomputeLive();
   await saveDB();
   renderDashboard();
-  toast('🗭 ডিলিট');
+  toast('🗑️ ডিলিট');
 }
 
-/* মানি এক্সচেঞ্জ */
 function openMoneyExchange(){
   const bf = currentBranchFilter();
   const targetBranch = (bf === 'all' || !BRANCHES[bf]) ? 'kalaroa' : bf;
@@ -3092,8 +3178,8 @@ function setupMoneyExchange(wrap, close, initialBranch){
     const v = DB().liveVault[br];
     for(const d in outNotes){
       if((Number(v[d])||0) < Number(outNotes[d])){
-        alert('ভল্টে পর্যাপ্ত ৳' + d + ' নেই। আছে: ' + toBn(v[d] || 0));
-        return;
+        if(!confirm('ভল্টে পর্যাপ্ত ৳' + d + ' নেই (আছে ' + toBn(v[d] || 0) + ')। তবুও সংরক্ষণ করবেন?')) return;
+        break;
       }
     }
     const tx = {
@@ -3110,9 +3196,11 @@ function setupMoneyExchange(wrap, close, initialBranch){
       createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
       accepted: true, acceptedDate: wrap.querySelector('#me_date').value || dashDate,
       acceptedBy: session.name, acceptedByUsername: session.username,
-      acceptedAt: new Date().toISOString()
+      acceptedAt: new Date().toISOString(),
+      settled: false
     };
     DB().txs.push(tx);
+    recomputeLive();
     await saveDB();
     close();
     renderDashboard();
@@ -3286,8 +3374,9 @@ function txListHTML(list, opts){
       actionBtns += `<button class="mini" data-edit="${t.id}">✏️</button>
                      <button class="mini danger" data-del="${t.id}">🗑️</button>`;
     }
+    const archiveBadge = t.settled ? ' <span class="badge archive">📦 আর্কাইভ</span>' : '';
     return `<tr>
-      <td>${toBn(t.date)}</td>
+      <td>${toBn(t.date)}${archiveBadge}</td>
       <td>${cfg.icon||''} ${esc(cfg.title||t.type)}${dirBadge}</td>
       <td>${esc(t.custName||'-')}<br><small style="color:#8b95c9">${esc(t.custAcc||'')}</small><br><span style="font-size:9.5px;padding:2px 6px;border-radius:5px;background:rgba(34,230,255,.15);border:1px solid rgba(34,230,255,.4);color:#22e6ff;display:inline-block;margin-top:3px">🏦 ${esc(BRANCHES[t.custBranch || t.branch]?.name||'-')}</span></td>
       <td>${extra || esc(t.note || '-')}${notesHTML}${statusBadge}</td>
@@ -3363,7 +3452,6 @@ function openCustomerList(){
         filterText = (filterText || '').trim().toLowerCase();
         const dueF = dueFilterEl.value;
         let list = DB().customers.slice();
-        /* refresh due numbers first */
         list.forEach(c => {
           const d = calculateCustomerDue(c.accountNo);
           c.supportPaid = d.paid; c.supportRefund = d.refund;
@@ -3485,7 +3573,6 @@ function openCustomerList(){
   });
 }
 
-/* ✅ Dedicated Due List modal */
 function openDueListModal(){
   const bf = currentBranchFilter();
   const all = DB().customers || [];
@@ -3566,13 +3653,11 @@ function openDueListModal(){
   });
 }
 
-/* ✅ Customer History with due summary */
 function showCustomerAllTxns(accountNo){
   const cust = DB().customers.find(c => c.accountNo === accountNo);
   const list = DB().txs.filter(t => t.custAcc === accountNo || t.supportAcc === accountNo)
     .sort((a,b)=> (b.date + (b.createdAt||'') < a.date + (a.createdAt||'') ? 1 : -1));
 
-  /* ✅ Compute due summary */
   const sTxns = list.filter(t => t.type === 'support');
   const sPaid = sTxns.filter(t => t.dir === 'out' || t.dir === 'online_support_out')
                      .reduce((s,t)=> s + Number(t.amount||0), 0);
@@ -3594,9 +3679,10 @@ function showCustomerAllTxns(accountNo){
       else if(t.dir === 'out') dirTxt = 'প্রদান';
       const amtColor = (t.dir === 'online_support_in' || (t.type==='support' && t.dir==='in')) ? '#8dff3f'
                      : ((t.dir === 'online_support_out' || (t.type==='support' && t.dir==='out')) ? '#ff4d6d' : '#8dff3f');
+      const arch = t.settled ? ' <span class="badge archive">📦</span>' : '';
       return `<tr>
         <td>${toBn(i+1)}</td>
-        <td>${toBn(t.date)}</td>
+        <td>${toBn(t.date)}${arch}</td>
         <td>${cfg.icon||''} ${esc(cfg.title||t.type)}${dirTxt ? '<br><small>' + dirTxt + '</small>' : ''}</td>
         <td><span class="badge online" style="font-size:10px">${esc(BRANCHES[t.branch]?.name||'')}</span></td>
         <td class="amt" style="color:${amtColor}">৳ ${fmt(t.amount)}</td>
@@ -3645,7 +3731,7 @@ function openAllData(){
   const isAdmin = session.role === 'admin';
   const options = Object.entries(TX_CFG).filter(([k])=> k !== 'customer').map(([k,v]) => `<option value="${k}">${v.icon} ${v.title}</option>`).join('');
   openModal({
-    title: '📋 সব ডেটা', wide: true,
+    title: '📋 সব ডেটা (সব লেনদেন চিরস্থায়ীভাবে সংরক্ষিত)', wide: true,
     bodyHTML: `
       <div class="form-row">
         <div class="field"><label>ধরন</label>
@@ -4002,10 +4088,10 @@ function startApp(){
 
 (async function init(){
   try{
-    if(!localStorage.getItem('__cleared_v55')){
+    if(!localStorage.getItem('__cleared_v57')){
       localStorage.removeItem('cc_agent_bank_v1');
       localStorage.removeItem('cc_agent_bank_session');
-      localStorage.setItem('__cleared_v55', 'yes');
+      localStorage.setItem('__cleared_v57', 'yes');
       console.log('🧹 পুরনো localStorage ডেটা একবার ক্লিয়ার করা হয়েছে');
     }
   }catch(e){}
