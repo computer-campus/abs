@@ -2787,12 +2787,19 @@ function txListHTML(list, opts){
     const cfg = TX_CFG[t.type] || { title:t.type };
     let extra = '', dirBadge = '';
     if(t.type === 'branch_transfer'){ extra = `${BRANCHES[t.from]?.name||''} ➜ ${BRANCHES[t.to]?.name||''}`; }
-    else if(t.type === 'other_bank'){
+else if(t.type === 'other_bank'){
       const bn = t.bank && BANKS[t.bank] ? BANKS[t.bank].name : '';
-      if(t.dir === 'online_in'){ extra = (bn ? bn + ' • ' : '') + '💳 অনলাইনে আসা'; dirBadge = ' <span class="badge online">💳</span>'; }
-      else if(t.dir === 'online_out'){ extra = (bn ? bn + ' • ' : '') + '💳 অনলাইন পাঠানো'; dirBadge = ' <span class="badge online">💳</span>'; }
-      else { extra = (bn ? bn + ' • ' : '') + (t.dir === 'in' ? '📥 ফিজিক্যালি আসা' : '📤 ফিজিক্যালি পাঠানো'); }
-   } else if(t.type === 'money_exchange'){
+      let dirLabel = '';
+      if(t.dir === 'online_in'){ dirLabel = '💳 অনলাইনে আসা'; dirBadge = ' <span class="badge online">💳</span>'; }
+      else if(t.dir === 'online_out'){ dirLabel = '💳 অনলাইন পাঠানো'; dirBadge = ' <span class="badge online">💳</span>'; }
+      else if(t.dir === 'in'){ dirLabel = '📥 ফিজিক্যালি আসা'; }
+      else if(t.dir === 'out'){ dirLabel = '📤 ফিজিক্যালি পাঠানো'; }
+      extra = (bn ? bn + ' • ' : '') + dirLabel;
+      if(t.note && t.note !== '-'){
+        extra += '<br><small style="color:#8b95c9">📝 ' + esc(t.note) + '</small>';
+      }
+    }
+    else if(t.type === 'money_exchange'){
       const bankName = t.bank ? (BANKS[t.bank]?.name || t.bank) : '';
       const dirLabel = t.dir === 'in_physical' ? '📥 ফিজিক্যালি আনা হল... (+)'
                      : t.dir === 'in_online' ? '💳 অনলাইনে আনা হল... (+)'
