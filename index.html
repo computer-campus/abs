@@ -204,6 +204,10 @@ main{max-width:1500px;margin:0 auto;padding:22px 18px 70px;display:flex;flex-dir
 .sug-item:hover{background:rgba(34,230,255,.12)}
 .sug-item b{color:#8dff3f}
 .sug-item small{color:var(--muted)}
+.sug-item .due-tag{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:8px;
+  background:rgba(255,77,109,.15);border:1px solid rgba(255,77,109,.45);color:#ff4d6d;font-size:10.5px;font-weight:800;}
+.sug-item .paid-tag{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:8px;
+  background:rgba(141,255,63,.15);border:1px solid rgba(141,255,63,.45);color:#8dff3f;font-size:10.5px;font-weight:800;}
 .notes-cols{display:grid;gap:14px;grid-template-columns:1fr 1fr;margin-top:6px}
 @media(max-width:700px){.notes-cols{grid-template-columns:1fr}}
 .notes-col{padding:14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.028);}
@@ -303,6 +307,8 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
 .badge.online{background:rgba(34,230,255,.2);color:#22e6ff;border:1px solid rgba(34,230,255,.4)}
 .badge.cross{background:rgba(255,203,43,.18);color:#ffcb2b;border:1px solid rgba(255,203,43,.4)}
 .badge.hist{background:rgba(251,191,36,.22);color:#fbbf24;border:1px solid rgba(251,191,36,.5);font-size:10.5px}
+.badge.due{background:rgba(255,77,109,.22);color:#ff4d6d;border:1px solid rgba(255,77,109,.5);font-size:11px;font-weight:800}
+.badge.cleared{background:rgba(141,255,63,.22);color:#8dff3f;border:1px solid rgba(141,255,63,.5);font-size:11px;font-weight:800}
 .mini{border:none;cursor:pointer;background:rgba(255,255,255,.08);color:#fff;
   padding:5px 9px;border-radius:8px;font-size:12px;transition:.15s;}
 .mini:hover{background:#22e6ff;color:#04050a}
@@ -310,6 +316,7 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
 .mini.accept:hover{background:#8dff3f;color:#04120a}
 .mini.edit{background:linear-gradient(135deg,#7c3aed,#22e6ff);font-weight:700}
 .mini.show{background:linear-gradient(135deg,#16a34a,#8dff3f);color:#04120a;font-weight:700}
+.mini.due-btn{background:linear-gradient(135deg,#dc2626,#ff8a2b);color:#fff;font-weight:700}
 .empty{padding:26px;text-align:center;color:var(--muted);font-size:13.5px}
 .bank-hint{font-size:11.5px;color:#9fe9ff;background:rgba(34,230,255,.06);
   padding:8px 12px;border-radius:10px;margin-bottom:10px;
@@ -317,6 +324,8 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
 .bank-hint b{color:#22e6ff}
 .cust-row{cursor:pointer}
 .cust-row:hover td{background:rgba(124,77,255,.10) !important}
+.cust-row.has-due td{background:rgba(255,77,109,.06)}
+.cust-row.has-due:hover td{background:rgba(255,77,109,.14) !important}
 .date-mode-banner{width:100%;padding:12px 18px;border-radius:14px;
   background:linear-gradient(90deg,rgba(251,191,36,.12),rgba(255,138,43,.08));
   border:1px solid rgba(251,191,36,.4);color:#fbbf24;
@@ -337,6 +346,23 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
 .pw-cell{display:flex;align-items:center;gap:6px;}
 .pw-value{font-family:monospace;font-weight:700;color:#8dff3f;background:rgba(0,0,0,.3);padding:3px 8px;border-radius:6px;letter-spacing:1px;}
 .pw-hidden{color:#8b95c9;letter-spacing:3px;}
+/* Due popup specific */
+.due-hero{padding:18px;border-radius:18px;text-align:center;
+  background:linear-gradient(135deg,rgba(255,77,109,.15),rgba(255,138,43,.10));
+  border:1.5px solid rgba(255,77,109,.5);margin-bottom:14px;}
+.due-hero.cleared{background:linear-gradient(135deg,rgba(141,255,63,.12),rgba(34,230,255,.08));
+  border-color:rgba(141,255,63,.5);}
+.due-hero .lbl{font-size:13px;color:var(--muted);font-weight:700}
+.due-hero .amt{font-size:40px;font-weight:900;margin-top:6px;letter-spacing:1px;
+  background:linear-gradient(90deg,#ff2e88,#ff8a2b,#ffcb2b,#ff2e88);
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:rgbmove 3s linear infinite;filter:drop-shadow(0 0 12px rgba(255,46,136,.5));}
+.due-hero.cleared .amt{background:linear-gradient(90deg,#8dff3f,#22e6ff,#8dff3f);
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 12px rgba(141,255,63,.5));}
+.due-hero .sub{font-size:12.5px;color:var(--muted);margin-top:6px}
+.due-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.due-actions .btn{flex:1;min-width:140px}
 @media(max-width:640px){
   .brand h1{font-size:15px}
   .big-amt{font-size:24px}
@@ -344,6 +370,7 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
   main{padding:16px 10px 60px}
   .bal-card.main .v{font-size:32px}
   .cust-count-num{font-size:36px}
+  .due-hero .amt{font-size:32px}
 }
 </style>
 </head>
@@ -404,6 +431,7 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
     <section class="section" id="statsSection"></section>
     <section class="section" id="vaultSection"></section>
     <section class="section" id="balanceSection"></section>
+    <section class="section" id="dueSection"></section>
     <section class="actions" id="actionsSection"></section>
   </main>
 </div>
@@ -419,8 +447,9 @@ window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
 
 <script>
 /* ============================================================
-   Computer Campus — Agent Banking System (v4 Final)
-   + Online Support Feature
+   Computer Campus — Agent Banking System (v5 Final)
+   + Online Support
+   + Customer Due Ledger (auto-calculated, DB-persisted)
    ============================================================ */
 
 const BRANCHES = {
@@ -451,7 +480,7 @@ const TX_CFG = {
   branch_transfer: { title:'শাখা-থেকে-শাখা লেনদেন', en:'Branch Transfer',  icon:'🔁', accent:'#a855f7', primary:'out', cust:false },
   expense:         { title:'ক্যাশ থেকে খরচ',         en:'Expense',          icon:'🧾', accent:'#ff8a2b', primary:'out', cust:false },
   other_bank:      { title:'অন্য ব্যাঙ্কে লেনদেন',   en:'Other Bank',       icon:'🏛️', accent:'#00d0ff', primary:'in',  cust:false, dir:true, banks:true, online:true },
-  support:         { title:'সাপোর্ট বাবদ প্রদান',    en:'Support Payment',  icon:'🤝', accent:'#ff4d6d', primary:'out', cust:false, dir:true, onlineSupport:true },
+  support:         { title:'সাপোর্ট বাবদ প্রদান',    en:'Support Payment',  icon:'🤝', accent:'#ff4d6d', primary:'out', cust:true,  dir:true, onlineSupport:true },
   money_exchange:  { title:'মানি এক্সচেঞ্জ',         en:'Money Exchange',   icon:'💱', accent:'#ffcb2b', primary:'out', cust:false },
   customer:        { title:'গ্রাহক তালিকা',          en:'Customer List',    icon:'👥', accent:'#7c4dff', primary:'in',  cust:false }
 };
@@ -510,6 +539,9 @@ async function sha256(str){
   const buf = new TextEncoder().encode(str);
   const hash = await crypto.subtle.digest('SHA-256', buf);
   return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+async function trySha256(str){
+  try { return await sha256(str); } catch(e){ console.warn('sha256 unavailable (HTTP?)'); return null; }
 }
 
 /* ============ Supabase ============ */
@@ -587,6 +619,7 @@ function startSupabaseListener(){
     try{ supabaseClient.removeChannel(realtimeChannel); }catch(e){}
     realtimeChannel = null;
   }
+  const recentTokens = new Set();
   realtimeChannel = supabaseClient
     .channel('agent_bank_changes_' + Date.now())
     .on('postgres_changes', {
@@ -597,29 +630,20 @@ function startSupabaseListener(){
       const remote = payload.new && payload.new.data;
       if(!remote) return;
       
-      if(window.__lastSaveToken && remote.__saveToken === window.__lastSaveToken){
-        console.log('⏭️ Skip own save echo');
+      /* Own-save echo suppression — only via token */
+      if(remote.__saveToken && recentTokens.has(remote.__saveToken)){
         return;
       }
       
       try{
         const currentStr = JSON.stringify(db);
         const remoteStr = JSON.stringify(remote);
-        if(currentStr === remoteStr){
-          console.log('⏭️ Skip identical data');
-          return;
-        }
+        if(currentStr === remoteStr) return;
       }catch(e){}
-      
-      const now = Date.now();
-      if(window.__lastRemoteUpdate && (now - window.__lastRemoteUpdate) < 1000){
-        console.log('⏭️ Skip rapid update');
-        return;
-      }
-      window.__lastRemoteUpdate = now;
       
       console.log('📥 Accepting remote update');
       db = remote;
+      try { normalizeDB(); recalcAllCustomerDues(false); } catch(e){}
       if(session){
         recomputeLive();
         renderTopbar();
@@ -632,6 +656,8 @@ function startSupabaseListener(){
       else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') updateConnStatus('offline');
       else if(status === 'CLOSED') updateConnStatus('offline');
     });
+  /* Expose set for saveDB to register own tokens */
+  window.__recentSaveTokens = recentTokens;
 }
 
 /* ============ DB ============ */
@@ -642,6 +668,14 @@ function DB(){ if(!window.db) window.db = db; return window.db; }
 async function saveDB(){
   window.__lastSaveToken = uid();
   db.__saveToken = window.__lastSaveToken;
+  if(window.__recentSaveTokens){ 
+    window.__recentSaveTokens.add(window.__lastSaveToken);
+    if(window.__recentSaveTokens.size > 40){
+      const arr = Array.from(window.__recentSaveTokens);
+      window.__recentSaveTokens.clear();
+      arr.slice(-20).forEach(t => window.__recentSaveTokens.add(t));
+    }
+  }
   db.__lastUpdate = new Date().toISOString();
 
   if(!db.dailyClose) db.dailyClose = {};
@@ -678,7 +712,9 @@ function performDailyRollover(force){
     DENOMS.forEach(d => { db.baseVault[br][d] = Number(lv[d]) || 0; });
   });
 
-  db.txs = [];
+  /* ✅ keep pending branch transfers; drop only settled txns */
+  db.txs = (db.txs || []).filter(t => t.type === 'branch_transfer' && !t.accepted);
+
   db.lastBaseDate = today;
 
   if(!db.dailyClose) db.dailyClose = {};
@@ -769,8 +805,8 @@ async function migrateLegacyPasswords(){
   let changed = false;
   for(const u of db.users){
     if(!u.passwordHash && u.password){
-      u.passwordHash = await sha256(u.password);
-      changed = true;
+      const h = await trySha256(u.password);
+      if(h){ u.passwordHash = h; changed = true; }
     }
   }
   if(changed) saveDB();
@@ -811,6 +847,7 @@ async function loadDB(){
     normalizeDB();
     await migrateLegacyPasswords();
     await ensureDefaultUsers();
+    recalcAllCustomerDues(false);
     recomputeLive();
     window.db = db;
     if(supabaseReady){ startSupabaseListener(); updateConnStatus('online'); }
@@ -840,6 +877,7 @@ function migrateOldDB(old){
     lastBaseDate: old.lastBaseDate || todayStr(),
     __firstSetupDone: true
   };
+  window.db = db;
 }
 function recomputeLive(){
   Object.keys(BRANCHES).forEach(b=>{
@@ -870,6 +908,157 @@ function syncLiveCashFromVault(){
   });
 }
 
+/* ============================================================
+   DUE LEDGER — Customer Due Tracking
+   ============================================================ */
+
+/** Calculate due for a customer account number */
+function calculateCustomerDue(accountNo){
+  const res = { paid:0, refund:0, net:0, count:0 };
+  if(!accountNo) return res;
+  const acc = String(accountNo).trim();
+  if(!acc) return res;
+  (DB().txs || []).forEach(t => {
+    if(t.type !== 'support') return;
+    const key = t.custAcc || t.supportAcc || '';
+    if(String(key).trim() !== acc) return;
+    res.count++;
+    const amt = Number(t.amount) || 0;
+    if(t.dir === 'out' || t.dir === 'online_support_out'){
+      res.paid += amt;
+    } else if(t.dir === 'in' || t.dir === 'online_support_in'){
+      res.refund += amt;
+    }
+  });
+  res.paid   = Math.round(res.paid*100)/100;
+  res.refund = Math.round(res.refund*100)/100;
+  res.net    = Math.round((res.paid - res.refund)*100)/100;
+  return res;
+}
+
+/** Recalculate all customer dues and persist into DB */
+function recalcAllCustomerDues(save){
+  let changed = false;
+  (DB().customers || []).forEach(c => {
+    const d = calculateCustomerDue(c.accountNo);
+    if(c.supportPaid !== d.paid || c.supportRefund !== d.refund ||
+       c.supportDue !== d.net || c.supportCount !== d.count){
+      changed = true;
+    }
+    c.supportPaid   = d.paid;
+    c.supportRefund = d.refund;
+    c.supportDue    = d.net;
+    c.supportCount  = d.count;
+    c.dueUpdatedAt  = new Date().toISOString();
+  });
+  if(save && changed){ try { saveDB(); } catch(e){} }
+  return changed;
+}
+
+/** Update a single customer's due and persist */
+function updateCustomerDueInDB(accountNo, save){
+  if(!accountNo) return;
+  const acc = String(accountNo).trim();
+  const c = (DB().customers||[]).find(x => x.accountNo === acc);
+  if(!c) return null;
+  const d = calculateCustomerDue(acc);
+  c.supportPaid   = d.paid;
+  c.supportRefund = d.refund;
+  c.supportDue    = d.net;
+  c.supportCount  = d.count;
+  c.dueUpdatedAt  = new Date().toISOString();
+  if(save){ try { saveDB(); } catch(e){} }
+  return c;
+}
+
+/** Show due popup for a customer (called from everywhere a customer is picked) */
+function showDuePopup(customer, opts){
+  opts = opts || {};
+  if(!customer) return;
+  const due = calculateCustomerDue(customer.accountNo || customer.supportAcc);
+  const isDue    = due.net > 0;
+  const cleared  = due.net <= 0 && due.count > 0;
+  const noTxn    = due.count === 0;
+
+  /* Skip silently if user only wants due cases and there's no due */
+  if(!opts.force && !isDue) return;
+
+  let heroClass = 'due-hero';
+  let heroLabel = '', heroAmt = '', heroSub = '';
+  if(isDue){
+    heroLabel = '⚠️ এই গ্রাহকের কাছে বকেয়া';
+    heroAmt   = '৳ ' + fmt(due.net);
+    heroSub   = `${toBn(due.count)} টি সাপোর্ট লেনদেন • প্রদান ৳${fmt(due.paid)} • ফেরত ৳${fmt(due.refund)}`;
+  } else if(cleared){
+    heroClass = 'due-hero cleared';
+    heroLabel = '✅ বকেয়া নেই';
+    heroAmt   = '৳ ০.০০';
+    heroSub   = `সব সাপোর্ট ফেরত পেয়েছেন (${toBn(due.count)} টি লেনদেন)`;
+  } else {
+    heroClass = 'due-hero cleared';
+    heroLabel = '📭 এখনো কোনো সাপোর্ট লেনদেন নেই';
+    heroAmt   = '৳ ০.০০';
+    heroSub   = 'প্রথম সাপোর্ট লেনদেনের অপেক্ষায়';
+  }
+
+  const body = `
+    <div class="${heroClass}">
+      <div class="lbl">${heroLabel}</div>
+      <div class="amt">${heroAmt}</div>
+      <div class="sub">${heroSub}</div>
+    </div>
+
+    <div class="cust-box" style="background:rgba(34,230,255,.05);border-color:rgba(34,230,255,.22)">
+      <div class="head"><h4>👤 ${esc(customer.name || '-')}</h4></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;font-size:13px;line-height:1.9">
+        <div><span style="color:var(--muted)">অ্যাকাউন্ট:</span> <b class="rgb">${esc(customer.accountNo || '-')}</b></div>
+        <div><span style="color:var(--muted)">মোবাইল:</span> <b>${esc(customer.mobile || '-')}</b></div>
+        <div><span style="color:var(--muted)">শাখা:</span> <b>${esc(BRANCHES[customer.branch]?.name || '-')}</b></div>
+        <div><span style="color:var(--muted)">ঠিকানা:</span> <b>${esc(customer.address || '-')}</b></div>
+      </div>
+    </div>
+
+    ${due.count > 0 ? `
+    <div class="bal-grid" style="margin-top:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+      <div class="bal-card">
+        <div class="t">🤝 সাপোর্ট প্রদান (মোট)</div>
+        <div class="v rgb" style="color:#ff4d6d">৳ ${fmt(due.paid)}</div>
+      </div>
+      <div class="bal-card">
+        <div class="t">↩️ সাপোর্ট ফেরত (মোট)</div>
+        <div class="v rgb" style="color:#8dff3f">৳ ${fmt(due.refund)}</div>
+      </div>
+      <div class="bal-card main" style="grid-column:1/-1;border-color:${isDue?'rgba(255,77,109,.5)':'rgba(141,255,63,.5)'}">
+        <div class="t">📊 নেট ${isDue?'বকেয়া':'ব্যালেন্স'}</div>
+        <div class="v rgb" style="color:${isDue?'#ff4d6d':'#8dff3f'}">৳ ${fmt(Math.abs(due.net))}</div>
+      </div>
+    </div>` : ''}
+
+    <div class="due-actions">
+      <button class="btn green" id="due_pay_btn">🤝 সাপোর্ট লেনদেন</button>
+      <button class="btn" id="due_hist_btn">📄 সম্পূর্ণ হিস্টরি</button>
+      <button class="btn gray" id="due_close_btn">বন্ধ করুন</button>
+    </div>
+  `;
+
+  openModal({
+    title: isDue ? '⚠️ বকেয়া তথ্য' : '✅ গ্রাহক সাপোর্ট ব্যালেন্স',
+    bodyHTML: body,
+    onMount: (w, close) => {
+      w.querySelector('#due_close_btn').addEventListener('click', close);
+      w.querySelector('#due_hist_btn').addEventListener('click', () => {
+        close();
+        showCustomerAllTxns(customer.accountNo);
+      });
+      w.querySelector('#due_pay_btn').addEventListener('click', () => {
+        close();
+        openTxModal('support');
+      });
+    }
+  });
+}
+
+/* ============ Session ============ */
 let session = null;
 let viewBranch = 'all';
 let dashDate = todayStr();
@@ -940,7 +1129,7 @@ function noteTextPlain(notes){
   return keys.map(k => 'BDT'+k+'x'+notes[k]).join(', ');
 }
 
-/* ============ applyTxToLive with Online Support ============ */
+/* ============ applyTxToLive ============ */
 function applyTxToLive(tx, dir, phase){
   const d = dir;
   const b = tx.branch;
@@ -997,17 +1186,16 @@ function applyTxToLive(tx, dir, phase){
       }
       break;
     case 'support':
-      /* ✅ Online Support — bank balance adjustment */
       if(tx.dir === 'online_support_out'){
         db.liveAccounts[b].bank -= amount;
       } else if(tx.dir === 'online_support_in'){
         db.liveAccounts[b].bank += amount;
       } else if(tx.dir === 'out'){
-        adjustNotes(db.liveVault[b], nOut, -d);
-        adjustNotes(db.liveVault[b], nIn, d);
+        adjustNotes(db.liveVault[custBranch], nOut, -d);
+        adjustNotes(db.liveVault[custBranch], nIn, d);
       } else {
-        adjustNotes(db.liveVault[b], nIn, d);
-        adjustNotes(db.liveVault[b], nOut, -d);
+        adjustNotes(db.liveVault[custBranch], nIn, d);
+        adjustNotes(db.liveVault[custBranch], nOut, -d);
       }
       break;
     case 'customer':
@@ -1046,7 +1234,9 @@ function upsertCustomer(data){
     mobile: data.mobile || '',
     address: data.address || '',
     branch: data.branch || 'kalaroa',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    supportPaid: 0, supportRefund: 0, supportDue: 0, supportCount: 0,
+    dueUpdatedAt: new Date().toISOString()
   };
   DB().customers.push(c);
   return c;
@@ -1059,7 +1249,7 @@ function searchCustomers(q){
     (c.name||'').toLowerCase().includes(q) ||
     (c.mobile||'').toLowerCase().includes(q) ||
     (c.address||'').toLowerCase().includes(q)
-  ).slice(0, 8);
+  ).slice(0, 10);
 }
 
 function getBalancesForDate(dateStr, bf){
@@ -1126,7 +1316,6 @@ function getVaultForDate(dateStr, bf){
   return { totals, isHistorical: true };
 }
 
-/* ✅ computeStats — includes online support */
 function computeStats(bf, date){
   const r = {
     loan_given:{amt:0,cnt:0}, loan_received:{amt:0,cnt:0},
@@ -1167,7 +1356,6 @@ function computeStats(bf, date){
         else if(t.dir === 'online_out'){ r.other.onlineOut += t.amount; r.other.cnt++; }
         break;
       case 'support':
-        /* ✅ Online support handling */
         if(t.dir === 'online_support_out'){ r.support.out += t.amount; r.support.onlineOut += t.amount; r.support.cnt++; }
         else if(t.dir === 'online_support_in'){ r.support.in += t.amount; r.support.onlineIn += t.amount; r.support.cnt++; }
         else if(t.dir === 'out'){ r.support.out += t.amount; r.support.cnt++; }
@@ -1276,9 +1464,82 @@ function renderDateBanner(){
   });
 }
 
+/* ✅ Due Section — Outstanding customers list */
+function renderDueSection(){
+  const box = document.getElementById('dueSection');
+  if(!box) return;
+  const bf = currentBranchFilter();
+  const all = DB().customers || [];
+  const scoped = bf === 'all' ? all : all.filter(c => c.branch === bf);
+  const dueList = scoped.filter(c => (c.supportDue || 0) > 0)
+                       .sort((a,b) => (b.supportDue||0) - (a.supportDue||0));
+  const totalDue = dueList.reduce((s,c) => s + (c.supportDue||0), 0);
+
+  if(!dueList.length){
+    box.innerHTML = `
+      <div class="section-title">
+        <span class="bar"></span> ⚠️ বকেয়া তালিকা
+        <span class="auto-badge" style="margin-left:auto">✅ সব পরিশোধিত</span>
+      </div>
+      <div class="vault-box" style="text-align:center;color:var(--muted);font-size:13.5px;padding:22px">
+        🎉 এই মুহূর্তে কোনো গ্রাহকের কাছে বকেয়া নেই।
+      </div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="section-title">
+      <span class="bar"></span> ⚠️ বকেয়া তালিকা
+      <span class="badge due" style="margin-left:auto">${toBn(dueList.length)} জন • মোট ৳ ${fmt(totalDue)}</span>
+    </div>
+    <div class="vault-box" style="padding:0">
+      <div class="table-wrap" style="border:none;border-radius:20px">
+        <table class="tbl">
+          <thead><tr>
+            <th>#</th><th>গ্রাহক</th><th>অ্যাকাউন্ট</th><th>শাখা</th>
+            <th>প্রদান</th><th>ফেরত</th><th>বকেয়া</th><th>অ্যাকশন</th>
+          </tr></thead>
+          <tbody>
+            ${dueList.map((c,i) => `
+              <tr class="cust-row has-due" data-due-acc="${esc(c.accountNo)}">
+                <td>${toBn(i+1)}</td>
+                <td><b>${esc(c.name||'-')}</b></td>
+                <td><span class="rgb" style="font-size:12.5px">${esc(c.accountNo||'-')}</span></td>
+                <td>${esc(BRANCHES[c.branch]?.name||'-')}</td>
+                <td style="color:#ff4d6d;font-weight:700">৳ ${fmt(c.supportPaid||0)}</td>
+                <td style="color:#8dff3f;font-weight:700">৳ ${fmt(c.supportRefund||0)}</td>
+                <td><span class="badge due" style="font-size:12px">৳ ${fmt(c.supportDue||0)}</span></td>
+                <td>
+                  <button class="mini due-btn" data-due-show="${esc(c.accountNo)}">⚠️ দেখুন</button>
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+
+  box.querySelectorAll('[data-due-show], tr[data-due-acc]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if(e.target.tagName === 'BUTTON' || e.target.closest('button')){
+        if(e.target.dataset.dueShow){
+          const acc = e.target.dataset.dueShow;
+          const c = DB().customers.find(x => x.accountNo === acc);
+          if(c) showDuePopup(c, { force:true });
+          return;
+        }
+      }
+      const acc = el.dataset.dueAcc;
+      if(!acc) return;
+      const c = DB().customers.find(x => x.accountNo === acc);
+      if(c) showDuePopup(c, { force:true });
+    });
+  });
+}
+
 function renderDashboard(){
   if(!session) return;
   performDailyRollover(false);
+  recalcAllCustomerDues(false);
   recomputeLive();
 
   const bf = currentBranchFilter();
@@ -1288,6 +1549,7 @@ function renderDashboard(){
   renderStats(bf, st);
   renderVault(bf);
   renderBalances(bf, st);
+  renderDueSection();
   renderActions();
 }
 
@@ -1371,6 +1633,7 @@ function renderStats(bf, st){
     </div>`);
 
   const custCount = DB().customers.length;
+  const dueCount = DB().customers.filter(c => (c.supportDue||0) > 0).length;
   cards.push(`
     <div class="card" data-tx="customer" style="--accent:#7c4dff">
       <div class="card-top"><span class="ico cust-ico-big">👥</span><h3>গ্রাহক তালিকা</h3></div>
@@ -1378,7 +1641,7 @@ function renderStats(bf, st){
         <span class="cust-count-num">${toBn(custCount)}</span>
         <span class="cust-count-unit">জন</span>
       </div>
-      <div class="card-sub">📋 তালিকা দেখতে ক্লিক করুন</div>
+      ${dueCount > 0 ? `<div class="card-sub warn">⚠️ <b>${toBn(dueCount)}</b> জনের বকেয়া আছে</div>` : `<div class="card-sub">📋 তালিকা দেখতে ক্লিক করুন</div>`}
       <div class="card-tap">বিস্তারিত ▸</div>
     </div>`);
 
@@ -1461,8 +1724,10 @@ function renderActions(){
   const isAdmin = session.role === 'admin';
   $('#actionsSection').innerHTML = `
     <button class="btn" id="btnAllData">📋 সব ডেটা</button>
+    <button class="btn pink" id="btnDueList">⚠️ বকেয়া তালিকা</button>
     ${isAdmin ? '<button class="btn red" id="btnClearAll">🗑️ ক্লিয়ার</button>' : ''}`;
   $('#btnAllData').addEventListener('click', openAllData);
+  $('#btnDueList').addEventListener('click', openDueListModal);
   if(isAdmin){
     const btn = $('#btnClearAll');
     if(btn) btn.addEventListener('click', clearAllData);
@@ -1770,12 +2035,14 @@ function openBackupModal(){
         <div style="font-size:12.5px;color:#8b95c9;line-height:1.9">
           • লেনদেন: <b style="color:#8dff3f">${toBn(DB().txs.length)}</b><br>
           • গ্রাহক: <b style="color:#8dff3f">${toBn(DB().customers.length)}</b><br>
+          • বকেয়াধারী: <b style="color:#ff4d6d">${toBn(DB().customers.filter(c=>(c.supportDue||0)>0).length)}</b><br>
           • শেষ base তারিখ: <b>${toBn(DB().lastBaseDate || '-')}</b><br>
           • Supabase: <b>${supabaseReady ? '🟢 সক্রিয়' : '🔴 নিষ্ক্রিয়'}</b>
         </div>
       </div>`,
     onMount: (wrap, close) => {
       wrap.querySelector('#bk_down').addEventListener('click', () => {
+        recalcAllCustomerDues(false);
         const data = JSON.stringify(DB(), null, 2);
         const blob = new Blob([data], {type:'application/json'});
         const url = URL.createObjectURL(blob);
@@ -1797,8 +2064,10 @@ function openBackupModal(){
             if(!data.users || !data.baseVault){ alert('❌ ভুল ফাইল'); return; }
             if(!confirm('বর্তমান ডেটা মুছে রিস্টোর হবে। চালিয়ে যাবেন?')) return;
             db = data;
+            window.db = db;
             normalizeDB();
             await ensureDefaultUsers();
+            recalcAllCustomerDues(false);
             recomputeLive();
             await saveDB();
             close();
@@ -1823,7 +2092,6 @@ function bankOpts(sel){
     `<option value="${k}" ${k===sel?'selected':''}>${v.name}</option>`).join('');
 }
 
-/* ✅ dirOptions — Support এ ২টা নতুন option */
 function dirOptions(type, cur){
   if(type === 'other_bank') return `
     <option value="in"          ${cur==='in'?'selected':''}>📥 ফিজিক্যালি আসা (+)</option>
@@ -1873,8 +2141,10 @@ function openTxModal(type, editId){
   const showOnlineSupport = !!cfg.onlineSupport;
   const isTransfer = type === 'branch_transfer';
 
-  /* initial dir for support */
   const initialDir = editing ? editing.dir : (cfg.primary);
+
+  /* ✅ Support — hide branch toggle (bank-side txn, not customer branch) */
+  const isSupportType = type === 'support';
 
   const body = `
     <div class="form-row">
@@ -1891,19 +2161,19 @@ function openTxModal(type, editId){
         ${showBranchToggle ? '' : `
         <div class="field"><label>লেনদেনকারী শাখা</label>
           ${isAdmin ? `<select id="f_branch">${branchOpts(baseBranch)}</select>`
-                    : `<input type="text" value="${BRANCHES[baseBranch].name}" disabled>`}
+                    : `<input type="text" id="f_branch" value="${BRANCHES[baseBranch].name}" disabled>`}
         </div>`}
-      ` : showBranchToggle ? '' : `
+      ` : (showBranchToggle || isSupportType) ? '' : `
         <div class="field"><label>লেনদেনকারী শাখা</label>
           ${isAdmin ? `<select id="f_branch">${branchOpts(baseBranch)}</select>`
-                    : `<input type="text" value="${BRANCHES[baseBranch].name}" disabled>`}
+                    : `<input type="text" id="f_branch" value="${BRANCHES[baseBranch].name}" disabled>`}
         </div>`}
       ${showDir ? `
         <div class="field"><label>লেনদেনের ধরন</label>
           <select id="f_dir">${dirOptions(type, initialDir)}</select>
         </div>` : ''}
     </div>
-    ${showBranchToggle ? `
+    ${showBranchToggle && !isSupportType ? `
     <div class="cust-branch-toggle">
       <div class="toggle-title">🏦 গ্রাহকের শাখা</div>
       <div class="branch-toggle-row">
@@ -1920,9 +2190,9 @@ function openTxModal(type, editId){
     ` : ''}
     ${showCust ? `
     <div class="cust-box">
-      <div class="head"><h4>🔍 গ্রাহকের তথ্য</h4></div>
+      <div class="head"><h4>🔍 গ্রাহকের তথ্য (নাম / অ্যাকাউন্ট লিখে সার্চ করুন)</h4></div>
       <div class="field" style="margin-bottom:8px">
-        <input type="text" id="f_search" placeholder="খুঁজুন..." autocomplete="off"
+        <input type="text" id="f_search" placeholder="নাম, অ্যাকাউন্ট নম্বর বা মোবাইল লিখুন..." autocomplete="off"
                value="${editing ? esc(editing.custAcc||'') : ''}">
         <div class="suggest" id="f_suggest"></div>
       </div>
@@ -1936,7 +2206,11 @@ function openTxModal(type, editId){
         <div class="field" style="margin-bottom:8px"><label>ঠিকানা</label>
           <input type="text" id="f_addr" value="${editing ? esc(editing.custAddr||'') : ''}"></div>
       </div>
-      <button class="btn gray" type="button" id="f_editCust" style="padding:9px 16px;font-size:13px">✏️ সেভ</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+        <button class="btn gray" type="button" id="f_editCust" style="padding:9px 16px;font-size:13px">✏️ গ্রাহক সেভ</button>
+        <button class="btn pink" type="button" id="f_checkDue" style="padding:9px 16px;font-size:13px">⚠️ বকেয়া চেক</button>
+      </div>
+      <div id="dueInlineBox" style="margin-top:10px"></div>
     </div>` : (showOnlineSupport ? '' : `
     <div class="field"><label>বিবরণ</label>
       <input type="text" id="f_name" value="${editing ? esc(editing.note||'') : ''}" placeholder="সংক্ষিপ্ত বিবরণ"></div>`)}
@@ -1964,13 +2238,11 @@ function openTxModal(type, editId){
     ${showOnlineSupport ? `
       <div class="online-box" id="onlineSupportBox">
         <h4>🌐 অনলাইন সাপোর্ট তথ্য</h4>
+        <div class="desc">
+          💡 গ্রাহকের তথ্য উপরের <b>🔍 সার্চ বক্স</b>-এ নাম/অ্যাকাউন্ট দিয়ে সিলেক্ট করুন।<br>
+          এখানে শুধু <b>পরিমাণ</b> ও <b>বিবরণ</b> দিন।
+        </div>
         <div class="form-row">
-          <div class="field"><label>গ্রাহকের অ্যাকাউন্ট নম্বর <span style="color:#ff4d6d">*</span></label>
-            <input type="text" id="support_acc" placeholder="যেমন: 8888205103098001"
-                   value="${editing && editing.supportAcc ? esc(editing.supportAcc) : ''}"></div>
-          <div class="field"><label>গ্রাহকের নাম <span style="color:#ff4d6d">*</span></label>
-            <input type="text" id="support_name" placeholder="নাম লিখুন"
-                   value="${editing && editing.supportName ? esc(editing.supportName) : ''}"></div>
           <div class="field"><label>পরিমাণ (৳) <span style="color:#ff4d6d">*</span></label>
             <input type="text" inputmode="decimal" id="support_amount" placeholder="0.00"
                    value="${editing && editing.onlineAmount ? editing.onlineAmount : (editing && editing.amount ? editing.amount : '')}"></div>
@@ -2019,7 +2291,7 @@ function openTxModal(type, editId){
         <h4>📑 রিপোর্ট — ${esc(cfg.title)}</h4>
         <div class="report-tools">
           <input type="date" id="r_date" value="${editing ? editing.date : dashDate}"
-                 style="padding:8px 10px;border-radius:10px;background:#fff;border:1px solid var(--line);color:#000;font-family:inherit">
+                 style="padding:8px 10px;border-radius:10px;background:#0a0d1c;border:1px solid var(--line);color:var(--txt);font-family:inherit">
           <button class="btn gray" id="r_all" style="padding:8px 14px;font-size:12.5px">সব</button>
           <button class="btn pdf" id="r_pdf" style="padding:8px 14px;font-size:12.5px">📄 PDF</button>
           <button class="btn xlsx" id="r_xlsx" style="padding:8px 14px;font-size:12.5px">📊 XLSX</button>
@@ -2045,7 +2317,41 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   const hasDir = !!cfg.dir;
   const hasOnline = !!cfg.online;
   const hasOnlineSupport = !!cfg.onlineSupport;
-  const hasBranchToggle = !!cfg.cust;
+  const hasBranchToggle = !!cfg.cust && type !== 'support';
+  const isSupportType = type === 'support';
+
+  /* ✅ Inline due box for support form */
+  const dueInlineBox = wrap.querySelector('#dueInlineBox');
+
+  function refreshInlineDue(){
+    if(!dueInlineBox) return;
+    const acc  = wrap.querySelector('#f_acc')?.value.trim() || '';
+    const name = wrap.querySelector('#f_name')?.value.trim() || '';
+    if(!acc && !name){ dueInlineBox.innerHTML = ''; return; }
+    const lookupAcc = acc || (DB().customers.find(c => c.name === name)?.accountNo) || '';
+    if(!lookupAcc){
+      dueInlineBox.innerHTML = `<div class="bank-hint" style="margin:0">ℹ️ নতুন গ্রাহক — প্রথম সাপোর্টে স্বয়ংক্রিয়ভাবে যোগ হবে।</div>`;
+      return;
+    }
+    const due = calculateCustomerDue(lookupAcc);
+    if(due.count === 0){
+      dueInlineBox.innerHTML = `<div class="bank-hint" style="margin:0">📭 এই গ্রাহকের এখনো কোনো সাপোর্ট লেনদেন নেই।</div>`;
+      return;
+    }
+    const isDue = due.net > 0;
+    const color = isDue ? '#ff4d6d' : '#8dff3f';
+    const label = isDue ? '⚠️ বকেয়া আছে' : '✅ বকেয়া নেই';
+    dueInlineBox.innerHTML = `
+      <div style="padding:12px;border-radius:12px;background:${isDue?'rgba(255,77,109,.08)':'rgba(141,255,63,.08)'};border:1.5px solid ${isDue?'rgba(255,77,109,.45)':'rgba(141,255,63,.45)'}">
+        <div style="font-size:13px;font-weight:800;color:${color};margin-bottom:6px">${label}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;font-size:12.5px;line-height:1.8">
+          <div>প্রদান: <b style="color:#ff4d6d">৳ ${fmt(due.paid)}</b></div>
+          <div>ফেরত: <b style="color:#8dff3f">৳ ${fmt(due.refund)}</b></div>
+          <div>নেট: <b style="color:${color}">৳ ${fmt(Math.abs(due.net))}</b></div>
+          <div>লেনদেন: <b>${toBn(due.count)} টি</b></div>
+        </div>
+      </div>`;
+  }
 
   function isOnlineSupportMode(){
     if(!hasOnlineSupport) return false;
@@ -2109,14 +2415,17 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const noteDetailBox = wrap.querySelector('#noteDetailBox');
     const hint = wrap.querySelector('#dirHint');
 
-    /* ✅ Online Support Mode */
     const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
     if(isOnlineSup){
+      /* ✅ clear any stale notes when entering online mode */
+      wrap.querySelectorAll('[id^="out_"]').forEach(i => i.value = '');
+      wrap.querySelectorAll('[id^="in_"]').forEach(i => i.value = '');
       if(notesCols) notesCols.style.display = 'none';
       if(noteDetailBox) noteDetailBox.style.display = 'none';
       if(onlineBox) onlineBox.classList.remove('active');
       if(onlineSupportBox) onlineSupportBox.classList.add('active');
       if(hint) hint.style.display = 'none';
+      recalc();
       return;
     } else {
       if(onlineSupportBox) onlineSupportBox.classList.remove('active');
@@ -2126,6 +2435,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       wrap.querySelectorAll('[id^="'+prefix+'_"]').forEach(inp => inp.value = '');
     };
     if(dir === 'online_in' || dir === 'online_out'){
+      clearNotes('out'); clearNotes('in');
       if(notesCols) notesCols.style.display = 'none';
       if(noteDetailBox) noteDetailBox.style.display = 'none';
       if(onlineBox){
@@ -2151,14 +2461,15 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       else if(dir === 'out'){ outCol.classList.remove('disabled'); inCol.classList.add('disabled'); clearNotes('in'); }
       else { outCol.classList.remove('disabled'); inCol.classList.remove('disabled'); }
     } else if(type === 'support'){
-      if(dir === 'out'){ outCol.classList.remove('disabled'); inCol.classList.add('disabled'); clearNotes('in'); }
-      else { outCol.classList.add('disabled'); inCol.classList.remove('disabled'); clearNotes('out'); }
+      /* ✅ both columns active for support (paid + refund together) */
+      outCol.classList.remove('disabled');
+      inCol.classList.remove('disabled');
     }
   }
 
   if(hasDir){
     const dirEl = wrap.querySelector('#f_dir');
-    if(dirEl) dirEl.addEventListener('change', () => { applyDirectionState(); recalc(); });
+    if(dirEl) dirEl.addEventListener('change', () => { applyDirectionState(); recalc(); refreshInlineDue(); });
     applyDirectionState();
   }
 
@@ -2176,7 +2487,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     if(pv) pv.textContent = '৳ ' + fmt(v);
   }
 
-  /* ✅ Online Support Amount Input */
   const supportAmtInput = wrap.querySelector('#support_amount');
   if(supportAmtInput){
     supportAmtInput.addEventListener('input', () => {
@@ -2216,6 +2526,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       netEl.textContent = '৳ ' + fmt(v);
     } else if(isTransfer){
       netEl.textContent = '৳ ' + fmt(Math.max(out, inSum));
+    } else if(type === 'support'){
+      netEl.textContent = '৳ ' + fmt(Math.abs(out - inSum));
     } else {
       netEl.textContent = '৳ ' + fmt(Math.abs(out - inSum));
     }
@@ -2265,17 +2577,27 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   }
   renderPending();
 
+  /* ✅ Suggestion dropdown */
   const searchEl = wrap.querySelector('#f_search');
   const sugEl = wrap.querySelector('#f_suggest');
   if(searchEl){
     searchEl.addEventListener('input', () => {
       let list = searchCustomers(searchEl.value);
       if(!list.length){ sugEl.innerHTML = ''; return; }
-      sugEl.innerHTML = list.map(c => `
+      sugEl.innerHTML = list.map(c => {
+        const due = calculateCustomerDue(c.accountNo);
+        let tag = '';
+        if(due.net > 0){
+          tag = `<span class="due-tag">⚠️ বকেয়া ৳${fmt(due.net)}</span>`;
+        } else if(due.count > 0){
+          tag = `<span class="paid-tag">✅ পরিশোধিত</span>`;
+        }
+        return `
         <div class="sug-item" data-id="${c.id}">
-          <b>${esc(c.name)}</b> — <small>${esc(c.accountNo)}</small><br>
+          <b>${esc(c.name)}</b> — <small>${esc(c.accountNo)}</small>${tag}<br>
           <small>📱 ${esc(c.mobile||'-')} • 📍 ${esc(c.address||'-')} • 🏦 ${esc(BRANCHES[c.branch]?.name||'')}</small>
-        </div>`).join('');
+        </div>`;
+      }).join('');
       sugEl.querySelectorAll('.sug-item').forEach(el => {
         el.addEventListener('click', () => {
           const c = DB().customers.find(x => x.id === el.dataset.id);
@@ -2296,10 +2618,47 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
             if(hiddenB) hiddenB.value = c.branch;
             updateCrossBranchNote();
           }
+          refreshInlineDue();
+          /* ✅ Auto-popup for due */
+          const due = calculateCustomerDue(c.accountNo);
+          if(due.net > 0){
+            /* Slight delay so fields update visually first */
+            setTimeout(() => showDuePopup(c, { force:false }), 150);
+          }
         });
       });
     });
   }
+
+  /* ✅ Manual due check button */
+  const checkDueBtn = wrap.querySelector('#f_checkDue');
+  if(checkDueBtn){
+    checkDueBtn.addEventListener('click', () => {
+      const acc = wrap.querySelector('#f_acc')?.value.trim();
+      const name = wrap.querySelector('#f_name')?.value.trim();
+      let c = null;
+      if(acc) c = DB().customers.find(x => x.accountNo === acc);
+      if(!c && name) c = DB().customers.find(x => x.name === name);
+      if(!c){
+        if(acc || name){
+          c = { accountNo: acc || '—', name: name || '—', branch: wrap.querySelector('#f_custBranch_hidden')?.value || session.branch, mobile:'', address:'' };
+        } else {
+          toast('⚠️ আগে অ্যাকাউন্ট বা নাম দিন'); return;
+        }
+      }
+      showDuePopup(c, { force:true });
+    });
+  }
+
+  /* ✅ Live inline due refresh */
+  ['#f_acc', '#f_name'].forEach(sel => {
+    const el = wrap.querySelector(sel);
+    if(el) el.addEventListener('input', () => {
+      clearTimeout(el.__dueT);
+      el.__dueT = setTimeout(refreshInlineDue, 250);
+    });
+  });
+  refreshInlineDue();
 
   const editCustBtn = wrap.querySelector('#f_editCust');
   if(editCustBtn){
@@ -2315,10 +2674,12 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         branch: br
       };
       if(!data.accountNo && !data.name){ alert('অ্যাকাউন্ট বা নাম দিন'); return; }
-      upsertCustomer(data);
+      const c = upsertCustomer(data);
+      if(c) updateCustomerDueInDB(c.accountNo, false);
       await saveDB();
       editCustBtn.textContent = '✅ সেভ';
-      setTimeout(()=> editCustBtn.textContent = '✏️ সেভ', 1500);
+      setTimeout(()=> editCustBtn.textContent = '✏️ গ্রাহক সেভ', 1500);
+      refreshInlineDue();
     });
   }
 
@@ -2394,19 +2755,20 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     let dir = wrap.querySelector('#f_dir') ? wrap.querySelector('#f_dir').value : null;
     let onlineAmount = 0;
 
-    /* ✅ Online support validation */
     let onlineSupportAcc = '';
     let onlineSupportName = '';
     let onlineSupportAmount = 0;
     let onlineSupportNote = '';
     const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
     if(isOnlineSup){
-      onlineSupportAcc = wrap.querySelector('#support_acc')?.value.trim() || '';
-      onlineSupportName = wrap.querySelector('#support_name')?.value.trim() || '';
+      onlineSupportAcc  = wrap.querySelector('#f_acc')?.value.trim() || '';
+      onlineSupportName = wrap.querySelector('#f_name')?.value.trim() || '';
       onlineSupportAmount = parseFloat(wrap.querySelector('#support_amount')?.value) || 0;
-      onlineSupportNote = wrap.querySelector('#support_note')?.value.trim() || '';
-      if(!onlineSupportAcc){ alert('🌐 গ্রাহকের অ্যাকাউন্ট নম্বর দিন'); return; }
-      if(!onlineSupportName){ alert('🌐 গ্রাহকের নাম দিন'); return; }
+      onlineSupportNote   = wrap.querySelector('#support_note')?.value.trim() || '';
+      if(!onlineSupportAcc && !onlineSupportName){ 
+        alert('🌐 গ্রাহকের নাম/অ্যাকাউন্ট দিন (উপরের 🔍 সার্চ থেকে)'); 
+        return; 
+      }
       if(onlineSupportAmount <= 0){ alert('🌐 পরিমাণ দিন'); return; }
     }
 
@@ -2421,8 +2783,10 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       if(dir === 'in' && inSum <= 0){ alert('📥 কলামে নোট দিন'); return; }
       if(dir === 'out' && outSum <= 0){ alert('💸 কলামে নোট দিন'); return; }
     } else if(type === 'support'){
-      if(dir === 'out' && outSum <= 0){ alert('💸 কলামে নোট দিন'); return; }
-      if(dir === 'in' && inSum <= 0){ alert('📥 কলামে নোট দিন'); return; }
+      if(outSum <= 0 && inSum <= 0){ alert('💸 বা 📥 অন্তত একটি নোট দিন'); return; }
+      const pAcc  = wrap.querySelector('#f_acc')?.value.trim() || '';
+      const pName = wrap.querySelector('#f_name')?.value.trim() || '';
+      if(!pAcc && !pName){ alert('🤝 গ্রাহকের নাম/অ্যাকাউন্ট দিন (উপরের 🔍 সার্চ থেকে)'); return; }
     } else if(amount <= 0){ alert('অন্তত একটি নোট'); return; }
 
     let branch;
@@ -2450,16 +2814,26 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       const hiddenCustB = wrap.querySelector('#f_custBranch_hidden');
       custBranch = (hiddenCustB && hiddenCustB.value) ? hiddenCustB.value : txnBranch;
     } else custBranch = txnBranch;
+
+    /* ✅ Support: custBranch = txnBranch (single branch) */
+    if(type === 'support'){
+      const bs = wrap.querySelector('#f_branch');
+      const br = bs ? bs.value : (session.role === 'admin' ? (viewBranch === 'all' ? 'kalaroa' : viewBranch) : session.branch);
+      txnBranch = br;
+      custBranch = br;
+      branch = br;
+    }
+
     const bankKey = wrap.querySelector('#f_bank') ? wrap.querySelector('#f_bank').value : null;
     let txAmount;
     if(isOnlineSup) txAmount = onlineSupportAmount;
     else if(isOnlineMode()) txAmount = onlineAmount;
     else if(type === 'branch_transfer') txAmount = Math.max(outSum, inSum);
+    else if(type === 'support') txAmount = Math.abs(outSum - inSum);
     else if(dir === 'in') txAmount = inSum;
     else if(dir === 'out') txAmount = outSum;
     else txAmount = amount;
 
-    /* ✅ Support note: use custom support note if available */
     let finalNote;
     if(isOnlineSup){
       finalNote = onlineSupportNote || ('সাপোর্ট — ' + onlineSupportName);
@@ -2478,8 +2852,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       supportAcc: isOnlineSup ? onlineSupportAcc : '',
       supportName: isOnlineSup ? onlineSupportName : '',
       notesOut: outNotes, notesIn: inNotes,
-      custAcc: isOnlineSup ? onlineSupportAcc : (wrap.querySelector('#f_acc') ? wrap.querySelector('#f_acc').value.trim() : ''),
-      custName: isOnlineSup ? onlineSupportName : (cfg.cust ? (wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '') : ''),
+      custAcc: (isOnlineSup ? onlineSupportAcc : '') || (wrap.querySelector('#f_acc') ? wrap.querySelector('#f_acc').value.trim() : ''),
+      custName: (isOnlineSup ? onlineSupportName : '') || (wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : ''),
       custMobile: wrap.querySelector('#f_mobile') ? wrap.querySelector('#f_mobile').value.trim() : '',
       custAddr: wrap.querySelector('#f_addr') ? wrap.querySelector('#f_addr').value.trim() : '',
       note: finalNote,
@@ -2491,11 +2865,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     };
 
     if(cfg.cust && (tx.custAcc || tx.custName)){
-      upsertCustomer({ accountNo: tx.custAcc, name: tx.custName, mobile: tx.custMobile, address: tx.custAddr, branch: custBranch });
-    }
-    /* ✅ Online support: auto-upsert customer */
-    if(isOnlineSup && (tx.supportAcc || tx.supportName)){
-      upsertCustomer({ accountNo: tx.supportAcc, name: tx.supportName, branch: custBranch });
+      const c = upsertCustomer({ accountNo: tx.custAcc, name: tx.custName, mobile: tx.custMobile, address: tx.custAddr, branch: custBranch });
+      if(c){ tx.custAcc = c.accountNo; if(!tx.custName) tx.custName = c.name; }
     }
 
     if(editing){
@@ -2510,10 +2881,23 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       }
     } else DB().txs.push(tx);
 
+    /* ✅ Recalculate due for this customer */
+    if(type === 'support' && tx.custAcc){
+      updateCustomerDueInDB(tx.custAcc, false);
+    }
+
     await saveDB();
     close();
     renderDashboard();
     toast('✅ সংরক্ষিত — ৳' + fmt(txAmount));
+
+    /* ✅ Auto-show updated due popup after support save */
+    if(type === 'support' && tx.custAcc){
+      setTimeout(() => {
+        const c = DB().customers.find(x => x.accountNo === tx.custAcc);
+        if(c) showDuePopup(c, { force:true });
+      }, 400);
+    }
   });
   wrap.querySelector('#f_close').addEventListener('click', close);
 }
@@ -2538,10 +2922,15 @@ async function acceptTransfer(id, wrap, type, close){
 }
 
 async function deleteTx(id){
+  const t = DB().txs.find(x => x.id === id);
   DB().txs = DB().txs.filter(x => x.id !== id);
+  /* ✅ refresh due for affected customer */
+  if(t && t.type === 'support' && t.custAcc){
+    updateCustomerDueInDB(t.custAcc, false);
+  }
   await saveDB();
   renderDashboard();
-  toast('🗑️ ডিলিট');
+  toast('🗭 ডিলিট');
 }
 
 /* মানি এক্সচেঞ্জ */
@@ -2612,7 +3001,7 @@ function openMoneyExchange(){
         <h4>📑 রিপোর্ট — মানি এক্সচেঞ্জ</h4>
         <div class="report-tools">
           <input type="date" id="me_r_date" value="${dashDate}"
-                 style="padding:8px 10px;border-radius:10px;background:#fff;border:1px solid var(--line);color:#000;font-family:inherit">
+                 style="padding:8px 10px;border-radius:10px;background:#0a0d1c;border:1px solid var(--line);color:var(--txt);font-family:inherit">
           <button class="btn gray" id="me_r_all" style="padding:8px 14px;font-size:12.5px">সব</button>
           <button class="btn pdf" id="me_r_pdf" style="padding:8px 14px;font-size:12.5px">📄 PDF</button>
           <button class="btn xlsx" id="me_r_xlsx" style="padding:8px 14px;font-size:12.5px">📊 XLSX</button>
@@ -2771,7 +3160,6 @@ function exportToXLSX(title, headers, rows, filename){
   }catch(e){ console.error(e); toast('❌ XLSX failed', 'err'); }
 }
 
-/* ✅ buildReportRow — includes online support */
 function buildReportRow(t){
   const typeEn = txEN(t.type);
   const branchEn = branchEN(t.branch);
@@ -2788,12 +3176,13 @@ function buildReportRow(t){
   } else if(t.type === 'support'){
     if(t.dir === 'online_support_out'){
       dirText = 'Online Support Paid';
-      description = (t.supportName || '') + (t.supportAcc ? ' (' + t.supportAcc + ')' : '');
+      description = (safeEN(t.custName||'', '') || '') + (t.custAcc ? ' (' + t.custAcc + ')' : '');
     } else if(t.dir === 'online_support_in'){
       dirText = 'Online Support Refund';
-      description = (t.supportName || '') + (t.supportAcc ? ' (' + t.supportAcc + ')' : '');
+      description = (safeEN(t.custName||'', '') || '') + (t.custAcc ? ' (' + t.custAcc + ')' : '');
     } else {
       dirText = t.dir === 'in' ? 'Refund' : 'Paid';
+      description = (t.custName && !hasBengali(t.custName) ? t.custName : '') + (t.custAcc ? ' (' + t.custAcc + ')' : '');
     }
   } else if(t.type === 'money_exchange'){
     const mBank = t.bank ? (BANKS[t.bank]?.en || t.bank) : '';
@@ -2851,18 +3240,20 @@ function txListHTML(list, opts){
         extra += '<br><small style="color:#8b95c9">📝 ' + esc(t.note) + '</small>';
       }
     }
-    /* ✅ Online Support rendering */
     else if(t.type === 'support' && (t.dir === 'online_support_out' || t.dir === 'online_support_in')){
       const isOut = t.dir === 'online_support_out';
       const lbl = isOut ? '🌐 অনলাইন সাপোর্ট প্রদান' : '🌐 অনলাইন সাপোর্ট ফেরত';
       const color = isOut ? '#ffb3d1' : '#d3ffa8';
       extra = `<span style="color:${color};font-weight:700">${lbl}</span>`;
-      if(t.supportName) extra += `<br><small style="color:${color}">👤 ${esc(t.supportName)}</small>`;
-      if(t.supportAcc) extra += `<br><small style="color:#22e6ff;cursor:pointer;text-decoration:underline" class="support-acc-link" data-support-acc="${esc(t.supportAcc)}">🔗 ${esc(t.supportAcc)} (হিস্টরি)</small>`;
+      if(t.custName) extra += `<br><small style="color:${color}">👤 ${esc(t.custName)}</small>`;
+      if(t.custAcc) extra += `<br><small style="color:#22e6ff;cursor:pointer;text-decoration:underline" class="support-acc-link" data-support-acc="${esc(t.custAcc)}">🔗 ${esc(t.custAcc)} (হিস্টরি)</small>`;
       if(t.note) extra += `<br><small style="color:#8b95c9">📝 ${esc(t.note)}</small>`;
     }
     else if(t.type === 'support'){
-      extra = t.dir === 'in' ? 'ফেরত' : 'প্রদান';
+      const isPaid = t.dir === 'out';
+      extra = `<span style="color:${isPaid?'#ffb3d1':'#d3ffa8'};font-weight:700">${isPaid?'🤝 সাপোর্ট প্রদান':'↩️ সাপোর্ট ফেরত'}</span>`;
+      if(t.custName && !hasBengali(t.custName)) extra += ` <small>(${esc(t.custName)})</small>`;
+      if(t.custAcc) extra += `<br><small style="color:#22e6ff;cursor:pointer;text-decoration:underline" class="support-acc-link" data-support-acc="${esc(t.custAcc)}">🔗 ${esc(t.custAcc)} (হিস্টরি)</small>`;
     }
     else if(t.type === 'money_exchange'){
       const bankName = t.bank ? (BANKS[t.bank]?.name || t.bank) : '';
@@ -2914,7 +3305,6 @@ function txListHTML(list, opts){
     </tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
-  /* ✅ Support acc link binding (after return to DOM) */
   setTimeout(() => {
     document.querySelectorAll('.support-acc-link').forEach(el => {
       if(el.dataset.bound) return;
@@ -2932,7 +3322,6 @@ function txListHTML(list, opts){
 /* গ্রাহক তালিকা */
 function openCustomerList(){
   const isAdmin = session.role === 'admin';
-  const branch = 'all';
 
   const html = `
     <div class="cust-box" style="margin-bottom:18px;background:rgba(141,255,63,.06);border-color:rgba(141,255,63,.35)">
@@ -2950,19 +3339,38 @@ function openCustomerList(){
       </div>
       <button class="btn green" id="nc_save" style="margin-top:10px;padding:10px 22px">💾 সংরক্ষণ</button>
     </div>
-    <div class="field" style="margin-bottom:12px">
-      <input type="text" id="cust_search" placeholder="🔍 খুঁজুন...">
+    <div class="form-row" style="margin-bottom:12px">
+      <div class="field" style="margin:0">
+        <input type="text" id="cust_search" placeholder="🔍 নাম / অ্যাকাউন্ট / মোবাইল দিয়ে খুঁজুন...">
+      </div>
+      <div class="field" style="margin:0">
+        <select id="cust_due_filter">
+          <option value="all">সব গ্রাহক</option>
+          <option value="due">⚠️ শুধু বকেয়াধারী</option>
+          <option value="clear">✅ বকেয়া নেই</option>
+        </select>
+      </div>
     </div>
     <div id="cust_list"></div>`;
   openModal({
-    title: '👥 গ্রাহক তালিকা (উভয় শাখা)', bodyHTML: html, wide: true,
+    title: '👥 গ্রাহক তালিকা (উভয় শাখা)',
+    bodyHTML: html, wide: true,
     onMount: (wrap, close) => {
       const listBox = wrap.querySelector('#cust_list');
       const searchEl = wrap.querySelector('#cust_search');
-      function getMyCustomers(){ return DB().customers.slice(); }
+      const dueFilterEl = wrap.querySelector('#cust_due_filter');
       function renderList(filterText){
         filterText = (filterText || '').trim().toLowerCase();
-        let list = getMyCustomers();
+        const dueF = dueFilterEl.value;
+        let list = DB().customers.slice();
+        /* refresh due numbers first */
+        list.forEach(c => {
+          const d = calculateCustomerDue(c.accountNo);
+          c.supportPaid = d.paid; c.supportRefund = d.refund;
+          c.supportDue = d.net; c.supportCount = d.count;
+        });
+        if(dueF === 'due') list = list.filter(c => (c.supportDue||0) > 0);
+        if(dueF === 'clear') list = list.filter(c => (c.supportDue||0) <= 0);
         if(filterText){
           list = list.filter(c =>
             (c.accountNo||'').toLowerCase().includes(filterText) ||
@@ -2970,31 +3378,64 @@ function openCustomerList(){
             (c.mobile||'').toLowerCase().includes(filterText) ||
             (c.address||'').toLowerCase().includes(filterText));
         }
+        list.sort((a,b) => (b.supportDue||0) - (a.supportDue||0));
         if(!list.length){ listBox.innerHTML = `<div class="table-wrap"><div class="empty">📭 কোনো গ্রাহক নেই</div></div>`; return; }
+        const totalDue = list.reduce((s,c)=> s + (c.supportDue||0), 0);
         let tbl = `<div class="table-wrap"><table class="tbl">
-          <thead><tr><th>#</th><th>অ্যাকাউন্ট</th><th>নাম</th><th>মোবাইল</th><th>ঠিকানা</th><th>শাখা</th><th>লেনদেন</th>${isAdmin ? '<th>অ্যাকশন</th>' : ''}</tr></thead><tbody>`;
+          <thead><tr>
+            <th>#</th><th>অ্যাকাউন্ট</th><th>নাম</th><th>মোবাইল</th><th>শাখা</th>
+            <th>লেনদেন</th><th>বকেয়া</th><th>অ্যাকশন</th>
+          </tr></thead><tbody>`;
         list.forEach((c, i) => {
-          const cnt = DB().txs.filter(t => t.custAcc === c.accountNo).length;
-          tbl += `<tr class="cust-row" data-cacc="${esc(c.accountNo)}">
+          const isDue = (c.supportDue||0) > 0;
+          const cleared = (c.supportCount||0) > 0 && !isDue;
+          let dueBadge = '';
+          if(isDue) dueBadge = `<span class="badge due">⚠️ ৳${fmt(c.supportDue)}</span>`;
+          else if(cleared) dueBadge = `<span class="badge cleared">✅ পরিশোধিত</span>`;
+          else dueBadge = `<span style="color:var(--muted);font-size:11.5px">— নতুন —</span>`;
+          tbl += `<tr class="cust-row ${isDue?'has-due':''}" data-cacc="${esc(c.accountNo)}">
             <td>${toBn(i+1)}</td>
             <td><b class="rgb" style="font-size:13px">${esc(c.accountNo)}</b></td>
             <td>${esc(c.name||'-')}</td>
             <td>${esc(c.mobile||'-')}</td>
-            <td>${esc(c.address||'-')}</td>
             <td><span class="badge online" style="font-size:10.5px">${esc(BRANCHES[c.branch]?.name||'')}</span></td>
-            <td><span class="badge accepted">${toBn(cnt)} টি</span></td>
-            ${isAdmin ? `<td><button class="mini danger" data-cdel="${c.id}">🗑️</button></td>` : ''}
+            <td><span class="badge accepted">${toBn(c.supportCount||0)} টি</span></td>
+            <td>${dueBadge}</td>
+            <td>
+              <button class="mini due-btn" data-due="${esc(c.accountNo)}">⚠️ দেখুন</button>
+              <button class="mini show" data-hist="${esc(c.accountNo)}">📄</button>
+              ${isAdmin ? `<button class="mini danger" data-cdel="${c.id}">🗑️</button>` : ''}
+            </td>
           </tr>`;
         });
         tbl += `</tbody></table></div>
           <div style="text-align:center;margin-top:12px;color:var(--muted);font-size:12.5px">
-            মোট <b style="color:#8dff3f">${toBn(list.length)}</b> জন • উভয় শাখা
+            মোট <b style="color:#8dff3f">${toBn(list.length)}</b> জন • মোট বকেয়া <b style="color:#ff4d6d">৳ ${fmt(totalDue)}</b>
           </div>`;
         listBox.innerHTML = tbl;
         listBox.querySelectorAll('tr[data-cacc]').forEach(tr => {
           tr.addEventListener('click', (e) => {
-            if(e.target.closest('[data-cdel]')) return;
-            showCustomerAllTxns(tr.dataset.cacc);
+            if(e.target.closest('button')) return;
+            const c = DB().customers.find(x => x.accountNo === tr.dataset.cacc);
+            if(!c) return;
+            if((c.supportDue||0) > 0){
+              showDuePopup(c, { force:false });
+            } else {
+              showCustomerAllTxns(c.accountNo);
+            }
+          });
+        });
+        listBox.querySelectorAll('[data-due]').forEach(b => {
+          b.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const c = DB().customers.find(x => x.accountNo === b.dataset.due);
+            if(c) showDuePopup(c, { force:true });
+          });
+        });
+        listBox.querySelectorAll('[data-hist]').forEach(b => {
+          b.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showCustomerAllTxns(b.dataset.hist);
           });
         });
         listBox.querySelectorAll('[data-cdel]').forEach(b => {
@@ -3010,6 +3451,7 @@ function openCustomerList(){
         });
       }
       searchEl.addEventListener('input', () => renderList(searchEl.value));
+      dueFilterEl.addEventListener('change', () => renderList(searchEl.value));
       wrap.querySelector('#nc_save').addEventListener('click', async () => {
         const acc = wrap.querySelector('#nc_acc').value.trim();
         const name = wrap.querySelector('#nc_name').value.trim();
@@ -3026,7 +3468,9 @@ function openCustomerList(){
           id: uid(),
           accountNo: acc || ('ACC' + Math.floor(Math.random()*900000+100000)),
           name, mobile, address: addr, branch: cbr,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          supportPaid:0, supportRefund:0, supportDue:0, supportCount:0,
+          dueUpdatedAt: new Date().toISOString()
         });
         await saveDB();
         wrap.querySelector('#nc_acc').value = '';
@@ -3041,12 +3485,102 @@ function openCustomerList(){
   });
 }
 
-/* ✅ showCustomerAllTxns — shows complete history for that account (including online support) */
+/* ✅ Dedicated Due List modal */
+function openDueListModal(){
+  const bf = currentBranchFilter();
+  const all = DB().customers || [];
+  const scoped = bf === 'all' ? all : all.filter(c => c.branch === bf);
+  scoped.forEach(c => {
+    const d = calculateCustomerDue(c.accountNo);
+    c.supportPaid = d.paid; c.supportRefund = d.refund;
+    c.supportDue = d.net; c.supportCount = d.count;
+  });
+  const dueList = scoped.filter(c => (c.supportDue||0) > 0)
+                       .sort((a,b) => (b.supportDue||0) - (a.supportDue||0));
+  const totalDue = dueList.reduce((s,c) => s + (c.supportDue||0), 0);
+
+  const body = `
+    <div class="accept-head" style="border-color:rgba(255,77,109,.5);background:rgba(255,77,109,.08)">
+      <div style="font-size:13.5px;line-height:1.9">
+        ⚠️ <b>বকেয়া তালিকা</b> — এই মুহূর্তে <b style="color:#ff4d6d">${toBn(dueList.length)} জন</b> গ্রাহকের কাছে মোট
+        <b style="color:#ff4d6d;font-size:16px">৳ ${fmt(totalDue)}</b> বকেয়া আছে।
+      </div>
+    </div>
+    ${dueList.length ? `
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th>#</th><th>গ্রাহক</th><th>অ্যাকাউন্ট</th><th>শাখা</th>
+          <th>প্রদান</th><th>ফেরত</th><th>বকেয়া</th><th>শেষ আপডেট</th>
+        </tr></thead>
+        <tbody>
+          ${dueList.map((c,i) => `
+            <tr class="cust-row has-due" data-due-acc2="${esc(c.accountNo)}">
+              <td>${toBn(i+1)}</td>
+              <td><b>${esc(c.name||'-')}</b></td>
+              <td><span class="rgb" style="font-size:12.5px">${esc(c.accountNo||'-')}</span></td>
+              <td>${esc(BRANCHES[c.branch]?.name||'-')}</td>
+              <td style="color:#ff4d6d;font-weight:700">৳ ${fmt(c.supportPaid||0)}</td>
+              <td style="color:#8dff3f;font-weight:700">৳ ${fmt(c.supportRefund||0)}</td>
+              <td><span class="badge due" style="font-size:12px">৳ ${fmt(c.supportDue||0)}</span></td>
+              <td style="font-size:11px;color:var(--muted)">${esc(fmtDateTime(c.dueUpdatedAt))}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : `<div class="empty">🎉 কোনো বকেয়া নেই</div>`}
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn pdf" id="dl_pdf" style="flex:1;min-width:140px">📄 PDF</button>
+      <button class="btn xlsx" id="dl_xlsx" style="flex:1;min-width:140px">📊 XLSX</button>
+      <button class="btn gray" id="dl_close" style="flex:1;min-width:120px">বন্ধ</button>
+    </div>`;
+
+  openModal({
+    title: '⚠️ বকেয়া তালিকা — সমস্ত গ্রাহক',
+    bodyHTML: body, wide: true,
+    onMount: (wrap, close) => {
+      wrap.querySelector('#dl_close').addEventListener('click', close);
+      wrap.querySelectorAll('[data-due-acc2]').forEach(tr => {
+        tr.addEventListener('click', () => {
+          const c = DB().customers.find(x => x.accountNo === tr.dataset.dueAcc2);
+          if(c) showDuePopup(c, { force:true });
+        });
+      });
+      const rowsForExport = () => dueList.map(c => [
+        c.accountNo || '-', c.name || '-', BRANCHES[c.branch]?.en || '-',
+        'BDT ' + fmt(c.supportPaid||0), 'BDT ' + fmt(c.supportRefund||0),
+        'BDT ' + fmt(c.supportDue||0), c.supportCount || 0,
+        fmtDateTimeEN(c.dueUpdatedAt)
+      ]);
+      const headers = ['Account','Customer','Branch','Paid','Refund','Due','Txns','Updated'];
+      wrap.querySelector('#dl_pdf').addEventListener('click', () => {
+        const rows = rowsForExport();
+        rows.push(['', '', '', '', '', 'TOTAL BDT ' + fmt(totalDue), '', '']);
+        exportToPDF('Due List', headers, rows, 'due_list.pdf');
+      });
+      wrap.querySelector('#dl_xlsx').addEventListener('click', () => {
+        const rows = rowsForExport();
+        rows.push(['', '', '', '', '', 'TOTAL BDT ' + fmt(totalDue), '', '']);
+        exportToXLSX('Due List', headers, rows, 'due_list.xlsx');
+      });
+    }
+  });
+}
+
+/* ✅ Customer History with due summary */
 function showCustomerAllTxns(accountNo){
   const cust = DB().customers.find(c => c.accountNo === accountNo);
-  /* ✅ If customer not found, still show transactions for this account (from support) */
   const list = DB().txs.filter(t => t.custAcc === accountNo || t.supportAcc === accountNo)
     .sort((a,b)=> (b.date + (b.createdAt||'') < a.date + (a.createdAt||'') ? 1 : -1));
+
+  /* ✅ Compute due summary */
+  const sTxns = list.filter(t => t.type === 'support');
+  const sPaid = sTxns.filter(t => t.dir === 'out' || t.dir === 'online_support_out')
+                     .reduce((s,t)=> s + Number(t.amount||0), 0);
+  const sRefund = sTxns.filter(t => t.dir === 'in' || t.dir === 'online_support_in')
+                       .reduce((s,t)=> s + Number(t.amount||0), 0);
+  const sNet = sPaid - sRefund;
+  const isDue = sNet > 0;
+
   let rows = '';
   if(list.length){
     rows = list.map((t, i) => {
@@ -3054,9 +3588,12 @@ function showCustomerAllTxns(accountNo){
       let dirTxt = '';
       if(t.type === 'support' && t.dir === 'online_support_out') dirTxt = '🌐 অনলাইন সাপোর্ট প্রদান';
       else if(t.type === 'support' && t.dir === 'online_support_in') dirTxt = '🌐 অনলাইন সাপোর্ট ফেরত';
+      else if(t.type === 'support' && t.dir === 'out') dirTxt = '🤝 সাপোর্ট প্রদান';
+      else if(t.type === 'support' && t.dir === 'in') dirTxt = '↩️ সাপোর্ট ফেরত';
       else if(t.dir === 'in') dirTxt = 'গ্রহণ';
       else if(t.dir === 'out') dirTxt = 'প্রদান';
-      const amtColor = (t.dir === 'online_support_in') ? '#8dff3f' : ((t.dir === 'online_support_out') ? '#ff4d6d' : '#8dff3f');
+      const amtColor = (t.dir === 'online_support_in' || (t.type==='support' && t.dir==='in')) ? '#8dff3f'
+                     : ((t.dir === 'online_support_out' || (t.type==='support' && t.dir==='out')) ? '#ff4d6d' : '#8dff3f');
       return `<tr>
         <td>${toBn(i+1)}</td>
         <td>${toBn(t.date)}</td>
@@ -3070,10 +3607,11 @@ function showCustomerAllTxns(accountNo){
   } else {
     rows = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">📭 কোনো লেনদেন নেই</td></tr>`;
   }
-  const custName = cust ? (cust.name||'-') : (list[0]?.supportName || list[0]?.custName || 'অজানা');
+  const custName = cust ? (cust.name||'-') : (list[0]?.custName || list[0]?.supportName || 'অজানা');
   const custMobile = cust ? (cust.mobile||'-') : '-';
   const custBranch = cust ? (BRANCHES[cust.branch]?.name||'-') : (list[0] ? BRANCHES[list[0].custBranch||list[0].branch]?.name : '-');
   const custAddr = cust ? (cust.address||'-') : '-';
+
   const body = `
     <div class="cust-box" style="margin-bottom:14px">
       <div class="head"><h4>👤 ${esc(custName)}</h4></div>
@@ -3084,11 +3622,21 @@ function showCustomerAllTxns(accountNo){
         <div><span style="color:var(--muted)">ঠিকানা:</span> <b>${esc(custAddr)}</b></div>
         <div style="grid-column:1/-1"><span style="color:var(--muted)">মোট লেনদেন:</span> <b class="rgb">${toBn(list.length)} টি</b></div>
       </div>
+      ${sTxns.length ? `
+      <div style="margin-top:14px;padding-top:12px;border-top:1px dashed rgba(255,255,255,.12);display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;font-size:13px;line-height:2">
+        <div><span style="color:var(--muted)">🤝 সাপোর্ট প্রদান:</span> <b style="color:#ff4d6d">৳ ${fmt(sPaid)}</b></div>
+        <div><span style="color:var(--muted)">↩️ সাপোর্ট ফেরত:</span> <b style="color:#8dff3f">৳ ${fmt(sRefund)}</b></div>
+        <div style="grid-column:1/-1">
+          <span style="color:var(--muted)">📊 নেট ${isDue?'বকেয়া':'ব্যালেন্স'}:</span>
+          <b style="color:${isDue?'#ff4d6d':'#8dff3f'};font-size:18px">৳ ${fmt(Math.abs(sNet))}</b>
+        </div>
+      </div>` : ''}
     </div>
     <div class="table-wrap"><table class="tbl">
       <thead><tr><th>#</th><th>তারিখ</th><th>ধরন</th><th>শাখা</th><th>টাকা</th><th>ইউজার</th><th>সময়</th></tr></thead>
       <tbody>${rows}</tbody>
     </table></div>`;
+
   openModal({ title: '📄 গ্রাহকের সম্পূর্ণ লেনদেন হিস্টরি', bodyHTML: body, wide: true });
 }
 
@@ -3167,6 +3715,7 @@ async function clearAllData(){
   db = defaultDB();
   db.users = users;
   db.__firstSetupDone = false;
+  window.db = db;
   await saveDB();
   renderDashboard();
   toast('🗑️ ক্লিয়ার');
@@ -3276,8 +3825,8 @@ function openUserManager(){
         if(!name || !user || !pass){ alert('সব ঘর পূরণ করুন'); return; }
         if(DB().users.some(u => u.username === user)){ alert('⚠️ এই আইডি ইতিমধ্যে আছে'); return; }
         if(role === 'admin') br = 'all';
-        const passwordHash = await sha256(pass);
-        DB().users.push({ id:uid(), name, username:user, password: pass, passwordHash, role, branch:br });
+        const passwordHash = await trySha256(pass);
+        DB().users.push({ id:uid(), name, username:user, password: pass, passwordHash: passwordHash || undefined, role, branch:br });
         await saveDB();
         wrap.querySelector('#u_name').value = '';
         wrap.querySelector('#u_user').value = '';
@@ -3338,7 +3887,10 @@ function openUserEditModal(userId){
         DB().users[idx].name = newName;
         DB().users[idx].username = newUser;
         DB().users[idx].password = newPass || DB().users[idx].password;
-        if(newPass) DB().users[idx].passwordHash = await sha256(newPass);
+        if(newPass){
+          const h = await trySha256(newPass);
+          if(h) DB().users[idx].passwordHash = h;
+        }
         DB().users[idx].branch = newBr;
         DB().users[idx].role = newRole;
         await saveDB();
@@ -3386,8 +3938,9 @@ async function doLogin(){
   err.textContent = '';
 
   try {
-    const hash = await sha256(p);
-    let user = DB().users.find(x => x.username === u && x.passwordHash === hash);
+    const hash = await trySha256(p);
+    let user = null;
+    if(hash) user = DB().users.find(x => x.username === u && x.passwordHash === hash);
     if(!user) user = DB().users.find(x => x.username === u && x.password === p);
     if(!user && u === 'admin' && p === 'admin123'){
       user = DB().users.find(x => x.username === 'admin');
@@ -3402,7 +3955,7 @@ async function doLogin(){
       return;
     }
 
-    if(!user.passwordHash){ user.passwordHash = hash; }
+    if(!user.passwordHash && hash){ user.passwordHash = hash; }
     if(!user.password){ user.password = p; }
 
     session = user;
@@ -3430,9 +3983,11 @@ function logout(){
   if(btn){ btn.disabled = false; btn.innerHTML = '🔐 লগইন করুন'; }
 }
 function startApp(){
+  if(!session) return;
   $('#loginScreen').classList.add('hidden');
   $('#app').classList.remove('hidden');
   performDailyRollover(false);
+  recalcAllCustomerDues(false);
   dashDate = todayStr();
   isDateViewMode = false;
   renderTopbar();
@@ -3447,10 +4002,10 @@ function startApp(){
 
 (async function init(){
   try{
-    if(!localStorage.getItem('__cleared_v54')){
+    if(!localStorage.getItem('__cleared_v55')){
       localStorage.removeItem('cc_agent_bank_v1');
       localStorage.removeItem('cc_agent_bank_session');
-      localStorage.setItem('__cleared_v54', 'yes');
+      localStorage.setItem('__cleared_v55', 'yes');
       console.log('🧹 পুরনো localStorage ডেটা একবার ক্লিয়ার করা হয়েছে');
     }
   }catch(e){}
@@ -3488,7 +4043,7 @@ function startApp(){
         console.log('✅ Supabase keep-alive ping');
       }catch(e){}
     }
-  }, 5 * 24 * 60 * 60 * 1000);
+  }, 24 * 60 * 60 * 1000);
 })();
 </script>
 </body>
