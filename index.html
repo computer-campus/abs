@@ -487,12 +487,16 @@ const BRANCHES = {
   kalaroa:   { name:'কলারোয়া শাখা',   en:'Kalaroa Branch',   color:'#ff2e88' },
   jhaudanga: { name:'ঝাউডাঙ্গা শাখা',  en:'Jhaudanga Branch', color:'#22e6ff' }
 };
+
+  
 const BANKS = {
   al_arafah_kalaroa:    { name:'আল আরাফাহ ব্যাংক (কলারোয়া)',  en:'Al-Arafah Bank (Kalaroa)' },
+  al_arafah_jhaudanga:  { name:'আল আরাফাহ ব্যাংক (ঝাউডাঙ্গা)', en:'Al-Arafah Bank (Jhaudanga)' },
+  dutch_bangla_kalaroa: { name:'ডাচ বাংলা ব্যাংক (কলারোয়া)',   en:'Dutch-Bangla Bank (Kalaroa)' },
   brac_satkhira:        { name:'ব্র্যাক ব্যাংক (সাতক্ষীরা)',    en:'BRAC Bank (Satkhira)' },
-  brac_dhaka:           { name:'ব্র্যাক ব্যাংক (ঢাকা)',         en:'BRAC Bank (Dhaka)' },
-  dutch_bangla_kalaroa: { name:'ডাচ বাংলা ব্যাংক (কলারোয়া)',   en:'Dutch-Bangla Bank (Kalaroa)' }
+  brac_dhaka:           { name:'ব্র্যাক ব্যাংক (ঢাকা)',         en:'BRAC Bank (Dhaka)' }
 };
+
 const DENOMS = [1000,500,200,100,50,20,10,5,2,1];
 
 const SKEY   = 'cc_agent_bank_session';
@@ -2491,6 +2495,10 @@ async function deleteTx(id){
   toast('🗑️ ডিলিট');
 }
 
+
+
+
+
 /* মানি এক্সচেঞ্জ */
 function openMoneyExchange(){
   const bf = currentBranchFilter();
@@ -2508,6 +2516,28 @@ function openMoneyExchange(){
           : `<input type="text" value="${BRANCHES[targetBranch].name}" disabled>
              <input type="hidden" id="me_branch" value="${targetBranch}">`}
       </div>
+      <div class="field"><label>🏦 ব্যাংক</label>
+        <select id="me_bank">
+          <option value="">— নির্বাচন করুন —</option>
+          <option value="al_arafah_kalaroa">আল আরাফাহ ব্যাংক (কলারোয়া)</option>
+          <option value="al_arafah_jhaudanga">আল আরাফাহ ব্যাংক (ঝাউডাঙ্গা)</option>
+          <option value="dutch_bangla_kalaroa">ডাচ বাংলা ব্যাংক (কলারোয়া)</option>
+          <option value="brac_satkhira">ব্র্যাক ব্যাংক (সাতক্ষীরা)</option>
+          <option value="brac_dhaka">ব্র্যাক ব্যাংক (ঢাকা)</option>
+        </select>
+      </div>
+      <div class="field"><label>লেনদেনের ধরন</label>
+        <select id="me_dir">
+          <option value="in_physical">📥 ফিজিক্যালি আনা হল... (+)</option>
+          <option value="in_online">💳 অনলাইনে আনা হল... (+)</option>
+          <option value="out_physical">📤 ফিজিক্যালি পাঠানো হল... (−)</option>
+          <option value="out_online">📤 অনলাইনে পাঠানো হল... (−)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-top:6px">
+      <label>📝 বিবরণী</label>
+      <input type="text" id="me_desc" placeholder="সংক্ষিপ্ত বিবরণ লিখুন...">
     </div>
     <div class="bank-hint" style="margin-top:14px">
       💡 <b>প্রদান</b> = আমি দিলাম | <b>গ্রহণ</b> = আমি নিলাম
@@ -2528,13 +2558,22 @@ function openMoneyExchange(){
       <div class="l">নেট</div>
       <div class="v rgb" id="me_netAmt">৳ 0.00</div>
     </div>
-    <div class="field" style="margin-top:14px">
-      <label>মন্তব্য</label>
-      <input type="text" id="me_note" placeholder="...">
-    </div>
     <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
       <button class="btn green" id="me_save" style="flex:1;min-width:160px">💾 সংরক্ষণ</button>
       <button class="btn gray"  id="me_close" style="flex:1;min-width:120px">বাতিল</button>
+    </div>
+    <div class="report-area">
+      <div class="report-head">
+        <h4>📑 রিপোর্ট — মানি এক্সচেঞ্জ</h4>
+        <div class="report-tools">
+          <input type="date" id="me_r_date" value="${dashDate}"
+                 style="padding:8px 10px;border-radius:10px;background:#fff;border:1px solid var(--line);color:#000;font-family:inherit">
+          <button class="btn gray" id="me_r_all" style="padding:8px 14px;font-size:12.5px">সব</button>
+          <button class="btn pdf" id="me_r_pdf" style="padding:8px 14px;font-size:12.5px">📄 PDF</button>
+          <button class="btn xlsx" id="me_r_xlsx" style="padding:8px 14px;font-size:12.5px">📊 XLSX</button>
+        </div>
+      </div>
+      <div id="me_r_body"></div>
     </div>`;
   openModal({
     title: `💱 মানি এক্সচেঞ্জ`,
@@ -2558,8 +2597,63 @@ function setupMoneyExchange(wrap, close, initialBranch){
   }
   wrap.querySelectorAll('.note-item input').forEach(i => i.addEventListener('input', recalc));
   recalc();
+
+  /* রিপোর্ট render */
+  const meRDate = wrap.querySelector('#me_r_date');
+  const meRBody = wrap.querySelector('#me_r_body');
+  let currentReportList = [];
+  function renderReport(){
+    const dateVal = meRDate.value;
+    let list = DB().txs.filter(t => t.type === 'money_exchange');
+    const bf = currentBranchFilter();
+    if(session.role !== 'admin'){
+      list = list.filter(t => t.branch === session.branch);
+    } else if(bf !== 'all'){
+      list = list.filter(t => t.branch === bf);
+    }
+    if(dateVal) list = list.filter(t => t.date === dateVal);
+    list.sort((a,b)=> (b.createdAt||'').localeCompare(a.createdAt||''));
+    currentReportList = list;
+    meRBody.innerHTML = txListHTML(list, { admin: session.role === 'admin' });
+    meRBody.querySelectorAll('[data-edit]').forEach(b =>
+      b.addEventListener('click', async () => { close(); openTxModal('money_exchange', b.dataset.edit); }));
+    meRBody.querySelectorAll('[data-del]').forEach(b =>
+      b.addEventListener('click', async () => {
+        if(confirm('ডিলিট?')){ await deleteTx(b.dataset.del); renderReport(); }
+      }));
+  }
+  if(meRDate) meRDate.addEventListener('change', renderReport);
+  const meAllBtn = wrap.querySelector('#me_r_all');
+  if(meAllBtn) meAllBtn.addEventListener('click', ()=>{ meRDate.value=''; renderReport(); });
+  renderReport();
+
+  /* PDF */
+  const mePdfBtn = wrap.querySelector('#me_r_pdf');
+  if(mePdfBtn){
+    mePdfBtn.addEventListener('click', () => {
+      const rows = currentReportList.map(t => buildReportRow(t));
+      const total = currentReportList.reduce((s,t)=> s + Number(t.amount||0), 0);
+      rows.push(['', '', '', '', 'TOTAL', 'BDT ' + fmt(total), '', '', '', '']);
+      exportToPDF('Money Exchange Report', REPORT_HEADERS, rows, 'money_exchange.pdf');
+    });
+  }
+  /* XLSX */
+  const meXlsxBtn = wrap.querySelector('#me_r_xlsx');
+  if(meXlsxBtn){
+    meXlsxBtn.addEventListener('click', () => {
+      const rows = currentReportList.map(t => buildReportRow(t));
+      const total = currentReportList.reduce((s,t)=> s + Number(t.amount||0), 0);
+      rows.push(['', '', '', '', 'TOTAL', 'BDT ' + fmt(total), '', '', '', '']);
+      exportToXLSX('Money Exchange Report', REPORT_HEADERS, rows, 'money_exchange.xlsx');
+    });
+  }
+
   wrap.querySelector('#me_save').addEventListener('click', async () => {
     const br = currentBranch();
+    const bankKey = wrap.querySelector('#me_bank').value;
+    const dirVal = wrap.querySelector('#me_dir').value;
+    const desc = wrap.querySelector('#me_desc').value.trim();
+    if(!bankKey){ alert('ব্যাংক নির্বাচন করুন'); return; }
     const outNotes = readNotes(wrap, 'me_out');
     const inNotes = readNotes(wrap, 'me_in');
     const outSum = noteSum(outNotes), inSum = noteSum(inNotes);
@@ -2574,11 +2668,13 @@ function setupMoneyExchange(wrap, close, initialBranch){
     const tx = {
       id: uid(), type: 'money_exchange',
       date: wrap.querySelector('#me_date').value || dashDate,
-      branch: br, custBranch: br, from: null, to: null, dir: null,
+      branch: br, custBranch: br, from: null, to: null,
+      bank: bankKey,
+      dir: dirVal,
       amount: Math.round(Math.abs(outSum - inSum) * 100) / 100,
       notesOut: outNotes, notesIn: inNotes,
       custAcc: '', custName: '', custMobile: '', custAddr: '',
-      note: wrap.querySelector('#me_note').value.trim() || 'মানি এক্সচেঞ্জ',
+      note: desc || 'মানি এক্সচেঞ্জ',
       user: session.name, userUsername: session.username,
       createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
       accepted: true, acceptedDate: wrap.querySelector('#me_date').value || dashDate,
@@ -2594,6 +2690,7 @@ function setupMoneyExchange(wrap, close, initialBranch){
   wrap.querySelector('#me_close').addEventListener('click', close);
 }
 
+  
 /* PDF / XLSX */
 const REPORT_HEADERS = ['Date','Type','Branch','Customer','Direction','Amount','Description','Notes','User','Time'];
 
@@ -2646,7 +2743,16 @@ function buildReportRow(t){
   } else if(t.type === 'support'){
     dirText = t.dir === 'in' ? 'Refund' : 'Paid';
   } else if(t.type === 'money_exchange'){
-    description = 'Money Exchange';
+    const mBank = t.bank ? (BANKS[t.bank]?.en || t.bank) : '';
+    const mDir = t.dir === 'in_physical' ? 'Physically In'
+              : t.dir === 'in_online' ? 'Online In'
+              : t.dir === 'out_physical' ? 'Physically Out'
+              : t.dir === 'out_online' ? 'Online Out'
+              : '';
+    description = [mBank, mDir].filter(x=>x).join(' | ') || 'Money Exchange';
+    if(t.note && t.note !== 'মানি এক্সচেঞ্জ'){
+      description += ' | Note: ' + t.note;
+    }
   } else if(t.dir){
     dirText = t.dir === 'in' ? 'Receive' : 'Give';
   }
@@ -2685,7 +2791,17 @@ function txListHTML(list, opts){
       if(t.dir === 'online_in'){ extra = (bn ? bn + ' • ' : '') + '💳 অনলাইনে আসা'; dirBadge = ' <span class="badge online">💳</span>'; }
       else if(t.dir === 'online_out'){ extra = (bn ? bn + ' • ' : '') + '💳 অনলাইন পাঠানো'; dirBadge = ' <span class="badge online">💳</span>'; }
       else { extra = (bn ? bn + ' • ' : '') + (t.dir === 'in' ? '📥 ফিজিক্যালি আসা' : '📤 ফিজিক্যালি পাঠানো'); }
-    } else if(t.type === 'money_exchange'){ extra = 'ভল্ট ক্যাশ মিলান'; }
+   } else if(t.type === 'money_exchange'){
+      const bankName = t.bank ? (BANKS[t.bank]?.name || t.bank) : '';
+      const dirLabel = t.dir === 'in_physical' ? '📥 ফিজিক্যালি আনা হল... (+)'
+                     : t.dir === 'in_online' ? '💳 অনলাইনে আনা হল... (+)'
+                     : t.dir === 'out_physical' ? '📤 ফিজিক্যালি পাঠানো হল... (−)'
+                     : t.dir === 'out_online' ? '📤 অনলাইনে পাঠানো হল... (−)'
+                     : (t.dir === 'in' ? '📥 গ্রহণ' : t.dir === 'out' ? '📤 প্রদান' : '');
+      const outSum = t.notesOut ? Object.keys(t.notesOut).reduce((s,k)=> s + Number(k)*Number(t.notesOut[k]), 0) : 0;
+      const inSum  = t.notesIn  ? Object.keys(t.notesIn).reduce((s,k)=> s + Number(k)*Number(t.notesIn[k]), 0) : 0;
+      extra = `🏦 ${bankName}<br><span style="color:#ffcb2b">${dirLabel}</span>${t.note && t.note !== 'মানি এক্সচেঞ্জ' ? '<br><small style="color:#8b95c9">📝 ' + esc(t.note) + '</small>' : ''}<br><small>📤 প্রদান: ৳ ${fmt(outSum)} • 📥 গ্রহণ: ৳ ${fmt(inSum)}</small>`;
+    }
     else if(t.dir){ extra = t.dir === 'in' ? 'গ্রহণ' : 'প্রদান'; }
     let notesHTML = '';
     if(t.notesOut && Object.keys(t.notesOut).length) notesHTML += `<div style="margin-top:3px"><small style="color:#ffb3d1">📤</small>${noteListInline(t.notesOut,'out')}</div>`;
