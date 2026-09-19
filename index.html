@@ -2047,6 +2047,104 @@ ${showOnlineSupport ? `
   });
 }
 
+/* ✅ Check previous support history for any customer */
+function checkAndShowSupportHistory(wrap, c){
+  if(!c || !c.accountNo) return;
+  
+  const normalize = (s) => String(s || '').trim().replace(/\s+/g, '').toLowerCase();
+  const custAcc = normalize(c.accountNo);
+  
+  /* Find all previous support transactions for this customer */
+  const prevSupports = DB().txs.filter(t =>
+    t.type === 'support' &&
+    t.dir === 'online_support_out' &&
+    (normalize(t.supportAcc) === custAcc || normalize(t.custAcc) === custAcc)
+  );
+  const prevReturns = DB().txs.filter(t =>
+    t.type === 'support' &&
+    t.dir === 'online_support_in' &&
+    (normalize(t.supportAcc) === custAcc || normalize(t.custAcc) === custAcc)
+  );
+  
+  /* Remove old history box if any */
+  const oldBox = wrap.querySelector('#supportHistoryBox');
+  if(oldBox) oldBox.remove();
+  
+  if(prevSupports.length === 0) return;
+  
+  const totalGiven = prevSupports.reduce((s,t) => s + Number(t.amount||0), 0);
+  const totalReturned = prevReturns.reduce((s,t) => s + Number(t.amount||0), 0);
+  const pendingDue = totalGiven - totalReturned;
+  
+  /* ✅ Popup message */
+  setTimeout(() => {
+    alert('⚠️ এই গ্রাহককে পূর্বে সাপোর্ট প্রদান করা হয়েছিল!\n\n' +
+          'গ্রাহক: ' + c.name + '\n' +
+          'অ্যাকাউন্ট: ' + c.accountNo + '\n\n' +
+          'মোট প্রদান: ৳ ' + fmt(totalGiven) + '\n' +
+          'মোট ফেরত: ৳ ' + fmt(totalReturned) + '\n' +
+          'বাকি: ৳ ' + fmt(pendingDue) + '\n\n' +
+          'নিচে সম্পূর্ণ সাপোর্ট হিস্টরি দেখানো হয়েছে।');
+  }, 100);
+  
+  /* ✅ Build history box */
+  const allTxs = [...prevSupports, ...prevReturns].sort((a,b) => {
+    const da = (a.date || '') + (a.createdAt || '');
+    const db2 = (b.date || '') + (b.createdAt || '');
+    return da.localeCompare(db2);
+  });
+  
+  const historyRows = allTxs.map(t => {
+    const isReturn = t.dir === 'online_support_in';
+    const color = isReturn ? '#8dff3f' : '#ff4d6d';
+    const lbl = isReturn ? '📥 ফেরত' : '📤 প্রদান';
+    return `<tr>
+      <td style="padding:6px 10px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.06)">${toBn(t.date)}</td>
+      <td style="padding:6px 10px;font-size:12px;color:${color};font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">${lbl}</td>
+      <td style="padding:6px 10px;font-size:12px;color:${color};font-weight:800;border-bottom:1px solid rgba(255,255,255,.06)">৳ ${fmt(t.amount)}</td>
+      <td style="padding:6px 10px;font-size:11px;color:#8b95c9;border-bottom:1px solid rgba(255,255,255,.06)">${esc(t.note||'-')}</td>
+      <td style="padding:6px 10px;font-size:11px;color:#8b95c9;border-bottom:1px solid rgba(255,255,255,.06)">${esc(t.user||'-')}</td>
+    </tr>`;
+  }).join('');
+  
+  const historyEl = document.createElement('div');
+  historyEl.id = 'supportHistoryBox';
+  historyEl.style.cssText = 'margin-top:14px;padding:14px;border-radius:16px;background:rgba(255,203,43,.06);border:1px solid rgba(255,203,43,.35);';
+  historyEl.innerHTML = `
+    <div style="font-size:13px;font-weight:800;color:#ffcb2b;margin-bottom:10px">
+      📋 সাপোর্ট হিস্টরি — ${esc(c.name)} (${esc(c.accountNo)})
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;font-size:12.5px">
+      <div>মোট প্রদান: <b style="color:#ff4d6d">৳ ${fmt(totalGiven)}</b></div>
+      <div>মোট ফেরত: <b style="color:#8dff3f">৳ ${fmt(totalReturned)}</b></div>
+      <div>বাকি: <b style="color:#ffcb2b">৳ ${fmt(pendingDue)}</b></div>
+    </div>
+    <div style="overflow-x:auto;border-radius:10px;border:1px solid rgba(255,255,255,.1)">
+      <table style="width:100%;border-collapse:collapse;min-width:420px">
+        <thead style="background:rgba(255,203,43,.12)">
+          <tr>
+            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">তারিখ</th>
+            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">ধরন</th>
+            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">টাকা</th>
+            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">বিবরণ</th>
+            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">ইউজার</th>
+          </tr>
+        </thead>
+        <tbody>${historyRows}</tbody>
+      </table>
+    </div>`;
+  
+  /* Insert history box after the customer box or suggest box */
+  const custBox = wrap.querySelector('.cust-box');
+  if(custBox){
+    custBox.appendChild(historyEl);
+  } else {
+    /* Fallback: insert before notes-cols */
+    const notesCols = wrap.querySelector('#notesCols');
+    if(notesCols) notesCols.parentNode.insertBefore(historyEl, notesCols);
+  }
+}
+
 function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   const cfg = TX_CFG[type];
   const sumOutEl = wrap.querySelector('#sumOut');
@@ -2394,7 +2492,7 @@ supportSugEl.querySelectorAll('.sug-item[data-id]').forEach(el => {
   const searchEl = wrap.querySelector('#f_search');
   const sugEl = wrap.querySelector('#f_suggest');
   if(searchEl){
-    searchEl.addEventListener('input', () => {
+searchEl.addEventListener('input', () => {
       let list = searchCustomers(searchEl.value);
       if(!list.length){ sugEl.innerHTML = ''; return; }
       sugEl.innerHTML = list.map(c => `
@@ -2422,6 +2520,9 @@ supportSugEl.querySelectorAll('.sug-item[data-id]').forEach(el => {
             if(hiddenB) hiddenB.value = c.branch;
             updateCrossBranchNote();
           }
+
+          /* ✅ Check previous support history for this customer */
+          checkAndShowSupportHistory(wrap, c);
         });
       });
     });
