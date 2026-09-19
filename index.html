@@ -2826,7 +2826,7 @@ function txListHTML(list, opts){
       <td>${toBn(t.date)}</td>
       <td>${cfg.icon||''} ${esc(cfg.title||t.type)}${dirBadge}</td>
       <td>${esc(t.custName||'-')}<br><small style="color:#8b95c9">${esc(t.custAcc||'')}</small><br><span style="font-size:9.5px;padding:2px 6px;border-radius:5px;background:rgba(34,230,255,.15);border:1px solid rgba(34,230,255,.4);color:#22e6ff;display:inline-block;margin-top:3px">🏦 ${esc(BRANCHES[t.custBranch || t.branch]?.name||'-')}</span></td>
-      <td>${esc(extra || t.note || '-')}${notesHTML}${statusBadge}</td>
+      <td>${extra || esc(t.note || '-')}${notesHTML}${statusBadge}</td>
       <td class="amt">৳ ${fmt(t.amount)}</td>
       <td>${esc(t.user||'-')}</td>
       <td style="font-size:11px;white-space:nowrap">${esc(fmtDateTime(t.createdAt))}</td>
