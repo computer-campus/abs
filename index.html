@@ -1000,17 +1000,13 @@ function applyTxToLive(tx, dir, phase){
       }
       break;
     case 'support':
-      /* ✅ Online Support — bank balance adjustment */
-      if(tx.dir === 'online_support_out'){
+      /* ✅ Support — সব variant same behavior */
+      if(tx.dir === 'online_support_out' || tx.dir === 'online_support_out_b' || tx.dir === 'out'){
+        /* প্রদান → ব্যাংক থেকে বিয়োগ */
         db.liveAccounts[b].bank -= amount;
-      } else if(tx.dir === 'online_support_in'){
-        db.liveAccounts[b].bank += amount;
-      } else if(tx.dir === 'out'){
-        adjustNotes(db.liveVault[b], nOut, -d);
-        adjustNotes(db.liveVault[b], nIn, d);
       } else {
-        adjustNotes(db.liveVault[b], nIn, d);
-        adjustNotes(db.liveVault[b], nOut, -d);
+        /* ফেরত → ব্যাংকে যোগ */
+        db.liveAccounts[b].bank += amount;
       }
       break;
     case 'customer':
@@ -1834,10 +1830,10 @@ function dirOptions(type, cur){
     <option value="out"         ${cur==='out'?'selected':''}>📤 ফিজিক্যালি পাঠানো (−)</option>
     <option value="online_out"  ${cur==='online_out'?'selected':''}>💳 অনলাইন পাঠানো (−)</option>`;
   if(type === 'support') return `
-    <option value="out" ${cur==='out'?'selected':''}>প্রদান (+)</option>
-    <option value="in"  ${cur==='in'?'selected':''}>ফেরত (−)</option>
-    <option value="online_support_out" ${cur==='online_support_out'?'selected':''}>🌐 অনলাইন সাপোর্ট প্রদান</option>
-    <option value="online_support_in"  ${cur==='online_support_in'?'selected':''}>🌐 অনলাইন সাপোর্ট ফেরত</option>`;
+    <option value="online_support_out" ${cur==='online_support_out'||cur==='out'?'selected':''}>প্রদান (+)</option>
+    <option value="online_support_in"  ${cur==='online_support_in'||cur==='in'?'selected':''}>ফেরত (−)</option>
+    <option value="online_support_out_b" ${cur==='online_support_out_b'?'selected':''}>🌐 অনলাইন সাপোর্ট প্রদান</option>
+    <option value="online_support_in_b"  ${cur==='online_support_in_b'?'selected':''}>🌐 অনলাইন সাপোর্ট ফেরত</option>`;
   return `
     <option value="in"  ${cur==='in'?'selected':''}>গ্রহণ (+)</option>
     <option value="out" ${cur==='out'?'selected':''}>পাঠানো (−)</option>`;
@@ -2160,7 +2156,9 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   function isOnlineSupportMode(){
     if(!hasOnlineSupport) return false;
     const dirEl = wrap.querySelector('#f_dir');
-    return dirEl && (dirEl.value === 'online_support_out' || dirEl.value === 'online_support_in');
+    const v = dirEl ? dirEl.value : '';
+    return v === 'online_support_out' || v === 'online_support_in' 
+        || v === 'online_support_out_b' || v === 'online_support_in_b';
   }
 
   function updateCrossBranchNote(){
@@ -2220,7 +2218,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const hint = wrap.querySelector('#dirHint');
 
     /* ✅ Online Support Mode */
-    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
+    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in' 
+                        || dir === 'online_support_out_b' || dir === 'online_support_in_b');
     if(isOnlineSup){
       if(notesCols) notesCols.style.display = 'none';
       if(noteDetailBox) noteDetailBox.style.display = 'none';
@@ -2626,7 +2625,8 @@ searchEl.addEventListener('input', () => {
     let onlineSupportName = '';
     let onlineSupportAmount = 0;
     let onlineSupportNote = '';
-    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
+    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in' 
+                        || dir === 'online_support_out_b' || dir === 'online_support_in_b');
     if(isOnlineSup){
       onlineSupportAcc = wrap.querySelector('#support_acc')?.value.trim() || '';
       onlineSupportName = wrap.querySelector('#support_name')?.value.trim() || '';
@@ -2699,7 +2699,9 @@ searchEl.addEventListener('input', () => {
       type, date, branch: txnBranch, custBranch, bank: bankKey,
       from: type === 'branch_transfer' ? wrap.querySelector('#f_from').value : null,
       to: type === 'branch_transfer' ? wrap.querySelector('#f_to').value : null,
-      dir, amount: Math.round(txAmount*100)/100,
+            dir: (dir === 'online_support_out_b' ? 'online_support_out' : 
+            dir === 'online_support_in_b' ? 'online_support_in' : dir),
+      amount: Math.round(txAmount*100)/100,
       onlineAmount: (isOnlineMode() || isOnlineSup) ? txAmount : null,
       onlineRef: isOnlineMode() ? (wrap.querySelector('#online_ref')?.value.trim() || '') : null,
       supportAcc: isOnlineSup ? onlineSupportAcc : '',
