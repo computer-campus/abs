@@ -14,8 +14,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*, *::before, *::after,
-html, body, button, input, select, textarea,
+*, *::before, *::after, html, body, button, input, select, textarea,
 h1, h2, h3, h4, h5, h6, p, span, div, label, td, th, a {
   font-family: 'Noto Sans Bengali', 'Noto Sans', system-ui, -apple-system, sans-serif !important;
   box-sizing: border-box;
@@ -51,54 +50,37 @@ body{
 }
 @keyframes rgbmove{to{background-position:300% 0}}
 .cust-count-wrap{display:flex;align-items:baseline;gap:8px;margin:6px 0 2px;}
-.cust-count-num{
-  font-size:44px;line-height:1.1;font-weight:900;
+.cust-count-num{font-size:44px;line-height:1.1;font-weight:900;
   background:linear-gradient(90deg,#ff2e88,#ff8a2b,#ffcb2b,#8dff3f,#22e6ff,#a855f7,#ff2e88);
-  background-size:300% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  color:transparent;animation:rgbmove 4s linear infinite;
-  filter:drop-shadow(0 0 12px rgba(34,230,255,.6));
-  letter-spacing:.5px;
-}
-.cust-count-unit{
-  font-size:20px;font-weight:800;
+  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;
+  color:transparent;animation:rgbmove 4s linear infinite;filter:drop-shadow(0 0 12px rgba(34,230,255,.6));letter-spacing:.5px;}
+.cust-count-unit{font-size:20px;font-weight:800;
   background:linear-gradient(90deg,#a855f7,#22e6ff,#a855f7);
-  background-size:300% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  color:transparent;animation:rgbmove 3s linear infinite;
-}
-.cust-ico-big{
-  width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
-  font-size:24px;background:rgba(124,77,255,.15);
-  border:1px solid rgba(124,77,255,.4);
-  box-shadow:0 0 24px rgba(124,77,255,.35);
-}
+  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;
+  color:transparent;animation:rgbmove 3s linear infinite;}
+.cust-ico-big{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+  font-size:24px;background:rgba(124,77,255,.15);border:1px solid rgba(124,77,255,.4);
+  box-shadow:0 0 24px rgba(124,77,255,.35);}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.login-box{
-  width:100%;max-width:440px;
+.login-box{width:100%;max-width:440px;
   background:linear-gradient(160deg,rgba(20,24,52,.95),rgba(8,10,20,.98));
   border:1px solid var(--line);border-radius:24px;padding:34px 28px;
   box-shadow:0 30px 80px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.06);
-  position:relative;overflow:hidden;
-}
-.login-box::before{
-  content:'';position:absolute;inset:-2px;border-radius:26px;padding:2px;
+  position:relative;overflow:hidden;}
+.login-box::before{content:'';position:absolute;inset:-2px;border-radius:26px;padding:2px;
   background:linear-gradient(120deg,#ff2e88,#22e6ff,#8dff3f,#a855f7);
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;
-  opacity:.65;pointer-events:none;animation:spinHue 8s linear infinite;
-}
+  opacity:.65;pointer-events:none;animation:spinHue 8s linear infinite;}
 @keyframes spinHue{to{filter:hue-rotate(360deg)}}
 .login-logo{width:78px;height:78px;margin:0 auto 14px;display:grid;place-items:center;}
 .login-box h1{text-align:center;font-size:22px;font-weight:800}
 .login-box h2{text-align:center;font-size:13px;color:var(--muted);font-weight:500;margin:6px 0 22px}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:600}
-.field input,.field select{
-  width:100%;padding:12px 14px;border-radius:12px;
+.field input,.field select{width:100%;padding:12px 14px;border-radius:12px;
   background:#080b18;border:1px solid var(--line);color:var(--txt);
-  font-family:inherit;font-size:14.5px;outline:none;transition:.2s;
-}
+  font-family:inherit;font-size:14.5px;outline:none;transition:.2s;}
 .field input:focus,.field select:focus{border-color:#22e6ff;box-shadow:0 0 0 3px rgba(34,230,255,.15)}
 .field input:disabled{opacity:.55;cursor:not-allowed}
 .btn{border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:14.5px;
@@ -124,18 +106,15 @@ body{
 .brand h1{font-size:17px;font-weight:800}
 .brand p{font-size:11.5px;color:var(--muted)}
 .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.top-actions input[type=date],.top-actions select{
-  padding:9px 12px;border-radius:11px;background:#0a0d1c;border:1px solid var(--line);
+.top-actions input[type=date],.top-actions select{padding:9px 12px;border-radius:11px;background:#0a0d1c;border:1px solid var(--line);
   color:var(--txt);font-family:inherit;font-size:13px;outline:none;}
 .top-actions input[type=date]:focus{border-color:#22e6ff;box-shadow:0 0 0 3px rgba(34,230,255,.18)}
 .who{font-size:12.5px;padding:8px 13px;border-radius:11px;
   background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);white-space:nowrap;}
 .who b{color:#e9d5ff}
-.sync-status{
-  font-size:11.5px;padding:6px 11px;border-radius:11px;
+.sync-status{font-size:11.5px;padding:6px 11px;border-radius:11px;
   background:rgba(141,255,63,.12);border:1px solid rgba(141,255,63,.4);
-  color:#8dff3f;font-weight:700;white-space:nowrap;
-}
+  color:#8dff3f;font-weight:700;white-space:nowrap;}
 .sync-status.offline{background:rgba(255,77,109,.12);border-color:rgba(255,77,109,.4);color:#ff4d6d}
 .sync-status.syncing{background:rgba(255,203,43,.12);border-color:rgba(255,203,43,.4);color:#ffcb2b}
 main{max-width:1500px;margin:0 auto;padding:22px 18px 70px;display:flex;flex-direction:column;gap:22px;align-items:center}
@@ -188,10 +167,8 @@ main{max-width:1500px;margin:0 auto;padding:22px 18px 70px;display:flex;flex-dir
   position:relative;overflow:hidden;}
 .bal-card .t{font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:8px}
 .bal-card .v{font-size:27px;font-weight:800;line-height:1.3}
-.bal-card.main{
-  background:linear-gradient(120deg,rgba(124,58,237,.22),rgba(34,230,255,.14),rgba(255,46,136,.16));
-  border-color:rgba(34,230,255,.35);
-}
+.bal-card.main{background:linear-gradient(120deg,rgba(124,58,237,.22),rgba(34,230,255,.14),rgba(255,46,136,.16));
+  border-color:rgba(34,230,255,.35);}
 .bal-card.main .v{font-size:44px}
 .actions{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;width:100%}
 .actions .btn{padding:14px 26px;font-size:15px}
@@ -249,89 +226,61 @@ main{max-width:1500px;margin:0 auto;padding:22px 18px 70px;display:flex;flex-dir
   border:1px solid rgba(168,85,247,.3);}
 .total-preview .l{font-size:12.5px;color:var(--muted);font-weight:700}
 .total-preview .v{font-size:32px;margin-top:4px}
-.note-detail-box{
-  margin-top:12px;padding:12px 14px;border-radius:14px;
+.note-detail-box{margin-top:12px;padding:12px 14px;border-radius:14px;
   background:rgba(255,255,255,.03);border:1px solid var(--line);
-  font-size:12.5px;color:var(--muted);line-height:1.9;
-}
+  font-size:12.5px;color:var(--muted);line-height:1.9;}
 .note-detail-box .ttl{font-size:12px;color:#9fe9ff;font-weight:700;margin-bottom:4px}
-.note-detail-box .tag{
-  display:inline-block;padding:2px 8px;margin:2px 4px 2px 0;border-radius:8px;
-  background:rgba(34,230,255,.12);border:1px solid rgba(34,230,255,.3);color:#9fe9ff;font-size:11.5px;
-}
+.note-detail-box .tag{display:inline-block;padding:2px 8px;margin:2px 4px 2px 0;border-radius:8px;
+  background:rgba(34,230,255,.12);border:1px solid rgba(34,230,255,.3);color:#9fe9ff;font-size:11.5px;}
 .note-detail-box .tag.out{background:rgba(255,46,136,.12);border-color:rgba(255,46,136,.35);color:#ffb3d1}
 .note-detail-box .tag.in{background:rgba(141,255,63,.12);border-color:rgba(141,255,63,.35);color:#d3ffa8}
-.pending-box{
-  margin-top:14px;padding:14px;border-radius:16px;
+.pending-box{margin-top:14px;padding:14px;border-radius:16px;
   background:linear-gradient(135deg,rgba(251,191,36,.10),rgba(234,88,12,.08));
-  border:1px solid rgba(251,191,36,.35);
-}
+  border:1px solid rgba(251,191,36,.35);}
 .pending-box h4{font-size:13.5px;color:#fbbf24;font-weight:800;margin-bottom:10px;
   display:flex;align-items:center;gap:8px;}
-.pending-item{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
+.pending-item{display:flex;justify-content:space-between;align-items:center;gap:10px;
   padding:10px 12px;border-radius:12px;margin-bottom:8px;
-  background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08);flex-wrap:wrap;
-}
+  background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08);flex-wrap:wrap;}
 .pending-item .info{font-size:12.5px;color:#e9edff;flex:1;min-width:180px}
 .pending-item .info b{color:#fbbf24}
 .pending-item .info small{color:var(--muted);display:block;margin-top:3px}
 .pending-empty{padding:14px;text-align:center;color:var(--muted);font-size:12.5px}
-.accept-head{
-  padding:14px;border-radius:14px;margin-bottom:14px;
+.accept-head{padding:14px;border-radius:14px;margin-bottom:14px;
   background:rgba(34,230,255,.06);border:1px solid rgba(34,230,255,.28);
-  font-size:13px;line-height:1.9;
-}
+  font-size:13px;line-height:1.9;}
 .accept-head b{color:#22e6ff}
-.online-box{
-  margin-top:14px;padding:16px;border-radius:16px;
+.online-box{margin-top:14px;padding:16px;border-radius:16px;
   background:linear-gradient(135deg,rgba(34,230,255,.08),rgba(168,85,247,.06));
   border:1.5px solid rgba(34,230,255,.4);
-  display:none;
-}
+  display:none;}
 .online-box.active{display:block;animation:fadeIn .25s ease;}
-.online-box h4{
-  font-size:13.5px;color:#22e6ff;font-weight:800;margin-bottom:12px;
-  display:flex;align-items:center;gap:8px;
-}
-.online-box .desc{
-  font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7;
-  padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.2);
-}
+.online-box h4{font-size:13.5px;color:#22e6ff;font-weight:800;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;}
+.online-box .desc{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7;
+  padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.2);}
 .online-box .desc b{color:#ffcb2b}
 .online-box .desc.pos{background:rgba(141,255,63,.08);border:1px solid rgba(141,255,63,.3)}
 .online-box .desc.pos b{color:#8dff3f}
 .online-box .desc.neg{background:rgba(255,46,136,.08);border:1px solid rgba(255,46,136,.3)}
 .online-box .desc.neg b{color:#ff2e88}
-.cust-branch-toggle{
-  padding:14px 16px;border-radius:16px;margin-top:6px;margin-bottom:14px;
+.cust-branch-toggle{padding:14px 16px;border-radius:16px;margin-top:6px;margin-bottom:14px;
   background:linear-gradient(135deg,rgba(34,230,255,.06),rgba(141,255,63,.04));
-  border:1px solid rgba(34,230,255,.25);
-}
-.cust-branch-toggle .toggle-title{
-  font-size:13.5px;font-weight:800;color:#dfe4ff;margin-bottom:10px;
-}
-.branch-toggle-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-}
+  border:1px solid rgba(34,230,255,.25);}
+.cust-branch-toggle .toggle-title{font-size:13.5px;font-weight:800;color:#dfe4ff;margin-bottom:10px;}
+.branch-toggle-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 @media(max-width:600px){.branch-toggle-row{grid-template-columns:1fr}}
-.branch-toggle-btn{
-  padding:12px 18px;border-radius:12px;cursor:pointer;
+.branch-toggle-btn{padding:12px 18px;border-radius:12px;cursor:pointer;
   font-family:inherit;font-size:13.5px;font-weight:700;
   border:1.5px solid var(--line);background:rgba(255,255,255,.03);
-  color:var(--muted);transition:.2s;
-}
+  color:var(--muted);transition:.2s;}
 .branch-toggle-btn:hover{background:rgba(34,230,255,.08);border-color:rgba(34,230,255,.4);color:var(--txt)}
-.branch-toggle-btn.active{
-  background:linear-gradient(135deg,#16a34a,#0ea5e9);color:#fff;
-  border-color:transparent;box-shadow:0 8px 22px rgba(34,230,255,.28);
-}
-.cross-branch-note{
-  margin-top:10px;padding:10px 12px;border-radius:12px;
+.branch-toggle-btn.active{background:linear-gradient(135deg,#16a34a,#0ea5e9);color:#fff;
+  border-color:transparent;box-shadow:0 8px 22px rgba(34,230,255,.28);}
+.cross-branch-note{margin-top:10px;padding:10px 12px;border-radius:12px;
   background:linear-gradient(135deg,rgba(141,255,63,.08),rgba(255,203,43,.08));
   border:1px solid rgba(141,255,63,.35);
-  font-size:12px;line-height:1.8;color:#d3ffa8;
-}
+  font-size:12px;line-height:1.8;color:#d3ffa8;}
 .cross-branch-note b{color:#ffcb2b}
 .report-area{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}
 .report-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
@@ -362,38 +311,28 @@ table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
 .mini.edit{background:linear-gradient(135deg,#7c3aed,#22e6ff);font-weight:700}
 .mini.show{background:linear-gradient(135deg,#16a34a,#8dff3f);color:#04120a;font-weight:700}
 .empty{padding:26px;text-align:center;color:var(--muted);font-size:13.5px}
-.bank-hint{
-  font-size:11.5px;color:#9fe9ff;background:rgba(34,230,255,.06);
+.bank-hint{font-size:11.5px;color:#9fe9ff;background:rgba(34,230,255,.06);
   padding:8px 12px;border-radius:10px;margin-bottom:10px;
-  border:1px dashed rgba(34,230,255,.28);
-}
+  border:1px dashed rgba(34,230,255,.28);}
 .bank-hint b{color:#22e6ff}
 .cust-row{cursor:pointer}
 .cust-row:hover td{background:rgba(124,77,255,.10) !important}
-.date-mode-banner{
-  width:100%;padding:12px 18px;border-radius:14px;
+.date-mode-banner{width:100%;padding:12px 18px;border-radius:14px;
   background:linear-gradient(90deg,rgba(251,191,36,.12),rgba(255,138,43,.08));
   border:1px solid rgba(251,191,36,.4);color:#fbbf24;
-  font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-}
+  font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .date-mode-banner b{color:#fff}
-.date-mode-banner .close-mode{
-  margin-left:auto;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.45);
+.date-mode-banner .close-mode{margin-left:auto;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.45);
   color:#fbbf24;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;
-  cursor:pointer;font-family:inherit;
-}
-.auto-badge{
-  display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
+  cursor:pointer;font-family:inherit;}
+.auto-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
   background:rgba(141,255,63,.12);border:1px solid rgba(141,255,63,.4);
-  color:#8dff3f;font-size:11px;font-weight:700;
-}
-.spinner{
-  display:inline-block;width:16px;height:16px;
+  color:#8dff3f;font-size:11px;font-weight:700;}
+.spinner{display:inline-block;width:16px;height:16px;
   border:2px solid rgba(255,255,255,.3);
   border-top-color:#fff;border-radius:50%;
   animation:spin 0.6s linear infinite;
-  vertical-align:middle;margin-right:6px;
-}
+  vertical-align:middle;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .pw-cell{display:flex;align-items:center;gap:6px;}
 .pw-value{font-family:monospace;font-weight:700;color:#8dff3f;background:rgba(0,0,0,.3);padding:3px 8px;border-radius:6px;letter-spacing:1px;}
@@ -480,7 +419,8 @@ window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
 
 <script>
 /* ============================================================
-   Computer Campus — Agent Banking System (v3 Final)
+   Computer Campus — Agent Banking System (v4 Final)
+   + Online Support Feature
    ============================================================ */
 
 const BRANCHES = {
@@ -488,7 +428,6 @@ const BRANCHES = {
   jhaudanga: { name:'ঝাউডাঙ্গা শাখা',  en:'Jhaudanga Branch', color:'#22e6ff' }
 };
 
-  
 const BANKS = {
   al_arafah_kalaroa:    { name:'আল আরাফাহ ব্যাংক (কলারোয়া)',  en:'Al-Arafah Bank (Kalaroa)' },
   al_arafah_jhaudanga:  { name:'আল আরাফাহ ব্যাংক (ঝাউডাঙ্গা)', en:'Al-Arafah Bank (Jhaudanga)' },
@@ -512,7 +451,7 @@ const TX_CFG = {
   branch_transfer: { title:'শাখা-থেকে-শাখা লেনদেন', en:'Branch Transfer',  icon:'🔁', accent:'#a855f7', primary:'out', cust:false },
   expense:         { title:'ক্যাশ থেকে খরচ',         en:'Expense',          icon:'🧾', accent:'#ff8a2b', primary:'out', cust:false },
   other_bank:      { title:'অন্য ব্যাঙ্কে লেনদেন',   en:'Other Bank',       icon:'🏛️', accent:'#00d0ff', primary:'in',  cust:false, dir:true, banks:true, online:true },
-  support:         { title:'সাপোর্ট বাবদ প্রদান',    en:'Support Payment',  icon:'🤝', accent:'#ff4d6d', primary:'out', cust:false, dir:true },
+  support:         { title:'সাপোর্ট বাবদ প্রদান',    en:'Support Payment',  icon:'🤝', accent:'#ff4d6d', primary:'out', cust:false, dir:true, onlineSupport:true },
   money_exchange:  { title:'মানি এক্সচেঞ্জ',         en:'Money Exchange',   icon:'💱', accent:'#ffcb2b', primary:'out', cust:false },
   customer:        { title:'গ্রাহক তালিকা',          en:'Customer List',    icon:'👥', accent:'#7c4dff', primary:'in',  cust:false }
 };
@@ -719,14 +658,16 @@ async function saveDB(){
   });
 
   window.db = db;
-
   if(supabaseReady) await saveToSupabase(db);
 }
 
 function performDailyRollover(force){
+  return false; /* ✅ Daily rollover সম্পূর্ণ বন্ধ - full history রাখতে */
+  const today = todayStr();
+  // ... বাকি সব code অপরিবর্তিত (কখনো run হবে না)
   const today = todayStr();
   const last = db.lastBaseDate || '';
-  if(!force && last === today) return false;
+  if(!force && last === today) return false; /* ✅ Rollover সম্পূর্ণ বন্ধ */
 
   Object.keys(BRANCHES).forEach(br=>{
     const la = db.liveAccounts[br] || {bank:0,cash:0,other:0};
@@ -740,7 +681,8 @@ function performDailyRollover(force){
     DENOMS.forEach(d => { db.baseVault[br][d] = Number(lv[d]) || 0; });
   });
 
-  db.txs = [];
+/* ✅ db.txs মুছে ফেলা বন্ধ — সম্পূর্ণ history রাখতে */
+
   db.lastBaseDate = today;
 
   if(!db.dailyClose) db.dailyClose = {};
@@ -913,6 +855,7 @@ function recomputeLive(){
       other: Number(db.baseAccounts[b].other) || 0
     };
   });
+  /* ✅ base এর পর থেকে সব transaction apply হবে */
   (db.txs || []).forEach(tx => {
     if(tx.type === 'branch_transfer'){
       applyTxToLive(tx, +1, 'send');
@@ -924,6 +867,7 @@ function recomputeLive(){
   syncLiveCashFromVault();
   window.db = db;
 }
+
 function syncLiveCashFromVault(){
   Object.keys(BRANCHES).forEach(br=>{
     let total = 0;
@@ -1002,6 +946,7 @@ function noteTextPlain(notes){
   return keys.map(k => 'BDT'+k+'x'+notes[k]).join(', ');
 }
 
+/* ============ applyTxToLive with Online Support ============ */
 function applyTxToLive(tx, dir, phase){
   const d = dir;
   const b = tx.branch;
@@ -1058,7 +1003,12 @@ function applyTxToLive(tx, dir, phase){
       }
       break;
     case 'support':
-      if(tx.dir === 'out'){
+      /* ✅ Online Support — bank balance adjustment */
+      if(tx.dir === 'online_support_out'){
+        db.liveAccounts[b].bank -= amount;
+      } else if(tx.dir === 'online_support_in'){
+        db.liveAccounts[b].bank += amount;
+      } else if(tx.dir === 'out'){
         adjustNotes(db.liveVault[b], nOut, -d);
         adjustNotes(db.liveVault[b], nIn, d);
       } else {
@@ -1182,12 +1132,13 @@ function getVaultForDate(dateStr, bf){
   return { totals, isHistorical: true };
 }
 
+/* ✅ computeStats — includes online support */
 function computeStats(bf, date){
   const r = {
     loan_given:{amt:0,cnt:0}, loan_received:{amt:0,cnt:0},
     deposit:{amt:0,cnt:0}, withdrawal:{amt:0,cnt:0},
     transfer:{in:0,out:0,cnt:0,pending:0,pendingCnt:0}, expense:{amt:0,cnt:0},
-    other:{in:0,out:0,cnt:0, onlineIn:0, onlineOut:0}, support:{in:0,out:0,cnt:0},
+    other:{in:0,out:0,cnt:0, onlineIn:0, onlineOut:0}, support:{in:0,out:0,cnt:0, onlineIn:0, onlineOut:0},
     customer:{in:0,out:0,cnt:0}
   };
   DB().txs.forEach(t=>{
@@ -1222,8 +1173,12 @@ function computeStats(bf, date){
         else if(t.dir === 'online_out'){ r.other.onlineOut += t.amount; r.other.cnt++; }
         break;
       case 'support':
-        if(t.dir === 'out') r.support.out += t.amount; else r.support.in += t.amount;
-        r.support.cnt++; break;
+        /* ✅ Online support handling */
+        if(t.dir === 'online_support_out'){ r.support.out += t.amount; r.support.onlineOut += t.amount; r.support.cnt++; }
+        else if(t.dir === 'online_support_in'){ r.support.in += t.amount; r.support.onlineIn += t.amount; r.support.cnt++; }
+        else if(t.dir === 'out'){ r.support.out += t.amount; r.support.cnt++; }
+        else { r.support.in += t.amount; r.support.cnt++; }
+        break;
       case 'customer':
         if(t.dir === 'in') r.customer.in += t.amount; else r.customer.out += t.amount;
         r.customer.cnt++; break;
@@ -1327,7 +1282,6 @@ function renderDateBanner(){
   });
 }
 
-/* ✅ renderDashboard এ saveDB() নেই — loop বন্ধ */
 function renderDashboard(){
   if(!session) return;
   performDailyRollover(false);
@@ -1410,6 +1364,7 @@ function renderStats(bf, st){
       <div class="card-top"><span class="ico">🤝</span><h3>সাপোর্ট বাবদ প্রদান</h3></div>
       <div class="big-amt sm"><span class="lbl">প্রদান:</span><span class="rgb">+৳ ${fmt(st.support.out)}</span></div>
       <div class="big-amt sm"><span class="lbl">ফেরত:</span><span class="rgb">−৳ ${fmt(st.support.in)}</span></div>
+      ${(st.support.onlineOut || st.support.onlineIn) ? `<div class="card-sub warn">🌐 অনলাইন: −৳ ${fmt(st.support.onlineOut)} / +৳ ${fmt(st.support.onlineIn)}</div>` : ''}
       <div class="card-sub pinkc">মোট: <b>৳ ${fmt(st.support.out - st.support.in)}</b></div>
       <div class="card-tap">বিস্তারিত ▸</div>
     </div>`);
@@ -1421,7 +1376,6 @@ function renderStats(bf, st){
       <div class="card-tap">খুলুন ▸</div>
     </div>`);
 
-  /* ✅ সব শাখার গ্রাহক সংখ্যা — ফিল্টার ছাড়া */
   const custCount = DB().customers.length;
   cards.push(`
     <div class="card" data-tx="customer" style="--accent:#7c4dff">
@@ -1540,7 +1494,6 @@ function openModal({ title, bodyHTML, wide=false, onMount }){
   return { wrap, close };
 }
 
-/* ⚙️ শাখা সেটআপ */
 function openBranchSetup(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন এই কাজ করতে পারবে'); return; }
   const defaultBranch = (viewBranch === 'all' || !BRANCHES[viewBranch]) ? 'kalaroa' : viewBranch;
@@ -1549,8 +1502,7 @@ function openBranchSetup(){
     <div class="accept-head" style="margin-bottom:16px">
       <div style="font-size:13.5px;line-height:1.9">
         ⚙️ <b>শাখা সেটআপ</b><br>
-        যেকোনো শাখার বর্তমান ব্যালেন্স ও ভল্ট নোট সেট করুন।<br>
-        <span style="color:#ffcb2b">⚠️ এক শাখার পরিবর্তন অন্য শাখাকে প্রভাবিত করবে না।</span>
+        যেকোনো শাখার বর্তমান ব্যালেন্স ও ভল্ট নোট সেট করুন।
       </div>
     </div>
     <div class="form-row">
@@ -1669,7 +1621,6 @@ function openBranchSetup(){
   });
 }
 
-/* প্রথমবার সেটআপ উইজার্ড */
 function isSystemEmpty(){
   if(db.__firstSetupDone === true) return false;
   const anyMoney = Object.keys(BRANCHES).some(br => {
@@ -1691,8 +1642,7 @@ function openSetupWizard(){
     <div class="accept-head" style="margin-bottom:16px">
       <div style="font-size:13.5px;line-height:1.9">
         🎬 <b>প্রথমবার সেটআপ (শুধু অ্যাডমিন)</b><br>
-        আপনার বর্তমান ব্যালেন্স ও ভল্টের নোট যোগ করুন।<br>
-        <span style="color:#ffcb2b">⚠️ এই ডেটা সরাসরি Supabase-এ সেভ হবে।</span>
+        আপনার বর্তমান ব্যালেন্স ও ভল্টের নোট যোগ করুন।
       </div>
     </div>
     <div class="form-row">
@@ -1869,7 +1819,7 @@ function openBackupModal(){
   });
 }
 
-/* লেনদেন মডাল */
+/* লেনদেন মডাল helpers */
 function branchOpts(sel){
   return Object.entries(BRANCHES).map(([k,v]) =>
     `<option value="${k}" ${k===sel?'selected':''}>${v.name}</option>`).join('');
@@ -1878,6 +1828,8 @@ function bankOpts(sel){
   return Object.entries(BANKS).map(([k,v]) =>
     `<option value="${k}" ${k===sel?'selected':''}>${v.name}</option>`).join('');
 }
+
+/* ✅ dirOptions — Support এ ২টা নতুন option */
 function dirOptions(type, cur){
   if(type === 'other_bank') return `
     <option value="in"          ${cur==='in'?'selected':''}>📥 ফিজিক্যালি আসা (+)</option>
@@ -1886,7 +1838,9 @@ function dirOptions(type, cur){
     <option value="online_out"  ${cur==='online_out'?'selected':''}>💳 অনলাইন পাঠানো (−)</option>`;
   if(type === 'support') return `
     <option value="out" ${cur==='out'?'selected':''}>প্রদান (+)</option>
-    <option value="in"  ${cur==='in'?'selected':''}>ফেরত (−)</option>`;
+    <option value="in"  ${cur==='in'?'selected':''}>ফেরত (−)</option>
+    <option value="online_support_out" ${cur==='online_support_out'?'selected':''}>🌐 অনলাইন সাপোর্ট প্রদান</option>
+    <option value="online_support_in"  ${cur==='online_support_in'?'selected':''}>🌐 অনলাইন সাপোর্ট ফেরত</option>`;
   return `
     <option value="in"  ${cur==='in'?'selected':''}>গ্রহণ (+)</option>
     <option value="out" ${cur==='out'?'selected':''}>পাঠানো (−)</option>`;
@@ -1922,7 +1876,11 @@ function openTxModal(type, editId){
   const showDir  = !!cfg.dir;
   const showBank = !!cfg.banks;
   const showOnline = !!cfg.online;
+  const showOnlineSupport = !!cfg.onlineSupport;
   const isTransfer = type === 'branch_transfer';
+
+  /* initial dir for support */
+  const initialDir = editing ? editing.dir : (cfg.primary);
 
   const body = `
     <div class="form-row">
@@ -1948,7 +1906,7 @@ function openTxModal(type, editId){
         </div>`}
       ${showDir ? `
         <div class="field"><label>লেনদেনের ধরন</label>
-          <select id="f_dir">${dirOptions(type, editing ? editing.dir : (cfg.primary))}</select>
+          <select id="f_dir">${dirOptions(type, initialDir)}</select>
         </div>` : ''}
     </div>
     ${showBranchToggle ? `
@@ -1985,9 +1943,9 @@ function openTxModal(type, editId){
           <input type="text" id="f_addr" value="${editing ? esc(editing.custAddr||'') : ''}"></div>
       </div>
       <button class="btn gray" type="button" id="f_editCust" style="padding:9px 16px;font-size:13px">✏️ সেভ</button>
-    </div>` : `
+    </div>` : (showOnlineSupport ? '' : `
     <div class="field"><label>বিবরণ</label>
-      <input type="text" id="f_name" value="${editing ? esc(editing.custName||'') : ''}" placeholder="সংক্ষিপ্ত বিবরণ"></div>`}
+      <input type="text" id="f_name" value="${editing ? esc(editing.note||'') : ''}" placeholder="সংক্ষিপ্ত বিবরণ"></div>`)}
     ${showDir ? `
       <div class="bank-hint" id="dirHint" style="margin-top:14px">
         💡 ধরন পরিবর্তন করলে সঠিক কলাম সক্রিয় হবে।
@@ -2009,6 +1967,39 @@ function openTxModal(type, editId){
         </div>
       </div>
     ` : ''}
+
+
+${showOnlineSupport ? `
+      <div class="online-box" id="onlineSupportBox">
+        <h4>🌐 অনলাইন সাপোর্ট তথ্য</h4>
+        <div class="field" style="margin-bottom:8px">
+          <label>🔍 গ্রাহক সার্চ করুন (নাম / অ্যাকাউন্ট / মোবাইল) <span style="color:#ff4d6d">*</span></label>
+          <input type="text" id="support_search" placeholder="খুঁজুন..." autocomplete="off" 
+                 value="${editing ? esc(editing.supportAcc || editing.supportName || '') : ''}">
+          <div class="suggest" id="support_suggest"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>গ্রাহকের অ্যাকাউন্ট নম্বর <span style="color:#ff4d6d">*</span></label>
+            <input type="text" id="support_acc" placeholder="যেমন: 8888205103098001"
+                   value="${editing && editing.supportAcc ? esc(editing.supportAcc) : ''}"></div>
+          <div class="field"><label>গ্রাহকের নাম <span style="color:#ff4d6d">*</span></label>
+            <input type="text" id="support_name" placeholder="নাম লিখুন"
+                   value="${editing && editing.supportName ? esc(editing.supportName) : ''}"></div>
+          <div class="field"><label>পরিমাণ (৳) <span style="color:#ff4d6d">*</span></label>
+            <input type="text" inputmode="decimal" id="support_amount" placeholder="0.00"
+                   value="${editing && editing.onlineAmount ? editing.onlineAmount : (editing && editing.amount ? editing.amount : '')}"></div>
+        </div>
+        <div class="field" style="margin-top:6px">
+          <label>📝 বিবরণ / মন্তব্য</label>
+          <input type="text" id="support_note" placeholder="সংক্ষিপ্ত বিবরণ..." value="${editing && editing.note && editing.note !== 'মানি এক্সচেঞ্জ' && editing.note !== 'Support' ? esc(editing.note) : ''}">
+        </div>
+        <div class="total-preview">
+          <div class="l">পরিমাণ</div>
+          <div class="v rgb" id="supportAmountPreview">৳ 0.00</div>
+        </div>
+      </div>
+    ` : ''}
+
     <div class="notes-cols" id="notesCols" style="margin-top:6px">
       <div class="notes-col out" id="outCol">
         <h4>💸 প্রদান</h4>
@@ -2049,7 +2040,7 @@ function openTxModal(type, editId){
           <button class="btn xlsx" id="r_xlsx" style="padding:8px 14px;font-size:12.5px">📊 XLSX</button>
         </div>
       </div>
-      <div id="r_body"></div>
+	      <div id="r_body"></div>
     </div>`;
 
   openModal({
@@ -2068,7 +2059,14 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   const isTransfer = type === 'branch_transfer';
   const hasDir = !!cfg.dir;
   const hasOnline = !!cfg.online;
+  const hasOnlineSupport = !!cfg.onlineSupport;
   const hasBranchToggle = !!cfg.cust;
+
+  function isOnlineSupportMode(){
+    if(!hasOnlineSupport) return false;
+    const dirEl = wrap.querySelector('#f_dir');
+    return dirEl && (dirEl.value === 'online_support_out' || dirEl.value === 'online_support_in');
+  }
 
   function updateCrossBranchNote(){
     const noteEl = wrap.querySelector('#crossBranchNote');
@@ -2122,8 +2120,23 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const inCol = wrap.querySelector('#inCol');
     const notesCols = wrap.querySelector('#notesCols');
     const onlineBox = wrap.querySelector('#onlineBox');
+    const onlineSupportBox = wrap.querySelector('#onlineSupportBox');
     const noteDetailBox = wrap.querySelector('#noteDetailBox');
     const hint = wrap.querySelector('#dirHint');
+
+    /* ✅ Online Support Mode */
+    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
+    if(isOnlineSup){
+      if(notesCols) notesCols.style.display = 'none';
+      if(noteDetailBox) noteDetailBox.style.display = 'none';
+      if(onlineBox) onlineBox.classList.remove('active');
+      if(onlineSupportBox) onlineSupportBox.classList.add('active');
+      if(hint) hint.style.display = 'none';
+      return;
+    } else {
+      if(onlineSupportBox) onlineSupportBox.classList.remove('active');
+    }
+
     const clearNotes = (prefix) => {
       wrap.querySelectorAll('[id^="'+prefix+'_"]').forEach(inp => inp.value = '');
     };
@@ -2178,6 +2191,135 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     if(pv) pv.textContent = '৳ ' + fmt(v);
   }
 
+/* ✅ Online Support — Customer Search Suggestion */
+  const supportSearchEl = wrap.querySelector('#support_search');
+  const supportSugEl = wrap.querySelector('#support_suggest');
+  if(supportSearchEl && supportSugEl){
+    supportSearchEl.addEventListener('input', () => {
+      const q = supportSearchEl.value.trim();
+      if(!q){ supportSugEl.innerHTML = ''; return; }
+      const list = searchCustomers(q);
+      if(!list.length){ 
+        supportSugEl.innerHTML = '<div class="sug-item" style="cursor:default;color:#8b95c9">📭 কোনো গ্রাহক পাওয়া যায়নি</div>'; 
+        return; 
+      }
+      supportSugEl.innerHTML = list.map(c => `
+        <div class="sug-item" data-id="${c.id}">
+          <b>${esc(c.name)}</b> — <small>${esc(c.accountNo)}</small><br>
+          <small>📱 ${esc(c.mobile||'-')} • 📍 ${esc(c.address||'-')} • 🏦 ${esc(BRANCHES[c.branch]?.name||'')}</small>
+        </div>`).join('');
+supportSugEl.querySelectorAll('.sug-item[data-id]').forEach(el => {
+        el.addEventListener('click', () => {
+          const c = DB().customers.find(x => x.id === el.dataset.id);
+          if(!c) return;
+          const accInput = wrap.querySelector('#support_acc');
+          const nameInput = wrap.querySelector('#support_name');
+          if(accInput) accInput.value = c.accountNo || '';
+          if(nameInput) nameInput.value = c.name || '';
+          supportSearchEl.value = (c.name || '') + ' — ' + (c.accountNo || '');
+          supportSugEl.innerHTML = '';
+
+          /* ✅ Previous support check */
+          const prevSupports = DB().txs.filter(t =>
+            t.type === 'support' &&
+            t.dir === 'online_support_out' &&
+            (t.supportAcc === c.accountNo || t.custAcc === c.accountNo)
+          );
+          const prevReturns = DB().txs.filter(t =>
+            t.type === 'support' &&
+            t.dir === 'online_support_in' &&
+            (t.supportAcc === c.accountNo || t.custAcc === c.accountNo)
+          );
+          const totalGiven = prevSupports.reduce((s,t) => s + Number(t.amount||0), 0);
+          const totalReturned = prevReturns.reduce((s,t) => s + Number(t.amount||0), 0);
+          const pendingDue = totalGiven - totalReturned;
+
+          const supportBox = wrap.querySelector('#onlineSupportBox');
+          let historyEl = wrap.querySelector('#supportHistoryBox');
+          if(historyEl) historyEl.remove();
+
+          if(prevSupports.length > 0){
+            /* Popup alert */
+            setTimeout(() => {
+              alert('⚠️ এই গ্রাহককে পূর্বে সাপোর্ট প্রদান করা হয়েছিল!\n\n' +
+                    'গ্রাহক: ' + c.name + '\n' +
+                    'অ্যাকাউন্ট: ' + c.accountNo + '\n\n' +
+                    'মোট প্রদান: ৳ ' + fmt(totalGiven) + '\n' +
+                    'মোট ফেরত: ৳ ' + fmt(totalReturned) + '\n' +
+                    'বাকি: ৳ ' + fmt(pendingDue) + '\n\n' +
+                    'নিচে সম্পূর্ণ সাপোর্ট হিস্টরি দেখানো হয়েছে।');
+            }, 100);
+
+            /* Build history table */
+            const allSupportTxs = [...prevSupports, ...prevReturns];
+            allSupportTxs.sort((a,b) => {
+              const da = (a.date || '') + (a.createdAt || '');
+              const db2 = (b.date || '') + (b.createdAt || '');
+              return da.localeCompare(db2);
+            });
+            const historyRows = allSupportTxs.map(t => {
+              const isReturn = t.dir === 'online_support_in';
+              const color = isReturn ? '#8dff3f' : '#ff4d6d';
+              const lbl = isReturn ? '📥 ফেরত' : '📤 প্রদান';
+              return `<tr>
+                <td style="padding:6px 10px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.06)">${toBn(t.date)}</td>
+                <td style="padding:6px 10px;font-size:12px;color:${color};font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">${lbl}</td>
+                <td style="padding:6px 10px;font-size:12px;color:${color};font-weight:800;border-bottom:1px solid rgba(255,255,255,.06)">৳ ${fmt(t.amount)}</td>
+                <td style="padding:6px 10px;font-size:11px;color:#8b95c9;border-bottom:1px solid rgba(255,255,255,.06)">${esc(t.note||'-')}</td>
+                <td style="padding:6px 10px;font-size:11px;color:#8b95c9;border-bottom:1px solid rgba(255,255,255,.06)">${esc(t.user||'-')}</td>
+              </tr>`;
+            }).join('');
+
+            historyEl = document.createElement('div');
+            historyEl.id = 'supportHistoryBox';
+            historyEl.style.cssText = 'margin-top:14px;padding:14px;border-radius:16px;background:rgba(255,203,43,.06);border:1px solid rgba(255,203,43,.35);';
+            historyEl.innerHTML = `
+              <div style="font-size:13px;font-weight:800;color:#ffcb2b;margin-bottom:10px">
+                📋 সাপোর্ট হিস্টরি — ${esc(c.name)} (${esc(c.accountNo)})
+              </div>
+              <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;font-size:12.5px">
+                <div>মোট প্রদান: <b style="color:#ff4d6d">৳ ${fmt(totalGiven)}</b></div>
+                <div>মোট ফেরত: <b style="color:#8dff3f">৳ ${fmt(totalReturned)}</b></div>
+                <div>বাকি: <b style="color:#ffcb2b">৳ ${fmt(pendingDue)}</b></div>
+              </div>
+              <div style="overflow-x:auto;border-radius:10px;border:1px solid rgba(255,255,255,.1)">
+                <table style="width:100%;border-collapse:collapse;min-width:420px">
+                  <thead style="background:rgba(255,203,43,.12)">
+                    <tr>
+                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">তারিখ</th>
+                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">ধরন</th>
+                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">টাকা</th>
+                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">বিবরণ</th>
+                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">ইউজার</th>
+                    </tr>
+                  </thead>
+                  <tbody>${historyRows}</tbody>
+                </table>
+              </div>`;
+            if(supportBox) supportBox.appendChild(historyEl);
+          } else {
+            /* No previous support — remove history box (already done above) */
+          }
+        });
+      });
+    });
+  }
+
+  /* ✅ Online Support Amount Input */
+  const supportAmtInput = wrap.querySelector('#support_amount');
+  if(supportAmtInput){
+    supportAmtInput.addEventListener('input', () => {
+      supportAmtInput.value = supportAmtInput.value.replace(/[^0-9.]/g,'');
+      const v = parseFloat(supportAmtInput.value) || 0;
+      const pv = wrap.querySelector('#supportAmountPreview');
+      if(pv) pv.textContent = '৳ ' + fmt(v);
+      recalc();
+    });
+    const v = parseFloat(supportAmtInput.value) || 0;
+    const pv = wrap.querySelector('#supportAmountPreview');
+    if(pv) pv.textContent = '৳ ' + fmt(v);
+  }
+
   function recalc(){
     if(isTransfer && autoCopyEnabled){
       const outNotes = readNotes(wrap, 'out');
@@ -2195,7 +2337,10 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const out = noteSum(outNotes), inSum = noteSum(inNotes);
     sumOutEl.textContent = '৳ ' + fmt(out);
     sumInEl.textContent = '৳ ' + fmt(inSum);
-    if(isOnlineMode()){
+    if(isOnlineSupportMode()){
+      const v = parseFloat(wrap.querySelector('#support_amount')?.value) || 0;
+      netEl.textContent = '৳ ' + fmt(v);
+    } else if(isOnlineMode()){
       const v = parseFloat(wrap.querySelector('#online_amount')?.value) || 0;
       netEl.textContent = '৳ ' + fmt(v);
     } else if(isTransfer){
@@ -2253,7 +2398,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   const sugEl = wrap.querySelector('#f_suggest');
   if(searchEl){
     searchEl.addEventListener('input', () => {
-      /* ✅ সব শাখার গ্রাহক suggestion এ আসবে */
       let list = searchCustomers(searchEl.value);
       if(!list.length){ sugEl.innerHTML = ''; return; }
       sugEl.innerHTML = list.map(c => `
@@ -2271,8 +2415,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
           wrap.querySelector('#f_addr').value = c.address || '';
           searchEl.value = c.accountNo || c.name;
           sugEl.innerHTML = '';
-
-          /* ✅ গ্রাহকের শাখা auto select */
           if(c.branch && hasBranchToggle){
             const btns = wrap.querySelectorAll('.branch-toggle-btn');
             btns.forEach(b => {
@@ -2380,9 +2522,28 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const amount = Math.abs(outSum - inSum);
     let dir = wrap.querySelector('#f_dir') ? wrap.querySelector('#f_dir').value : null;
     let onlineAmount = 0;
+
+    /* ✅ Online support validation */
+    let onlineSupportAcc = '';
+    let onlineSupportName = '';
+    let onlineSupportAmount = 0;
+    let onlineSupportNote = '';
+    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
+    if(isOnlineSup){
+      onlineSupportAcc = wrap.querySelector('#support_acc')?.value.trim() || '';
+      onlineSupportName = wrap.querySelector('#support_name')?.value.trim() || '';
+      onlineSupportAmount = parseFloat(wrap.querySelector('#support_amount')?.value) || 0;
+      onlineSupportNote = wrap.querySelector('#support_note')?.value.trim() || '';
+      if(!onlineSupportAcc){ alert('🌐 গ্রাহকের অ্যাকাউন্ট নম্বর দিন'); return; }
+      if(!onlineSupportName){ alert('🌐 গ্রাহকের নাম দিন'); return; }
+      if(onlineSupportAmount <= 0){ alert('🌐 পরিমাণ দিন'); return; }
+    }
+
     if(isOnlineMode()){
       onlineAmount = parseFloat(wrap.querySelector('#online_amount').value) || 0;
       if(onlineAmount <= 0){ alert('পরিমাণ দিন'); return; }
+    } else if(isOnlineSup){
+      /* handled above */
     } else if(type === 'branch_transfer'){
       if(outSum <= 0 && inSum <= 0){ alert('অন্তত একটি নোট'); return; }
     } else if(type === 'other_bank'){
@@ -2420,11 +2581,20 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     } else custBranch = txnBranch;
     const bankKey = wrap.querySelector('#f_bank') ? wrap.querySelector('#f_bank').value : null;
     let txAmount;
-    if(isOnlineMode()) txAmount = onlineAmount;
+    if(isOnlineSup) txAmount = onlineSupportAmount;
+    else if(isOnlineMode()) txAmount = onlineAmount;
     else if(type === 'branch_transfer') txAmount = Math.max(outSum, inSum);
     else if(dir === 'in') txAmount = inSum;
     else if(dir === 'out') txAmount = outSum;
     else txAmount = amount;
+
+    /* ✅ Support note: use custom support note if available */
+    let finalNote;
+    if(isOnlineSup){
+      finalNote = onlineSupportNote || ('সাপোর্ট — ' + onlineSupportName);
+    } else {
+      finalNote = (!cfg.cust && wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '') || wrap.querySelector('#f_note').value.trim();
+    }
 
     const tx = {
       id: editing ? editing.id : uid(),
@@ -2432,24 +2602,31 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       from: type === 'branch_transfer' ? wrap.querySelector('#f_from').value : null,
       to: type === 'branch_transfer' ? wrap.querySelector('#f_to').value : null,
       dir, amount: Math.round(txAmount*100)/100,
-      onlineAmount: isOnlineMode() ? onlineAmount : null,
+      onlineAmount: (isOnlineMode() || isOnlineSup) ? txAmount : null,
       onlineRef: isOnlineMode() ? (wrap.querySelector('#online_ref')?.value.trim() || '') : null,
+      supportAcc: isOnlineSup ? onlineSupportAcc : '',
+      supportName: isOnlineSup ? onlineSupportName : '',
       notesOut: outNotes, notesIn: inNotes,
-      custAcc: wrap.querySelector('#f_acc') ? wrap.querySelector('#f_acc').value.trim() : '',
-      custName: cfg.cust ? (wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '') : '',
-      customNote: !cfg.cust && wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '',
+      custAcc: isOnlineSup ? onlineSupportAcc : (wrap.querySelector('#f_acc') ? wrap.querySelector('#f_acc').value.trim() : ''),
+      custName: isOnlineSup ? onlineSupportName : (cfg.cust ? (wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '') : ''),
       custMobile: wrap.querySelector('#f_mobile') ? wrap.querySelector('#f_mobile').value.trim() : '',
       custAddr: wrap.querySelector('#f_addr') ? wrap.querySelector('#f_addr').value.trim() : '',
-      note: (!cfg.cust && wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '') || wrap.querySelector('#f_note').value.trim(),
+      note: finalNote,
       user: session.name, userUsername: session.username,
       createdAt: editing ? editing.createdAt : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       accepted: type === 'branch_transfer' ? false : true,
       acceptedDate: null, acceptedBy: null, acceptedByUsername: null, acceptedAt: null
     };
+
     if(cfg.cust && (tx.custAcc || tx.custName)){
       upsertCustomer({ accountNo: tx.custAcc, name: tx.custName, mobile: tx.custMobile, address: tx.custAddr, branch: custBranch });
     }
+    /* ✅ Online support: auto-upsert customer */
+    if(isOnlineSup && (tx.supportAcc || tx.supportName)){
+      upsertCustomer({ accountNo: tx.supportAcc, name: tx.supportName, branch: custBranch });
+    }
+
     if(editing){
       const i = DB().txs.findIndex(t => t.id === editing.id);
       if(i >= 0){
@@ -2495,10 +2672,6 @@ async function deleteTx(id){
   renderDashboard();
   toast('🗑️ ডিলিট');
 }
-
-
-
-
 
 /* মানি এক্সচেঞ্জ */
 function openMoneyExchange(){
@@ -2599,7 +2772,6 @@ function setupMoneyExchange(wrap, close, initialBranch){
   wrap.querySelectorAll('.note-item input').forEach(i => i.addEventListener('input', recalc));
   recalc();
 
-  /* রিপোর্ট render */
   const meRDate = wrap.querySelector('#me_r_date');
   const meRBody = wrap.querySelector('#me_r_body');
   let currentReportList = [];
@@ -2628,7 +2800,6 @@ function setupMoneyExchange(wrap, close, initialBranch){
   if(meAllBtn) meAllBtn.addEventListener('click', ()=>{ meRDate.value=''; renderReport(); });
   renderReport();
 
-  /* PDF */
   const mePdfBtn = wrap.querySelector('#me_r_pdf');
   if(mePdfBtn){
     mePdfBtn.addEventListener('click', () => {
@@ -2638,7 +2809,6 @@ function setupMoneyExchange(wrap, close, initialBranch){
       exportToPDF('Money Exchange Report', REPORT_HEADERS, rows, 'money_exchange.pdf');
     });
   }
-  /* XLSX */
   const meXlsxBtn = wrap.querySelector('#me_r_xlsx');
   if(meXlsxBtn){
     meXlsxBtn.addEventListener('click', () => {
@@ -2690,8 +2860,9 @@ function setupMoneyExchange(wrap, close, initialBranch){
   });
   wrap.querySelector('#me_close').addEventListener('click', close);
 }
+</script>
 
-  
+<script>
 /* PDF / XLSX */
 const REPORT_HEADERS = ['Date','Type','Branch','Customer','Direction','Amount','Description','Notes','User','Time'];
 
@@ -2728,6 +2899,8 @@ function exportToXLSX(title, headers, rows, filename){
     toast('📊 XLSX');
   }catch(e){ console.error(e); toast('❌ XLSX failed', 'err'); }
 }
+
+/* ✅ buildReportRow — includes online support */
 function buildReportRow(t){
   const typeEn = txEN(t.type);
   const branchEn = branchEN(t.branch);
@@ -2742,7 +2915,15 @@ function buildReportRow(t){
     else if(t.dir === 'in'){ dirText = 'In'; description = bn; }
     else if(t.dir === 'out'){ dirText = 'Out'; description = bn; }
   } else if(t.type === 'support'){
-    dirText = t.dir === 'in' ? 'Refund' : 'Paid';
+    if(t.dir === 'online_support_out'){
+      dirText = 'Online Support Paid';
+      description = (t.supportName || '') + (t.supportAcc ? ' (' + t.supportAcc + ')' : '');
+    } else if(t.dir === 'online_support_in'){
+      dirText = 'Online Support Refund';
+      description = (t.supportName || '') + (t.supportAcc ? ' (' + t.supportAcc + ')' : '');
+    } else {
+      dirText = t.dir === 'in' ? 'Refund' : 'Paid';
+    }
   } else if(t.type === 'money_exchange'){
     const mBank = t.bank ? (BANKS[t.bank]?.en || t.bank) : '';
     const mDir = t.dir === 'in_physical' ? 'Physically In'
@@ -2787,7 +2968,7 @@ function txListHTML(list, opts){
     const cfg = TX_CFG[t.type] || { title:t.type };
     let extra = '', dirBadge = '';
     if(t.type === 'branch_transfer'){ extra = `${BRANCHES[t.from]?.name||''} ➜ ${BRANCHES[t.to]?.name||''}`; }
-else if(t.type === 'other_bank'){
+    else if(t.type === 'other_bank'){
       const bn = t.bank && BANKS[t.bank] ? BANKS[t.bank].name : '';
       let dirLabel = '';
       if(t.dir === 'online_in'){ dirLabel = '💳 অনলাইনে আসা'; dirBadge = ' <span class="badge online">💳</span>'; }
@@ -2798,6 +2979,19 @@ else if(t.type === 'other_bank'){
       if(t.note && t.note !== '-'){
         extra += '<br><small style="color:#8b95c9">📝 ' + esc(t.note) + '</small>';
       }
+    }
+    /* ✅ Online Support rendering */
+    else if(t.type === 'support' && (t.dir === 'online_support_out' || t.dir === 'online_support_in')){
+      const isOut = t.dir === 'online_support_out';
+      const lbl = isOut ? '🌐 অনলাইন সাপোর্ট প্রদান' : '🌐 অনলাইন সাপোর্ট ফেরত';
+      const color = isOut ? '#ffb3d1' : '#d3ffa8';
+      extra = `<span style="color:${color};font-weight:700">${lbl}</span>`;
+      if(t.supportName) extra += `<br><small style="color:${color}">👤 ${esc(t.supportName)}</small>`;
+      if(t.supportAcc) extra += `<br><small style="color:#22e6ff;cursor:pointer;text-decoration:underline" class="support-acc-link" data-support-acc="${esc(t.supportAcc)}">🔗 ${esc(t.supportAcc)} (হিস্টরি)</small>`;
+      if(t.note) extra += `<br><small style="color:#8b95c9">📝 ${esc(t.note)}</small>`;
+    }
+    else if(t.type === 'support'){
+      extra = t.dir === 'in' ? 'ফেরত' : 'প্রদান';
     }
     else if(t.type === 'money_exchange'){
       const bankName = t.bank ? (BANKS[t.bank]?.name || t.bank) : '';
@@ -2841,7 +3035,7 @@ else if(t.type === 'other_bank'){
       ${opts.admin ? `<td>${actionBtns}</td>` : ''}
     </tr>`;
   }).join('');
-  return `<div class="table-wrap"><table class="tbl">
+  const html = `<div class="table-wrap"><table class="tbl">
     <thead><tr>
       <th>তারিখ</th><th>ধরন</th><th>গ্রাহক</th><th>বিবরণ ও নোট</th><th>টাকা</th>
       <th>ইউজার</th><th>সময়</th>
@@ -2849,12 +3043,25 @@ else if(t.type === 'other_bank'){
     </tr></thead>
     <tbody>${rows}</tbody>
   </table></div>`;
+  /* ✅ Support acc link binding (after return to DOM) */
+  setTimeout(() => {
+    document.querySelectorAll('.support-acc-link').forEach(el => {
+      if(el.dataset.bound) return;
+      el.dataset.bound = '1';
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const acc = el.dataset.supportAcc;
+        if(acc) showCustomerAllTxns(acc);
+      });
+    });
+  }, 50);
+  return html;
 }
 
-/* ✅ গ্রাহক তালিকা — সব শাখা দেখাবে সবসময় */
+/* গ্রাহক তালিকা */
 function openCustomerList(){
   const isAdmin = session.role === 'admin';
-  const branch = 'all';  /* ✅ সবসময় সব শাখা */
+  const branch = 'all';
 
   const html = `
     <div class="cust-box" style="margin-bottom:18px;background:rgba(141,255,63,.06);border-color:rgba(141,255,63,.35)">
@@ -2963,43 +3170,55 @@ function openCustomerList(){
   });
 }
 
+/* ✅ showCustomerAllTxns — shows complete history for that account (including online support) */
 function showCustomerAllTxns(accountNo){
   const cust = DB().customers.find(c => c.accountNo === accountNo);
-  if(!cust) return;
-  const list = DB().txs.filter(t => t.custAcc === accountNo)
+  /* ✅ If customer not found, still show transactions for this account (from support) */
+  const list = DB().txs.filter(t => t.custAcc === accountNo || t.supportAcc === accountNo)
     .sort((a,b)=> (b.date + (b.createdAt||'') < a.date + (a.createdAt||'') ? 1 : -1));
   let rows = '';
   if(list.length){
     rows = list.map((t, i) => {
       const cfg = TX_CFG[t.type] || { title:t.type, icon:'' };
+      let dirTxt = '';
+      if(t.type === 'support' && t.dir === 'online_support_out') dirTxt = '🌐 অনলাইন সাপোর্ট প্রদান';
+      else if(t.type === 'support' && t.dir === 'online_support_in') dirTxt = '🌐 অনলাইন সাপোর্ট ফেরত';
+      else if(t.dir === 'in') dirTxt = 'গ্রহণ';
+      else if(t.dir === 'out') dirTxt = 'প্রদান';
+      const amtColor = (t.dir === 'online_support_in') ? '#8dff3f' : ((t.dir === 'online_support_out') ? '#ff4d6d' : '#8dff3f');
       return `<tr>
         <td>${toBn(i+1)}</td>
         <td>${toBn(t.date)}</td>
-        <td>${cfg.icon||''} ${esc(cfg.title||t.type)}</td>
+        <td>${cfg.icon||''} ${esc(cfg.title||t.type)}${dirTxt ? '<br><small>' + dirTxt + '</small>' : ''}</td>
         <td><span class="badge online" style="font-size:10px">${esc(BRANCHES[t.branch]?.name||'')}</span></td>
-        <td class="amt">৳ ${fmt(t.amount)}</td>
+        <td class="amt" style="color:${amtColor}">৳ ${fmt(t.amount)}</td>
         <td>${esc(t.user||'-')}</td>
         <td style="font-size:11px">${esc(fmtDateTime(t.createdAt))}</td>
       </tr>`;
     }).join('');
   } else {
-    rows = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">📭 নেই</td></tr>`;
+    rows = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">📭 কোনো লেনদেন নেই</td></tr>`;
   }
+  const custName = cust ? (cust.name||'-') : (list[0]?.supportName || list[0]?.custName || 'অজানা');
+  const custMobile = cust ? (cust.mobile||'-') : '-';
+  const custBranch = cust ? (BRANCHES[cust.branch]?.name||'-') : (list[0] ? BRANCHES[list[0].custBranch||list[0].branch]?.name : '-');
+  const custAddr = cust ? (cust.address||'-') : '-';
   const body = `
     <div class="cust-box" style="margin-bottom:14px">
-      <div class="head"><h4>👤 ${esc(cust.name||'-')}</h4></div>
+      <div class="head"><h4>👤 ${esc(custName)}</h4></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;font-size:13px;line-height:2">
-        <div><span style="color:var(--muted)">অ্যাকাউন্ট:</span> <b class="rgb">${esc(cust.accountNo)}</b></div>
-        <div><span style="color:var(--muted)">মোবাইল:</span> <b>${esc(cust.mobile||'-')}</b></div>
-        <div><span style="color:var(--muted)">শাখা:</span> <b>${esc(BRANCHES[cust.branch]?.name||'-')}</b></div>
-        <div><span style="color:var(--muted)">ঠিকানা:</span> <b>${esc(cust.address||'-')}</b></div>
+        <div><span style="color:var(--muted)">অ্যাকাউন্ট:</span> <b class="rgb">${esc(accountNo)}</b></div>
+        <div><span style="color:var(--muted)">মোবাইল:</span> <b>${esc(custMobile)}</b></div>
+        <div><span style="color:var(--muted)">শাখা:</span> <b>${esc(custBranch)}</b></div>
+        <div><span style="color:var(--muted)">ঠিকানা:</span> <b>${esc(custAddr)}</b></div>
+        <div style="grid-column:1/-1"><span style="color:var(--muted)">মোট লেনদেন:</span> <b class="rgb">${toBn(list.length)} টি</b></div>
       </div>
     </div>
     <div class="table-wrap"><table class="tbl">
       <thead><tr><th>#</th><th>তারিখ</th><th>ধরন</th><th>শাখা</th><th>টাকা</th><th>ইউজার</th><th>সময়</th></tr></thead>
       <tbody>${rows}</tbody>
     </table></div>`;
-  openModal({ title: '📄 গ্রাহকের লেনদেন', bodyHTML: body, wide: true });
+  openModal({ title: '📄 গ্রাহকের সম্পূর্ণ লেনদেন হিস্টরি', bodyHTML: body, wide: true });
 }
 
 function openAllData(){
@@ -3357,10 +3576,10 @@ function startApp(){
 
 (async function init(){
   try{
-    if(!localStorage.getItem('__cleared_v53')){
+    if(!localStorage.getItem('__cleared_v54')){
       localStorage.removeItem('cc_agent_bank_v1');
       localStorage.removeItem('cc_agent_bank_session');
-      localStorage.setItem('__cleared_v53', 'yes');
+      localStorage.setItem('__cleared_v54', 'yes');
       console.log('🧹 পুরনো localStorage ডেটা একবার ক্লিয়ার করা হয়েছে');
     }
   }catch(e){}
