@@ -664,10 +664,7 @@ async function saveDB(){
 function performDailyRollover(force){
   return false; /* ✅ Daily rollover সম্পূর্ণ বন্ধ - full history রাখতে */
   const today = todayStr();
-  // ... বাকি সব code অপরিবর্তিত (কখনো run হবে না)
-  const today = todayStr();
   const last = db.lastBaseDate || '';
-  if(!force && last === today) return false; /* ✅ Rollover সম্পূর্ণ বন্ধ */
 
   Object.keys(BRANCHES).forEach(br=>{
     const la = db.liveAccounts[br] || {bank:0,cash:0,other:0};
