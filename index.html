@@ -1,0 +1,3281 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Campus | Agent Banking System</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ff2e88'/%3E%3Cstop offset='33%25' stop-color='%23a855f7'/%3E%3Cstop offset='66%25' stop-color='%2322e6ff'/%3E%3Cstop offset='100%25' stop-color='%238dff3f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='48' fill='%230b0e1f' stroke='url(%23g)' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='url(%23g)'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<meta name="theme-color" content="#0b0e1f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after,
+html, body, button, input, select, textarea,
+h1, h2, h3, h4, h5, h6, p, span, div, label, td, th, a {
+  font-family: 'Noto Sans Bengali', 'Noto Sans', system-ui, -apple-system, sans-serif !important;
+  box-sizing: border-box;
+}
+*{margin:0;padding:0}
+:root{
+  --bg:#04050a; --card:#0d1020; --card2:#131735;
+  --line:rgba(255,255,255,.09); --txt:#e9edff; --muted:#8b95c9;
+  --pink:#ff2e88; --cyan:#22e6ff; --lime:#8dff3f; --gold:#ffcb2b;
+  --violet:#a855f7; --orange:#ff8a2b; --red:#ff4d6d;
+}
+html,body{height:100%}
+body{
+  font-family:'Noto Sans Bengali',system-ui,sans-serif;
+  color:var(--txt);
+  background:
+    radial-gradient(900px 520px at 10% -8%, rgba(168,85,247,.20), transparent 62%),
+    radial-gradient(900px 520px at 92% 0%, rgba(34,230,255,.17), transparent 62%),
+    radial-gradient(800px 600px at 50% 115%, rgba(255,46,136,.15), transparent 62%),
+    #04050a;
+  min-height:100vh; overflow-x:hidden;
+}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#080a14}
+::-webkit-scrollbar-thumb{background:linear-gradient(#a855f7,#22e6ff);border-radius:10px}
+.hidden{display:none !important}
+.rgb{
+  background:linear-gradient(90deg,#ff2e88,#ff8a2b,#ffcb2b,#8dff3f,#22e6ff,#a855f7,#ff2e88);
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent; animation:rgbmove 4s linear infinite;
+  filter:drop-shadow(0 0 10px rgba(34,230,255,.55)); font-weight:800;
+}
+@keyframes rgbmove{to{background-position:300% 0}}
+.cust-count-wrap{display:flex;align-items:baseline;gap:8px;margin:6px 0 2px;}
+.cust-count-num{
+  font-size:44px;line-height:1.1;font-weight:900;
+  background:linear-gradient(90deg,#ff2e88,#ff8a2b,#ffcb2b,#8dff3f,#22e6ff,#a855f7,#ff2e88);
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;animation:rgbmove 4s linear infinite;
+  filter:drop-shadow(0 0 12px rgba(34,230,255,.6));
+  letter-spacing:.5px;
+}
+.cust-count-unit{
+  font-size:20px;font-weight:800;
+  background:linear-gradient(90deg,#a855f7,#22e6ff,#a855f7);
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;animation:rgbmove 3s linear infinite;
+}
+.cust-ico-big{
+  width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+  font-size:24px;background:rgba(124,77,255,.15);
+  border:1px solid rgba(124,77,255,.4);
+  box-shadow:0 0 24px rgba(124,77,255,.35);
+}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-box{
+  width:100%;max-width:440px;
+  background:linear-gradient(160deg,rgba(20,24,52,.95),rgba(8,10,20,.98));
+  border:1px solid var(--line);border-radius:24px;padding:34px 28px;
+  box-shadow:0 30px 80px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.06);
+  position:relative;overflow:hidden;
+}
+.login-box::before{
+  content:'';position:absolute;inset:-2px;border-radius:26px;padding:2px;
+  background:linear-gradient(120deg,#ff2e88,#22e6ff,#8dff3f,#a855f7);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:.65;pointer-events:none;animation:spinHue 8s linear infinite;
+}
+@keyframes spinHue{to{filter:hue-rotate(360deg)}}
+.login-logo{width:78px;height:78px;margin:0 auto 14px;display:grid;place-items:center;}
+.login-box h1{text-align:center;font-size:22px;font-weight:800}
+.login-box h2{text-align:center;font-size:13px;color:var(--muted);font-weight:500;margin:6px 0 22px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.field input,.field select{
+  width:100%;padding:12px 14px;border-radius:12px;
+  background:#080b18;border:1px solid var(--line);color:var(--txt);
+  font-family:inherit;font-size:14.5px;outline:none;transition:.2s;
+}
+.field input:focus,.field select:focus{border-color:#22e6ff;box-shadow:0 0 0 3px rgba(34,230,255,.15)}
+.field input:disabled{opacity:.55;cursor:not-allowed}
+.btn{border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:14.5px;
+  padding:12px 18px;border-radius:12px;color:#fff;transition:.2s;
+  background:linear-gradient(135deg,#7c3aed,#22e6ff);
+  box-shadow:0 8px 26px rgba(34,230,255,.22);}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn.block{width:100%}
+.btn.pink{background:linear-gradient(135deg,#ff2e88,#a855f7);box-shadow:0 8px 26px rgba(255,46,136,.25)}
+.btn.green{background:linear-gradient(135deg,#16a34a,#8dff3f);color:#04120a;box-shadow:0 8px 26px rgba(141,255,63,.2)}
+.btn.gray{background:#1a1f3d;box-shadow:none}
+.btn.red{background:linear-gradient(135deg,#dc2626,#ff4d6d);box-shadow:0 8px 26px rgba(255,77,109,.25)}
+.btn.small{padding:6px 12px;font-size:12px;border-radius:8px}
+.btn.pdf{background:linear-gradient(135deg,#dc2626,#ff8a2b);box-shadow:0 6px 20px rgba(220,38,38,.3)}
+.btn.xlsx{background:linear-gradient(135deg,#16a34a,#22e6ff);color:#04120a;box-shadow:0 6px 20px rgba(22,163,74,.3)}
+.topbar{position:sticky;top:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:12px 20px;background:rgba(6,8,16,.82);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:46px;height:46px;display:grid;place-items:center;}
+.brand h1{font-size:17px;font-weight:800}
+.brand p{font-size:11.5px;color:var(--muted)}
+.top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.top-actions input[type=date],.top-actions select{
+  padding:9px 12px;border-radius:11px;background:#0a0d1c;border:1px solid var(--line);
+  color:var(--txt);font-family:inherit;font-size:13px;outline:none;}
+.top-actions input[type=date]:focus{border-color:#22e6ff;box-shadow:0 0 0 3px rgba(34,230,255,.18)}
+.who{font-size:12.5px;padding:8px 13px;border-radius:11px;
+  background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);white-space:nowrap;}
+.who b{color:#e9d5ff}
+.sync-status{
+  font-size:11.5px;padding:6px 11px;border-radius:11px;
+  background:rgba(141,255,63,.12);border:1px solid rgba(141,255,63,.4);
+  color:#8dff3f;font-weight:700;white-space:nowrap;
+}
+.sync-status.offline{background:rgba(255,77,109,.12);border-color:rgba(255,77,109,.4);color:#ff4d6d}
+.sync-status.syncing{background:rgba(255,203,43,.12);border-color:rgba(255,203,43,.4);color:#ffcb2b}
+main{max-width:1500px;margin:0 auto;padding:22px 18px 70px;display:flex;flex-direction:column;gap:22px;align-items:center}
+.section{width:100%}
+.section-title{display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  font-size:16px;font-weight:800;color:#cfd6ff;flex-wrap:wrap;}
+.section-title span.bar{width:5px;height:22px;border-radius:6px;background:linear-gradient(#ff2e88,#22e6ff)}
+.grid{display:grid;gap:16px;width:100%;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{position:relative;cursor:pointer;overflow:hidden;
+  border-radius:20px;padding:18px 18px 16px;
+  background:linear-gradient(155deg,rgba(19,23,53,.95),rgba(8,10,20,.98));
+  border:1px solid var(--line);
+  box-shadow:0 18px 45px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.05);
+  transition:.25s;}
+.card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;
+  background:var(--accent,#22e6ff);box-shadow:0 0 22px var(--accent,#22e6ff);}
+.card::before{content:'';position:absolute;right:-40px;top:-40px;width:130px;height:130px;border-radius:50%;
+  background:var(--accent,#22e6ff);opacity:.09;filter:blur(10px);}
+.card:hover{transform:translateY(-5px);border-color:var(--accent,#22e6ff);box-shadow:0 24px 60px rgba(0,0,0,.7),0 0 0 1px var(--accent,#22e6ff)}
+.card-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-top .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);}
+.card-top h3{font-size:14.5px;font-weight:700;color:#dfe4ff}
+.big-amt{font-size:30px;line-height:1.25;letter-spacing:.3px;font-weight:800}
+.big-amt.sm{font-size:21px;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.big-amt.sm .lbl{color:var(--muted);font-size:13px;font-weight:600;min-width:62px}
+.card-sub{margin-top:9px;font-size:12.5px;color:var(--muted);font-weight:500}
+.card-sub b{color:#8dff3f}
+.card-sub.blue b{color:#22e6ff}
+.card-sub.pinkc b{color:#ff2e88}
+.card-sub.warn{color:#fbbf24}
+.card-sub.warn b{color:#fbbf24}
+.card-tap{position:absolute;right:14px;bottom:12px;font-size:11px;color:var(--muted);opacity:.7;font-weight:500}
+.vault-box{width:100%;border-radius:20px;padding:18px;
+  background:linear-gradient(155deg,rgba(19,23,53,.9),rgba(8,10,20,.97));
+  border:1px solid var(--line);box-shadow:0 18px 45px rgba(0,0,0,.5);}
+.vault-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+.vault-item{flex:1 1 82px;min-width:76px;text-align:center;padding:11px 6px;border-radius:14px;
+  background:rgba(255,255,255,.035);border:1px solid var(--line);transition:.2s;}
+.vault-item:hover{background:rgba(34,230,255,.09);border-color:rgba(34,230,255,.4)}
+.vault-item .d{font-size:12.5px;color:var(--muted);font-weight:600}
+.vault-item .c{font-size:19px;font-weight:800;margin-top:3px;color:#8dff3f}
+.vault-total{margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  padding-top:12px;border-top:1px dashed rgba(255,255,255,.12);}
+.vault-total span{font-size:13.5px;color:var(--muted);font-weight:600}
+.bal-grid{display:grid;gap:16px;width:100%;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.bal-card{border-radius:20px;padding:20px;
+  background:linear-gradient(150deg,rgba(19,23,53,.95),rgba(8,10,20,.98));
+  border:1px solid var(--line);box-shadow:0 18px 45px rgba(0,0,0,.5);
+  position:relative;overflow:hidden;}
+.bal-card .t{font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:8px}
+.bal-card .v{font-size:27px;font-weight:800;line-height:1.3}
+.bal-card.main{
+  background:linear-gradient(120deg,rgba(124,58,237,.22),rgba(34,230,255,.14),rgba(255,46,136,.16));
+  border-color:rgba(34,230,255,.35);
+}
+.bal-card.main .v{font-size:44px}
+.actions{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;width:100%}
+.actions .btn{padding:14px 26px;font-size:15px}
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(2,3,8,.82);backdrop-filter:blur(6px);
+  display:flex;align-items:flex-start;justify-content:center;padding:26px 14px;overflow-y:auto;
+  animation:fadeIn .18s ease;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{width:100%;max-width:760px;border-radius:22px;overflow:hidden;
+  background:linear-gradient(165deg,#12162e,#070912);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 40px 100px rgba(0,0,0,.85);
+  animation:pop .22s cubic-bezier(.2,.9,.3,1.2);}
+.modal.wide{max-width:1100px}
+@keyframes pop{from{transform:translateY(22px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px 20px;border-bottom:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(168,85,247,.16),rgba(34,230,255,.10));
+  position:sticky;top:0;z-index:5;backdrop-filter:blur(12px);}
+.modal-head h3{font-size:16.5px;font-weight:800;display:flex;align-items:center;gap:9px}
+.modal-head .x{border:none;background:rgba(255,255,255,.08);color:#fff;width:34px;height:34px;border-radius:10px;
+  cursor:pointer;font-size:16px;transition:.2s;}
+.modal-head .x:hover{background:#ff2e88}
+.modal-body{padding:18px 20px 24px}
+.form-row{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.cust-box{margin-top:6px;padding:14px;border-radius:16px;
+  background:rgba(34,230,255,.05);border:1px solid rgba(34,230,255,.22);}
+.cust-box .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cust-box .head h4{font-size:13.5px;color:#9fe9ff}
+.suggest{margin-top:6px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
+  background:#0a0d1c;max-height:230px;overflow-y:auto;}
+.suggest:empty{display:none}
+.sug-item{padding:10px 13px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;transition:.15s}
+.sug-item:hover{background:rgba(34,230,255,.12)}
+.sug-item b{color:#8dff3f}
+.sug-item small{color:var(--muted)}
+.notes-cols{display:grid;gap:14px;grid-template-columns:1fr 1fr;margin-top:6px}
+@media(max-width:700px){.notes-cols{grid-template-columns:1fr}}
+.notes-col{padding:14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.028);}
+.notes-col.out{border-color:rgba(255,46,136,.3);background:rgba(255,46,136,.05)}
+.notes-col.in{border-color:rgba(141,255,63,.3);background:rgba(141,255,63,.05)}
+.notes-col.disabled{opacity:.35;pointer-events:none}
+.notes-col h4{font-size:12.5px;margin-bottom:10px;font-weight:700;color:#dfe4ff}
+.notes-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between}
+.note-item{flex:1 1 52px;min-width:50px;text-align:center}
+.note-item label{display:block;font-size:10.5px;color:var(--muted);margin-bottom:4px;font-weight:600}
+.note-item input{width:100%;padding:7px 3px;text-align:center;border-radius:9px;
+  background:#080b18;border:1px solid var(--line);color:#8dff3f;
+  font-family:inherit;font-size:13px;font-weight:700;outline:none;}
+.note-item input:focus{border-color:#22e6ff;box-shadow:0 0 0 2px rgba(34,230,255,.18)}
+.sum-line{margin-top:10px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;
+  padding-top:8px;border-top:1px dashed rgba(255,255,255,.12);}
+.sum-line b{color:#ffcb2b;font-size:15px}
+.total-preview{margin-top:16px;padding:15px;border-radius:16px;text-align:center;
+  background:linear-gradient(90deg,rgba(168,85,247,.14),rgba(34,230,255,.12));
+  border:1px solid rgba(168,85,247,.3);}
+.total-preview .l{font-size:12.5px;color:var(--muted);font-weight:700}
+.total-preview .v{font-size:32px;margin-top:4px}
+.note-detail-box{
+  margin-top:12px;padding:12px 14px;border-radius:14px;
+  background:rgba(255,255,255,.03);border:1px solid var(--line);
+  font-size:12.5px;color:var(--muted);line-height:1.9;
+}
+.note-detail-box .ttl{font-size:12px;color:#9fe9ff;font-weight:700;margin-bottom:4px}
+.note-detail-box .tag{
+  display:inline-block;padding:2px 8px;margin:2px 4px 2px 0;border-radius:8px;
+  background:rgba(34,230,255,.12);border:1px solid rgba(34,230,255,.3);color:#9fe9ff;font-size:11.5px;
+}
+.note-detail-box .tag.out{background:rgba(255,46,136,.12);border-color:rgba(255,46,136,.35);color:#ffb3d1}
+.note-detail-box .tag.in{background:rgba(141,255,63,.12);border-color:rgba(141,255,63,.35);color:#d3ffa8}
+.pending-box{
+  margin-top:14px;padding:14px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(251,191,36,.10),rgba(234,88,12,.08));
+  border:1px solid rgba(251,191,36,.35);
+}
+.pending-box h4{font-size:13.5px;color:#fbbf24;font-weight:800;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;}
+.pending-item{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:12px;margin-bottom:8px;
+  background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08);flex-wrap:wrap;
+}
+.pending-item .info{font-size:12.5px;color:#e9edff;flex:1;min-width:180px}
+.pending-item .info b{color:#fbbf24}
+.pending-item .info small{color:var(--muted);display:block;margin-top:3px}
+.pending-empty{padding:14px;text-align:center;color:var(--muted);font-size:12.5px}
+.accept-head{
+  padding:14px;border-radius:14px;margin-bottom:14px;
+  background:rgba(34,230,255,.06);border:1px solid rgba(34,230,255,.28);
+  font-size:13px;line-height:1.9;
+}
+.accept-head b{color:#22e6ff}
+.online-box{
+  margin-top:14px;padding:16px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(34,230,255,.08),rgba(168,85,247,.06));
+  border:1.5px solid rgba(34,230,255,.4);
+  display:none;
+}
+.online-box.active{display:block;animation:fadeIn .25s ease;}
+.online-box h4{
+  font-size:13.5px;color:#22e6ff;font-weight:800;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.online-box .desc{
+  font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7;
+  padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.2);
+}
+.online-box .desc b{color:#ffcb2b}
+.online-box .desc.pos{background:rgba(141,255,63,.08);border:1px solid rgba(141,255,63,.3)}
+.online-box .desc.pos b{color:#8dff3f}
+.online-box .desc.neg{background:rgba(255,46,136,.08);border:1px solid rgba(255,46,136,.3)}
+.online-box .desc.neg b{color:#ff2e88}
+.cust-branch-toggle{
+  padding:14px 16px;border-radius:16px;margin-top:6px;margin-bottom:14px;
+  background:linear-gradient(135deg,rgba(34,230,255,.06),rgba(141,255,63,.04));
+  border:1px solid rgba(34,230,255,.25);
+}
+.cust-branch-toggle .toggle-title{
+  font-size:13.5px;font-weight:800;color:#dfe4ff;margin-bottom:10px;
+}
+.branch-toggle-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+@media(max-width:600px){.branch-toggle-row{grid-template-columns:1fr}}
+.branch-toggle-btn{
+  padding:12px 18px;border-radius:12px;cursor:pointer;
+  font-family:inherit;font-size:13.5px;font-weight:700;
+  border:1.5px solid var(--line);background:rgba(255,255,255,.03);
+  color:var(--muted);transition:.2s;
+}
+.branch-toggle-btn:hover{background:rgba(34,230,255,.08);border-color:rgba(34,230,255,.4);color:var(--txt)}
+.branch-toggle-btn.active{
+  background:linear-gradient(135deg,#16a34a,#0ea5e9);color:#fff;
+  border-color:transparent;box-shadow:0 8px 22px rgba(34,230,255,.28);
+}
+.cross-branch-note{
+  margin-top:10px;padding:10px 12px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(141,255,63,.08),rgba(255,203,43,.08));
+  border:1px solid rgba(141,255,63,.35);
+  font-size:12px;line-height:1.8;color:#d3ffa8;
+}
+.cross-branch-note b{color:#ffcb2b}
+.report-area{margin-top:22px;border-top:1px solid var(--line);padding-top:16px}
+.report-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.report-head h4{font-size:14.5px;font-weight:800;color:#cfd6ff}
+.report-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--line)}
+table.tbl{width:100%;border-collapse:collapse;font-size:12.8px;min-width:640px}
+table.tbl th{background:rgba(168,85,247,.14);padding:11px 12px;text-align:left;font-weight:700;
+  color:#d9c9ff;white-space:nowrap;font-size:12px;}
+table.tbl td{padding:10px 12px;border-top:1px solid rgba(255,255,255,.055);vertical-align:top}
+table.tbl tr:hover td{background:rgba(34,230,255,.05)}
+table.tbl td.amt{font-weight:800;color:#8dff3f;white-space:nowrap}
+.note-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.note-list span{font-size:10.5px;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid var(--line);}
+.note-list span.out{background:rgba(255,46,136,.15);border-color:rgba(255,46,136,.3);color:#ffb3d1}
+.note-list span.in{background:rgba(141,255,63,.15);border-color:rgba(141,255,63,.3);color:#d3ffa8}
+.badge{padding:3px 9px;border-radius:8px;font-size:11px;font-weight:700;white-space:nowrap;}
+.badge.pending{background:rgba(251,191,36,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.4)}
+.badge.accepted{background:rgba(141,255,63,.2);color:#d3ffa8;border:1px solid rgba(141,255,63,.4)}
+.badge.online{background:rgba(34,230,255,.2);color:#22e6ff;border:1px solid rgba(34,230,255,.4)}
+.badge.cross{background:rgba(255,203,43,.18);color:#ffcb2b;border:1px solid rgba(255,203,43,.4)}
+.badge.hist{background:rgba(251,191,36,.22);color:#fbbf24;border:1px solid rgba(251,191,36,.5);font-size:10.5px}
+.mini{border:none;cursor:pointer;background:rgba(255,255,255,.08);color:#fff;
+  padding:5px 9px;border-radius:8px;font-size:12px;transition:.15s;}
+.mini:hover{background:#22e6ff;color:#04050a}
+.mini.danger:hover{background:#ff4d6d;color:#fff}
+.mini.accept:hover{background:#8dff3f;color:#04120a}
+.mini.edit{background:linear-gradient(135deg,#7c3aed,#22e6ff);font-weight:700}
+.mini.show{background:linear-gradient(135deg,#16a34a,#8dff3f);color:#04120a;font-weight:700}
+.empty{padding:26px;text-align:center;color:var(--muted);font-size:13.5px}
+.bank-hint{
+  font-size:11.5px;color:#9fe9ff;background:rgba(34,230,255,.06);
+  padding:8px 12px;border-radius:10px;margin-bottom:10px;
+  border:1px dashed rgba(34,230,255,.28);
+}
+.bank-hint b{color:#22e6ff}
+.cust-row{cursor:pointer}
+.cust-row:hover td{background:rgba(124,77,255,.10) !important}
+.date-mode-banner{
+  width:100%;padding:12px 18px;border-radius:14px;
+  background:linear-gradient(90deg,rgba(251,191,36,.12),rgba(255,138,43,.08));
+  border:1px solid rgba(251,191,36,.4);color:#fbbf24;
+  font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.date-mode-banner b{color:#fff}
+.date-mode-banner .close-mode{
+  margin-left:auto;background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.45);
+  color:#fbbf24;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+}
+.auto-badge{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
+  background:rgba(141,255,63,.12);border:1px solid rgba(141,255,63,.4);
+  color:#8dff3f;font-size:11px;font-weight:700;
+}
+.spinner{
+  display:inline-block;width:16px;height:16px;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin 0.6s linear infinite;
+  vertical-align:middle;margin-right:6px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pw-cell{display:flex;align-items:center;gap:6px;}
+.pw-value{font-family:monospace;font-weight:700;color:#8dff3f;background:rgba(0,0,0,.3);padding:3px 8px;border-radius:6px;letter-spacing:1px;}
+.pw-hidden{color:#8b95c9;letter-spacing:3px;}
+@media(max-width:640px){
+  .brand h1{font-size:15px}
+  .big-amt{font-size:24px}
+  .topbar{padding:10px 12px}
+  main{padding:16px 10px 60px}
+  .bal-card.main .v{font-size:32px}
+  .cust-count-num{font-size:36px}
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-wrap">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:78px;height:78px;filter:drop-shadow(0 0 24px rgba(34,230,255,.6));">
+        <defs>
+          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff2e88"/>
+            <stop offset="33%" stop-color="#a855f7"/>
+            <stop offset="66%" stop-color="#22e6ff"/>
+            <stop offset="100%" stop-color="#8dff3f"/>
+          </linearGradient>
+          <linearGradient id="lg2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#22e6ff"/>
+            <stop offset="100%" stop-color="#a855f7"/>
+          </linearGradient>
+          <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#1b1f45"/>
+            <stop offset="100%" stop-color="#0b0e1f"/>
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="47" fill="url(#bg)" stroke="url(#lg1)" stroke-width="2.5"/>
+        <g transform="translate(50,50)">
+          <path d="M -22 -12 L 0 -28 L 22 -12 Z" fill="url(#lg1)"/>
+          <rect x="-18" y="-8" width="4" height="22" rx="1" fill="url(#lg2)"/>
+          <rect x="-8" y="-8" width="4" height="22" rx="1" fill="url(#lg2)"/>
+          <rect x="4" y="-8" width="4" height="22" rx="1" fill="url(#lg2)"/>
+          <rect x="14" y="-8" width="4" height="22" rx="1" fill="url(#lg2)"/>
+          <rect x="-22" y="14" width="44" height="4" rx="1.5" fill="url(#lg1)"/>
+        </g>
+        <circle cx="82" cy="20" r="2" fill="#8dff3f" opacity="0.9"/>
+        <circle cx="18" cy="82" r="1.5" fill="#22e6ff" opacity="0.8"/>
+      </svg>
+    </div>
+    <h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1>
+    <h2>এজেন্ট ব্যাংকিং সিস্টেম • কলারোয়া ও ঝাউডাঙ্গা শাখা</h2>
+    <div class="field">
+      <label>ইউজার আইডি</label>
+      <input type="text" id="loginUser" placeholder="আপনার আইডি লিখুন" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>পাসওয়ার্ড</label>
+      <input type="password" id="loginPass" placeholder="পাসওয়ার্ড লিখুন" autocomplete="current-password">
+    </div>
+    <button class="btn block pink" id="loginBtn">🔐 লগইন করুন</button>
+    <div id="loginErr" style="color:#ff4d6d;font-size:13px;text-align:center;margin-top:10px;min-height:18px"></div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <header class="topbar" id="topbar"></header>
+  <main>
+    <section class="section" id="dateBannerSection"></section>
+    <section class="section" id="statsSection"></section>
+    <section class="section" id="vaultSection"></section>
+    <section class="section" id="balanceSection"></section>
+    <section class="actions" id="actionsSection"></section>
+  </main>
+</div>
+
+<div id="modalRoot"></div>
+
+<script>
+window.SUPABASE_URL = 'https://xmjemenswfharaptazxn.supabase.co';
+window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamVtZW5zd2ZoYXJhcHRhenhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDI2MDIsImV4cCI6MjEwNTMxODYwMn0.akRSS-22xeU72gdVye9B7xrV09QkjJY_9zoA9xXNiJc';
+window.SUPABASE_TABLE = 'agent_bank';
+window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
+</script>
+
+<script>
+/* ============================================================
+   Computer Campus — Agent Banking System (v3 Final)
+   ============================================================ */
+
+const BRANCHES = {
+  kalaroa:   { name:'কলারোয়া শাখা',   en:'Kalaroa Branch',   color:'#ff2e88' },
+  jhaudanga: { name:'ঝাউডাঙ্গা শাখা',  en:'Jhaudanga Branch', color:'#22e6ff' }
+};
+const BANKS = {
+  al_arafah_kalaroa:    { name:'আল আরাফাহ ব্যাংক (কলারোয়া)',  en:'Al-Arafah Bank (Kalaroa)' },
+  brac_satkhira:        { name:'ব্র্যাক ব্যাংক (সাতক্ষীরা)',    en:'BRAC Bank (Satkhira)' },
+  brac_dhaka:           { name:'ব্র্যাক ব্যাংক (ঢাকা)',         en:'BRAC Bank (Dhaka)' },
+  dutch_bangla_kalaroa: { name:'ডাচ বাংলা ব্যাংক (কলারোয়া)',   en:'Dutch-Bangla Bank (Kalaroa)' }
+};
+const DENOMS = [1000,500,200,100,50,20,10,5,2,1];
+
+const SKEY   = 'cc_agent_bank_session';
+const SESSION_TIMEOUT_MS = 20 * 60 * 1000;
+
+const DEFAULT_HASH_ADMIN = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
+
+const TX_CFG = {
+  loan_given:      { title:'ঋণের টাকা বিতরণ',       en:'Loan Given',       icon:'💸', accent:'#ff2e88', primary:'out', cust:true  },
+  loan_received:   { title:'ঋণের টাকা গ্রহণ',        en:'Loan Received',    icon:'📥', accent:'#22e6ff', primary:'in',  cust:true  },
+  deposit:         { title:'জমা (Deposits)',         en:'Deposit',          icon:'🏦', accent:'#8dff3f', primary:'in',  cust:true  },
+  withdrawal:      { title:'উত্তোলন (Withdrawals)',  en:'Withdrawal',       icon:'💵', accent:'#ffcb2b', primary:'out', cust:true  },
+  branch_transfer: { title:'শাখা-থেকে-শাখা লেনদেন', en:'Branch Transfer',  icon:'🔁', accent:'#a855f7', primary:'out', cust:false },
+  expense:         { title:'ক্যাশ থেকে খরচ',         en:'Expense',          icon:'🧾', accent:'#ff8a2b', primary:'out', cust:false },
+  other_bank:      { title:'অন্য ব্যাঙ্কে লেনদেন',   en:'Other Bank',       icon:'🏛️', accent:'#00d0ff', primary:'in',  cust:false, dir:true, banks:true, online:true },
+  support:         { title:'সাপোর্ট বাবদ প্রদান',    en:'Support Payment',  icon:'🤝', accent:'#ff4d6d', primary:'out', cust:false, dir:true },
+  money_exchange:  { title:'মানি এক্সচেঞ্জ',         en:'Money Exchange',   icon:'💱', accent:'#ffcb2b', primary:'out', cust:false },
+  customer:        { title:'গ্রাহক তালিকা',          en:'Customer List',    icon:'👥', accent:'#7c4dff', primary:'in',  cust:false }
+};
+
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const uid = () => Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-4);
+const fmt = n => (Math.round((Number(n)||0)*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const todayStr = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const toBn = s => String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+
+function hasBengali(str){ return /[\u0980-\u09FF]/.test(String(str||'')); }
+function safeEN(str, fallback){
+  if(!str) return fallback || '-';
+  if(hasBengali(str)) return fallback || '-';
+  return str;
+}
+function fmtDateTimeEN(iso){
+  if(!iso) return '-';
+  try{
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return '-';
+    const day = String(d.getDate()).padStart(2,'0');
+    const mon = String(d.getMonth()+1).padStart(2,'0');
+    const yr  = d.getFullYear();
+    let h = d.getHours();
+    const m = String(d.getMinutes()).padStart(2,'0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if(h === 0) h = 12;
+    const hh = String(h).padStart(2,'0');
+    return `${day}/${mon}/${yr} ${hh}:${m} ${ampm}`;
+  }catch(e){ return '-'; }
+}
+function fmtDateTime(iso){
+  if(!iso) return '-';
+  try{
+    const d = new Date(iso);
+    if(isNaN(d.getTime())) return '-';
+    let h = d.getHours();
+    const m = String(d.getMinutes()).padStart(2,'0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if(h === 0) h = 12;
+    const hh = String(h).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    const mon = String(d.getMonth()+1).padStart(2,'0');
+    const yr  = d.getFullYear();
+    return `${toBn(day)}/${toBn(mon)}/${toBn(yr)} ${toBn(hh)}:${toBn(m)} ${ampm}`;
+  }catch(e){ return '-'; }
+}
+function branchEN(key){ return BRANCHES[key]?.en || key; }
+function bankEN(key){ return BANKS[key]?.en || key; }
+function txEN(type){ return TX_CFG[type]?.en || type; }
+
+async function sha256(str){
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ============ Supabase ============ */
+let supabaseClient = null, supabaseReady = false, realtimeChannel = null;
+
+function initSupabase(){
+  const url = window.SUPABASE_URL || '';
+  const key = window.SUPABASE_ANON_KEY || '';
+  if(!url || !key || url.includes('YOUR-PROJECT')){ 
+    updateConnStatus('offline'); supabaseReady = false; return false; 
+  }
+  try{
+    if(typeof window.supabase === 'undefined' || !window.supabase.createClient){
+      setTimeout(initSupabase, 500); return false;
+    }
+    supabaseClient = window.supabase.createClient(url, key, {
+      realtime: { params: { eventsPerSecond: 10 } }
+    });
+    supabaseReady = true;
+    updateConnStatus('syncing');
+    return true;
+  }catch(e){
+    console.warn('Supabase init failed:', e);
+    updateConnStatus('offline');
+    supabaseReady = false;
+    return false;
+  }
+}
+function updateConnStatus(status){
+  const top = document.querySelector('.sync-status');
+  if(top){
+    top.className = 'sync-status ' + (status === 'online' ? '' : status);
+    top.textContent = status === 'online' ? '🟢 সিঙ্ক' : (status === 'syncing' ? '🟡 সিঙ্ক...' : '🔴 অফলাইন');
+  }
+}
+async function loadFromSupabase(){
+  if(!supabaseReady) return null;
+  try{
+    const { data, error } = await supabaseClient
+      .from(window.SUPABASE_TABLE)
+      .select('data')
+      .eq('id', window.SUPABASE_ROW_ID)
+      .maybeSingle();
+    if(error){ console.warn('Supabase read:', error); return null; }
+    return data && data.data ? data.data : null;
+  }catch(e){ console.warn('Supabase read:', e); return null; }
+}
+async function saveToSupabase(data){
+  if(!supabaseReady) return false;
+  try{
+    updateConnStatus('syncing');
+    const { error } = await supabaseClient
+      .from(window.SUPABASE_TABLE)
+      .upsert({ 
+        id: window.SUPABASE_ROW_ID, 
+        data: data, 
+        updated_at: new Date().toISOString() 
+      }, { onConflict: 'id' });
+    if(error){ 
+      console.warn('Supabase write:', error); 
+      updateConnStatus('offline'); 
+      return false; 
+    }
+    updateConnStatus('online');
+    return true;
+  }catch(e){
+    console.warn('Supabase write:', e);
+    updateConnStatus('offline');
+    return false;
+  }
+}
+function startSupabaseListener(){
+  if(!supabaseReady) return;
+  if(realtimeChannel){ 
+    try{ supabaseClient.removeChannel(realtimeChannel); }catch(e){}
+    realtimeChannel = null;
+  }
+  realtimeChannel = supabaseClient
+    .channel('agent_bank_changes_' + Date.now())
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: window.SUPABASE_TABLE
+    }, (payload) => {
+      const remote = payload.new && payload.new.data;
+      if(!remote) return;
+      
+      if(window.__lastSaveToken && remote.__saveToken === window.__lastSaveToken){
+        console.log('⏭️ Skip own save echo');
+        return;
+      }
+      
+      try{
+        const currentStr = JSON.stringify(db);
+        const remoteStr = JSON.stringify(remote);
+        if(currentStr === remoteStr){
+          console.log('⏭️ Skip identical data');
+          return;
+        }
+      }catch(e){}
+      
+      const now = Date.now();
+      if(window.__lastRemoteUpdate && (now - window.__lastRemoteUpdate) < 1000){
+        console.log('⏭️ Skip rapid update');
+        return;
+      }
+      window.__lastRemoteUpdate = now;
+      
+      console.log('📥 Accepting remote update');
+      db = remote;
+      if(session){
+        recomputeLive();
+        renderTopbar();
+        renderDashboard();
+      }
+    })
+    .subscribe((status, err) => {
+      console.log('📡 Realtime status:', status, err || '');
+      if(status === 'SUBSCRIBED') updateConnStatus('online');
+      else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') updateConnStatus('offline');
+      else if(status === 'CLOSED') updateConnStatus('offline');
+    });
+}
+
+/* ============ DB ============ */
+window.db = null;
+let db = null;
+function DB(){ if(!window.db) window.db = db; return window.db; }
+
+async function saveDB(){
+  window.__lastSaveToken = uid();
+  db.__saveToken = window.__lastSaveToken;
+  db.__lastUpdate = new Date().toISOString();
+
+  if(!db.dailyClose) db.dailyClose = {};
+  const d = todayStr();
+  if(!db.dailyClose[d]) db.dailyClose[d] = { accounts:{}, vault:{} };
+  Object.keys(BRANCHES).forEach(br=>{
+    db.dailyClose[d].accounts[br] = {
+      bank:  Number(db.liveAccounts[br]?.bank)  || 0,
+      cash:  Number(db.liveAccounts[br]?.cash)  || 0,
+      other: Number(db.liveAccounts[br]?.other) || 0
+    };
+    db.dailyClose[d].vault[br] = {};
+    DENOMS.forEach(x => { db.dailyClose[d].vault[br][x] = Number(db.liveVault[br]?.[x]) || 0; });
+  });
+
+  window.db = db;
+
+  if(supabaseReady) await saveToSupabase(db);
+}
+
+function performDailyRollover(force){
+  const today = todayStr();
+  const last = db.lastBaseDate || '';
+  if(!force && last === today) return false;
+
+  Object.keys(BRANCHES).forEach(br=>{
+    const la = db.liveAccounts[br] || {bank:0,cash:0,other:0};
+    db.baseAccounts[br] = {
+      bank:  Number(la.bank)  || 0,
+      cash:  Number(la.cash)  || 0,
+      other: Number(la.other) || 0
+    };
+    const lv = db.liveVault[br] || {};
+    db.baseVault[br] = {};
+    DENOMS.forEach(d => { db.baseVault[br][d] = Number(lv[d]) || 0; });
+  });
+
+  db.txs = [];
+  db.lastBaseDate = today;
+
+  if(!db.dailyClose) db.dailyClose = {};
+  db.dailyClose[today] = { accounts:{}, vault:{} };
+  Object.keys(BRANCHES).forEach(br=>{
+    db.dailyClose[today].accounts[br] = {
+      bank:  Number(db.baseAccounts[br].bank)  || 0,
+      cash:  Number(db.baseAccounts[br].cash)  || 0,
+      other: Number(db.baseAccounts[br].other) || 0
+    };
+    db.dailyClose[today].vault[br] = {};
+    DENOMS.forEach(d => { db.dailyClose[today].vault[br][d] = Number(db.baseVault[br][d]) || 0; });
+  });
+
+  if(supabaseReady) saveToSupabase(db);
+  return true;
+}
+
+function defaultUsers(){
+  return [
+    { id:'admin1', name:'প্রধান অ্যাডমিন', username:'admin', password: 'admin123', passwordHash: DEFAULT_HASH_ADMIN, role:'admin', branch:'all' }
+  ];
+}
+
+function defaultDB(){
+  const baseVault = {}, baseAccounts = {}, liveVault = {}, liveAccounts = {};
+  Object.keys(BRANCHES).forEach(b=>{
+    baseVault[b] = {}; DENOMS.forEach(d=> baseVault[b][d] = 0);
+    baseAccounts[b] = { bank:0, cash:0, other:0 };
+    liveVault[b] = {}; DENOMS.forEach(d=> liveVault[b][d] = 0);
+    liveAccounts[b] = { bank:0, cash:0, other:0 };
+  });
+  return {
+    users: defaultUsers(),
+    customers: [], txs: [],
+    baseVault, baseAccounts,
+    liveVault, liveAccounts,
+    dailyClose: {},
+    lastBaseDate: todayStr(),
+    __firstSetupDone: false
+  };
+}
+function fixBranchKeys(obj){
+  if(!obj || typeof obj !== 'object') return obj;
+  if(obj.kalaroja !== undefined && obj.kalaroa === undefined){
+    obj.kalaroa = obj.kalaroja; delete obj.kalaroja;
+  }
+  return obj;
+}
+function normalizeDB(){
+  Object.keys(BRANCHES).forEach(b=>{
+    if(!db.baseVault) db.baseVault = {};
+    if(!db.baseVault[b]) { db.baseVault[b] = {}; DENOMS.forEach(d=> db.baseVault[b][d] = 0); }
+    DENOMS.forEach(d=>{ const v = Number(db.baseVault[b][d]); db.baseVault[b][d] = Number.isFinite(v) ? v : 0; });
+    if(!db.liveVault) db.liveVault = {};
+    if(!db.liveVault[b]) { db.liveVault[b] = {}; DENOMS.forEach(d=> db.liveVault[b][d] = 0); }
+    DENOMS.forEach(d=>{ const v = Number(db.liveVault[b][d]); db.liveVault[b][d] = Number.isFinite(v) ? v : 0; });
+    if(!db.baseAccounts) db.baseAccounts = {};
+    if(!db.baseAccounts[b]) db.baseAccounts[b] = { bank:0, cash:0, other:0 };
+    if(!db.liveAccounts) db.liveAccounts = {};
+    if(!db.liveAccounts[b]) db.liveAccounts[b] = { bank:0, cash:0, other:0 };
+  });
+  if(!Array.isArray(db.customers)) db.customers = [];
+  if(!Array.isArray(db.txs)) db.txs = [];
+  if(!Array.isArray(db.users) || !db.users.length) db.users = defaultUsers();
+  if(!db.lastBaseDate) db.lastBaseDate = todayStr();
+  if(!db.dailyClose) db.dailyClose = {};
+  if(typeof db.__firstSetupDone !== 'boolean') db.__firstSetupDone = false;
+
+  for(const u of db.users){
+    if(!u.password && !u.passwordHash){ u.password = '1234'; }
+  }
+
+  (db.txs || []).forEach(t=>{
+    if(t.branch === 'kalaroja') t.branch = 'kalaroa';
+    if(t.from === 'kalaroja')   t.from = 'kalaroa';
+    if(t.to === 'kalaroja')     t.to = 'kalaroa';
+    if(t.custBranch === 'kalaroja') t.custBranch = 'kalaroa';
+    if(!t.userUsername && t.user){
+      const u = (db.users||[]).find(x => x.name === t.user);
+      if(u) t.userUsername = u.username;
+    }
+    if(!t.custBranch) t.custBranch = t.branch;
+  });
+  (db.users || []).forEach(u=>{ if(u.branch === 'kalaroja') u.branch = 'kalaroa'; });
+}
+async function migrateLegacyPasswords(){
+  let changed = false;
+  for(const u of db.users){
+    if(!u.passwordHash && u.password){
+      u.passwordHash = await sha256(u.password);
+      changed = true;
+    }
+  }
+  if(changed) saveDB();
+}
+async function ensureDefaultUsers(){
+  let changed = false;
+  const defaults = defaultUsers();
+  for(const du of defaults){
+    const existing = db.users.find(u => u.username === du.username);
+    if(!existing){
+      db.users.push(du);
+      changed = true;
+    }
+  }
+  if(changed) await saveDB();
+}
+
+async function loadDB(){
+  try{
+    let cloud = null;
+    if(supabaseReady){
+      cloud = await Promise.race([
+        loadFromSupabase(),
+        new Promise(resolve => setTimeout(() => resolve(null), 8000))
+      ]);
+    }
+
+    if(cloud && Object.keys(cloud).length > 0){ db = cloud; }
+    else { db = defaultDB(); }
+
+    if(db && (db.vault || db.accounts) && !db.baseVault){ migrateOldDB(db); }
+    if(!db) db = defaultDB();
+    if(db.baseVault)    fixBranchKeys(db.baseVault);
+    if(db.liveVault)    fixBranchKeys(db.liveVault);
+    if(db.baseAccounts) fixBranchKeys(db.baseAccounts);
+    if(db.liveAccounts) fixBranchKeys(db.liveAccounts);
+
+    normalizeDB();
+    await migrateLegacyPasswords();
+    await ensureDefaultUsers();
+    recomputeLive();
+    window.db = db;
+    if(supabaseReady){ startSupabaseListener(); updateConnStatus('online'); }
+  }catch(e){
+    console.warn('loadDB error:', e);
+    db = defaultDB(); window.db = db;
+  }
+}
+function migrateOldDB(old){
+  const baseVault = {}, baseAccounts = {};
+  Object.keys(BRANCHES).forEach(b=>{
+    baseVault[b] = {};
+    DENOMS.forEach(d => baseVault[b][d] = Number(old.vault?.[b]?.[d]) || 0);
+    baseAccounts[b] = {
+      bank:  Number(old.accounts?.[b]?.bank)  || 0,
+      cash:  Number(old.accounts?.[b]?.cash)  || 0,
+      other: Number(old.accounts?.[b]?.other) || 0
+    };
+  });
+  db = {
+    users: old.users || defaultUsers(),
+    customers: old.customers || [], txs: old.txs || [],
+    baseVault, baseAccounts,
+    liveVault: JSON.parse(JSON.stringify(baseVault)),
+    liveAccounts: JSON.parse(JSON.stringify(baseAccounts)),
+    dailyClose: old.dailyClose || {},
+    lastBaseDate: old.lastBaseDate || todayStr(),
+    __firstSetupDone: true
+  };
+}
+function recomputeLive(){
+  Object.keys(BRANCHES).forEach(b=>{
+    db.liveVault[b] = {};
+    DENOMS.forEach(d => db.liveVault[b][d] = Number(db.baseVault[b][d]) || 0);
+    db.liveAccounts[b] = {
+      bank:  Number(db.baseAccounts[b].bank)  || 0,
+      cash:  Number(db.baseAccounts[b].cash)  || 0,
+      other: Number(db.baseAccounts[b].other) || 0
+    };
+  });
+  (db.txs || []).forEach(tx => {
+    if(tx.type === 'branch_transfer'){
+      applyTxToLive(tx, +1, 'send');
+      if(tx.accepted === true){ applyTxToLive(tx, +1, 'accept'); }
+    } else {
+      applyTxToLive(tx, +1, undefined);
+    }
+  });
+  syncLiveCashFromVault();
+  window.db = db;
+}
+function syncLiveCashFromVault(){
+  Object.keys(BRANCHES).forEach(br=>{
+    let total = 0;
+    DENOMS.forEach(d => total += (Number(db.liveVault[br][d])||0) * d);
+    db.liveAccounts[br].cash = Math.round(total*100)/100;
+  });
+}
+
+let session = null;
+let viewBranch = 'all';
+let dashDate = todayStr();
+let isDateViewMode = false;
+
+let sessionTimer = null;
+let lastActivityTime = Date.now();
+
+function resetSessionTimer(){
+  lastActivityTime = Date.now();
+  if(sessionTimer){ clearInterval(sessionTimer); sessionTimer = null; }
+  if(!session) return;
+  sessionTimer = setInterval(() => {
+    if(!session) return;
+    const elapsed = Date.now() - lastActivityTime;
+    if(elapsed >= SESSION_TIMEOUT_MS){
+      clearInterval(sessionTimer); sessionTimer = null;
+      console.log('⏰ ২০ মিনিট নিষ্ক্রিয় — অটো লগআউট');
+      alert('⏰ ২০ মিনিট নিষ্ক্রিয় ছিলেন। আবার লগইন করুন।');
+      logout();
+    }
+  }, 1000);
+}
+function bindActivityListeners(){
+  const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'touchmove', 'scroll', 'click'];
+  events.forEach(evt => {
+    document.addEventListener(evt, () => { if(session) lastActivityTime = Date.now(); }, true);
+  });
+}
+function stopSessionTimer(){
+  if(sessionTimer){ clearInterval(sessionTimer); sessionTimer = null; }
+}
+
+function currentBranchFilter(){
+  if(!session) return 'all';
+  if(session.role === 'admin') return viewBranch || 'all';
+  return session.branch || 'kalaroa';
+}
+function readNotes(scope, prefix){
+  const o = {};
+  scope.querySelectorAll('[id^="'+prefix+'_"]').forEach(inp=>{
+    const v = parseInt(String(inp.value).replace(/[^0-9]/g,''),10) || 0;
+    if(v > 0) o[inp.dataset.denom] = v;
+  });
+  return o;
+}
+function noteSum(o){ let s=0; if(!o) return 0; for(const k in o) s += (Number(o[k])||0) * Number(k); return s; }
+function adjustNotes(target, notes, sign){
+  if(!notes || !target) return;
+  for(const k in notes){
+    target[k] = (target[k]||0) + sign * (Number(notes[k])||0);
+    if(target[k] < 0) target[k] = 0;
+  }
+}
+function noteDetailHTML(notes){
+  const keys = Object.keys(notes||{}).filter(k => notes[k] > 0).sort((a,b)=> b-a);
+  if(!keys.length) return '<span style="color:#8b95c9">—</span>';
+  return keys.map(k => `<span class="tag">৳${toBn(k)} × ${toBn(notes[k])} = ৳${fmt(Number(k)*Number(notes[k]))}</span>`).join('');
+}
+function noteListInline(notes, cls){
+  const keys = Object.keys(notes||{}).filter(k => notes[k] > 0).sort((a,b)=> b-a);
+  if(!keys.length) return '';
+  return `<div class="note-list">${keys.map(k => `<span class="${cls||''}">৳${toBn(k)}×${toBn(notes[k])}</span>`).join('')}</div>`;
+}
+function noteTextPlain(notes){
+  const keys = Object.keys(notes||{}).filter(k => notes[k] > 0).sort((a,b)=> b-a);
+  if(!keys.length) return '';
+  return keys.map(k => 'BDT'+k+'x'+notes[k]).join(', ');
+}
+
+function applyTxToLive(tx, dir, phase){
+  const d = dir;
+  const b = tx.branch;
+  const custBranch = tx.custBranch || b;
+  const ensure = (br) => {
+    if(!br) return;
+    if(!db.liveAccounts[br]) db.liveAccounts[br] = {bank:0,cash:0,other:0};
+    if(!db.liveVault[br]) db.liveVault[br] = {};
+    DENOMS.forEach(x => { if(typeof db.liveVault[br][x] !== 'number') db.liveVault[br][x] = 0; });
+  };
+  ensure(b); ensure(custBranch);
+  const amount = (Number(tx.amount)||0) * d;
+  const nIn = tx.notesIn || {}, nOut = tx.notesOut || {};
+
+  switch(tx.type){
+    case 'loan_given':
+      db.liveAccounts[b].bank += amount;
+      adjustNotes(db.liveVault[custBranch], nOut, -d);
+      adjustNotes(db.liveVault[custBranch], nIn, d); break;
+    case 'loan_received':
+      db.liveAccounts[b].bank -= amount;
+      adjustNotes(db.liveVault[custBranch], nIn, d);
+      adjustNotes(db.liveVault[custBranch], nOut, -d); break;
+    case 'deposit':
+      db.liveAccounts[b].bank -= amount;
+      adjustNotes(db.liveVault[custBranch], nIn, d);
+      adjustNotes(db.liveVault[custBranch], nOut, -d); break;
+    case 'withdrawal':
+      db.liveAccounts[b].bank += amount;
+      adjustNotes(db.liveVault[custBranch], nOut, -d);
+      adjustNotes(db.liveVault[custBranch], nIn, d); break;
+    case 'expense':
+      adjustNotes(db.liveVault[b], nOut, -d);
+      adjustNotes(db.liveVault[b], nIn, d); break;
+    case 'branch_transfer': {
+      const from = tx.from, to = tx.to;
+      if(!from || !to || from === to) break;
+      ensure(from); ensure(to);
+      if(phase === 'send'){ adjustNotes(db.liveVault[from], nOut, -d); }
+      else if(phase === 'accept'){ adjustNotes(db.liveVault[to], nIn, d); }
+      break;
+    }
+    case 'other_bank':
+      if(tx.dir === 'online_in')  db.liveAccounts[b].bank += amount;
+      else if(tx.dir === 'online_out') db.liveAccounts[b].bank -= amount;
+      else if(tx.dir === 'in'){
+        db.liveAccounts[b].bank += amount;
+        adjustNotes(db.liveVault[custBranch], nIn, d);
+        adjustNotes(db.liveVault[custBranch], nOut, -d);
+      } else {
+        db.liveAccounts[b].bank -= amount;
+        adjustNotes(db.liveVault[custBranch], nOut, -d);
+        adjustNotes(db.liveVault[custBranch], nIn, d);
+      }
+      break;
+    case 'support':
+      if(tx.dir === 'out'){
+        adjustNotes(db.liveVault[b], nOut, -d);
+        adjustNotes(db.liveVault[b], nIn, d);
+      } else {
+        adjustNotes(db.liveVault[b], nIn, d);
+        adjustNotes(db.liveVault[b], nOut, -d);
+      }
+      break;
+    case 'customer':
+      if(tx.dir === 'in'){
+        adjustNotes(db.liveVault[custBranch], nIn, d);
+        adjustNotes(db.liveVault[custBranch], nOut, -d);
+      } else {
+        adjustNotes(db.liveVault[custBranch], nOut, -d);
+        adjustNotes(db.liveVault[custBranch], nIn, d);
+      }
+      break;
+    case 'money_exchange':
+      adjustNotes(db.liveVault[custBranch], nOut, -d);
+      adjustNotes(db.liveVault[custBranch], nIn, d);
+      break;
+  }
+  syncLiveCashFromVault();
+}
+
+function upsertCustomer(data){
+  if(!data.accountNo && !data.name) return null;
+  let c = DB().customers.find(x =>
+      (data.accountNo && x.accountNo === data.accountNo) ||
+      (!data.accountNo && data.name && x.name === data.name && x.branch === data.branch));
+  if(c){
+    c.name = data.name || c.name;
+    c.mobile = data.mobile || c.mobile;
+    c.address = data.address || c.address;
+    c.branch = data.branch || c.branch;
+    return c;
+  }
+  c = {
+    id: uid(),
+    accountNo: data.accountNo || ('ACC' + Math.floor(Math.random()*900000+100000)),
+    name: data.name || 'অজ্ঞাত',
+    mobile: data.mobile || '',
+    address: data.address || '',
+    branch: data.branch || 'kalaroa',
+    createdAt: new Date().toISOString()
+  };
+  DB().customers.push(c);
+  return c;
+}
+function searchCustomers(q){
+  q = String(q||'').trim().toLowerCase();
+  if(!q) return [];
+  return DB().customers.filter(c =>
+    (c.accountNo||'').toLowerCase().includes(q) ||
+    (c.name||'').toLowerCase().includes(q) ||
+    (c.mobile||'').toLowerCase().includes(q) ||
+    (c.address||'').toLowerCase().includes(q)
+  ).slice(0, 8);
+}
+
+function getBalancesForDate(dateStr, bf){
+  const branches = bf === 'all' ? Object.keys(BRANCHES) : [bf];
+  const result = { bank:0, cash:0, other:0, isHistorical:false };
+
+  if(dateStr === todayStr()){
+    branches.forEach(b => {
+      const la = db.liveAccounts[b] || {bank:0,cash:0,other:0};
+      result.bank += Number(la.bank) || 0;
+      result.cash += Number(la.cash) || 0;
+      result.other += Number(la.other) || 0;
+    });
+    return result;
+  }
+
+  const close = db.dailyClose?.[dateStr];
+  if(close && close.accounts){
+    result.isHistorical = true;
+    branches.forEach(b => {
+      const sa = close.accounts[b] || {bank:0,cash:0,other:0};
+      result.bank += Number(sa.bank) || 0;
+      result.cash += Number(sa.cash) || 0;
+      result.other += Number(sa.other) || 0;
+    });
+    return result;
+  }
+
+  result.isHistorical = true;
+  branches.forEach(b => {
+    const ba = db.baseAccounts[b] || {bank:0,cash:0,other:0};
+    result.bank += Number(ba.bank) || 0;
+    result.cash += Number(ba.cash) || 0;
+    result.other += Number(ba.other) || 0;
+  });
+  return result;
+}
+
+function getVaultForDate(dateStr, bf){
+  const branches = bf === 'all' ? Object.keys(BRANCHES) : [bf];
+  const totals = {}; DENOMS.forEach(d => totals[d] = 0);
+
+  if(dateStr === todayStr()){
+    branches.forEach(b => {
+      const lv = db.liveVault[b] || {};
+      DENOMS.forEach(d => { totals[d] += Number(lv[d]) || 0; });
+    });
+    return { totals, isHistorical: false };
+  }
+
+  const close = db.dailyClose?.[dateStr];
+  if(close && close.vault){
+    branches.forEach(b => {
+      const sv = close.vault[b] || {};
+      DENOMS.forEach(d => { totals[d] += Number(sv[d]) || 0; });
+    });
+    return { totals, isHistorical: true };
+  }
+
+  branches.forEach(b => {
+    const bv = db.baseVault[b] || {};
+    DENOMS.forEach(d => { totals[d] += Number(bv[d]) || 0; });
+  });
+  return { totals, isHistorical: true };
+}
+
+function computeStats(bf, date){
+  const r = {
+    loan_given:{amt:0,cnt:0}, loan_received:{amt:0,cnt:0},
+    deposit:{amt:0,cnt:0}, withdrawal:{amt:0,cnt:0},
+    transfer:{in:0,out:0,cnt:0,pending:0,pendingCnt:0}, expense:{amt:0,cnt:0},
+    other:{in:0,out:0,cnt:0, onlineIn:0, onlineOut:0}, support:{in:0,out:0,cnt:0},
+    customer:{in:0,out:0,cnt:0}
+  };
+  DB().txs.forEach(t=>{
+    const ok = (bf === 'all') || (t.branch === bf) || (t.type==='branch_transfer' && (t.from===bf || t.to===bf));
+    if(!ok) return;
+    if(date && t.date !== date && !(t.type==='branch_transfer' && t.acceptedDate === date)) return;
+    switch(t.type){
+      case 'loan_given':    r.loan_given.amt += t.amount; r.loan_given.cnt++; break;
+      case 'loan_received': r.loan_received.amt += t.amount; r.loan_received.cnt++; break;
+      case 'deposit':       r.deposit.amt += t.amount; r.deposit.cnt++; break;
+      case 'withdrawal':    r.withdrawal.amt += t.amount; r.withdrawal.cnt++; break;
+      case 'expense':       r.expense.amt += t.amount; r.expense.cnt++; break;
+      case 'branch_transfer': {
+        const accepted = !!t.accepted;
+        if(bf === 'all'){
+          if(accepted){ r.transfer.in += t.amount; r.transfer.out += t.amount; }
+          else { r.transfer.out += t.amount; r.transfer.pending += t.amount; r.transfer.pendingCnt++; }
+          r.transfer.cnt++;
+        } else {
+          if(t.to === bf){
+            if(accepted){ if(!date || t.acceptedDate === date){ r.transfer.in += t.amount; r.transfer.cnt++; } }
+            else { if(!date || t.date === date){ r.transfer.pending += t.amount; r.transfer.pendingCnt++; } }
+          }
+          if(t.from === bf){ if(!date || t.date === date){ r.transfer.out += t.amount; r.transfer.cnt++; } }
+        }
+        break;
+      }
+      case 'other_bank':
+        if(t.dir === 'in'){ r.other.in += t.amount; r.other.cnt++; }
+        else if(t.dir === 'online_in'){ r.other.onlineIn += t.amount; r.other.cnt++; }
+        else if(t.dir === 'out'){ r.other.out += t.amount; r.other.cnt++; }
+        else if(t.dir === 'online_out'){ r.other.onlineOut += t.amount; r.other.cnt++; }
+        break;
+      case 'support':
+        if(t.dir === 'out') r.support.out += t.amount; else r.support.in += t.amount;
+        r.support.cnt++; break;
+      case 'customer':
+        if(t.dir === 'in') r.customer.in += t.amount; else r.customer.out += t.amount;
+        r.customer.cnt++; break;
+    }
+  });
+  return r;
+}
+</script>
+
+<script>
+/* ============ UI RENDERING ============ */
+function renderTopbar(){
+  const isAdmin = session.role === 'admin';
+  const bf = currentBranchFilter();
+  const branchLabel = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  $('#topbar').innerHTML = `
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;">
+          <defs>
+            <linearGradient id="tlg1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff2e88"/>
+              <stop offset="33%" stop-color="#a855f7"/>
+              <stop offset="66%" stop-color="#22e6ff"/>
+              <stop offset="100%" stop-color="#8dff3f"/>
+            </linearGradient>
+            <linearGradient id="tlg2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#22e6ff"/>
+              <stop offset="100%" stop-color="#a855f7"/>
+            </linearGradient>
+            <radialGradient id="tbg" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#1b1f45"/>
+              <stop offset="100%" stop-color="#0b0e1f"/>
+            </radialGradient>
+          </defs>
+          <circle cx="50" cy="50" r="47" fill="url(#tbg)" stroke="url(#tlg1)" stroke-width="3"/>
+          <g transform="translate(50,50)">
+            <path d="M -22 -12 L 0 -28 L 22 -12 Z" fill="url(#tlg1)"/>
+            <rect x="-18" y="-8" width="4" height="22" rx="1" fill="url(#tlg2)"/>
+            <rect x="-8" y="-8" width="4" height="22" rx="1" fill="url(#tlg2)"/>
+            <rect x="4" y="-8" width="4" height="22" rx="1" fill="url(#tlg2)"/>
+            <rect x="14" y="-8" width="4" height="22" rx="1" fill="url(#tlg2)"/>
+            <rect x="-22" y="14" width="44" height="4" rx="1.5" fill="url(#tlg1)"/>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1>
+        <p>এজেন্ট ব্যাংকিং • ${esc(branchLabel)}</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="sync-status ${supabaseReady ? '' : 'offline'}">${supabaseReady ? '🟢 সিঙ্ক' : '🔴 অফলাইন'}</span>
+      <label style="font-size:12px;color:#8b95c9;font-weight:600">📅</label>
+      <input type="date" id="dashDateInput" value="${dashDate}">
+      ${isAdmin ? `
+        <select id="branchSel">
+          <option value="all"       ${viewBranch==='all'?'selected':''}>উভয় শাখা</option>
+          <option value="kalaroa"   ${viewBranch==='kalaroa'?'selected':''}>কলারোয়া</option>
+          <option value="jhaudanga" ${viewBranch==='jhaudanga'?'selected':''}>ঝাউডাঙ্গা</option>
+        </select>
+        <button class="btn gray" id="btnBranchSetup" style="padding:9px 14px;font-size:13px">⚙️ শাখা সেটআপ</button>
+        <button class="btn gray" id="btnUserMgr" style="padding:9px 14px;font-size:13px">👥 ইউজার</button>
+        <button class="btn gray" id="btnBackup" style="padding:9px 14px;font-size:13px">💾 ব্যাকআপ</button>
+      ` : ''}
+      <span class="who">👤 <b>${esc(session.name)}</b></span>
+      <button class="btn red" id="btnLogout" style="padding:9px 16px;font-size:13px">লগআউট</button>
+    </div>`;
+  $('#dashDateInput').addEventListener('change', e => {
+    dashDate = e.target.value || todayStr();
+    isDateViewMode = dashDate !== todayStr();
+    renderDashboard();
+  });
+  if(isAdmin){
+    $('#branchSel').addEventListener('change', e => {
+      viewBranch = e.target.value;
+      renderTopbar(); renderDashboard();
+    });
+    $('#btnBranchSetup').addEventListener('click', openBranchSetup);
+    $('#btnUserMgr').addEventListener('click', openUserManager);
+    $('#btnBackup').addEventListener('click', openBackupModal);
+  }
+  $('#btnLogout').addEventListener('click', logout);
+}
+
+function renderDateBanner(){
+  const box = document.getElementById('dateBannerSection');
+  if(!box) return;
+  if(!isDateViewMode){ box.innerHTML = ''; return; }
+  box.innerHTML = `
+    <div class="date-mode-banner">
+      <span>📅</span>
+      <span>আপনি <b>${toBn(dashDate)}</b> তারিখের ডাটা দেখছেন।</span>
+      <button class="close-mode" id="btnExitDateMode">🔄 আজকের ড্যাশবোর্ডে ফিরুন</button>
+    </div>`;
+  document.getElementById('btnExitDateMode').addEventListener('click', () => {
+    isDateViewMode = false;
+    dashDate = todayStr();
+    renderTopbar();
+    renderDashboard();
+  });
+}
+
+/* ✅ renderDashboard এ saveDB() নেই — loop বন্ধ */
+function renderDashboard(){
+  if(!session) return;
+  performDailyRollover(false);
+  recomputeLive();
+
+  const bf = currentBranchFilter();
+  const st = computeStats(bf, dashDate);
+
+  renderDateBanner();
+  renderStats(bf, st);
+  renderVault(bf);
+  renderBalances(bf, st);
+  renderActions();
+}
+
+function renderStats(bf, st){
+  const cards = [];
+  const isToday = dashDate === todayStr();
+  const histBadge = isToday ? '<span class="auto-badge" style="margin-left:8px">⚡ অটো</span>' : '<span class="badge hist" style="margin-left:8px">📅 ' + toBn(dashDate) + '</span>';
+
+  cards.push(`
+    <div class="card" data-tx="loan_received" style="--accent:#22e6ff">
+      <div class="card-top"><span class="ico">📥</span><h3>ঋণের টাকা গ্রহণ</h3></div>
+      <div class="big-amt rgb">৳ ${fmt(st.loan_received.amt)}</div>
+      <div class="card-sub blue">মোট: <b>${toBn(st.loan_received.cnt)}</b> টি</div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+  cards.push(`
+    <div class="card" data-tx="loan_given" style="--accent:#ff2e88">
+      <div class="card-top"><span class="ico">💸</span><h3>ঋণের টাকা বিতরণ</h3></div>
+      <div class="big-amt rgb">৳ ${fmt(st.loan_given.amt)}</div>
+      <div class="card-sub pinkc">মোট: <b>${toBn(st.loan_given.cnt)}</b> টি</div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+  cards.push(`
+    <div class="card" data-tx="deposit" style="--accent:#8dff3f">
+      <div class="card-top"><span class="ico">🏦</span><h3>জমা (Deposits)</h3></div>
+      <div class="big-amt rgb">৳ ${fmt(st.deposit.amt)}</div>
+      <div class="card-sub">মোট: <b>${toBn(st.deposit.cnt)}</b> টি</div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+  cards.push(`
+    <div class="card" data-tx="withdrawal" style="--accent:#ffcb2b">
+      <div class="card-top"><span class="ico">💵</span><h3>উত্তোলন (Withdrawals)</h3></div>
+      <div class="big-amt rgb">৳ ${fmt(st.withdrawal.amt)}</div>
+      <div class="card-sub">মোট: <b>${toBn(st.withdrawal.cnt)}</b> টি</div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+  cards.push(`
+    <div class="card" data-tx="branch_transfer" style="--accent:#a855f7">
+      <div class="card-top"><span class="ico">🔁</span><h3>শাখা-থেকে-শাখা</h3></div>
+      <div class="big-amt sm"><span class="lbl">গ্রহণ:</span><span class="rgb">+৳ ${fmt(st.transfer.in)}</span></div>
+      <div class="big-amt sm"><span class="lbl">প্রদান:</span><span class="rgb">−৳ ${fmt(st.transfer.out)}</span></div>
+      ${st.transfer.pendingCnt ? `<div class="card-sub warn">⏳ অপেক্ষমাণ: <b>৳ ${fmt(st.transfer.pending)}</b> • ${toBn(st.transfer.pendingCnt)} টি</div>` : ''}
+      <div class="card-sub">মোট: <b>${toBn(st.transfer.cnt)}</b> টি</div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+  cards.push(`
+    <div class="card" data-tx="expense" style="--accent:#ff8a2b">
+      <div class="card-top"><span class="ico">🧾</span><h3>ক্যাশ থেকে খরচ</h3></div>
+      <div class="big-amt rgb">৳ ${fmt(st.expense.amt)}</div>
+      <div class="card-sub">মোট: <b>${toBn(st.expense.cnt)}</b> টি</div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+
+  const otherIn  = (st.other.in || 0) + (st.other.onlineIn || 0);
+  const otherOut = (st.other.out || 0) + (st.other.onlineOut || 0);
+  const otherNet = otherIn - otherOut;
+  cards.push(`
+    <div class="card" data-tx="other_bank" style="--accent:#00d0ff">
+      <div class="card-top"><span class="ico">🏛️</span><h3>অন্য ব্যাঙ্কে লেনদেন</h3></div>
+      <div class="big-amt sm"><span class="lbl">আসা:</span><span class="rgb">+৳ ${fmt(otherIn)}</span></div>
+      <div class="big-amt sm"><span class="lbl">পাঠানো:</span><span class="rgb">−৳ ${fmt(otherOut)}</span></div>
+      ${(st.other.onlineIn || st.other.onlineOut) ? `<div class="card-sub warn">💳 অনলাইন: +৳ ${fmt(st.other.onlineIn)} / −৳ ${fmt(st.other.onlineOut)}</div>` : ''}
+      <div class="card-sub blue">মোট: <b>৳ ${fmt(otherNet)}</b></div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+  cards.push(`
+    <div class="card" data-tx="support" style="--accent:#ff4d6d">
+      <div class="card-top"><span class="ico">🤝</span><h3>সাপোর্ট বাবদ প্রদান</h3></div>
+      <div class="big-amt sm"><span class="lbl">প্রদান:</span><span class="rgb">+৳ ${fmt(st.support.out)}</span></div>
+      <div class="big-amt sm"><span class="lbl">ফেরত:</span><span class="rgb">−৳ ${fmt(st.support.in)}</span></div>
+      <div class="card-sub pinkc">মোট: <b>৳ ${fmt(st.support.out - st.support.in)}</b></div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+  cards.push(`
+    <div class="card" data-tx="money_exchange" style="--accent:#ffcb2b">
+      <div class="card-top"><span class="ico">💱</span><h3>মানি এক্সচেঞ্জ</h3></div>
+      <div class="big-amt rgb" style="font-size:22px">নোট এক্সচেঞ্জ</div>
+      <div class="card-sub warn">🔁 ভল্ট ক্যাশ মিলানোর জন্য</div>
+      <div class="card-tap">খুলুন ▸</div>
+    </div>`);
+
+  /* ✅ সব শাখার গ্রাহক সংখ্যা — ফিল্টার ছাড়া */
+  const custCount = DB().customers.length;
+  cards.push(`
+    <div class="card" data-tx="customer" style="--accent:#7c4dff">
+      <div class="card-top"><span class="ico cust-ico-big">👥</span><h3>গ্রাহক তালিকা</h3></div>
+      <div class="cust-count-wrap">
+        <span class="cust-count-num">${toBn(custCount)}</span>
+        <span class="cust-count-unit">জন</span>
+      </div>
+      <div class="card-sub">📋 তালিকা দেখতে ক্লিক করুন</div>
+      <div class="card-tap">বিস্তারিত ▸</div>
+    </div>`);
+
+  $('#statsSection').innerHTML = `
+    <div class="section-title">
+      <span class="bar"></span> 📊 ড্যাশবোর্ড — ${toBn(dashDate)} ${histBadge}
+    </div>
+    <div class="grid" id="statsGrid">${cards.join('')}</div>`;
+  $$('#statsGrid .card').forEach(el=>{
+    el.addEventListener('click', ()=> openTxModal(el.dataset.tx));
+  });
+}
+
+function renderVault(bf){
+  if(!BRANCHES[bf] && bf !== 'all') bf = session?.branch || 'kalaroa';
+  const scopeLabel = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  const v = getVaultForDate(dashDate, bf);
+  const totals = v.totals;
+  const items = DENOMS.map(d => `
+    <div class="vault-item">
+      <div class="d">৳ ${toBn(d)}</div>
+      <div class="c">${toBn(totals[d])}</div>
+    </div>`).join('');
+  const totalAmt = DENOMS.reduce((s,d)=> s + d*totals[d], 0);
+  const totalNotes = DENOMS.reduce((s,d)=> s + totals[d], 0);
+  $('#vaultSection').innerHTML = `
+    <div class="section-title">
+      <span class="bar"></span>
+      🗄️ ভল্ট নোট ইনভেন্টরি — ${esc(scopeLabel)}
+      ${v.isHistorical ? '<span class="badge hist" style="margin-left:auto">📅 '+toBn(dashDate)+'</span>' : '<span class="auto-badge" style="margin-left:auto">⚡ লাইভ</span>'}
+    </div>
+    <div class="vault-box">
+      <div class="vault-row">${items}</div>
+      <div class="vault-total">
+        <span>মোট নোট: <b style="color:#22e6ff">${toBn(totalNotes)}</b> টি</span>
+        <span>মোট মান: <b class="rgb" style="font-size:19px">৳ ${fmt(totalAmt)}</b></span>
+      </div>
+    </div>`;
+}
+
+function renderBalances(bf, st){
+  const isAdmin = session.role === 'admin';
+  const bal = getBalancesForDate(dashDate, bf);
+  const mainBalance = (bal.bank || 0) + (bal.cash || 0) + (bal.other || 0);
+  $('#balanceSection').innerHTML = `
+    <div class="section-title">
+      <span class="bar"></span> 💰 অ্যাকাউন্ট ব্যালেন্স
+      ${bal.isHistorical ? '<span class="badge hist" style="margin-left:auto">📅 '+toBn(dashDate)+'</span>' : '<span class="auto-badge" style="margin-left:auto">⚡ লাইভ</span>'}
+    </div>
+    <div class="bal-grid">
+      <div class="bal-card ${bal.isHistorical?'hist':''}">
+        <div class="t">🏦 ব্যাংক সিস্টেম অ্যাকাউন্ট ব্যালেন্স</div>
+        <div class="v rgb">৳ ${fmt(bal.bank)}</div>
+      </div>
+      <div class="bal-card ${bal.isHistorical?'hist':''}">
+        <div class="t">💵 ক্যাশ ইন হ্যান্ড / ভল্ট ক্যাশ</div>
+        <div class="v rgb">৳ ${fmt(bal.cash)}</div>
+      </div>
+      ${isAdmin ? `
+      <div class="bal-card ${bal.isHistorical?'hist':''}">
+        <div class="t">🏛️ অন্যান্য ব্যাংকে জমা</div>
+        <div class="v rgb">৳ ${fmt(bal.other)}</div>
+      </div>
+      <div class="bal-card">
+        <div class="t">🧾 খরচ (নির্বাচিত তারিখ)</div>
+        <div class="v rgb">৳ ${fmt(st.expense.amt)}</div>
+      </div>
+      <div class="bal-card main" style="grid-column:1/-1">
+        <div class="t">⭐ মেইন অ্যাকাউন্ট ব্যালেন্স</div>
+        <div class="v rgb">৳ ${fmt(mainBalance)}</div>
+      </div>` : `
+      <div class="bal-card">
+        <div class="t">🧾 খরচ</div>
+        <div class="v rgb">৳ ${fmt(st.expense.amt)}</div>
+      </div>`}
+    </div>`;
+}
+
+function renderActions(){
+  const isAdmin = session.role === 'admin';
+  $('#actionsSection').innerHTML = `
+    <button class="btn" id="btnAllData">📋 সব ডেটা</button>
+    ${isAdmin ? '<button class="btn red" id="btnClearAll">🗑️ ক্লিয়ার</button>' : ''}`;
+  $('#btnAllData').addEventListener('click', openAllData);
+  if(isAdmin){
+    const btn = $('#btnClearAll');
+    if(btn) btn.addEventListener('click', clearAllData);
+  }
+}
+
+function openModal({ title, bodyHTML, wide=false, onMount }){
+  const wrap = document.createElement('div');
+  wrap.className = 'modal-overlay';
+  wrap.innerHTML = `
+    <div class="modal ${wide?'wide':''}">
+      <div class="modal-head">
+        <h3>${title}</h3>
+        <button class="x" type="button">✕</button>
+      </div>
+      <div class="modal-body">${bodyHTML}</div>
+    </div>`;
+  $('#modalRoot').appendChild(wrap);
+  const close = () => wrap.remove();
+  wrap.querySelector('.x').addEventListener('click', close);
+  wrap.addEventListener('click', e => { if(e.target === wrap) close(); });
+  if(onMount) onMount(wrap, close);
+  return { wrap, close };
+}
+
+/* ⚙️ শাখা সেটআপ */
+function openBranchSetup(){
+  if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন এই কাজ করতে পারবে'); return; }
+  const defaultBranch = (viewBranch === 'all' || !BRANCHES[viewBranch]) ? 'kalaroa' : viewBranch;
+
+  const body = `
+    <div class="accept-head" style="margin-bottom:16px">
+      <div style="font-size:13.5px;line-height:1.9">
+        ⚙️ <b>শাখা সেটআপ</b><br>
+        যেকোনো শাখার বর্তমান ব্যালেন্স ও ভল্ট নোট সেট করুন।<br>
+        <span style="color:#ffcb2b">⚠️ এক শাখার পরিবর্তন অন্য শাখাকে প্রভাবিত করবে না।</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>শাখা নির্বাচন করুন</label>
+        <select id="bs_branch">
+          <option value="kalaroa"  ${defaultBranch==='kalaroa'?'selected':''}>কলারোয়া শাখা</option>
+          <option value="jhaudanga" ${defaultBranch==='jhaudanga'?'selected':''}>ঝাউডাঙ্গা শাখা</option>
+        </select>
+      </div>
+    </div>
+    <h4 style="font-size:13.5px;color:#9fe9ff;margin:18px 0 10px;font-weight:800">💰 অ্যাকাউন্ট ব্যালেন্স</h4>
+    <div class="form-row">
+      <div class="field"><label>🏦 ব্যাংক সিস্টেম অ্যাকাউন্ট ব্যালেন্স</label>
+        <input type="text" inputmode="decimal" id="bs_bank" placeholder="0.00"
+               style="font-size:17px;font-weight:800;color:#22e6ff;padding:14px"></div>
+      <div class="field"><label>🏛️ অন্যান্য ব্যাংকে জমা</label>
+        <input type="text" inputmode="decimal" id="bs_other" placeholder="0.00"
+               style="font-size:17px;font-weight:800;color:#ffcb2b;padding:14px"></div>
+    </div>
+    <h4 style="font-size:13.5px;color:#d3ffa8;margin:18px 0 10px;font-weight:800">📦 ভল্টের নোট</h4>
+    <div class="notes-col">
+      <div class="notes-row" id="bs_notes">
+        ${DENOMS.map(d => `
+          <div class="note-item">
+            <label>৳ ${toBn(d)}</label>
+            <input type="text" inputmode="numeric" autocomplete="off"
+                   id="bs_note_${d}" data-denom="${d}" value="" placeholder="0">
+          </div>`).join('')}
+      </div>
+      <div class="sum-line">
+        <span>💵 ক্যাশ ইন হ্যান্ড</span>
+        <b id="bs_cash">৳ 0.00</b>
+      </div>
+    </div>
+    <div class="total-preview" style="margin-top:18px">
+      <div class="l">মোট শাখা ব্যালেন্স</div>
+      <div class="v rgb" id="bs_total">৳ 0.00</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn green" id="bs_save" style="flex:1;min-width:200px">💾 সেভ করুন</button>
+      <button class="btn gray"  id="bs_cancel" style="flex:1;min-width:120px">বাতিল</button>
+    </div>
+  `;
+
+  openModal({
+    title: '⚙️ শাখা সেটআপ',
+    bodyHTML: body, wide: true,
+    onMount: (wrap, close) => {
+      const branchSel = wrap.querySelector('#bs_branch');
+      function numInput(id){
+        const el = wrap.querySelector('#'+id);
+        return el ? (Number(String(el.value).replace(/[^0-9.\-]/g,'')) || 0) : 0;
+      }
+      function calcVaultCash(){
+        let total = 0;
+        wrap.querySelectorAll('[id^="bs_note_"]').forEach(inp => {
+          const v = parseInt(String(inp.value).replace(/[^0-9]/g,''),10) || 0;
+          total += v * Number(inp.dataset.denom);
+        });
+        return total;
+      }
+      function updateTotals(){
+        const bank = numInput('bs_bank');
+        const other = numInput('bs_other');
+        const cash = calcVaultCash();
+        wrap.querySelector('#bs_cash').textContent = '৳ ' + fmt(cash);
+        wrap.querySelector('#bs_total').textContent = '৳ ' + fmt(bank + cash + other);
+      }
+      function loadBranchData(br){
+        const a = DB().baseAccounts[br] || {bank:0,cash:0,other:0};
+        const v = DB().baseVault[br] || {};
+        wrap.querySelector('#bs_bank').value = a.bank || '';
+        wrap.querySelector('#bs_other').value = a.other || '';
+        DENOMS.forEach(d => {
+          const inp = wrap.querySelector('#bs_note_'+d);
+          if(inp) inp.value = (Number(v[d]) || 0) || '';
+        });
+        updateTotals();
+      }
+      wrap.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updateTotals));
+      branchSel.addEventListener('change', () => loadBranchData(branchSel.value));
+      loadBranchData(branchSel.value);
+
+      wrap.querySelector('#bs_save').addEventListener('click', async () => {
+        const br = branchSel.value;
+        const bank = numInput('bs_bank');
+        const other = numInput('bs_other');
+        const vaultNotes = {};
+        DENOMS.forEach(d => {
+          const inp = wrap.querySelector('#bs_note_'+d);
+          vaultNotes[d] = inp ? (parseInt(String(inp.value).replace(/[^0-9]/g,''),10) || 0) : 0;
+        });
+        const cash = DENOMS.reduce((s,d)=> s + vaultNotes[d]*d, 0);
+
+        DB().baseAccounts[br] = { bank, cash, other };
+        DB().liveAccounts[br] = { bank, cash, other };
+        DB().baseVault[br] = {};
+        DENOMS.forEach(d => { DB().baseVault[br][d] = vaultNotes[d]; });
+        DB().liveVault[br] = {};
+        DENOMS.forEach(d => { DB().liveVault[br][d] = vaultNotes[d]; });
+
+        if(!DB().dailyClose) DB().dailyClose = {};
+        const d0 = todayStr();
+        if(!DB().dailyClose[d0]) DB().dailyClose[d0] = { accounts:{}, vault:{} };
+        DB().dailyClose[d0].accounts[br] = { bank, cash, other };
+        DB().dailyClose[d0].vault[br] = { ...vaultNotes };
+
+        await saveDB();
+        close();
+        renderDashboard();
+        toast('✅ ' + BRANCHES[br].name + ' আপডেট — ৳ ' + fmt(bank + cash + other));
+      });
+
+      wrap.querySelector('#bs_cancel').addEventListener('click', close);
+    }
+  });
+}
+
+/* প্রথমবার সেটআপ উইজার্ড */
+function isSystemEmpty(){
+  if(db.__firstSetupDone === true) return false;
+  const anyMoney = Object.keys(BRANCHES).some(br => {
+    const acc = DB().baseAccounts[br] || {};
+    const vault = DB().baseVault[br] || {};
+    const hasM = (Number(acc.bank)||0) + (Number(acc.cash)||0) + (Number(acc.other)||0);
+    const hasN = DENOMS.reduce((s,d)=> s + (Number(vault[d])||0), 0);
+    return hasM > 0 || hasN > 0;
+  });
+  const hasTx = (DB().txs || []).length > 0;
+  return !anyMoney && !hasTx;
+}
+
+function openSetupWizard(){
+  if(!session || session.role !== 'admin') return;
+  const bf = 'kalaroa';
+
+  const body = `
+    <div class="accept-head" style="margin-bottom:16px">
+      <div style="font-size:13.5px;line-height:1.9">
+        🎬 <b>প্রথমবার সেটআপ (শুধু অ্যাডমিন)</b><br>
+        আপনার বর্তমান ব্যালেন্স ও ভল্টের নোট যোগ করুন।<br>
+        <span style="color:#ffcb2b">⚠️ এই ডেটা সরাসরি Supabase-এ সেভ হবে।</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>শুরু করার শাখা</label>
+        <select id="sw_branch">
+          <option value="kalaroa"  ${bf==='kalaroa'?'selected':''}>কলারোয়া শাখা</option>
+          <option value="jhaudanga" ${bf==='jhaudanga'?'selected':''}>ঝাউডাঙ্গা শাখা</option>
+        </select>
+      </div>
+    </div>
+    <h4 style="font-size:13.5px;color:#9fe9ff;margin:18px 0 10px;font-weight:800">💰 অ্যাকাউন্ট ব্যালেন্স</h4>
+    <div class="form-row">
+      <div class="field"><label>🏦 ব্যাংক সিস্টেম অ্যাকাউন্ট ব্যালেন্স</label>
+        <input type="text" inputmode="decimal" id="sw_bank" placeholder="0.00"
+               style="font-size:17px;font-weight:800;color:#22e6ff;padding:14px"></div>
+      <div class="field"><label>🏛️ অন্যান্য ব্যাংকে জমা</label>
+        <input type="text" inputmode="decimal" id="sw_other" placeholder="0.00"
+               style="font-size:17px;font-weight:800;color:#ffcb2b;padding:14px"></div>
+    </div>
+    <h4 style="font-size:13.5px;color:#d3ffa8;margin:18px 0 10px;font-weight:800">📦 ভল্টের নোট</h4>
+    <div class="notes-col">
+      <div class="notes-row">
+        ${DENOMS.map(d => `
+          <div class="note-item">
+            <label>৳ ${toBn(d)}</label>
+            <input type="text" inputmode="numeric" autocomplete="off"
+                   id="sw_note_${d}" data-denom="${d}" value="" placeholder="0">
+          </div>`).join('')}
+      </div>
+      <div class="sum-line">
+        <span>💵 ক্যাশ ইন হ্যান্ড</span>
+        <b id="sw_cash">৳ 0.00</b>
+      </div>
+    </div>
+    <div class="total-preview" style="margin-top:18px">
+      <div class="l">মোট শুরুর ব্যালেন্স</div>
+      <div class="v rgb" id="sw_total">৳ 0.00</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn green" id="sw_save" style="flex:1;min-width:200px">💾 সেটআপ শুরু করুন</button>
+      <button class="btn gray"  id="sw_cancel" style="flex:1;min-width:120px">বাতিল</button>
+    </div>
+  `;
+
+  openModal({
+    title: '🎬 প্রথমবার সেটআপ উইজার্ড',
+    bodyHTML: body, wide: true,
+    onMount: (wrap, close) => {
+      function getBranch(){ return wrap.querySelector('#sw_branch')?.value || bf; }
+      function numInput(id){
+        const el = wrap.querySelector('#'+id);
+        return el ? (Number(String(el.value).replace(/[^0-9.\-]/g,'')) || 0) : 0;
+      }
+      function calcVaultCash(){
+        let total = 0;
+        wrap.querySelectorAll('[id^="sw_note_"]').forEach(inp => {
+          const v = parseInt(String(inp.value).replace(/[^0-9]/g,''),10) || 0;
+          total += v * Number(inp.dataset.denom);
+        });
+        return total;
+      }
+      function updateTotals(){
+        const bank = numInput('sw_bank');
+        const other = numInput('sw_other');
+        const cash = calcVaultCash();
+        wrap.querySelector('#sw_cash').textContent = '৳ ' + fmt(cash);
+        wrap.querySelector('#sw_total').textContent = '৳ ' + fmt(bank + cash + other);
+      }
+      wrap.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updateTotals));
+      updateTotals();
+
+      wrap.querySelector('#sw_save').addEventListener('click', async () => {
+        const br = getBranch();
+        const bank = numInput('sw_bank');
+        const other = numInput('sw_other');
+        const vaultNotes = {};
+        DENOMS.forEach(d => {
+          const inp = wrap.querySelector('#sw_note_'+d);
+          vaultNotes[d] = inp ? (parseInt(String(inp.value).replace(/[^0-9]/g,''),10) || 0) : 0;
+        });
+        const cash = DENOMS.reduce((s,d)=> s + vaultNotes[d]*d, 0);
+
+        DB().baseAccounts[br] = { bank, cash, other };
+        DB().liveAccounts[br] = { bank, cash, other };
+        DB().baseVault[br] = {};
+        DENOMS.forEach(d => { DB().baseVault[br][d] = vaultNotes[d]; });
+        DB().liveVault[br] = {};
+        DENOMS.forEach(d => { DB().liveVault[br][d] = vaultNotes[d]; });
+
+        if(!DB().dailyClose) DB().dailyClose = {};
+        const d0 = todayStr();
+        if(!DB().dailyClose[d0]) DB().dailyClose[d0] = { accounts:{}, vault:{} };
+        DB().dailyClose[d0].accounts[br] = { bank, cash, other };
+        DB().dailyClose[d0].vault[br] = { ...vaultNotes };
+
+        DB().lastBaseDate = d0;
+        DB().__firstSetupDone = true;
+
+        await saveDB();
+        close();
+        renderDashboard();
+        toast('✅ সেটআপ সম্পন্ন — ৳ ' + fmt(bank + cash + other));
+      });
+
+      wrap.querySelector('#sw_cancel').addEventListener('click', () => {
+        DB().__firstSetupDone = true;
+        saveDB();
+        close();
+      });
+    }
+  });
+}
+</script>
+
+<script>
+/* Backup */
+function openBackupModal(){
+  if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
+  openModal({
+    title: '💾 ব্যাকআপ / রিস্টোর',
+    bodyHTML: `
+      <div class="accept-head">📦 পূর্ণ ডেটাবেস JSON ফাইলে ডাউনলোড করুন বা রিস্টোর করুন।</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+        <button class="btn green" id="bk_down" style="flex:1;min-width:160px">📥 ডাউনলোড</button>
+        <button class="btn" id="bk_up_btn" style="flex:1;min-width:160px">📤 রিস্টোর</button>
+        <input type="file" id="bk_file" accept=".json" style="display:none">
+      </div>
+      <div class="bank-hint">💡 প্রতিদিন কাজ শেষে ব্যাকআপ ডাউনলোড করে রাখুন।</div>
+      <div class="field" style="margin-top:16px">
+        <label>ডেটাবেস স্ট্যাটাস</label>
+        <div style="font-size:12.5px;color:#8b95c9;line-height:1.9">
+          • লেনদেন: <b style="color:#8dff3f">${toBn(DB().txs.length)}</b><br>
+          • গ্রাহক: <b style="color:#8dff3f">${toBn(DB().customers.length)}</b><br>
+          • শেষ base তারিখ: <b>${toBn(DB().lastBaseDate || '-')}</b><br>
+          • Supabase: <b>${supabaseReady ? '🟢 সক্রিয়' : '🔴 নিষ্ক্রিয়'}</b>
+        </div>
+      </div>`,
+    onMount: (wrap, close) => {
+      wrap.querySelector('#bk_down').addEventListener('click', () => {
+        const data = JSON.stringify(DB(), null, 2);
+        const blob = new Blob([data], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'cc_agent_bank_backup_' + todayStr() + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        toast('📥 ব্যাকআপ ডাউনলোড');
+      });
+      wrap.querySelector('#bk_up_btn').addEventListener('click', () => wrap.querySelector('#bk_file').click());
+      wrap.querySelector('#bk_file').addEventListener('change', (e) => {
+        const f = e.target.files[0];
+        if(!f) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          try{
+            const data = JSON.parse(ev.target.result);
+            if(!data.users || !data.baseVault){ alert('❌ ভুল ফাইল'); return; }
+            if(!confirm('বর্তমান ডেটা মুছে রিস্টোর হবে। চালিয়ে যাবেন?')) return;
+            db = data;
+            normalizeDB();
+            await ensureDefaultUsers();
+            recomputeLive();
+            await saveDB();
+            close();
+            renderTopbar();
+            renderDashboard();
+            toast('✅ রিস্টোর সফল');
+          }catch(err){ alert('❌ ' + err.message); }
+        };
+        reader.readAsText(f);
+      });
+    }
+  });
+}
+
+/* লেনদেন মডাল */
+function branchOpts(sel){
+  return Object.entries(BRANCHES).map(([k,v]) =>
+    `<option value="${k}" ${k===sel?'selected':''}>${v.name}</option>`).join('');
+}
+function bankOpts(sel){
+  return Object.entries(BANKS).map(([k,v]) =>
+    `<option value="${k}" ${k===sel?'selected':''}>${v.name}</option>`).join('');
+}
+function dirOptions(type, cur){
+  if(type === 'other_bank') return `
+    <option value="in"          ${cur==='in'?'selected':''}>📥 ফিজিক্যালি আসা (+)</option>
+    <option value="online_in"   ${cur==='online_in'?'selected':''}>💳 অনলাইনে আসা (+)</option>
+    <option value="out"         ${cur==='out'?'selected':''}>📤 ফিজিক্যালি পাঠানো (−)</option>
+    <option value="online_out"  ${cur==='online_out'?'selected':''}>💳 অনলাইন পাঠানো (−)</option>`;
+  if(type === 'support') return `
+    <option value="out" ${cur==='out'?'selected':''}>প্রদান (+)</option>
+    <option value="in"  ${cur==='in'?'selected':''}>ফেরত (−)</option>`;
+  return `
+    <option value="in"  ${cur==='in'?'selected':''}>গ্রহণ (+)</option>
+    <option value="out" ${cur==='out'?'selected':''}>পাঠানো (−)</option>`;
+}
+function notesRowHTML(prefix, values){
+  values = values || {};
+  return `<div class="notes-row">` + DENOMS.map(d => `
+    <div class="note-item">
+      <label>৳ ${toBn(d)}</label>
+      <input type="text" inputmode="numeric" autocomplete="off"
+             id="${prefix}_${d}" data-denom="${d}"
+             value="${values[d] ? values[d] : ''}" placeholder="0">
+    </div>`).join('') + `</div>`;
+}
+
+function openTxModal(type, editId){
+  const cfg = TX_CFG[type];
+  if(!cfg) return;
+  if(type === 'customer'){ openCustomerList(); return; }
+  if(type === 'money_exchange'){ openMoneyExchange(); return; }
+
+  const editing = editId ? DB().txs.find(t => t.id === editId) : null;
+  const isAdmin = session.role === 'admin';
+  let baseBranch;
+  if(editing) baseBranch = editing.branch;
+  else if(isAdmin) baseBranch = (viewBranch === 'all') ? 'kalaroa' : viewBranch;
+  else baseBranch = session.branch;
+  if(!BRANCHES[baseBranch]) baseBranch = 'kalaroa';
+  const baseCustBranch = editing ? (editing.custBranch || editing.branch) : (isAdmin ? baseBranch : session.branch);
+  const showBranchToggle = !!cfg.cust;
+  const activeBranchForForm = baseCustBranch;
+  const showCust = cfg.cust;
+  const showDir  = !!cfg.dir;
+  const showBank = !!cfg.banks;
+  const showOnline = !!cfg.online;
+  const isTransfer = type === 'branch_transfer';
+
+  const body = `
+    <div class="form-row">
+      <div class="field"><label>তারিখ</label>
+        <input type="date" id="f_date" value="${editing ? editing.date : dashDate}"></div>
+      ${isTransfer ? `
+        <div class="field"><label>যে শাখা থেকে</label>
+          <select id="f_from">${branchOpts(editing ? editing.from : baseBranch)}</select></div>
+        <div class="field"><label>যে শাখায়</label>
+          <select id="f_to">${branchOpts(editing ? editing.to : (baseBranch==='kalaroa'?'jhaudanga':'kalaroa'))}</select></div>
+      ` : showBank ? `
+        <div class="field"><label>ব্যাংক</label>
+          <select id="f_bank">${bankOpts(editing ? editing.bank : 'al_arafah_kalaroa')}</select></div>
+        ${showBranchToggle ? '' : `
+        <div class="field"><label>লেনদেনকারী শাখা</label>
+          ${isAdmin ? `<select id="f_branch">${branchOpts(baseBranch)}</select>`
+                    : `<input type="text" value="${BRANCHES[baseBranch].name}" disabled>`}
+        </div>`}
+      ` : showBranchToggle ? '' : `
+        <div class="field"><label>লেনদেনকারী শাখা</label>
+          ${isAdmin ? `<select id="f_branch">${branchOpts(baseBranch)}</select>`
+                    : `<input type="text" value="${BRANCHES[baseBranch].name}" disabled>`}
+        </div>`}
+      ${showDir ? `
+        <div class="field"><label>লেনদেনের ধরন</label>
+          <select id="f_dir">${dirOptions(type, editing ? editing.dir : (cfg.primary))}</select>
+        </div>` : ''}
+    </div>
+    ${showBranchToggle ? `
+    <div class="cust-branch-toggle">
+      <div class="toggle-title">🏦 গ্রাহকের শাখা</div>
+      <div class="branch-toggle-row">
+        <button type="button" class="branch-toggle-btn ${activeBranchForForm==='kalaroa'?'active':''}"
+                data-bbranch="kalaroa">কলারোয়া</button>
+        <button type="button" class="branch-toggle-btn ${activeBranchForForm==='jhaudanga'?'active':''}"
+                data-bbranch="jhaudanga">ঝাউডাঙ্গা</button>
+      </div>
+      <input type="hidden" id="f_custBranch_hidden" value="${activeBranchForForm}">
+      <div class="cross-branch-note" id="crossBranchNote" style="display:none">
+        ⚠️ <b>ক্রস-ব্রাঞ্চ:</b> গ্রাহক <b id="cbCust">-</b> | লেনদেন <b id="cbTxn">-</b>
+      </div>
+    </div>
+    ` : ''}
+    ${showCust ? `
+    <div class="cust-box">
+      <div class="head"><h4>🔍 গ্রাহকের তথ্য</h4></div>
+      <div class="field" style="margin-bottom:8px">
+        <input type="text" id="f_search" placeholder="খুঁজুন..." autocomplete="off"
+               value="${editing ? esc(editing.custAcc||'') : ''}">
+        <div class="suggest" id="f_suggest"></div>
+      </div>
+      <div class="form-row">
+        <div class="field" style="margin-bottom:8px"><label>অ্যাকাউন্ট</label>
+          <input type="text" id="f_acc" value="${editing ? esc(editing.custAcc||'') : ''}"></div>
+        <div class="field" style="margin-bottom:8px"><label>নাম</label>
+          <input type="text" id="f_name" value="${editing ? esc(editing.custName||'') : ''}"></div>
+        <div class="field" style="margin-bottom:8px"><label>মোবাইল</label>
+          <input type="text" id="f_mobile" value="${editing ? esc(editing.custMobile||'') : ''}"></div>
+        <div class="field" style="margin-bottom:8px"><label>ঠিকানা</label>
+          <input type="text" id="f_addr" value="${editing ? esc(editing.custAddr||'') : ''}"></div>
+      </div>
+      <button class="btn gray" type="button" id="f_editCust" style="padding:9px 16px;font-size:13px">✏️ সেভ</button>
+    </div>` : `
+    <div class="field"><label>বিবরণ</label>
+      <input type="text" id="f_name" value="${editing ? esc(editing.custName||'') : ''}" placeholder="সংক্ষিপ্ত বিবরণ"></div>`}
+    ${showDir ? `
+      <div class="bank-hint" id="dirHint" style="margin-top:14px">
+        💡 ধরন পরিবর্তন করলে সঠিক কলাম সক্রিয় হবে।
+      </div>
+    ` : ''}
+    ${showOnline ? `
+      <div class="online-box" id="onlineBox">
+        <h4>💳 অনলাইন ট্র্যান্সফার</h4>
+        <div class="desc" id="onlineDesc"></div>
+        <div class="form-row">
+          <div class="field"><label>পরিমাণ (৳)</label>
+            <input type="text" inputmode="decimal" id="online_amount" placeholder="0.00" value="${editing && editing.onlineAmount ? editing.onlineAmount : ''}"></div>
+          <div class="field"><label>রেফারেন্স</label>
+            <input type="text" id="online_ref" placeholder="TXN" value="${editing && editing.onlineRef ? esc(editing.onlineRef) : ''}"></div>
+        </div>
+        <div class="total-preview">
+          <div class="l">পরিমাণ</div>
+          <div class="v rgb" id="onlineAmountPreview">৳ 0.00</div>
+        </div>
+      </div>
+    ` : ''}
+    <div class="notes-cols" id="notesCols" style="margin-top:6px">
+      <div class="notes-col out" id="outCol">
+        <h4>💸 প্রদান</h4>
+        ${notesRowHTML('out', editing ? editing.notesOut : null)}
+        <div class="sum-line"><span>মোট</span><b id="sumOut">৳ 0.00</b></div>
+      </div>
+      <div class="notes-col in" id="inCol">
+        <h4>📥 গ্রহণ</h4>
+        ${notesRowHTML('in', editing ? editing.notesIn : null)}
+        <div class="sum-line"><span>মোট</span><b id="sumIn">৳ 0.00</b></div>
+      </div>
+    </div>
+    <div class="total-preview" id="netPreview">
+      <div class="l">নেট</div>
+      <div class="v rgb" id="netAmt">৳ 0.00</div>
+    </div>
+    <div class="note-detail-box" id="noteDetailBox">
+      <div class="ttl">🧾 বিবরণী</div>
+      <div id="noteDetailContent">—</div>
+    </div>
+    <div class="field" style="margin-top:14px">
+      <label>মন্তব্য</label>
+      <input type="text" id="f_note" value="${editing ? esc(editing.note||'') : ''}">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn green" id="f_save" style="flex:1;min-width:160px">💾 সংরক্ষণ</button>
+      <button class="btn gray"  id="f_close" style="flex:1;min-width:120px">বাতিল</button>
+    </div>
+    ${isTransfer ? `<div id="pendingArea"></div>` : ''}
+    <div class="report-area">
+      <div class="report-head">
+        <h4>📑 রিপোর্ট — ${esc(cfg.title)}</h4>
+        <div class="report-tools">
+          <input type="date" id="r_date" value="${editing ? editing.date : dashDate}"
+                 style="padding:8px 10px;border-radius:10px;background:#fff;border:1px solid var(--line);color:#000;font-family:inherit">
+          <button class="btn gray" id="r_all" style="padding:8px 14px;font-size:12.5px">সব</button>
+          <button class="btn pdf" id="r_pdf" style="padding:8px 14px;font-size:12.5px">📄 PDF</button>
+          <button class="btn xlsx" id="r_xlsx" style="padding:8px 14px;font-size:12.5px">📊 XLSX</button>
+        </div>
+      </div>
+      <div id="r_body"></div>
+    </div>`;
+
+  openModal({
+    title: `${cfg.icon} ${cfg.title}`,
+    bodyHTML: body, wide: true,
+    onMount: (w, close) => setupTxForm(w, type, editing, close, activeBranchForForm)
+  });
+}
+
+function setupTxForm(wrap, type, editing, close, activeBranchForForm){
+  const cfg = TX_CFG[type];
+  const sumOutEl = wrap.querySelector('#sumOut');
+  const sumInEl  = wrap.querySelector('#sumIn');
+  const netEl    = wrap.querySelector('#netAmt');
+  const noteBox  = wrap.querySelector('#noteDetailContent');
+  const isTransfer = type === 'branch_transfer';
+  const hasDir = !!cfg.dir;
+  const hasOnline = !!cfg.online;
+  const hasBranchToggle = !!cfg.cust;
+
+  function updateCrossBranchNote(){
+    const noteEl = wrap.querySelector('#crossBranchNote');
+    if(!noteEl) return;
+    const hidden = wrap.querySelector('#f_custBranch_hidden');
+    const custBranch = hidden ? hidden.value : null;
+    const txnBranchEl = wrap.querySelector('#f_branch');
+    const txnBranch = txnBranchEl ? txnBranchEl.value : null;
+    if(custBranch && txnBranch && custBranch !== txnBranch){
+      noteEl.style.display = 'block';
+      if(wrap.querySelector('#cbCust')) wrap.querySelector('#cbCust').textContent = BRANCHES[custBranch].name;
+      if(wrap.querySelector('#cbTxn'))  wrap.querySelector('#cbTxn').textContent = BRANCHES[txnBranch].name;
+    } else {
+      noteEl.style.display = 'none';
+    }
+  }
+
+  if(hasBranchToggle){
+    const btns = wrap.querySelectorAll('.branch-toggle-btn');
+    const hidden = wrap.querySelector('#f_custBranch_hidden');
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        hidden.value = btn.dataset.bbranch;
+        updateCrossBranchNote();
+      });
+    });
+    const txnBranchEl = wrap.querySelector('#f_branch');
+    if(txnBranchEl) txnBranchEl.addEventListener('change', updateCrossBranchNote);
+    updateCrossBranchNote();
+  }
+
+  let autoCopyEnabled = true;
+  wrap.querySelectorAll('[id^="in_"]').forEach(inp => {
+    inp.addEventListener('focus', () => { autoCopyEnabled = false; });
+  });
+
+  function isOnlineMode(){
+    if(!hasOnline) return false;
+    const dirEl = wrap.querySelector('#f_dir');
+    return dirEl && (dirEl.value === 'online_in' || dirEl.value === 'online_out');
+  }
+
+  function applyDirectionState(){
+    if(!hasDir) return;
+    const dirEl = wrap.querySelector('#f_dir');
+    if(!dirEl) return;
+    const dir = dirEl.value;
+    const outCol = wrap.querySelector('#outCol');
+    const inCol = wrap.querySelector('#inCol');
+    const notesCols = wrap.querySelector('#notesCols');
+    const onlineBox = wrap.querySelector('#onlineBox');
+    const noteDetailBox = wrap.querySelector('#noteDetailBox');
+    const hint = wrap.querySelector('#dirHint');
+    const clearNotes = (prefix) => {
+      wrap.querySelectorAll('[id^="'+prefix+'_"]').forEach(inp => inp.value = '');
+    };
+    if(dir === 'online_in' || dir === 'online_out'){
+      if(notesCols) notesCols.style.display = 'none';
+      if(noteDetailBox) noteDetailBox.style.display = 'none';
+      if(onlineBox){
+        onlineBox.classList.add('active');
+        const desc = wrap.querySelector('#onlineDesc');
+        if(dir === 'online_in'){
+          desc.className = 'desc pos';
+          desc.innerHTML = '💡 অনলাইনে আসা — ব্যাংক সিস্টেমে <b style="color:#8dff3f">যোগ</b>';
+        } else {
+          desc.className = 'desc neg';
+          desc.innerHTML = '💡 অনলাইন পাঠানো — ব্যাংক সিস্টেম থেকে <b style="color:#ff2e88">বিয়োগ</b>';
+        }
+      }
+      if(hint) hint.style.display = 'none';
+    } else {
+      if(notesCols) notesCols.style.display = 'grid';
+      if(noteDetailBox) noteDetailBox.style.display = 'block';
+      if(onlineBox) onlineBox.classList.remove('active');
+      if(hint) hint.style.display = 'block';
+    }
+    if(type === 'other_bank'){
+      if(dir === 'in'){ outCol.classList.add('disabled'); inCol.classList.remove('disabled'); clearNotes('out'); }
+      else if(dir === 'out'){ outCol.classList.remove('disabled'); inCol.classList.add('disabled'); clearNotes('in'); }
+      else { outCol.classList.remove('disabled'); inCol.classList.remove('disabled'); }
+    } else if(type === 'support'){
+      if(dir === 'out'){ outCol.classList.remove('disabled'); inCol.classList.add('disabled'); clearNotes('in'); }
+      else { outCol.classList.add('disabled'); inCol.classList.remove('disabled'); clearNotes('out'); }
+    }
+  }
+
+  if(hasDir){
+    const dirEl = wrap.querySelector('#f_dir');
+    if(dirEl) dirEl.addEventListener('change', () => { applyDirectionState(); recalc(); });
+    applyDirectionState();
+  }
+
+  const onlineAmt = wrap.querySelector('#online_amount');
+  if(onlineAmt){
+    onlineAmt.addEventListener('input', () => {
+      onlineAmt.value = onlineAmt.value.replace(/[^0-9.]/g,'');
+      const v = parseFloat(onlineAmt.value) || 0;
+      const pv = wrap.querySelector('#onlineAmountPreview');
+      if(pv) pv.textContent = '৳ ' + fmt(v);
+      recalc();
+    });
+    const v = parseFloat(onlineAmt.value) || 0;
+    const pv = wrap.querySelector('#onlineAmountPreview');
+    if(pv) pv.textContent = '৳ ' + fmt(v);
+  }
+
+  function recalc(){
+    if(isTransfer && autoCopyEnabled){
+      const outNotes = readNotes(wrap, 'out');
+      wrap.querySelectorAll('[id^="in_"]').forEach(inp => {
+        const d = inp.dataset.denom;
+        const tgt = outNotes[d] || '';
+        if(inp.value === '' || inp.dataset.autofilled === 'true'){
+          inp.value = tgt;
+          inp.dataset.autofilled = tgt ? 'true' : 'false';
+        }
+      });
+    }
+    const outNotes = readNotes(wrap, 'out');
+    const inNotes = readNotes(wrap, 'in');
+    const out = noteSum(outNotes), inSum = noteSum(inNotes);
+    sumOutEl.textContent = '৳ ' + fmt(out);
+    sumInEl.textContent = '৳ ' + fmt(inSum);
+    if(isOnlineMode()){
+      const v = parseFloat(wrap.querySelector('#online_amount')?.value) || 0;
+      netEl.textContent = '৳ ' + fmt(v);
+    } else if(isTransfer){
+      netEl.textContent = '৳ ' + fmt(Math.max(out, inSum));
+    } else {
+      netEl.textContent = '৳ ' + fmt(Math.abs(out - inSum));
+    }
+    let html = '';
+    if(Object.keys(outNotes).length){
+      html += `<div style="margin-bottom:6px"><span style="color:#ffb3d1;font-weight:700">📤</span><br>${noteDetailHTML(outNotes)}</div>`;
+    }
+    if(Object.keys(inNotes).length){
+      html += `<div><span style="color:#d3ffa8;font-weight:700">📥</span><br>${noteDetailHTML(inNotes)}</div>`;
+    }
+    noteBox.innerHTML = html || '—';
+  }
+  wrap.querySelectorAll('.note-item input').forEach(i => i.addEventListener('input', recalc));
+  recalc();
+
+  function renderPending(){
+    if(!isTransfer) return;
+    const box = wrap.querySelector('#pendingArea');
+    if(!box) return;
+    const bf = currentBranchFilter();
+    const myBranch = session.role === 'admin' ? (bf === 'all' ? null : bf) : session.branch;
+    let pending = DB().txs.filter(t => t.type === 'branch_transfer' && !t.accepted);
+    if(myBranch) pending = pending.filter(t => t.to === myBranch);
+    if(!pending.length){
+      box.innerHTML = `<div class="pending-box"><h4>⏳ অপেক্ষমাণ</h4><div class="pending-empty">নেই ✅</div></div>`;
+      return;
+    }
+    box.innerHTML = `
+      <div class="pending-box">
+        <h4>⏳ অপেক্ষমাণ শাখা-থেকে-শাখা</h4>
+        ${pending.map(t => `
+          <div class="pending-item">
+            <div class="info"><b>${esc(BRANCHES[t.from]?.name || t.from)}</b> ➜ <b>${esc(BRANCHES[t.to]?.name || t.to)}</b>
+              <small>${toBn(t.date)} • ৳ ${fmt(t.amount)} • ${esc(t.user||'')}</small></div>
+            <div style="display:flex;gap:6px">
+              <button class="mini accept" data-accept="${t.id}">✅</button>
+              ${session.role === 'admin' ? `<button class="mini danger" data-del="${t.id}">🗑️</button>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>`;
+    box.querySelectorAll('[data-accept]').forEach(b =>
+      b.addEventListener('click', () => acceptTransfer(b.dataset.accept, wrap, type, close)));
+    box.querySelectorAll('[data-del]').forEach(b =>
+      b.addEventListener('click', async () => {
+        if(confirm('ডিলিট?')){ await deleteTx(b.dataset.del); close(); openTxModal(type); }
+      }));
+  }
+  renderPending();
+
+  const searchEl = wrap.querySelector('#f_search');
+  const sugEl = wrap.querySelector('#f_suggest');
+  if(searchEl){
+    searchEl.addEventListener('input', () => {
+      /* ✅ সব শাখার গ্রাহক suggestion এ আসবে */
+      let list = searchCustomers(searchEl.value);
+      if(!list.length){ sugEl.innerHTML = ''; return; }
+      sugEl.innerHTML = list.map(c => `
+        <div class="sug-item" data-id="${c.id}">
+          <b>${esc(c.name)}</b> — <small>${esc(c.accountNo)}</small><br>
+          <small>📱 ${esc(c.mobile||'-')} • 📍 ${esc(c.address||'-')} • 🏦 ${esc(BRANCHES[c.branch]?.name||'')}</small>
+        </div>`).join('');
+      sugEl.querySelectorAll('.sug-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const c = DB().customers.find(x => x.id === el.dataset.id);
+          if(!c) return;
+          wrap.querySelector('#f_acc').value = c.accountNo || '';
+          wrap.querySelector('#f_name').value = c.name || '';
+          wrap.querySelector('#f_mobile').value = c.mobile || '';
+          wrap.querySelector('#f_addr').value = c.address || '';
+          searchEl.value = c.accountNo || c.name;
+          sugEl.innerHTML = '';
+
+          /* ✅ গ্রাহকের শাখা auto select */
+          if(c.branch && hasBranchToggle){
+            const btns = wrap.querySelectorAll('.branch-toggle-btn');
+            btns.forEach(b => {
+              if(b.dataset.bbranch === c.branch){ b.classList.add('active'); }
+              else { b.classList.remove('active'); }
+            });
+            const hiddenB = wrap.querySelector('#f_custBranch_hidden');
+            if(hiddenB) hiddenB.value = c.branch;
+            updateCrossBranchNote();
+          }
+        });
+      });
+    });
+  }
+
+  const editCustBtn = wrap.querySelector('#f_editCust');
+  if(editCustBtn){
+    editCustBtn.addEventListener('click', async () => {
+      const hiddenB = wrap.querySelector('#f_custBranch_hidden');
+      const selB = wrap.querySelector('#f_branch');
+      let br = hiddenB?.value || selB?.value || (editing?.custBranch || editing?.branch) || session.branch;
+      const data = {
+        accountNo: wrap.querySelector('#f_acc').value.trim(),
+        name: wrap.querySelector('#f_name').value.trim(),
+        mobile: wrap.querySelector('#f_mobile').value.trim(),
+        address: wrap.querySelector('#f_addr').value.trim(),
+        branch: br
+      };
+      if(!data.accountNo && !data.name){ alert('অ্যাকাউন্ট বা নাম দিন'); return; }
+      upsertCustomer(data);
+      await saveDB();
+      editCustBtn.textContent = '✅ সেভ';
+      setTimeout(()=> editCustBtn.textContent = '✏️ সেভ', 1500);
+    });
+  }
+
+  const rDate = wrap.querySelector('#r_date');
+  const rBody = wrap.querySelector('#r_body');
+  let currentReportList = [];
+  function renderReport(){
+    const dateVal = rDate.value;
+    let list = DB().txs.filter(t => t.type === type);
+    const bf = currentBranchFilter();
+    if(session.role !== 'admin'){
+      list = list.filter(t => t.branch === session.branch || t.from === session.branch || t.to === session.branch || t.custBranch === session.branch);
+    } else if(bf !== 'all'){
+      list = list.filter(t => t.branch === bf || t.from === bf || t.to === bf || t.custBranch === bf);
+    }
+    if(dateVal){
+      list = list.filter(t => {
+        if(t.type === 'branch_transfer'){
+          if(session.role === 'admin'){
+            if(bf === 'all') return t.date === dateVal || t.acceptedDate === dateVal;
+            if(t.from === bf) return t.date === dateVal;
+            if(t.to === bf) return t.acceptedDate === dateVal;
+          } else {
+            if(t.from === session.branch) return t.date === dateVal;
+            if(t.to === session.branch) return t.acceptedDate === dateVal;
+          }
+        }
+        return t.date === dateVal;
+      });
+    }
+    list.sort((a,b)=> (b.createdAt||'').localeCompare(a.createdAt||''));
+    currentReportList = list;
+    rBody.innerHTML = txListHTML(list, { admin: session.role === 'admin', transfer: isTransfer });
+    rBody.querySelectorAll('[data-edit]').forEach(b =>
+      b.addEventListener('click', async () => { close(); openTxModal(type, b.dataset.edit); }));
+    rBody.querySelectorAll('[data-del]').forEach(b =>
+      b.addEventListener('click', async () => {
+        if(confirm('ডিলিট?')){ await deleteTx(b.dataset.del); close(); openTxModal(type); }
+      }));
+    rBody.querySelectorAll('[data-accept]').forEach(b =>
+      b.addEventListener('click', () => acceptTransfer(b.dataset.accept, wrap, type, close)));
+  }
+  if(rDate) rDate.addEventListener('change', renderReport);
+  const allBtn = wrap.querySelector('#r_all');
+  if(allBtn) allBtn.addEventListener('click', ()=>{ rDate.value=''; renderReport(); });
+  renderReport();
+
+  const pdfBtn = wrap.querySelector('#r_pdf');
+  if(pdfBtn){
+    pdfBtn.addEventListener('click', () => {
+      const rows = currentReportList.map(t => buildReportRow(t));
+      const total = currentReportList.reduce((s,t)=> s + Number(t.amount||0), 0);
+      rows.push(['', '', '', '', 'TOTAL', 'BDT ' + fmt(total), '', '', '', '']);
+      exportToPDF('Report: ' + txEN(type), REPORT_HEADERS, rows, 'report_' + type + '.pdf');
+    });
+  }
+  const xlsxBtn = wrap.querySelector('#r_xlsx');
+  if(xlsxBtn){
+    xlsxBtn.addEventListener('click', () => {
+      const rows = currentReportList.map(t => buildReportRow(t));
+      const total = currentReportList.reduce((s,t)=> s + Number(t.amount||0), 0);
+      rows.push(['', '', '', '', 'TOTAL', 'BDT ' + fmt(total), '', '', '', '']);
+      exportToXLSX('Report: ' + txEN(type), REPORT_HEADERS, rows, 'report_' + type + '.xlsx');
+    });
+  }
+
+  wrap.querySelector('#f_save').addEventListener('click', async () => {
+    const date = wrap.querySelector('#f_date').value || todayStr();
+    const outNotes = readNotes(wrap, 'out');
+    const inNotes = readNotes(wrap, 'in');
+    const outSum = noteSum(outNotes), inSum = noteSum(inNotes);
+    const amount = Math.abs(outSum - inSum);
+    let dir = wrap.querySelector('#f_dir') ? wrap.querySelector('#f_dir').value : null;
+    let onlineAmount = 0;
+    if(isOnlineMode()){
+      onlineAmount = parseFloat(wrap.querySelector('#online_amount').value) || 0;
+      if(onlineAmount <= 0){ alert('পরিমাণ দিন'); return; }
+    } else if(type === 'branch_transfer'){
+      if(outSum <= 0 && inSum <= 0){ alert('অন্তত একটি নোট'); return; }
+    } else if(type === 'other_bank'){
+      if(dir === 'in' && inSum <= 0){ alert('📥 কলামে নোট দিন'); return; }
+      if(dir === 'out' && outSum <= 0){ alert('💸 কলামে নোট দিন'); return; }
+    } else if(type === 'support'){
+      if(dir === 'out' && outSum <= 0){ alert('💸 কলামে নোট দিন'); return; }
+      if(dir === 'in' && inSum <= 0){ alert('📥 কলামে নোট দিন'); return; }
+    } else if(amount <= 0){ alert('অন্তত একটি নোট'); return; }
+
+    let branch;
+    if(type === 'branch_transfer'){
+      const from = wrap.querySelector('#f_from').value;
+      const to = wrap.querySelector('#f_to').value;
+      if(from === to){ alert('একই শাখা নয়'); return; }
+      branch = from;
+    } else {
+      const hiddenB = wrap.querySelector('#f_custBranch_hidden');
+      if(hiddenB && hiddenB.value && cfg.cust){ branch = hiddenB.value; }
+      else {
+        const bs = wrap.querySelector('#f_branch');
+        branch = bs ? bs.value : (editing ? editing.branch : (session.role==='admin' ? (viewBranch==='all'?'kalaroa':viewBranch) : session.branch));
+      }
+    }
+    let txnBranch = branch;
+    if(cfg.cust){
+      const bs = wrap.querySelector('#f_branch');
+      if(bs) txnBranch = bs.value;
+      else if(session.role !== 'admin') txnBranch = session.branch;
+    }
+    let custBranch;
+    if(cfg.cust){
+      const hiddenCustB = wrap.querySelector('#f_custBranch_hidden');
+      custBranch = (hiddenCustB && hiddenCustB.value) ? hiddenCustB.value : txnBranch;
+    } else custBranch = txnBranch;
+    const bankKey = wrap.querySelector('#f_bank') ? wrap.querySelector('#f_bank').value : null;
+    let txAmount;
+    if(isOnlineMode()) txAmount = onlineAmount;
+    else if(type === 'branch_transfer') txAmount = Math.max(outSum, inSum);
+    else if(dir === 'in') txAmount = inSum;
+    else if(dir === 'out') txAmount = outSum;
+    else txAmount = amount;
+
+    const tx = {
+      id: editing ? editing.id : uid(),
+      type, date, branch: txnBranch, custBranch, bank: bankKey,
+      from: type === 'branch_transfer' ? wrap.querySelector('#f_from').value : null,
+      to: type === 'branch_transfer' ? wrap.querySelector('#f_to').value : null,
+      dir, amount: Math.round(txAmount*100)/100,
+      onlineAmount: isOnlineMode() ? onlineAmount : null,
+      onlineRef: isOnlineMode() ? (wrap.querySelector('#online_ref')?.value.trim() || '') : null,
+      notesOut: outNotes, notesIn: inNotes,
+      custAcc: wrap.querySelector('#f_acc') ? wrap.querySelector('#f_acc').value.trim() : '',
+      custName: wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '',
+      custMobile: wrap.querySelector('#f_mobile') ? wrap.querySelector('#f_mobile').value.trim() : '',
+      custAddr: wrap.querySelector('#f_addr') ? wrap.querySelector('#f_addr').value.trim() : '',
+      note: wrap.querySelector('#f_note').value.trim(),
+      user: session.name, userUsername: session.username,
+      createdAt: editing ? editing.createdAt : new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      accepted: type === 'branch_transfer' ? false : true,
+      acceptedDate: null, acceptedBy: null, acceptedByUsername: null, acceptedAt: null
+    };
+    if(cfg.cust && (tx.custAcc || tx.custName)){
+      upsertCustomer({ accountNo: tx.custAcc, name: tx.custName, mobile: tx.custMobile, address: tx.custAddr, branch: custBranch });
+    }
+    if(editing){
+      const i = DB().txs.findIndex(t => t.id === editing.id);
+      if(i >= 0){
+        tx.accepted = DB().txs[i].accepted;
+        tx.acceptedDate = DB().txs[i].acceptedDate;
+        tx.acceptedBy = DB().txs[i].acceptedBy;
+        tx.acceptedByUsername = DB().txs[i].acceptedByUsername;
+        tx.acceptedAt = DB().txs[i].acceptedAt;
+        DB().txs[i] = tx;
+      }
+    } else DB().txs.push(tx);
+
+    await saveDB();
+    close();
+    renderDashboard();
+    toast('✅ সংরক্ষিত — ৳' + fmt(txAmount));
+  });
+  wrap.querySelector('#f_close').addEventListener('click', close);
+}
+
+async function acceptTransfer(id, wrap, type, close){
+  const t = DB().txs.find(x => x.id === id);
+  if(!t || t.accepted) return;
+  if(session.role !== 'admin' && session.branch !== t.to){ alert('শুধু গ্রহণকারী শাখা'); return; }
+  if(!confirm('গ্রহণ করবেন?')) return;
+  const idx = DB().txs.findIndex(x => x.id === id);
+  if(idx < 0) return;
+  DB().txs[idx].accepted = true;
+  DB().txs[idx].acceptedDate = todayStr();
+  DB().txs[idx].acceptedAt = new Date().toISOString();
+  DB().txs[idx].acceptedBy = session.name;
+  DB().txs[idx].acceptedByUsername = session.username;
+  recomputeLive();
+  await saveDB();
+  if(close) close();
+  renderTopbar(); renderDashboard();
+  toast('✅ গৃহীত');
+}
+
+async function deleteTx(id){
+  DB().txs = DB().txs.filter(x => x.id !== id);
+  await saveDB();
+  renderDashboard();
+  toast('🗑️ ডিলিট');
+}
+
+/* মানি এক্সচেঞ্জ */
+function openMoneyExchange(){
+  const bf = currentBranchFilter();
+  const targetBranch = (bf === 'all' || !BRANCHES[bf]) ? 'kalaroa' : bf;
+  const body = `
+    <div class="form-row">
+      <div class="field"><label>তারিখ</label>
+        <input type="date" id="me_date" value="${dashDate}"></div>
+      <div class="field"><label>শাখা</label>
+        ${session.role === 'admin'
+          ? `<select id="me_branch">
+               <option value="kalaroa"  ${targetBranch==='kalaroa'?'selected':''}>কলারোয়া</option>
+               <option value="jhaudanga" ${targetBranch==='jhaudanga'?'selected':''}>ঝাউডাঙ্গা</option>
+             </select>`
+          : `<input type="text" value="${BRANCHES[targetBranch].name}" disabled>
+             <input type="hidden" id="me_branch" value="${targetBranch}">`}
+      </div>
+    </div>
+    <div class="bank-hint" style="margin-top:14px">
+      💡 <b>প্রদান</b> = আমি দিলাম | <b>গ্রহণ</b> = আমি নিলাম
+    </div>
+    <div class="notes-cols">
+      <div class="notes-col out">
+        <h4>💸 প্রদান</h4>
+        ${notesRowHTML('me_out', null)}
+        <div class="sum-line"><span>মোট</span><b id="me_sumOut">৳ 0.00</b></div>
+      </div>
+      <div class="notes-col in">
+        <h4>📥 গ্রহণ</h4>
+        ${notesRowHTML('me_in', null)}
+        <div class="sum-line"><span>মোট</span><b id="me_sumIn">৳ 0.00</b></div>
+      </div>
+    </div>
+    <div class="total-preview">
+      <div class="l">নেট</div>
+      <div class="v rgb" id="me_netAmt">৳ 0.00</div>
+    </div>
+    <div class="field" style="margin-top:14px">
+      <label>মন্তব্য</label>
+      <input type="text" id="me_note" placeholder="...">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn green" id="me_save" style="flex:1;min-width:160px">💾 সংরক্ষণ</button>
+      <button class="btn gray"  id="me_close" style="flex:1;min-width:120px">বাতিল</button>
+    </div>`;
+  openModal({
+    title: `💱 মানি এক্সচেঞ্জ`,
+    bodyHTML: body, wide: true,
+    onMount: (w, close) => setupMoneyExchange(w, close, targetBranch)
+  });
+}
+
+function setupMoneyExchange(wrap, close, initialBranch){
+  const sumOutEl = wrap.querySelector('#me_sumOut');
+  const sumInEl = wrap.querySelector('#me_sumIn');
+  const netEl = wrap.querySelector('#me_netAmt');
+  function currentBranch(){ return wrap.querySelector('#me_branch')?.value || initialBranch; }
+  function recalc(){
+    const outNotes = readNotes(wrap, 'me_out');
+    const inNotes = readNotes(wrap, 'me_in');
+    const outSum = noteSum(outNotes), inSum = noteSum(inNotes);
+    sumOutEl.textContent = '৳ ' + fmt(outSum);
+    sumInEl.textContent = '৳ ' + fmt(inSum);
+    netEl.textContent = '৳ ' + fmt(Math.abs(outSum - inSum));
+  }
+  wrap.querySelectorAll('.note-item input').forEach(i => i.addEventListener('input', recalc));
+  recalc();
+  wrap.querySelector('#me_save').addEventListener('click', async () => {
+    const br = currentBranch();
+    const outNotes = readNotes(wrap, 'me_out');
+    const inNotes = readNotes(wrap, 'me_in');
+    const outSum = noteSum(outNotes), inSum = noteSum(inNotes);
+    if(outSum === 0 && inSum === 0){ alert('নোট দিন'); return; }
+    const v = DB().liveVault[br];
+    for(const d in outNotes){
+      if((Number(v[d])||0) < Number(outNotes[d])){
+        alert('ভল্টে পর্যাপ্ত ৳' + d + ' নেই। আছে: ' + toBn(v[d] || 0));
+        return;
+      }
+    }
+    const tx = {
+      id: uid(), type: 'money_exchange',
+      date: wrap.querySelector('#me_date').value || dashDate,
+      branch: br, custBranch: br, from: null, to: null, dir: null,
+      amount: Math.round(Math.abs(outSum - inSum) * 100) / 100,
+      notesOut: outNotes, notesIn: inNotes,
+      custAcc: '', custName: '', custMobile: '', custAddr: '',
+      note: wrap.querySelector('#me_note').value.trim() || 'মানি এক্সচেঞ্জ',
+      user: session.name, userUsername: session.username,
+      createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+      accepted: true, acceptedDate: wrap.querySelector('#me_date').value || dashDate,
+      acceptedBy: session.name, acceptedByUsername: session.username,
+      acceptedAt: new Date().toISOString()
+    };
+    DB().txs.push(tx);
+    await saveDB();
+    close();
+    renderDashboard();
+    toast('✅ মানি এক্সচেঞ্জ — ৳' + fmt(Math.abs(outSum - inSum)));
+  });
+  wrap.querySelector('#me_close').addEventListener('click', close);
+}
+
+/* PDF / XLSX */
+const REPORT_HEADERS = ['Date','Type','Branch','Customer','Direction','Amount','Description','Notes','User','Time'];
+
+function exportToPDF(title, headers, rows, filename){
+  try{
+    const { jsPDF } = window.jspdf;
+    if(!jsPDF){ toast('❌ PDF নেই', 'err'); return; }
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text(title, 40, 40);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('Generated: ' + fmtDateTimeEN(new Date().toISOString()) + ' | By: ' + (session?.username || 'System'), 40, 55);
+    doc.autoTable({
+      head: [headers], body: rows, startY: 70,
+      styles: { font: 'helvetica', fontSize: 8, cellPadding: 4, overflow: 'linebreak' },
+      headStyles: { fillColor: [124, 58, 237], textColor: 255 },
+      alternateRowStyles: { fillColor: [245, 245, 255] },
+      margin: { left: 40, right: 40 }
+    });
+    doc.save(filename || 'report.pdf');
+    toast('📄 PDF');
+  }catch(e){ console.error(e); toast('❌ PDF failed', 'err'); }
+}
+function exportToXLSX(title, headers, rows, filename){
+  try{
+    const aoa = [[title], [], headers, ...rows];
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = headers.map(() => ({ wch: 18 }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Report');
+    XLSX.writeFile(wb, filename || 'report.xlsx');
+    toast('📊 XLSX');
+  }catch(e){ console.error(e); toast('❌ XLSX failed', 'err'); }
+}
+function buildReportRow(t){
+  const typeEn = txEN(t.type);
+  const branchEn = branchEN(t.branch);
+  let description = '', dirText = '';
+  if(t.type === 'branch_transfer'){
+    description = branchEN(t.from) + ' -> ' + branchEN(t.to);
+    description += t.accepted ? ' [ACCEPTED]' : ' [PENDING]';
+  } else if(t.type === 'other_bank'){
+    const bn = t.bank ? bankEN(t.bank) : '';
+    if(t.dir === 'online_in'){ dirText = 'Online In'; description = bn; }
+    else if(t.dir === 'online_out'){ dirText = 'Online Out'; description = bn; }
+    else if(t.dir === 'in'){ dirText = 'In'; description = bn; }
+    else if(t.dir === 'out'){ dirText = 'Out'; description = bn; }
+  } else if(t.type === 'support'){
+    dirText = t.dir === 'in' ? 'Refund' : 'Paid';
+  } else if(t.type === 'money_exchange'){
+    description = 'Money Exchange';
+  } else if(t.dir){
+    dirText = t.dir === 'in' ? 'Receive' : 'Give';
+  }
+  const notesOut = t.notesOut && Object.keys(t.notesOut).length ? noteTextPlain(t.notesOut) : '';
+  const notesIn = t.notesIn && Object.keys(t.notesIn).length ? noteTextPlain(t.notesIn) : '';
+  let notesStr = '';
+  if(notesOut) notesStr += 'OUT: ' + notesOut;
+  if(notesIn) notesStr += (notesStr ? ' | ' : '') + 'IN: ' + notesIn;
+  if(t.onlineRef) notesStr += (notesStr ? ' | ' : '') + 'Ref: ' + t.onlineRef;
+  const custName = t.custName || '', custAcc = t.custAcc || '';
+  let customer = '';
+  if(hasBengali(custName)){ customer = custAcc ? '(' + custAcc + ')' : '-'; }
+  else { customer = (custName || '-') + (custAcc ? ' (' + custAcc + ')' : ''); }
+  let userDisplay = t.userUsername || '';
+  if(!userDisplay){
+    const u = (DB().users||[]).find(x => x.name === t.user);
+    if(u) userDisplay = u.username;
+  }
+  if(!userDisplay) userDisplay = safeEN(t.user, '-');
+  return [
+    t.date || '-', typeEn, branchEn, customer, dirText || '-',
+    'BDT ' + fmt(t.amount), description || '-', notesStr || '-',
+    userDisplay, fmtDateTimeEN(t.createdAt)
+  ];
+}
+
+function txListHTML(list, opts){
+  opts = opts || {};
+  if(!list.length) return `<div class="empty">📭 কোনো লেনদেন নেই</div>`;
+  const rows = list.map(t => {
+    const cfg = TX_CFG[t.type] || { title:t.type };
+    let extra = '', dirBadge = '';
+    if(t.type === 'branch_transfer'){ extra = `${BRANCHES[t.from]?.name||''} ➜ ${BRANCHES[t.to]?.name||''}`; }
+    else if(t.type === 'other_bank'){
+      const bn = t.bank && BANKS[t.bank] ? BANKS[t.bank].name : '';
+      if(t.dir === 'online_in'){ extra = (bn ? bn + ' • ' : '') + '💳 অনলাইনে আসা'; dirBadge = ' <span class="badge online">💳</span>'; }
+      else if(t.dir === 'online_out'){ extra = (bn ? bn + ' • ' : '') + '💳 অনলাইন পাঠানো'; dirBadge = ' <span class="badge online">💳</span>'; }
+      else { extra = (bn ? bn + ' • ' : '') + (t.dir === 'in' ? '📥 ফিজিক্যালি আসা' : '📤 ফিজিক্যালি পাঠানো'); }
+    } else if(t.type === 'money_exchange'){ extra = 'ভল্ট ক্যাশ মিলান'; }
+    else if(t.dir){ extra = t.dir === 'in' ? 'গ্রহণ' : 'প্রদান'; }
+    let notesHTML = '';
+    if(t.notesOut && Object.keys(t.notesOut).length) notesHTML += `<div style="margin-top:3px"><small style="color:#ffb3d1">📤</small>${noteListInline(t.notesOut,'out')}</div>`;
+    if(t.notesIn && Object.keys(t.notesIn).length) notesHTML += `<div style="margin-top:3px"><small style="color:#d3ffa8">📥</small>${noteListInline(t.notesIn,'in')}</div>`;
+    if(t.onlineRef) notesHTML += `<div style="margin-top:3px"><small style="color:#22e6ff">🔗 ${esc(t.onlineRef)}</small></div>`;
+    let statusBadge = '';
+    if(t.type === 'branch_transfer'){
+      statusBadge = t.accepted
+        ? `<div style="margin-top:4px"><span class="badge accepted">✅</span></div>`
+        : '<div style="margin-top:4px"><span class="badge pending">⏳</span></div>';
+    }
+    let actionBtns = '';
+    if(t.type === 'branch_transfer' && !t.accepted){
+      const canAccept = session.role === 'admin' || session.branch === t.to;
+      if(canAccept) actionBtns += `<button class="mini accept" data-accept="${t.id}">✅</button> `;
+    }
+    if(opts.admin){
+      actionBtns += `<button class="mini" data-edit="${t.id}">✏️</button>
+                     <button class="mini danger" data-del="${t.id}">🗑️</button>`;
+    }
+    return `<tr>
+      <td>${toBn(t.date)}</td>
+      <td>${cfg.icon||''} ${esc(cfg.title||t.type)}${dirBadge}</td>
+      <td>${esc(t.custName||'-')}<br><small style="color:#8b95c9">${esc(t.custAcc||'')}</small><br><span style="font-size:9.5px;padding:2px 6px;border-radius:5px;background:rgba(34,230,255,.15);border:1px solid rgba(34,230,255,.4);color:#22e6ff;display:inline-block;margin-top:3px">🏦 ${esc(BRANCHES[t.custBranch || t.branch]?.name||'-')}</span></td>
+      <td>${esc(extra || t.note || '-')}${notesHTML}${statusBadge}</td>
+      <td class="amt">৳ ${fmt(t.amount)}</td>
+      <td>${esc(t.user||'-')}</td>
+      <td style="font-size:11px;white-space:nowrap">${esc(fmtDateTime(t.createdAt))}</td>
+      ${opts.admin ? `<td>${actionBtns}</td>` : ''}
+    </tr>`;
+  }).join('');
+  return `<div class="table-wrap"><table class="tbl">
+    <thead><tr>
+      <th>তারিখ</th><th>ধরন</th><th>গ্রাহক</th><th>বিবরণ ও নোট</th><th>টাকা</th>
+      <th>ইউজার</th><th>সময়</th>
+      ${opts.admin ? '<th>অ্যাকশন</th>' : ''}
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+/* ✅ গ্রাহক তালিকা — সব শাখা দেখাবে সবসময় */
+function openCustomerList(){
+  const isAdmin = session.role === 'admin';
+  const branch = 'all';  /* ✅ সবসময় সব শাখা */
+
+  const html = `
+    <div class="cust-box" style="margin-bottom:18px;background:rgba(141,255,63,.06);border-color:rgba(141,255,63,.35)">
+      <div class="head"><h4>➕ নতুন গ্রাহক</h4></div>
+      <div class="form-row">
+        <div class="field"><label>অ্যাকাউন্ট</label><input type="text" id="nc_acc"></div>
+        <div class="field"><label>নাম *</label><input type="text" id="nc_name"></div>
+        <div class="field"><label>মোবাইল</label><input type="text" id="nc_mobile"></div>
+        <div class="field"><label>ঠিকানা</label><input type="text" id="nc_addr"></div>
+        ${isAdmin ? `<div class="field"><label>শাখা</label>
+          <select id="nc_branch">
+            <option value="kalaroa">কলারোয়া</option>
+            <option value="jhaudanga">ঝাউডাঙ্গা</option>
+          </select></div>` : ''}
+      </div>
+      <button class="btn green" id="nc_save" style="margin-top:10px;padding:10px 22px">💾 সংরক্ষণ</button>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <input type="text" id="cust_search" placeholder="🔍 খুঁজুন...">
+    </div>
+    <div id="cust_list"></div>`;
+  openModal({
+    title: '👥 গ্রাহক তালিকা (উভয় শাখা)', bodyHTML: html, wide: true,
+    onMount: (wrap, close) => {
+      const listBox = wrap.querySelector('#cust_list');
+      const searchEl = wrap.querySelector('#cust_search');
+      function getMyCustomers(){ return DB().customers.slice(); }
+      function renderList(filterText){
+        filterText = (filterText || '').trim().toLowerCase();
+        let list = getMyCustomers();
+        if(filterText){
+          list = list.filter(c =>
+            (c.accountNo||'').toLowerCase().includes(filterText) ||
+            (c.name||'').toLowerCase().includes(filterText) ||
+            (c.mobile||'').toLowerCase().includes(filterText) ||
+            (c.address||'').toLowerCase().includes(filterText));
+        }
+        if(!list.length){ listBox.innerHTML = `<div class="table-wrap"><div class="empty">📭 কোনো গ্রাহক নেই</div></div>`; return; }
+        let tbl = `<div class="table-wrap"><table class="tbl">
+          <thead><tr><th>#</th><th>অ্যাকাউন্ট</th><th>নাম</th><th>মোবাইল</th><th>ঠিকানা</th><th>শাখা</th><th>লেনদেন</th>${isAdmin ? '<th>অ্যাকশন</th>' : ''}</tr></thead><tbody>`;
+        list.forEach((c, i) => {
+          const cnt = DB().txs.filter(t => t.custAcc === c.accountNo).length;
+          tbl += `<tr class="cust-row" data-cacc="${esc(c.accountNo)}">
+            <td>${toBn(i+1)}</td>
+            <td><b class="rgb" style="font-size:13px">${esc(c.accountNo)}</b></td>
+            <td>${esc(c.name||'-')}</td>
+            <td>${esc(c.mobile||'-')}</td>
+            <td>${esc(c.address||'-')}</td>
+            <td><span class="badge online" style="font-size:10.5px">${esc(BRANCHES[c.branch]?.name||'')}</span></td>
+            <td><span class="badge accepted">${toBn(cnt)} টি</span></td>
+            ${isAdmin ? `<td><button class="mini danger" data-cdel="${c.id}">🗑️</button></td>` : ''}
+          </tr>`;
+        });
+        tbl += `</tbody></table></div>
+          <div style="text-align:center;margin-top:12px;color:var(--muted);font-size:12.5px">
+            মোট <b style="color:#8dff3f">${toBn(list.length)}</b> জন • উভয় শাখা
+          </div>`;
+        listBox.innerHTML = tbl;
+        listBox.querySelectorAll('tr[data-cacc]').forEach(tr => {
+          tr.addEventListener('click', (e) => {
+            if(e.target.closest('[data-cdel]')) return;
+            showCustomerAllTxns(tr.dataset.cacc);
+          });
+        });
+        listBox.querySelectorAll('[data-cdel]').forEach(b => {
+          b.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const cust = DB().customers.find(x => x.id === b.dataset.cdel);
+            if(!cust) return;
+            if(!confirm('ডিলিট করবেন: ' + cust.name + '?')) return;
+            DB().customers = DB().customers.filter(x => x.id !== b.dataset.cdel);
+            await saveDB();
+            renderList(searchEl.value);
+          });
+        });
+      }
+      searchEl.addEventListener('input', () => renderList(searchEl.value));
+      wrap.querySelector('#nc_save').addEventListener('click', async () => {
+        const acc = wrap.querySelector('#nc_acc').value.trim();
+        const name = wrap.querySelector('#nc_name').value.trim();
+        const mobile = wrap.querySelector('#nc_mobile').value.trim();
+        const addr = wrap.querySelector('#nc_addr').value.trim();
+        const brSel = wrap.querySelector('#nc_branch');
+        let cbr;
+        if(brSel){ cbr = brSel.value; }
+        else if(session.role !== 'admin'){ cbr = session.branch; }
+        else { cbr = 'kalaroa'; }
+        if(!name){ alert('নাম দিন'); return; }
+        if(acc && DB().customers.some(c => c.accountNo === acc)){ alert('এই অ্যাকাউন্ট আছে'); return; }
+        DB().customers.push({
+          id: uid(),
+          accountNo: acc || ('ACC' + Math.floor(Math.random()*900000+100000)),
+          name, mobile, address: addr, branch: cbr,
+          createdAt: new Date().toISOString()
+        });
+        await saveDB();
+        wrap.querySelector('#nc_acc').value = '';
+        wrap.querySelector('#nc_name').value = '';
+        wrap.querySelector('#nc_mobile').value = '';
+        wrap.querySelector('#nc_addr').value = '';
+        renderList(searchEl.value);
+        toast('✅ গ্রাহক যোগ হয়েছে');
+      });
+      renderList('');
+    }
+  });
+}
+
+function showCustomerAllTxns(accountNo){
+  const cust = DB().customers.find(c => c.accountNo === accountNo);
+  if(!cust) return;
+  const list = DB().txs.filter(t => t.custAcc === accountNo)
+    .sort((a,b)=> (b.date + (b.createdAt||'') < a.date + (a.createdAt||'') ? 1 : -1));
+  let rows = '';
+  if(list.length){
+    rows = list.map((t, i) => {
+      const cfg = TX_CFG[t.type] || { title:t.type, icon:'' };
+      return `<tr>
+        <td>${toBn(i+1)}</td>
+        <td>${toBn(t.date)}</td>
+        <td>${cfg.icon||''} ${esc(cfg.title||t.type)}</td>
+        <td><span class="badge online" style="font-size:10px">${esc(BRANCHES[t.branch]?.name||'')}</span></td>
+        <td class="amt">৳ ${fmt(t.amount)}</td>
+        <td>${esc(t.user||'-')}</td>
+        <td style="font-size:11px">${esc(fmtDateTime(t.createdAt))}</td>
+      </tr>`;
+    }).join('');
+  } else {
+    rows = `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">📭 নেই</td></tr>`;
+  }
+  const body = `
+    <div class="cust-box" style="margin-bottom:14px">
+      <div class="head"><h4>👤 ${esc(cust.name||'-')}</h4></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;font-size:13px;line-height:2">
+        <div><span style="color:var(--muted)">অ্যাকাউন্ট:</span> <b class="rgb">${esc(cust.accountNo)}</b></div>
+        <div><span style="color:var(--muted)">মোবাইল:</span> <b>${esc(cust.mobile||'-')}</b></div>
+        <div><span style="color:var(--muted)">শাখা:</span> <b>${esc(BRANCHES[cust.branch]?.name||'-')}</b></div>
+        <div><span style="color:var(--muted)">ঠিকানা:</span> <b>${esc(cust.address||'-')}</b></div>
+      </div>
+    </div>
+    <div class="table-wrap"><table class="tbl">
+      <thead><tr><th>#</th><th>তারিখ</th><th>ধরন</th><th>শাখা</th><th>টাকা</th><th>ইউজার</th><th>সময়</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  openModal({ title: '📄 গ্রাহকের লেনদেন', bodyHTML: body, wide: true });
+}
+
+function openAllData(){
+  const bf = currentBranchFilter();
+  const isAdmin = session.role === 'admin';
+  const options = Object.entries(TX_CFG).filter(([k])=> k !== 'customer').map(([k,v]) => `<option value="${k}">${v.icon} ${v.title}</option>`).join('');
+  openModal({
+    title: '📋 সব ডেটা', wide: true,
+    bodyHTML: `
+      <div class="form-row">
+        <div class="field"><label>ধরন</label>
+          <select id="ad_type"><option value="all">— সব —</option>${options}</select></div>
+        <div class="field"><label>শুরু</label><input type="date" id="ad_from"></div>
+        <div class="field"><label>শেষ</label><input type="date" id="ad_to"></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">
+        <button class="btn pdf" id="ad_pdf">📄 PDF</button>
+        <button class="btn xlsx" id="ad_xlsx">📊 XLSX</button>
+      </div>
+      <div id="ad_body" style="margin-top:16px"></div>`,
+    onMount: (wrap) => {
+      let currentList = [];
+      function render(){
+        const ty = wrap.querySelector('#ad_type').value;
+        const f = wrap.querySelector('#ad_from').value;
+        const tt = wrap.querySelector('#ad_to').value;
+        let list = DB().txs.slice();
+        if(session.role !== 'admin') list = list.filter(t => t.branch === session.branch || t.from === session.branch || t.to === session.branch || t.custBranch === session.branch);
+        else if(bf !== 'all') list = list.filter(t => t.branch === bf || t.from === bf || t.to === bf || t.custBranch === bf);
+        if(ty !== 'all') list = list.filter(t => t.type === ty);
+        if(f) list = list.filter(t => t.date >= f || (t.acceptedDate && t.acceptedDate >= f));
+        if(tt) list = list.filter(t => t.date <= tt || (t.acceptedDate && t.acceptedDate <= tt));
+        list.sort((a,b)=> (b.createdAt||'').localeCompare(a.createdAt||''));
+        currentList = list;
+        const total = list.reduce((s,t)=> s + t.amount, 0);
+        wrap.querySelector('#ad_body').innerHTML =
+          `<div style="margin-bottom:10px;font-size:13.5px;color:#8b95c9">
+             মোট <b style="color:#8dff3f">${toBn(list.length)}</b> • সর্বমোট <b class="rgb">৳ ${fmt(total)}</b>
+           </div>` + txListHTML(list, { admin:isAdmin });
+        wrap.querySelectorAll('[data-del]').forEach(b =>
+          b.addEventListener('click', async ()=>{ if(confirm('ডিলিট?')){ await deleteTx(b.dataset.del); render(); } }));
+        wrap.querySelectorAll('[data-edit]').forEach(b =>
+          b.addEventListener('click', ()=>{
+            const t = DB().txs.find(x=>x.id===b.dataset.edit);
+            if(t){ wrap.remove(); openTxModal(t.type, t.id); }
+          }));
+        wrap.querySelectorAll('[data-accept]').forEach(b =>
+          b.addEventListener('click', ()=> acceptTransfer(b.dataset.accept, wrap, 'branch_transfer', null)));
+      }
+      wrap.querySelector('#ad_type').addEventListener('change', render);
+      wrap.querySelector('#ad_from').addEventListener('change', render);
+      wrap.querySelector('#ad_to').addEventListener('change', render);
+      render();
+      wrap.querySelector('#ad_pdf').addEventListener('click', () => {
+        const rows = currentList.map(t => buildReportRow(t));
+        const total = currentList.reduce((s,t)=> s + Number(t.amount||0), 0);
+        rows.push(['', '', '', '', 'TOTAL', 'BDT ' + fmt(total), '', '', '', '']);
+        exportToPDF('All Data', REPORT_HEADERS, rows, 'all_data.pdf');
+      });
+      wrap.querySelector('#ad_xlsx').addEventListener('click', () => {
+        const rows = currentList.map(t => buildReportRow(t));
+        const total = currentList.reduce((s,t)=> s + Number(t.amount||0), 0);
+        rows.push(['', '', '', '', 'TOTAL', 'BDT ' + fmt(total), '', '', '', '']);
+        exportToXLSX('All Data', REPORT_HEADERS, rows, 'all_data.xlsx');
+      });
+    }
+  });
+}
+
+async function clearAllData(){
+  if(session.role !== 'admin') return;
+  if(!confirm('⚠️ সব ডেটা মুছে যাবে?')) return;
+  if(!confirm('🚨 শেষবার নিশ্চিত করুন।')) return;
+  const users = DB().users;
+  db = defaultDB();
+  db.users = users;
+  db.__firstSetupDone = false;
+  await saveDB();
+  renderDashboard();
+  toast('🗑️ ক্লিয়ার');
+}
+
+function openUserManager(){
+  openModal({
+    title: '👥 ইউজার ম্যানেজমেন্ট', wide: true,
+    bodyHTML: `
+      <div class="form-row">
+        <div class="field"><label>নাম</label><input type="text" id="u_name" placeholder="ইউজারের নাম"></div>
+        <div class="field"><label>আইডি</label><input type="text" id="u_user" placeholder="login id"></div>
+        <div class="field"><label>পাসওয়ার্ড</label><input type="text" id="u_pass" placeholder="password"></div>
+        <div class="field"><label>শাখা</label>
+          <select id="u_branch">
+            <option value="kalaroa">কলারোয়া</option>
+            <option value="jhaudanga">ঝাউডাঙ্গা</option>
+            <option value="all">সব শাখা</option>
+          </select></div>
+        <div class="field"><label>রোল</label>
+          <select id="u_role">
+            <option value="user">👤 ইউজার</option>
+            <option value="admin">👑 অ্যাডমিন</option>
+          </select></div>
+      </div>
+      <button class="btn green block" id="u_add" style="margin-top:6px">➕ ইউজার তৈরি</button>
+      <div style="margin-top:20px" id="u_list"></div>`,
+    onMount: (wrap) => {
+      const listBox = wrap.querySelector('#u_list');
+      function renderList(){
+        listBox.innerHTML = `
+          <div class="table-wrap"><table class="tbl">
+            <thead><tr>
+              <th>নাম</th><th>আইডি</th><th>পাসওয়ার্ড</th><th>শাখা</th><th>রোল</th><th>অ্যাকশন</th>
+            </tr></thead>
+            <tbody>${DB().users.map(u => {
+              const isMe = session.id === u.id;
+              const totalAdmins = DB().users.filter(x => x.role === 'admin').length;
+              const isLastAdmin = u.role === 'admin' && totalAdmins <= 1;
+              return `<tr>
+                <td>${esc(u.name)} ${isMe ? '<span class="badge accepted" style="font-size:10px">আপনি</span>' : ''}</td>
+                <td><b style="color:#22e6ff">${esc(u.username)}</b></td>
+                <td>
+                  <div class="pw-cell">
+                    <span class="pw-value pw-hidden" data-pw="${esc(u.password || '—')}" data-userid="${u.id}">••••••</span>
+                    <button class="mini show" data-show="${u.id}" title="দেখুন">👁️</button>
+                  </div>
+                </td>
+                <td>${u.branch === 'all' ? '<span class="badge cross">সব শাখা</span>' : esc(BRANCHES[u.branch]?.name||'')}</td>
+                <td>${u.role === 'admin' ? '<span class="badge accepted">👑</span>' : '<span class="badge online">👤</span>'}</td>
+                <td style="white-space:nowrap">
+                  <button class="mini edit" data-edit="${u.id}">✏️</button>
+                  ${isLastAdmin ? '—' : `<button class="mini danger" data-uid="${u.id}">🗑️</button>`}
+                </td>
+              </tr>`;
+            }).join('')}</tbody>
+          </table></div>`;
+        listBox.querySelectorAll('[data-show]').forEach(b => {
+          b.addEventListener('click', () => {
+            const userId = b.dataset.show;
+            const pwEl = listBox.querySelector(`.pw-value[data-userid="${userId}"]`);
+            if(!pwEl) return;
+            if(pwEl.classList.contains('pw-hidden')){
+              pwEl.textContent = pwEl.dataset.pw;
+              pwEl.classList.remove('pw-hidden');
+              b.textContent = '🙈';
+            } else {
+              pwEl.textContent = '••••••';
+              pwEl.classList.add('pw-hidden');
+              b.textContent = '👁️';
+            }
+          });
+        });
+        listBox.querySelectorAll('[data-edit]').forEach(b => {
+          b.addEventListener('click', () => openUserEditModal(b.dataset.edit));
+        });
+        listBox.querySelectorAll('[data-uid]').forEach(b => {
+          b.addEventListener('click', async () => {
+            const userId = b.dataset.uid;
+            const u = DB().users.find(x => x.id === userId);
+            if(!u) return;
+            const totalAdmins = DB().users.filter(x => x.role === 'admin').length;
+            if(u.role === 'admin' && totalAdmins <= 1){
+              alert('⚠️ শেষ অ্যাডমিন অ্যাকাউন্ট ডিলিট করা যাবে না।');
+              return;
+            }
+            if(session.id === userId){
+              alert('⚠️ আপনি নিজের অ্যাকাউন্ট ডিলিট করতে পারবেন না।');
+              return;
+            }
+            if(!confirm('ইউজার ডিলিট করবেন: ' + u.name + ' (' + u.username + ')?')) return;
+            DB().users = DB().users.filter(x => x.id !== userId);
+            await saveDB();
+            renderList();
+            toast('🗑️ ইউজার ডিলিট হয়েছে: ' + u.username);
+          });
+        });
+      }
+      renderList();
+
+      wrap.querySelector('#u_add').addEventListener('click', async () => {
+        const name = wrap.querySelector('#u_name').value.trim();
+        const user = wrap.querySelector('#u_user').value.trim();
+        const pass = wrap.querySelector('#u_pass').value.trim();
+        let br = wrap.querySelector('#u_branch').value;
+        let role = wrap.querySelector('#u_role').value;
+        if(!name || !user || !pass){ alert('সব ঘর পূরণ করুন'); return; }
+        if(DB().users.some(u => u.username === user)){ alert('⚠️ এই আইডি ইতিমধ্যে আছে'); return; }
+        if(role === 'admin') br = 'all';
+        const passwordHash = await sha256(pass);
+        DB().users.push({ id:uid(), name, username:user, password: pass, passwordHash, role, branch:br });
+        await saveDB();
+        wrap.querySelector('#u_name').value = '';
+        wrap.querySelector('#u_user').value = '';
+        wrap.querySelector('#u_pass').value = '';
+        renderList();
+        toast('✅ ইউজার তৈরি হয়েছে: ' + user);
+      });
+    }
+  });
+}
+
+function openUserEditModal(userId){
+  const user = DB().users.find(u => u.id === userId);
+  if(!user) return;
+  const isLastAdmin = user.role === 'admin' && DB().users.filter(u => u.role === 'admin').length <= 1;
+  const body = `
+    <div class="accept-head">
+      <div>👤 <b>${esc(user.name)}</b> — <b style="color:#22e6ff">${esc(user.username)}</b></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>নাম</label><input type="text" id="ue_name" value="${esc(user.name)}"></div>
+      <div class="field"><label>আইডি</label><input type="text" id="ue_user" value="${esc(user.username)}"></div>
+      <div class="field"><label>পাসওয়ার্ড</label><input type="text" id="ue_pass" value="${esc(user.password || '')}"></div>
+      <div class="field"><label>শাখা</label>
+        <select id="ue_branch">
+          <option value="kalaroa" ${user.branch==='kalaroa'?'selected':''}>কলারোয়া</option>
+          <option value="jhaudanga" ${user.branch==='jhaudanga'?'selected':''}>ঝাউডাঙ্গা</option>
+          <option value="all" ${user.branch==='all'?'selected':''}>সব শাখা</option>
+        </select></div>
+      <div class="field"><label>রোল</label>
+        <select id="ue_role">
+          <option value="user" ${user.role==='user'?'selected':''}>👤 ইউজার</option>
+          <option value="admin" ${user.role==='admin'?'selected':''}>👑 অ্যাডমিন</option>
+        </select></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn green" id="ue_save" style="flex:1;min-width:160px">💾 সংরক্ষণ</button>
+      <button class="btn gray" id="ue_cancel" style="flex:1;min-width:120px">বাতিল</button>
+    </div>`;
+  openModal({
+    title: '✏️ ইউজার এডিট', bodyHTML: body,
+    onMount: (w, close) => {
+      w.querySelector('#ue_save').addEventListener('click', async () => {
+        const newName = w.querySelector('#ue_name').value.trim();
+        const newUser = w.querySelector('#ue_user').value.trim();
+        const newPass = w.querySelector('#ue_pass').value.trim();
+        let newBr = w.querySelector('#ue_branch').value;
+        let newRole = w.querySelector('#ue_role').value;
+        if(!newName || !newUser){ alert('নাম ও আইডি দিন'); return; }
+        if(DB().users.some(u => u.username === newUser && u.id !== user.id)){ alert('আইডি আছে'); return; }
+        if(isLastAdmin && newRole !== 'admin'){
+          if(!confirm('একমাত্র অ্যাডমিন। রোল পরিবর্তন?')) return;
+        }
+        if(newRole === 'admin') newBr = 'all';
+        const idx = DB().users.findIndex(u => u.id === user.id);
+        if(idx < 0) return;
+        const wasCurrent = session.id === user.id;
+        DB().users[idx].name = newName;
+        DB().users[idx].username = newUser;
+        DB().users[idx].password = newPass || DB().users[idx].password;
+        if(newPass) DB().users[idx].passwordHash = await sha256(newPass);
+        DB().users[idx].branch = newBr;
+        DB().users[idx].role = newRole;
+        await saveDB();
+        if(wasCurrent){
+          session = DB().users[idx];
+          viewBranch = session.role === 'admin' ? (viewBranch || 'all') : session.branch;
+          if(session.role !== 'admin') viewBranch = session.branch;
+        }
+        close();
+        setTimeout(() => {
+          document.querySelectorAll('.modal-overlay').forEach(x => x.remove());
+          if(wasCurrent){ renderTopbar(); renderDashboard(); }
+          openUserManager();
+        }, 100);
+        toast('✅ আপডেট হয়েছে');
+      });
+      w.querySelector('#ue_cancel').addEventListener('click', close);
+    }
+  });
+}
+
+function toast(msg){
+  const el = document.createElement('div');
+  el.textContent = msg;
+  el.style.cssText = `
+    position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+    background:linear-gradient(135deg,#16a34a,#22e6ff);color:#04120a;
+    padding:13px 24px;border-radius:14px;font-weight:800;font-size:14px;z-index:999;
+    box-shadow:0 16px 40px rgba(0,0,0,.6);opacity:0;transition:.3s;font-family:inherit;max-width:90%;`;
+  document.body.appendChild(el);
+  requestAnimationFrame(()=>{ el.style.opacity='1'; el.style.transform='translateX(-50%) translateY(0)'; });
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(20px)'; setTimeout(()=>el.remove(),320); }, 2500);
+}
+
+async function doLogin(){
+  const btn = $('#loginBtn');
+  const err = $('#loginErr');
+  const u = $('#loginUser').value.trim();
+  const p = $('#loginPass').value.trim();
+
+  if(!u || !p){ err.textContent = 'আইডি ও পাসওয়ার্ড দিন'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> যাচাই হচ্ছে...';
+  err.textContent = '';
+
+  try {
+    const hash = await sha256(p);
+    let user = DB().users.find(x => x.username === u && x.passwordHash === hash);
+    if(!user) user = DB().users.find(x => x.username === u && x.password === p);
+    if(!user && u === 'admin' && p === 'admin123'){
+      user = DB().users.find(x => x.username === 'admin');
+      if(user){ user.passwordHash = DEFAULT_HASH_ADMIN; user.password = 'admin123'; }
+    }
+
+    if(!user){
+      err.textContent = '❌ ভুল আইডি বা পাসওয়ার্ড';
+      $('#loginPass').value = '';
+      btn.disabled = false;
+      btn.innerHTML = '🔐 লগইন করুন';
+      return;
+    }
+
+    if(!user.passwordHash){ user.passwordHash = hash; }
+    if(!user.password){ user.password = p; }
+
+    session = user;
+    sessionStorage.setItem(SKEY, user.id);
+
+    viewBranch = user.role === 'admin' ? 'all' : user.branch;
+    dashDate = todayStr();
+    startApp();
+
+  } catch(e){
+    err.textContent = '❌ সমস্যা: ' + e.message;
+    btn.disabled = false;
+    btn.innerHTML = '🔐 লগইন করুন';
+  }
+}
+function logout(){
+  stopSessionTimer();
+  sessionStorage.removeItem(SKEY);
+  session = null;
+  $('#app').classList.add('hidden');
+  $('#loginScreen').classList.remove('hidden');
+  $('#loginPass').value = '';
+  $('#modalRoot').innerHTML = '';
+  const btn = $('#loginBtn');
+  if(btn){ btn.disabled = false; btn.innerHTML = '🔐 লগইন করুন'; }
+}
+function startApp(){
+  $('#loginScreen').classList.add('hidden');
+  $('#app').classList.remove('hidden');
+  performDailyRollover(false);
+  dashDate = todayStr();
+  isDateViewMode = false;
+  renderTopbar();
+  renderDashboard();
+  saveDB();
+  resetSessionTimer();
+  lastActivityTime = Date.now();
+  if(session && session.role === 'admin' && isSystemEmpty()){
+    setTimeout(() => openSetupWizard(), 500);
+  }
+}
+
+(async function init(){
+  try{
+    if(!localStorage.getItem('__cleared_v53')){
+      localStorage.removeItem('cc_agent_bank_v1');
+      localStorage.removeItem('cc_agent_bank_session');
+      localStorage.setItem('__cleared_v53', 'yes');
+      console.log('🧹 পুরনো localStorage ডেটা একবার ক্লিয়ার করা হয়েছে');
+    }
+  }catch(e){}
+
+  initSupabase();
+
+  try{
+    await loadDB();
+  }catch(e){
+    console.warn('DB load error:', e);
+    db = defaultDB();
+    window.db = db;
+  }
+
+  bindActivityListeners();
+
+  $('#loginBtn').addEventListener('click', doLogin);
+  $('#loginUser').addEventListener('keydown', e => { if(e.key === 'Enter') $('#loginPass').focus(); });
+  $('#loginPass').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+
+  const sid = sessionStorage.getItem(SKEY);
+  if(sid){
+    const u = DB().users.find(x => x.id === sid);
+    if(u){
+      session = u;
+      viewBranch = u.role === 'admin' ? 'all' : u.branch;
+      startApp();
+    }
+  }
+
+  setInterval(async () => {
+    if(supabaseReady){
+      try{
+        await supabaseClient.from(window.SUPABASE_TABLE).select('id').eq('id', window.SUPABASE_ROW_ID).maybeSingle();
+        console.log('✅ Supabase keep-alive ping');
+      }catch(e){}
+    }
+  }, 5 * 24 * 60 * 60 * 1000);
+})();
+</script>
+</body>
+</html>
