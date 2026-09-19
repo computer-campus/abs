@@ -662,9 +662,9 @@ async function saveDB(){
 }
 
 function performDailyRollover(force){
-  return false; /* ✅ Daily rollover সম্পূর্ণ বন্ধ - full history রাখতে */
   const today = todayStr();
   const last = db.lastBaseDate || '';
+  if(!force && last === today) return false;
 
   Object.keys(BRANCHES).forEach(br=>{
     const la = db.liveAccounts[br] || {bank:0,cash:0,other:0};
@@ -678,8 +678,7 @@ function performDailyRollover(force){
     DENOMS.forEach(d => { db.baseVault[br][d] = Number(lv[d]) || 0; });
   });
 
-/* ✅ db.txs মুছে ফেলা বন্ধ — সম্পূর্ণ history রাখতে */
-
+  db.txs = [];
   db.lastBaseDate = today;
 
   if(!db.dailyClose) db.dailyClose = {};
@@ -852,7 +851,6 @@ function recomputeLive(){
       other: Number(db.baseAccounts[b].other) || 0
     };
   });
-  /* ✅ base এর পর থেকে সব transaction apply হবে */
   (db.txs || []).forEach(tx => {
     if(tx.type === 'branch_transfer'){
       applyTxToLive(tx, +1, 'send');
@@ -864,7 +862,6 @@ function recomputeLive(){
   syncLiveCashFromVault();
   window.db = db;
 }
-
 function syncLiveCashFromVault(){
   Object.keys(BRANCHES).forEach(br=>{
     let total = 0;
@@ -1000,13 +997,17 @@ function applyTxToLive(tx, dir, phase){
       }
       break;
     case 'support':
-      /* ✅ Support — সব variant same behavior */
-      if(tx.dir === 'online_support_out' || tx.dir === 'online_support_out_b' || tx.dir === 'out'){
-        /* প্রদান → ব্যাংক থেকে বিয়োগ */
+      /* ✅ Online Support — bank balance adjustment */
+      if(tx.dir === 'online_support_out'){
         db.liveAccounts[b].bank -= amount;
-      } else {
-        /* ফেরত → ব্যাংকে যোগ */
+      } else if(tx.dir === 'online_support_in'){
         db.liveAccounts[b].bank += amount;
+      } else if(tx.dir === 'out'){
+        adjustNotes(db.liveVault[b], nOut, -d);
+        adjustNotes(db.liveVault[b], nIn, d);
+      } else {
+        adjustNotes(db.liveVault[b], nIn, d);
+        adjustNotes(db.liveVault[b], nOut, -d);
       }
       break;
     case 'customer':
@@ -1830,10 +1831,10 @@ function dirOptions(type, cur){
     <option value="out"         ${cur==='out'?'selected':''}>📤 ফিজিক্যালি পাঠানো (−)</option>
     <option value="online_out"  ${cur==='online_out'?'selected':''}>💳 অনলাইন পাঠানো (−)</option>`;
   if(type === 'support') return `
-    <option value="online_support_out" ${cur==='online_support_out'||cur==='out'?'selected':''}>প্রদান (+)</option>
-    <option value="online_support_in"  ${cur==='online_support_in'||cur==='in'?'selected':''}>ফেরত (−)</option>
-    <option value="online_support_out_b" ${cur==='online_support_out_b'?'selected':''}>🌐 অনলাইন সাপোর্ট প্রদান</option>
-    <option value="online_support_in_b"  ${cur==='online_support_in_b'?'selected':''}>🌐 অনলাইন সাপোর্ট ফেরত</option>`;
+    <option value="out" ${cur==='out'?'selected':''}>প্রদান (+)</option>
+    <option value="in"  ${cur==='in'?'selected':''}>ফেরত (−)</option>
+    <option value="online_support_out" ${cur==='online_support_out'?'selected':''}>🌐 অনলাইন সাপোর্ট প্রদান</option>
+    <option value="online_support_in"  ${cur==='online_support_in'?'selected':''}>🌐 অনলাইন সাপোর্ট ফেরত</option>`;
   return `
     <option value="in"  ${cur==='in'?'selected':''}>গ্রহণ (+)</option>
     <option value="out" ${cur==='out'?'selected':''}>পাঠানো (−)</option>`;
@@ -1960,17 +1961,9 @@ function openTxModal(type, editId){
         </div>
       </div>
     ` : ''}
-
-
-${showOnlineSupport ? `
+    ${showOnlineSupport ? `
       <div class="online-box" id="onlineSupportBox">
         <h4>🌐 অনলাইন সাপোর্ট তথ্য</h4>
-        <div class="field" style="margin-bottom:8px">
-          <label>🔍 গ্রাহক সার্চ করুন (নাম / অ্যাকাউন্ট / মোবাইল) <span style="color:#ff4d6d">*</span></label>
-          <input type="text" id="support_search" placeholder="খুঁজুন..." autocomplete="off" 
-                 value="${editing ? esc(editing.supportAcc || editing.supportName || '') : ''}">
-          <div class="suggest" id="support_suggest"></div>
-        </div>
         <div class="form-row">
           <div class="field"><label>গ্রাহকের অ্যাকাউন্ট নম্বর <span style="color:#ff4d6d">*</span></label>
             <input type="text" id="support_acc" placeholder="যেমন: 8888205103098001"
@@ -1992,7 +1985,6 @@ ${showOnlineSupport ? `
         </div>
       </div>
     ` : ''}
-
     <div class="notes-cols" id="notesCols" style="margin-top:6px">
       <div class="notes-col out" id="outCol">
         <h4>💸 প্রদান</h4>
@@ -2033,7 +2025,7 @@ ${showOnlineSupport ? `
           <button class="btn xlsx" id="r_xlsx" style="padding:8px 14px;font-size:12.5px">📊 XLSX</button>
         </div>
       </div>
-	      <div id="r_body"></div>
+      <div id="r_body"></div>
     </div>`;
 
   openModal({
@@ -2041,104 +2033,6 @@ ${showOnlineSupport ? `
     bodyHTML: body, wide: true,
     onMount: (w, close) => setupTxForm(w, type, editing, close, activeBranchForForm)
   });
-}
-
-/* ✅ Check previous support history for any customer */
-function checkAndShowSupportHistory(wrap, c){
-  if(!c || !c.accountNo) return;
-  
-  const normalize = (s) => String(s || '').trim().replace(/\s+/g, '').toLowerCase();
-  const custAcc = normalize(c.accountNo);
-  
-  /* Find all previous support transactions for this customer */
-  const prevSupports = DB().txs.filter(t =>
-    t.type === 'support' &&
-    t.dir === 'online_support_out' &&
-    (normalize(t.supportAcc) === custAcc || normalize(t.custAcc) === custAcc)
-  );
-  const prevReturns = DB().txs.filter(t =>
-    t.type === 'support' &&
-    t.dir === 'online_support_in' &&
-    (normalize(t.supportAcc) === custAcc || normalize(t.custAcc) === custAcc)
-  );
-  
-  /* Remove old history box if any */
-  const oldBox = wrap.querySelector('#supportHistoryBox');
-  if(oldBox) oldBox.remove();
-  
-  if(prevSupports.length === 0) return;
-  
-  const totalGiven = prevSupports.reduce((s,t) => s + Number(t.amount||0), 0);
-  const totalReturned = prevReturns.reduce((s,t) => s + Number(t.amount||0), 0);
-  const pendingDue = totalGiven - totalReturned;
-  
-  /* ✅ Popup message */
-  setTimeout(() => {
-    alert('⚠️ এই গ্রাহককে পূর্বে সাপোর্ট প্রদান করা হয়েছিল!\n\n' +
-          'গ্রাহক: ' + c.name + '\n' +
-          'অ্যাকাউন্ট: ' + c.accountNo + '\n\n' +
-          'মোট প্রদান: ৳ ' + fmt(totalGiven) + '\n' +
-          'মোট ফেরত: ৳ ' + fmt(totalReturned) + '\n' +
-          'বাকি: ৳ ' + fmt(pendingDue) + '\n\n' +
-          'নিচে সম্পূর্ণ সাপোর্ট হিস্টরি দেখানো হয়েছে।');
-  }, 100);
-  
-  /* ✅ Build history box */
-  const allTxs = [...prevSupports, ...prevReturns].sort((a,b) => {
-    const da = (a.date || '') + (a.createdAt || '');
-    const db2 = (b.date || '') + (b.createdAt || '');
-    return da.localeCompare(db2);
-  });
-  
-  const historyRows = allTxs.map(t => {
-    const isReturn = t.dir === 'online_support_in';
-    const color = isReturn ? '#8dff3f' : '#ff4d6d';
-    const lbl = isReturn ? '📥 ফেরত' : '📤 প্রদান';
-    return `<tr>
-      <td style="padding:6px 10px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.06)">${toBn(t.date)}</td>
-      <td style="padding:6px 10px;font-size:12px;color:${color};font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">${lbl}</td>
-      <td style="padding:6px 10px;font-size:12px;color:${color};font-weight:800;border-bottom:1px solid rgba(255,255,255,.06)">৳ ${fmt(t.amount)}</td>
-      <td style="padding:6px 10px;font-size:11px;color:#8b95c9;border-bottom:1px solid rgba(255,255,255,.06)">${esc(t.note||'-')}</td>
-      <td style="padding:6px 10px;font-size:11px;color:#8b95c9;border-bottom:1px solid rgba(255,255,255,.06)">${esc(t.user||'-')}</td>
-    </tr>`;
-  }).join('');
-  
-  const historyEl = document.createElement('div');
-  historyEl.id = 'supportHistoryBox';
-  historyEl.style.cssText = 'margin-top:14px;padding:14px;border-radius:16px;background:rgba(255,203,43,.06);border:1px solid rgba(255,203,43,.35);';
-  historyEl.innerHTML = `
-    <div style="font-size:13px;font-weight:800;color:#ffcb2b;margin-bottom:10px">
-      📋 সাপোর্ট হিস্টরি — ${esc(c.name)} (${esc(c.accountNo)})
-    </div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;font-size:12.5px">
-      <div>মোট প্রদান: <b style="color:#ff4d6d">৳ ${fmt(totalGiven)}</b></div>
-      <div>মোট ফেরত: <b style="color:#8dff3f">৳ ${fmt(totalReturned)}</b></div>
-      <div>বাকি: <b style="color:#ffcb2b">৳ ${fmt(pendingDue)}</b></div>
-    </div>
-    <div style="overflow-x:auto;border-radius:10px;border:1px solid rgba(255,255,255,.1)">
-      <table style="width:100%;border-collapse:collapse;min-width:420px">
-        <thead style="background:rgba(255,203,43,.12)">
-          <tr>
-            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">তারিখ</th>
-            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">ধরন</th>
-            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">টাকা</th>
-            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">বিবরণ</th>
-            <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">ইউজার</th>
-          </tr>
-        </thead>
-        <tbody>${historyRows}</tbody>
-      </table>
-    </div>`;
-  
-  /* Insert history box after the customer box or suggest box */
-  const custBox = wrap.querySelector('.cust-box');
-  if(custBox){
-    custBox.appendChild(historyEl);
-  } else {
-    /* Fallback: insert before notes-cols */
-    const notesCols = wrap.querySelector('#notesCols');
-    if(notesCols) notesCols.parentNode.insertBefore(historyEl, notesCols);
-  }
 }
 
 function setupTxForm(wrap, type, editing, close, activeBranchForForm){
@@ -2156,9 +2050,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   function isOnlineSupportMode(){
     if(!hasOnlineSupport) return false;
     const dirEl = wrap.querySelector('#f_dir');
-    const v = dirEl ? dirEl.value : '';
-    return v === 'online_support_out' || v === 'online_support_in' 
-        || v === 'online_support_out_b' || v === 'online_support_in_b';
+    return dirEl && (dirEl.value === 'online_support_out' || dirEl.value === 'online_support_in');
   }
 
   function updateCrossBranchNote(){
@@ -2218,8 +2110,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const hint = wrap.querySelector('#dirHint');
 
     /* ✅ Online Support Mode */
-    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in' 
-                        || dir === 'online_support_out_b' || dir === 'online_support_in_b');
+    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
     if(isOnlineSup){
       if(notesCols) notesCols.style.display = 'none';
       if(noteDetailBox) noteDetailBox.style.display = 'none';
@@ -2283,120 +2174,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const v = parseFloat(onlineAmt.value) || 0;
     const pv = wrap.querySelector('#onlineAmountPreview');
     if(pv) pv.textContent = '৳ ' + fmt(v);
-  }
-
-/* ✅ Online Support — Customer Search Suggestion */
-  const supportSearchEl = wrap.querySelector('#support_search');
-  const supportSugEl = wrap.querySelector('#support_suggest');
-  if(supportSearchEl && supportSugEl){
-    supportSearchEl.addEventListener('input', () => {
-      const q = supportSearchEl.value.trim();
-      if(!q){ supportSugEl.innerHTML = ''; return; }
-      const list = searchCustomers(q);
-      if(!list.length){ 
-        supportSugEl.innerHTML = '<div class="sug-item" style="cursor:default;color:#8b95c9">📭 কোনো গ্রাহক পাওয়া যায়নি</div>'; 
-        return; 
-      }
-      supportSugEl.innerHTML = list.map(c => `
-        <div class="sug-item" data-id="${c.id}">
-          <b>${esc(c.name)}</b> — <small>${esc(c.accountNo)}</small><br>
-          <small>📱 ${esc(c.mobile||'-')} • 📍 ${esc(c.address||'-')} • 🏦 ${esc(BRANCHES[c.branch]?.name||'')}</small>
-        </div>`).join('');
-supportSugEl.querySelectorAll('.sug-item[data-id]').forEach(el => {
-        el.addEventListener('click', () => {
-          const c = DB().customers.find(x => x.id === el.dataset.id);
-          if(!c) return;
-          const accInput = wrap.querySelector('#support_acc');
-          const nameInput = wrap.querySelector('#support_name');
-          if(accInput) accInput.value = c.accountNo || '';
-          if(nameInput) nameInput.value = c.name || '';
-          supportSearchEl.value = (c.name || '') + ' — ' + (c.accountNo || '');
-          supportSugEl.innerHTML = '';
-
-          /* ✅ Previous support check */
-          const prevSupports = DB().txs.filter(t =>
-            t.type === 'support' &&
-            t.dir === 'online_support_out' &&
-            (t.supportAcc === c.accountNo || t.custAcc === c.accountNo)
-          );
-          const prevReturns = DB().txs.filter(t =>
-            t.type === 'support' &&
-            t.dir === 'online_support_in' &&
-            (t.supportAcc === c.accountNo || t.custAcc === c.accountNo)
-          );
-          const totalGiven = prevSupports.reduce((s,t) => s + Number(t.amount||0), 0);
-          const totalReturned = prevReturns.reduce((s,t) => s + Number(t.amount||0), 0);
-          const pendingDue = totalGiven - totalReturned;
-
-          const supportBox = wrap.querySelector('#onlineSupportBox');
-          let historyEl = wrap.querySelector('#supportHistoryBox');
-          if(historyEl) historyEl.remove();
-
-          if(prevSupports.length > 0){
-            /* Popup alert */
-            setTimeout(() => {
-              alert('⚠️ এই গ্রাহককে পূর্বে সাপোর্ট প্রদান করা হয়েছিল!\n\n' +
-                    'গ্রাহক: ' + c.name + '\n' +
-                    'অ্যাকাউন্ট: ' + c.accountNo + '\n\n' +
-                    'মোট প্রদান: ৳ ' + fmt(totalGiven) + '\n' +
-                    'মোট ফেরত: ৳ ' + fmt(totalReturned) + '\n' +
-                    'বাকি: ৳ ' + fmt(pendingDue) + '\n\n' +
-                    'নিচে সম্পূর্ণ সাপোর্ট হিস্টরি দেখানো হয়েছে।');
-            }, 100);
-
-            /* Build history table */
-            const allSupportTxs = [...prevSupports, ...prevReturns];
-            allSupportTxs.sort((a,b) => {
-              const da = (a.date || '') + (a.createdAt || '');
-              const db2 = (b.date || '') + (b.createdAt || '');
-              return da.localeCompare(db2);
-            });
-            const historyRows = allSupportTxs.map(t => {
-              const isReturn = t.dir === 'online_support_in';
-              const color = isReturn ? '#8dff3f' : '#ff4d6d';
-              const lbl = isReturn ? '📥 ফেরত' : '📤 প্রদান';
-              return `<tr>
-                <td style="padding:6px 10px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.06)">${toBn(t.date)}</td>
-                <td style="padding:6px 10px;font-size:12px;color:${color};font-weight:700;border-bottom:1px solid rgba(255,255,255,.06)">${lbl}</td>
-                <td style="padding:6px 10px;font-size:12px;color:${color};font-weight:800;border-bottom:1px solid rgba(255,255,255,.06)">৳ ${fmt(t.amount)}</td>
-                <td style="padding:6px 10px;font-size:11px;color:#8b95c9;border-bottom:1px solid rgba(255,255,255,.06)">${esc(t.note||'-')}</td>
-                <td style="padding:6px 10px;font-size:11px;color:#8b95c9;border-bottom:1px solid rgba(255,255,255,.06)">${esc(t.user||'-')}</td>
-              </tr>`;
-            }).join('');
-
-            historyEl = document.createElement('div');
-            historyEl.id = 'supportHistoryBox';
-            historyEl.style.cssText = 'margin-top:14px;padding:14px;border-radius:16px;background:rgba(255,203,43,.06);border:1px solid rgba(255,203,43,.35);';
-            historyEl.innerHTML = `
-              <div style="font-size:13px;font-weight:800;color:#ffcb2b;margin-bottom:10px">
-                📋 সাপোর্ট হিস্টরি — ${esc(c.name)} (${esc(c.accountNo)})
-              </div>
-              <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;font-size:12.5px">
-                <div>মোট প্রদান: <b style="color:#ff4d6d">৳ ${fmt(totalGiven)}</b></div>
-                <div>মোট ফেরত: <b style="color:#8dff3f">৳ ${fmt(totalReturned)}</b></div>
-                <div>বাকি: <b style="color:#ffcb2b">৳ ${fmt(pendingDue)}</b></div>
-              </div>
-              <div style="overflow-x:auto;border-radius:10px;border:1px solid rgba(255,255,255,.1)">
-                <table style="width:100%;border-collapse:collapse;min-width:420px">
-                  <thead style="background:rgba(255,203,43,.12)">
-                    <tr>
-                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">তারিখ</th>
-                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">ধরন</th>
-                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">টাকা</th>
-                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">বিবরণ</th>
-                      <th style="padding:8px 10px;text-align:left;font-size:11.5px;color:#d9c9ff">ইউজার</th>
-                    </tr>
-                  </thead>
-                  <tbody>${historyRows}</tbody>
-                </table>
-              </div>`;
-            if(supportBox) supportBox.appendChild(historyEl);
-          } else {
-            /* No previous support — remove history box (already done above) */
-          }
-        });
-      });
-    });
   }
 
   /* ✅ Online Support Amount Input */
@@ -2491,7 +2268,7 @@ supportSugEl.querySelectorAll('.sug-item[data-id]').forEach(el => {
   const searchEl = wrap.querySelector('#f_search');
   const sugEl = wrap.querySelector('#f_suggest');
   if(searchEl){
-searchEl.addEventListener('input', () => {
+    searchEl.addEventListener('input', () => {
       let list = searchCustomers(searchEl.value);
       if(!list.length){ sugEl.innerHTML = ''; return; }
       sugEl.innerHTML = list.map(c => `
@@ -2519,9 +2296,6 @@ searchEl.addEventListener('input', () => {
             if(hiddenB) hiddenB.value = c.branch;
             updateCrossBranchNote();
           }
-
-          /* ✅ Check previous support history for this customer */
-          checkAndShowSupportHistory(wrap, c);
         });
       });
     });
@@ -2625,8 +2399,7 @@ searchEl.addEventListener('input', () => {
     let onlineSupportName = '';
     let onlineSupportAmount = 0;
     let onlineSupportNote = '';
-    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in' 
-                        || dir === 'online_support_out_b' || dir === 'online_support_in_b');
+    const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
     if(isOnlineSup){
       onlineSupportAcc = wrap.querySelector('#support_acc')?.value.trim() || '';
       onlineSupportName = wrap.querySelector('#support_name')?.value.trim() || '';
@@ -2699,9 +2472,7 @@ searchEl.addEventListener('input', () => {
       type, date, branch: txnBranch, custBranch, bank: bankKey,
       from: type === 'branch_transfer' ? wrap.querySelector('#f_from').value : null,
       to: type === 'branch_transfer' ? wrap.querySelector('#f_to').value : null,
-            dir: (dir === 'online_support_out_b' ? 'online_support_out' : 
-            dir === 'online_support_in_b' ? 'online_support_in' : dir),
-      amount: Math.round(txAmount*100)/100,
+      dir, amount: Math.round(txAmount*100)/100,
       onlineAmount: (isOnlineMode() || isOnlineSup) ? txAmount : null,
       onlineRef: isOnlineMode() ? (wrap.querySelector('#online_ref')?.value.trim() || '') : null,
       supportAcc: isOnlineSup ? onlineSupportAcc : '',
