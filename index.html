@@ -91,6 +91,8 @@ body{
 .btn.red{background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;border:1px solid rgba(220,38,38,.4);}
 .btn.pdf{background:linear-gradient(135deg,#dc2626,#f59e0b);color:#fff;border:none;}
 .btn.xlsx{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;}
+.btn.dup{background:linear-gradient(135deg,#dc2626,#f59e0b);color:#fff;border:none;box-shadow:0 4px 16px rgba(220,38,38,.35);}
+.btn.dup:hover{box-shadow:0 8px 24px rgba(220,38,38,.5);filter:brightness(1.1);}
 .topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 22px;background:rgba(4,6,13,.9);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--line-2);box-shadow:0 4px 24px rgba(0,0,0,.7), 0 0 40px rgba(59,130,246,.08);}
 .brand{display:flex;align-items:center;gap:14px;}
 .brand .logo{width:50px;height:50px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,rgba(59,130,246,.18),rgba(34,197,94,.1));border:1px solid var(--line-3);box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 16px rgba(59,130,246,.25);transition:transform .3s;}
@@ -265,6 +267,7 @@ table.tbl td.amt{font-weight:800;color:var(--green-2);white-space:nowrap;font-va
 .badge.due{background:rgba(220,38,38,.18);border-color:rgba(220,38,38,.5);color:#f87171;font-size:11px;font-weight:800;}
 .badge.cleared{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--green-2);font-size:11px;font-weight:800;}
 .badge.archive{background:rgba(122,138,184,.15);border-color:rgba(122,138,184,.4);color:#a5b4d8;font-size:10px;font-weight:700;}
+.badge.online-tx{background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(59,130,246,.15));border:1px solid rgba(34,197,94,.6);color:#4ade80;font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:6px;display:inline-block;margin-top:4px;}
 .mini{border:none;cursor:pointer;background:rgba(59,130,246,.15);color:var(--blue-3);padding:6px 10px;border-radius:8px;font-size:12px;transition:all .2s;border:1px solid var(--line-3);font-weight:600;}
 .mini:hover{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-1px);}
 .mini.danger{background:rgba(220,38,38,.15);color:#f87171;border-color:rgba(220,38,38,.4);}
@@ -273,6 +276,7 @@ table.tbl td.amt{font-weight:800;color:var(--green-2);white-space:nowrap;font-va
 .mini.edit{background:rgba(59,130,246,.2);color:var(--blue-3);border-color:var(--line-3);}
 .mini.show{background:rgba(34,197,94,.2);color:var(--green-2);border-color:rgba(34,197,94,.4);}
 .mini.due-btn{background:linear-gradient(135deg,#dc2626,#f59e0b);color:#fff;font-weight:700;border-color:transparent;}
+.mini.tick{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-color:transparent;font-weight:800;}
 .empty{padding:36px 24px;text-align:center;color:var(--muted);font-size:13.5px;background:linear-gradient(145deg,#080c1a,#050810);border-radius:var(--radius-md);}
 .bank-hint{font-size:11.5px;color:var(--blue-3);background:rgba(59,130,246,.08);padding:10px 14px;border-radius:10px;margin-bottom:12px;border:1px dashed rgba(59,130,246,.35);line-height:1.7;}
 .bank-hint b{color:var(--green-2);}
@@ -311,6 +315,16 @@ table.tbl td.amt{font-weight:800;color:var(--green-2);white-space:nowrap;font-va
 .rt-toast.new-tx::before{background:linear-gradient(180deg,#3b82f6,#22c55e);}
 .rt-toast.accept::before{background:linear-gradient(180deg,#22c55e,#16a34a);}
 .rt-toast.delete::before{background:linear-gradient(180deg,#dc2626,#991b1b);}
+.online-tick-box{padding:16px 18px;border-radius:var(--radius-md);margin-top:8px;margin-bottom:16px;background:linear-gradient(145deg,rgba(34,197,94,.08),rgba(59,130,246,.04));border:1px solid rgba(34,197,94,.4);}
+.online-tick-label{display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line-2);transition:all .2s;}
+.online-tick-label:hover{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.5);}
+.online-tick-label input[type="checkbox"]{width:22px;height:22px;cursor:pointer;accent-color:#22c55e;flex-shrink:0;}
+.online-tick-text{flex:1;}
+.online-tick-text .title{font-size:13.5px;font-weight:800;color:#fff;}
+.online-tick-text .sub{font-size:11.5px;color:var(--muted);margin-top:3px;}
+.online-bank-display{margin-top:12px;padding:12px;border-radius:12px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.4);}
+.online-bank-display .lbl{font-size:11.5px;color:#86efac;font-weight:700;margin-bottom:5px;}
+.online-bank-display .name{font-size:14.5px;color:#fff;font-weight:800;word-break:break-word;}
 @media(max-width:640px){
   .brand h1{font-size:15px;}
   .big-amt{font-size:24px;}
@@ -388,13 +402,10 @@ window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
 
 <script>
 /* ============================================================
-   Computer Campus — Agent Banking System (FINAL v14)
-   ✅ All v13 features
-   ✅ 4-Layer Duplicate Prevention:
-      - Save button lock
-      - Fingerprint duplicate warning
-      - Same account + amount + day check
-      - Undo (30 sec)
+   Computer Campus — Agent Banking System (FINAL v15)
+   ✅ v14 features (Realtime sync, 4-Layer Duplicate Prevention)
+   ✅ NEW: ⚠️ Duplicate List Button — সব ডুপ্লিকেট এন্ট্রি ম্যানেজ
+   ✅ NEW: ঋণ বিতরণে Tick Mark + ব্যাংক নাম popup
    ============================================================ */
 
 const BRANCHES = {
@@ -409,7 +420,7 @@ const BANKS = {
   brac_dhaka:           { name:'ব্র্যাক ব্যাংক (ঢাকা)',         en:'BRAC Bank (Dhaka)' }
 };
 const DENOMS = [1000,500,200,100,50,20,10,5,2,1];
-const APP_VERSION = 'v14';
+const APP_VERSION = 'v15';
 const SKEY = 'cc_agent_bank_session_' + APP_VERSION;
 const LOCAL_DB_KEY = 'cc_agent_bank_local_' + APP_VERSION;
 const VERSION_KEY = 'cc_agent_bank_version';
@@ -419,6 +430,7 @@ const KEEP_FULL_SNAPSHOT_DAYS = 400;
 const ARCHIVE_YEARS_AFTER = 2;
 const SUPABASE_TIMEOUT_MS = 12000;
 const SUPABASE_MAX_RETRY = 10;
+const ONLINE_TRANSFER_NOTE_PREFIX = 'লোন অফিসার ও গ্রাহকের সম্মতিতে অনলাইনে ফান্ড ট্রান্সফার করা হয়েছে।';
 
 const TX_CFG = {
   loan_given:      { title:'ঋণের টাকা বিতরণ',       en:'Loan Given',       icon:'💸', primary:'out', cust:true  },
@@ -708,8 +720,6 @@ function mergeRemoteIntoLocal(remote){
 /* ============================================================
    DUPLICATE PREVENTION SYSTEM — 4 Layers
    ============================================================ */
-
-/* Layer 2 helper: TX Fingerprint */
 function makeTxFingerprint(tx){
   return [
     tx.date || '',
@@ -738,8 +748,6 @@ function findRecentDuplicateTx(tx, withinSeconds){
   }
   return null;
 }
-
-/* Layer 3 helper: Same account + amount + date + type */
 function findSameAccountSameAmountSameDay(tx, withinMinutes){
   const cutoff = Date.now() - (withinMinutes * 60 * 1000);
   const all = getAllTxs();
@@ -758,8 +766,6 @@ function findSameAccountSameAmountSameDay(tx, withinMinutes){
   }
   return null;
 }
-
-/* Confirm duplicate dialog */
 function confirmDuplicate(tx, withinSeconds){
   return new Promise((resolve) => {
     const fpDup = findRecentDuplicateTx(tx, withinSeconds);
@@ -901,7 +907,6 @@ function startSupabaseListener(){
       if(!remote) return;
       if(__isApplyingRemote) return;
       if(remote.__version && remote.__version !== APP_VERSION){
-        console.log('Realtime: version mismatch, skipping');
         return;
       }
       const __now = Date.now();
@@ -1892,6 +1897,8 @@ function renderTopbar(){
   const isAdmin = session.role === 'admin';
   const bf = currentBranchFilter();
   const branchLabel = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  const dupGroups = getDuplicateGroups();
+  const dupCount = dupGroups.reduce((s,g)=> s + (g.txs.length - 1), 0);
   $('#topbar').innerHTML = `
     <div class="brand">
       <div class="logo">
@@ -1926,6 +1933,7 @@ function renderTopbar(){
         <button class="btn gray" id="btnUserMgr" style="padding:9px 14px;font-size:13px">👥 ইউজার</button>
         <button class="btn gray" id="btnBackup" style="padding:9px 14px;font-size:13px">💾 ব্যাকআপ</button>
       ` : ''}
+      <button class="btn dup" id="btnDupList" style="padding:9px 14px;font-size:13px">⚠️ ডুপ্লিকেট${dupCount > 0 ? ' (' + toBn(dupCount) + ')' : ''}</button>
       <span class="who">👤 <b>${esc(session.name)}</b></span>
       <button class="btn red" id="btnLogout" style="padding:9px 16px;font-size:13px">লগআউট</button>
     </div>`;
@@ -1944,6 +1952,7 @@ function renderTopbar(){
     $('#btnUserMgr').addEventListener('click', openUserManager);
     $('#btnBackup').addEventListener('click', openBackupModal);
   }
+  $('#btnDupList').addEventListener('click', openDuplicateListModal);
   $('#btnLogout').addEventListener('click', logout);
 }
 function renderDateBanner(){
@@ -2310,6 +2319,253 @@ function showDuePopup(customer, opts){
     }
   });
 }
+
+/* ============================================================
+   ⚠️ DUPLICATE LIST MODAL — সব ডুপ্লিকেট এন্ট্রি এক জায়গায়
+   ============================================================ */
+function getDuplicateGroups(){
+  const all = getAllTxs();
+  const groups = new Map();
+  all.forEach(t => {
+    const fp = makeTxFingerprint(t);
+    if(!groups.has(fp)) groups.set(fp, []);
+    groups.get(fp).push(t);
+  });
+  const dupGroups = [];
+  groups.forEach((txs, fp) => {
+    if(txs.length >= 2){
+      txs.sort((a,b)=> (a.createdAt||'').localeCompare(b.createdAt||''));
+      dupGroups.push({ fingerprint: fp, txs });
+    }
+  });
+  dupGroups.sort((a,b)=> {
+    const aLast = a.txs[a.txs.length-1].createdAt || '';
+    const bLast = b.txs[b.txs.length-1].createdAt || '';
+    return bLast.localeCompare(aLast);
+  });
+  return dupGroups;
+}
+function openDuplicateListModal(){
+  if(!session) return;
+  const bf = currentBranchFilter();
+  let groups = getDuplicateGroups();
+  if(session.role !== 'admin'){
+    groups = groups.map(g => ({
+      fingerprint: g.fingerprint,
+      txs: g.txs.filter(t => t.branch === session.branch || t.custBranch === session.branch)
+    })).filter(g => g.txs.length >= 2);
+  } else if(bf !== 'all'){
+    groups = groups.map(g => ({
+      fingerprint: g.fingerprint,
+      txs: g.txs.filter(t => t.branch === bf || t.custBranch === bf)
+    })).filter(g => g.txs.length >= 2);
+  }
+  const totalDupEntries = groups.reduce((s,g)=> s + (g.txs.length - 1), 0);
+  const isAdmin = session.role === 'admin';
+
+  let groupsHTML = '';
+  if(!groups.length){
+    groupsHTML = `<div class="empty" style="color:#4ade80;border:1px solid rgba(34,197,94,.4);background:linear-gradient(145deg,rgba(34,197,94,.08),rgba(34,197,94,.02))">🎉 কোনো ডুপ্লিকেট পাওয়া যায়নি</div>`;
+  } else {
+    groups.forEach((g, gi) => {
+      const first = g.txs[0];
+      const cfg = TX_CFG[first.type] || { title: first.type, icon: '📌' };
+      groupsHTML += `
+        <div class="vault-box" style="margin-bottom:14px;padding:0;border-color:rgba(220,38,38,.35)">
+          <div style="padding:12px 16px;background:linear-gradient(180deg,rgba(220,38,38,.12),transparent);border-bottom:1px solid var(--line-2)">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+              <div>
+                <div style="font-size:14px;font-weight:800;color:#fff">${cfg.icon||''} ${esc(cfg.title||first.type)}</div>
+                <div style="font-size:11.5px;color:var(--muted);margin-top:3px">
+                  📅 ${toBn(first.date)} • 🏦 ${esc(BRANCHES[first.branch]?.name||'-')}
+                  ${first.custAcc ? ` • 👤 ${esc(first.custName||'-')} (${esc(first.custAcc)})` : ''}
+                </div>
+              </div>
+              <span class="badge due" style="font-size:12px">⚠️ ${toBn(g.txs.length)} টি একই</span>
+            </div>
+          </div>
+          <div class="table-wrap" style="border:none;border-radius:0">
+            <table class="tbl" style="min-width:auto">
+              <thead><tr>
+                <th>#</th><th>পরিমাণ</th><th>ইউজার</th><th>সময়</th><th>বিবরণ</th><th>অ্যাকশন</th>
+              </tr></thead>
+              <tbody>
+                ${g.txs.map((t, ti)=>`
+                  <tr data-dup-txid="${esc(t.id)}" class="${ti === 0 ? 'cust-row' : 'cust-row has-due'}">
+                    <td><b style="color:${ti === 0 ? '#4ade80' : '#f87171'}">${toBn(ti+1)}</b>${ti === 0 ? ' <small style="color:#4ade80">(রাখুন)</small>' : ''}</td>
+                    <td class="amt" style="color:#fff">৳ ${fmt(t.amount)}</td>
+                    <td>${esc(t.user||'-')}</td>
+                    <td style="font-size:11px;white-space:nowrap">${esc(fmtDateTime(t.createdAt))}</td>
+                    <td style="font-size:12px;color:var(--muted);max-width:260px;word-break:break-word">${esc(t.note||'-')}</td>
+                    <td style="white-space:nowrap">
+                      <button class="mini" data-dup-edit="${esc(t.id)}" title="এডিট">✏️</button>
+                      <button class="mini danger" data-dup-del="${esc(t.id)}" title="ডিলিট">🗑️</button>
+                    </td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+          ${isAdmin ? `
+          <div style="padding:12px 16px;background:rgba(0,0,0,.2);border-top:1px dashed var(--line-2);display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="mini danger" data-dup-keepfirst="${gi}" style="padding:8px 14px;font-size:12.5px">🗑️ প্রথমটি রেখে বাকিসব ডিলিট (${toBn(g.txs.length-1)} টি)</button>
+          </div>` : ''}
+        </div>`;
+    });
+  }
+
+  const body = `
+    <div class="accept-head" style="background:linear-gradient(145deg,rgba(220,38,38,.1),rgba(245,158,11,.04));border-color:rgba(220,38,38,.5)">
+      <div style="font-size:13.5px;line-height:1.9">
+        ⚠️ <b>সম্ভাব্য ডুপ্লিকেট এন্ট্রি তালিকা</b><br>
+        মোট <b style="color:#fff">${toBn(groups.length)}</b> টি গ্রুপে <b style="color:#fff">${toBn(totalDupEntries)}</b> টি অতিরিক্ত এন্ট্রি পাওয়া গেছে।
+        <br><small style="color:var(--muted)">নিচে প্রতিটি গ্রুপে দেখানো হয়েছে — একই ধরনের লেনদেনগুলো। প্রয়োজনে এডিট বা ডিলিট করুন।</small>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:14px;flex-wrap:wrap">
+      <button class="btn pdf" id="dup_pdf">📄 PDF</button>
+      <button class="btn xlsx" id="dup_xlsx">📊 XLSX</button>
+    </div>
+    <div id="dup_body">${groupsHTML}</div>`;
+
+  openModal({
+    title: '⚠️ ডুপ্লিকেট এন্ট্রি ম্যানেজমেন্ট',
+    bodyHTML: body,
+    wide: true,
+    onMount: (w, cl) => {
+      w.querySelectorAll('[data-dup-edit]').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const t = getAllTxs().find(x => x.id === b.dataset.dupEdit);
+          if(!t) return;
+          cl();
+          setTimeout(()=> openTxModal(t.type, t.id), 100);
+        });
+      });
+      w.querySelectorAll('[data-dup-del]').forEach(b=>{
+        b.addEventListener('click', async ()=>{
+          const id = b.dataset.dupDel;
+          const t = getAllTxs().find(x => x.id === id);
+          if(!t) return;
+          if(!confirm('⚠️ এই লেনদেনটি ডিলিট করবেন?\n\n৳ ' + fmt(t.amount) + '\n' + fmtDateTime(t.createdAt) + '\nইউজার: ' + (t.user||'-'))) return;
+          await deleteTx(id);
+          cl();
+          setTimeout(()=> openDuplicateListModal(), 200);
+        });
+      });
+      w.querySelectorAll('[data-dup-keepfirst]').forEach(b=>{
+        b.addEventListener('click', async ()=>{
+          const gi = parseInt(b.dataset.dupKeepfirst, 10);
+          const g = groups[gi];
+          if(!g) return;
+          if(!confirm('⚠️ প্রথম এন্ট্রি রেখে বাকি ' + (g.txs.length - 1) + ' টি ডিলিট করবেন?')) return;
+          for(let i = 1; i < g.txs.length; i++){
+            await deleteTx(g.txs[i].id);
+          }
+          cl();
+          setTimeout(()=> openDuplicateListModal(), 200);
+        });
+      });
+      w.querySelector('#dup_pdf').addEventListener('click', ()=>{
+        const headers = ['Group','#','Date','Type','Branch','Customer','Amount','User','Time','Description'];
+        const rows = [];
+        groups.forEach((g, gi) => {
+          g.txs.forEach((t, ti) => {
+            const cfg = TX_CFG[t.type] || { title: t.type };
+            rows.push([
+              String(gi+1), String(ti+1), t.date || '-', cfg.title || t.type,
+              BRANCHES[t.branch]?.en || '-',
+              (t.custName || '-') + (t.custAcc ? ' (' + t.custAcc + ')' : ''),
+              'BDT ' + fmt(t.amount), t.user || '-',
+              fmtDateTimeEN(t.createdAt), (t.note || '-').substring(0, 80)
+            ]);
+          });
+        });
+        exportToPDF('Duplicate Entries Report', headers, rows, 'duplicate_entries.pdf');
+      });
+      w.querySelector('#dup_xlsx').addEventListener('click', ()=>{
+        const headers = ['Group','#','Date','Type','Branch','Customer','Amount','User','Time','Description'];
+        const rows = [];
+        groups.forEach((g, gi) => {
+          g.txs.forEach((t, ti) => {
+            const cfg = TX_CFG[t.type] || { title: t.type };
+            rows.push([
+              String(gi+1), String(ti+1), t.date || '-', cfg.title || t.type,
+              BRANCHES[t.branch]?.en || '-',
+              (t.custName || '-') + (t.custAcc ? ' (' + t.custAcc + ')' : ''),
+              'BDT ' + fmt(t.amount), t.user || '-',
+              fmtDateTimeEN(t.createdAt), (t.note || '-').substring(0, 80)
+            ]);
+          });
+        });
+        exportToXLSX('Duplicate Entries Report', headers, rows, 'duplicate_entries.xlsx');
+      });
+    }
+  });
+}
+
+/* ============================================================
+   BANK NAME POPUP — Online Transfer টিক দিলে দেখাবে
+   ============================================================ */
+function showBankNamePopup(onDone, initialValue, existingValue){
+  const initial = initialValue || existingValue || '';
+  const popupBody = `
+    <div class="accept-head" style="background:linear-gradient(145deg,rgba(34,197,94,.1),rgba(59,130,246,.04));border-color:rgba(34,197,94,.5)">
+      <div style="font-size:13.5px;line-height:1.9">
+        ✅ <b>অনলাইনে ফান্ড ট্রান্সফার</b><br>
+        <small style="color:var(--muted)">অনুগ্রহ করে যে ব্যাংক থেকে ফান্ড ট্রান্সফার করা হয়েছে তার নাম লিখুন। না লিখলে লেনদেন বাতিল হবে।</small>
+      </div>
+    </div>
+    <div class="field">
+      <label>🏦 ব্যাংকের নাম *</label>
+      <input type="text" id="bp_bankName" placeholder="যেমন: আল আরাফাহ ইসলামী ব্যাংক" value="${esc(initial)}" style="font-size:15px;font-weight:700;color:#fff;padding:14px">
+    </div>
+    <div class="field">
+      <label>দ্রুত নির্বাচন</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="bp_quickBanks">
+        ${Object.entries(BANKS).map(([k,v]) =>
+          `<button type="button" class="btn gray" data-bank-quick="${esc(v.name)}" style="padding:8px 14px;font-size:12.5px">${esc(v.name)}</button>`
+        ).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+      <button class="btn green" id="bp_confirm" style="flex:1;min-width:180px">✅ নিশ্চিত করুন</button>
+      <button class="btn gray" id="bp_cancel" style="flex:1;min-width:120px">❌ বাতিল (লেনদেন হবে না)</button>
+    </div>`;
+  let resolved = false;
+  openModal({
+    title: '🏦 ব্যাংকের নাম দিন',
+    bodyHTML: popupBody,
+    onMount: (w, close)=>{
+      const inputEl = w.querySelector('#bp_bankName');
+      setTimeout(()=> inputEl.focus(), 100);
+      w.querySelectorAll('[data-bank-quick]').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          inputEl.value = b.dataset.bankQuick;
+          inputEl.focus();
+        });
+      });
+      const finalize = (val)=>{
+        if(resolved) return;
+        resolved = true;
+        close();
+        onDone(val);
+      };
+      w.querySelector('#bp_confirm').addEventListener('click', ()=>{
+        const v = inputEl.value.trim();
+        if(!v){
+          alert('⚠️ ব্যাংকের নাম না লিখলে লেনদেন সংরক্ষণ করা যাবে না।');
+          inputEl.focus();
+          return;
+        }
+        finalize(v);
+      });
+      w.querySelector('#bp_cancel').addEventListener('click', ()=>{ finalize(null); });
+      w.querySelector('.x').addEventListener('click', ()=>{ finalize(null); }, true);
+      inputEl.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter'){ e.preventDefault(); w.querySelector('#bp_confirm').click(); }
+      });
+    }
+  });
+}
 </script>
 
 <script>
@@ -2663,6 +2919,23 @@ function openTxModal(type, editId){
         </div>`}
       ${showDir ? `<div class="field"><label>লেনদেনের ধরন</label><select id="f_dir">${dirOptions(type, initialDir)}</select></div>` : ''}
     </div>
+    ${type === 'loan_given' ? `
+    <div class="online-tick-box">
+      <div class="toggle-title" style="font-size:12.5px;font-weight:800;color:#4ade80;margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px">🌐 অনলাইন ফান্ড ট্রান্সফার সম্মতি</div>
+      <label class="online-tick-label" for="f_onlineTransferTick">
+        <input type="checkbox" id="f_onlineTransferTick" ${editing && editing.onlineTransfer ? 'checked' : ''}>
+        <div class="online-tick-text">
+          <div class="title">✅ অনলাইনে ফান্ড ট্রান্সফার করা হয়েছে</div>
+          <div class="sub">টিক দিলে ব্যাংকের নাম দিতে হবে এবং বিবরণীতে স্বয়ংক্রিয়ভাবে লেখা হবে</div>
+        </div>
+      </label>
+      <div id="onlineBankInfoBox" class="online-bank-display" style="display:none">
+        <div class="lbl">🏦 ব্যাংকের নাম</div>
+        <div class="name" id="onlineBankNameDisplay">—</div>
+      </div>
+      <input type="hidden" id="f_onlineBankName" value="${editing && editing.onlineBankName ? esc(editing.onlineBankName) : ''}">
+    </div>
+    ` : ''}
     ${type === 'support' ? `
     <div class="cust-branch-toggle">
       <div class="toggle-title">🏦 লেনদেনকারী শাখা</div>
@@ -2786,6 +3059,49 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   const hasBranchToggle = !!cfg.cust && type !== 'support';
   const isSupportType = type === 'support';
   const dueInlineBox = wrap.querySelector('#dueInlineBox');
+
+  /* ✅ Loan Given — Online Transfer Tick handler */
+  if(type === 'loan_given'){
+    const tickEl = wrap.querySelector('#f_onlineTransferTick');
+    const bankNameHidden = wrap.querySelector('#f_onlineBankName');
+    const infoBox = wrap.querySelector('#onlineBankInfoBox');
+    const bankNameDisplay = wrap.querySelector('#onlineBankNameDisplay');
+    const noteInputEl = wrap.querySelector('#f_note');
+
+    function refreshBankInfo(){
+      if(!tickEl) return;
+      const isTicked = tickEl.checked;
+      const bankName = bankNameHidden ? bankNameHidden.value.trim() : '';
+      if(isTicked && bankName){
+        if(infoBox) infoBox.style.display = 'block';
+        if(bankNameDisplay) bankNameDisplay.textContent = bankName;
+      } else {
+        if(infoBox) infoBox.style.display = 'none';
+      }
+    }
+    refreshBankInfo();
+
+    if(tickEl){
+      tickEl.addEventListener('change', ()=>{
+        if(!tickEl.checked){
+          if(bankNameHidden) bankNameHidden.value = '';
+          refreshBankInfo();
+          return;
+        }
+        showBankNamePopup((bankName)=>{
+          if(!bankName){
+            tickEl.checked = false;
+            if(bankNameHidden) bankNameHidden.value = '';
+            refreshBankInfo();
+            return;
+          }
+          if(bankNameHidden) bankNameHidden.value = bankName;
+          if(noteInputEl) noteInputEl.value = 'লোন অফিসার ও গ্রাহকের সম্মতিতে অনলাইনে ফান্ড ট্রান্সফার করা হয়েছে। (' + bankName + ')';
+          refreshBankInfo();
+        }, bankNameHidden ? bankNameHidden.value : '', editing ? editing.onlineBankName : '');
+      });
+    }
+  }
 
   function refreshInlineDue(){
     if(!dueInlineBox) return;
@@ -3144,11 +3460,10 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   });
 
   /* ============================================================
-     SAVE HANDLER — 4-Layer Duplicate Prevention
+     SAVE HANDLER
      ============================================================ */
   const saveBtn = wrap.querySelector('#f_save');
   saveBtn.addEventListener('click', async ()=>{
-    /* ✅ LAYER 1: Prevent double-click / re-click during save */
     if(saveBtn.disabled) return;
     saveBtn.disabled = true;
     const originalBtnText = saveBtn.innerHTML;
@@ -3189,6 +3504,24 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         if(!pAcc && !pName){ alert('🤝 গ্রাহকের নাম/অ্যাকাউন্ট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
       else if(amount <= 0){ alert('অন্তত একটি নোট'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
+
+      /* ✅ Loan Given — Online Transfer check */
+      let onlineTransfer = false;
+      let onlineBankName = '';
+      if(type === 'loan_given'){
+        const tickEl = wrap.querySelector('#f_onlineTransferTick');
+        const bnHidden = wrap.querySelector('#f_onlineBankName');
+        if(tickEl && tickEl.checked){
+          onlineBankName = bnHidden ? bnHidden.value.trim() : '';
+          if(!onlineBankName){
+            alert('⚠️ ব্যাংকের নাম দেওয়া হয়নি। লেনদেন বাতিল।');
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = originalBtnText;
+            return;
+          }
+          onlineTransfer = true;
+        }
+      }
 
       let txnBranch, custBranch;
       if(type === 'branch_transfer'){
@@ -3237,8 +3570,13 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       else txAmount = amount;
 
       let finalNote;
-      if(isOnlineSup) finalNote = onlineSupportNote || ('সাপোর্ট — ' + onlineSupportName);
-      else finalNote = (!cfg.cust && wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '') || wrap.querySelector('#f_note').value.trim();
+      if(onlineTransfer){
+        finalNote = 'লোন অফিসার ও গ্রাহকের সম্মতিতে অনলাইনে ফান্ড ট্রান্সফার করা হয়েছে। (' + onlineBankName + ')';
+      } else if(isOnlineSup){
+        finalNote = onlineSupportNote || ('সাপোর্ট — ' + onlineSupportName);
+      } else {
+        finalNote = (!cfg.cust && wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : '') || wrap.querySelector('#f_note').value.trim();
+      }
 
       const tx = {
         id: editing ? editing.id : uid(),
@@ -3261,10 +3599,11 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         updatedAt: new Date().toISOString(),
         year: date.slice(0,4),
         accepted: type === 'branch_transfer' ? false : true,
-        acceptedDate: null, acceptedBy: null, acceptedByUsername: null, acceptedAt: null
+        acceptedDate: null, acceptedBy: null, acceptedByUsername: null, acceptedAt: null,
+        onlineTransfer: onlineTransfer || false,
+        onlineBankName: onlineBankName || null
       };
 
-      /* ✅ LAYER 2 + 3: Duplicate check (only on NEW save) */
       if(!editing){
         const confirmed = await confirmDuplicate(tx, 60);
         if(!confirmed){
@@ -3334,7 +3673,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       renderDashboard();
       toast('✅ সংরক্ষিত — ৳' + fmt(txAmount));
 
-      /* ✅ LAYER 4: Offer Undo (30 sec) */
       if(editing){
         offerUndoForTx(tx, prevTxBackup);
       } else {
@@ -3563,8 +3901,6 @@ function setupMoneyExchange(wrap, close, initialBranch){
     rows.push(['', '', '', '', 'TOTAL', 'BDT ' + fmt(total), '', '', '', '']);
     exportToXLSX('Money Exchange Report', REPORT_HEADERS, rows, 'money_exchange.xlsx');
   });
-
-  /* Money Exchange Save with duplicate prevention */
   const meSaveBtn = wrap.querySelector('#me_save');
   meSaveBtn.addEventListener('click', async ()=>{
     if(meSaveBtn.disabled) return;
@@ -3603,8 +3939,6 @@ function setupMoneyExchange(wrap, close, initialBranch){
         acceptedBy: session.name, acceptedByUsername: session.username,
         acceptedAt: new Date().toISOString()
       };
-
-      /* ✅ Duplicate check */
       const confirmed = await confirmDuplicate(tx, 60);
       if(!confirmed){
         toast('❌ ডাবল এন্ট্রি বাতিল');
@@ -3612,7 +3946,6 @@ function setupMoneyExchange(wrap, close, initialBranch){
         meSaveBtn.innerHTML = originalMeBtnText;
         return;
       }
-
       DB().txs.push(tx);
       logTxEdit(tx.id, 'create', null, tx);
       recomputeLive();
@@ -3871,6 +4204,9 @@ function buildReportRow(t){
     const mDir = t.dir === 'in_physical' ? 'Physically In' : t.dir === 'in_online' ? 'Online In' : t.dir === 'out_physical' ? 'Physically Out' : t.dir === 'out_online' ? 'Online Out' : t.dir === 'note_change' ? 'Note Change' : '';
     description = [mBank, mDir].filter(x=>x).join(' | ') || 'Money Exchange';
     if(t.note && t.note !== 'মানি এক্সচেঞ্জ' && t.note !== 'নোট পরিবর্তন'){ description += ' | Note: ' + t.note; }
+  } else if(t.type === 'loan_given' && t.onlineTransfer){
+    dirText = 'Give (Online Transfer)';
+    description = 'Bank: ' + (t.onlineBankName || '-');
   } else if(t.dir){ dirText = t.dir === 'in' ? 'Receive' : 'Give'; }
   const notesOut = t.notesOut && Object.keys(t.notesOut).length ? noteTextPlain(t.notesOut) : '';
   const notesIn = t.notesIn && Object.keys(t.notesIn).length ? noteTextPlain(t.notesIn) : '';
@@ -3943,6 +4279,13 @@ function txListHTML(list, opts){
       extra = `🏦 <b>${bankName}</b><br><span style="color:${dirColor};font-weight:700">${dirLabel}</span>${t.note && t.note !== 'মানি এক্সচেঞ্জ' && t.note !== 'নোট পরিবর্তন' ? '<br><small style="color:#888">📝 ' + esc(t.note) + '</small>' : ''}<br><small>📤 প্রদান: ৳ ${fmt(outSum)} • 📥 গ্রহণ: ৳ ${fmt(inSum)}</small>`;
     }
     else if(t.dir){ extra = t.dir === 'in' ? 'গ্রহণ' : 'প্রদান'; }
+
+    if(t.type === 'loan_given' && t.onlineTransfer){
+      extra = `<span style="color:#4ade80;font-weight:700">🌐 অনলাইন ফান্ড ট্রান্সফার</span>`;
+      if(t.onlineBankName) extra += `<br><small style="color:#ccc">🏦 ${esc(t.onlineBankName)}</small>`;
+      if(t.note) extra += `<br><small style="color:#888">📝 ${esc(t.note)}</small>`;
+      dirBadge = ' <span class="badge online-tx">🌐 অনলাইন</span>';
+    }
     let notesHTML = '';
     if(t.notesOut && Object.keys(t.notesOut).length) notesHTML += `<div style="margin-top:3px"><small style="color:#ccc">📤</small>${noteListInline(t.notesOut,'out')}</div>`;
     if(t.notesIn && Object.keys(t.notesIn).length) notesHTML += `<div style="margin-top:3px"><small style="color:#ccc">📥</small>${noteListInline(t.notesIn,'in')}</div>`;
@@ -4018,6 +4361,7 @@ function showCustomerAllTxns(accountNo){
       else if(t.type === 'support' && t.dir === 'online_support_in') dirTxt = '🌐 অনলাইন সাপোর্ট ফেরত';
       else if(t.type === 'support' && t.dir === 'out') dirTxt = '🤝 সাপোর্ট প্রদান';
       else if(t.type === 'support' && t.dir === 'in') dirTxt = '↩️ সাপোর্ট ফেরত';
+      else if(t.type === 'loan_given' && t.onlineTransfer) dirTxt = '🌐 অনলাইন ফান্ড ট্রান্সফার';
       else if(t.dir === 'in') dirTxt = 'গ্রহণ';
       else if(t.dir === 'out') dirTxt = 'প্রদান';
       const isArchived = t.year && (new Date().getFullYear() - parseInt(t.year,10)) >= ARCHIVE_YEARS_AFTER;
@@ -4079,6 +4423,7 @@ function showCustomerAllTxns(accountNo){
         else if(t.type === 'support' && t.dir === 'online_support_in') dirTxt = 'Online Support Refund';
         else if(t.type === 'support' && t.dir === 'out') dirTxt = 'Support Paid';
         else if(t.type === 'support' && t.dir === 'in') dirTxt = 'Support Refund';
+        else if(t.type === 'loan_given' && t.onlineTransfer) dirTxt = 'Online Fund Transfer';
         else if(t.dir === 'in') dirTxt = 'Receive';
         else if(t.dir === 'out') dirTxt = 'Give';
         const typeStr = ((cfg.icon||'') + ' ' + (cfg.title||t.type) + (dirTxt ? ' (' + dirTxt + ')' : '')).trim();
