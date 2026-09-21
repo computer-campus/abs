@@ -394,8 +394,6 @@ input, select, button{transition:all .2s;}
 <div id="modalRoot"></div>
 <div id="rtStack" class="rt-stack"></div>
 
-<!-- ⬇️ Part 2 এখানে যোগ হবে (Script section) -->
-
 <script>
 window.SUPABASE_URL = 'https://xmjemenswfharaptazxn.supabase.co';
 window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamVtZW5zd2ZoYXJhcHRhenhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDI2MDIsImV4cCI6MjEwNTMxODYwMn0.akRSS-22xeU72gdVye9B7xrV09QkjJY_9zoA9xXNiJc';
@@ -1896,7 +1894,6 @@ function startApp(){
 }
 </script>
 
-<!-- ⬇️ Part 3 এখানে যোগ হবে (UI Rendering) -->
 <script>
 /* ============================================================
    Part 3: UI Rendering
@@ -2523,7 +2520,6 @@ function openDuplicateListModal(){
 }
 </script>
 
-<!-- ⬇️ Part 4 এখানে যোগ হবে (Branch Setup, Tx Modal, Money Exchange) -->
 <script>
 /* ============================================================
    Part 4: Branch Setup, Main Tx Modal, Money Exchange
@@ -3123,6 +3119,11 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const dirEl = wrap.querySelector('#f_dir');
     return dirEl && (dirEl.value === 'online_support_out' || dirEl.value === 'online_support_in');
   }
+  function isOnlineMode(){
+    if(!hasOnline) return false;
+    const dirEl = wrap.querySelector('#f_dir');
+    return dirEl && (dirEl.value === 'online_in' || dirEl.value === 'online_out');
+  }
   function updateCrossBranchNote(){
     const noteEl = wrap.querySelector('#crossBranchNote');
     if(!noteEl) return;
@@ -3155,11 +3156,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   wrap.querySelectorAll('[id^="in_"]').forEach(inp=>{
     inp.addEventListener('focus', ()=>{ autoCopyEnabled = false; });
   });
-  function isOnlineMode(){
-    if(!hasOnline) return false;
-    const dirEl = wrap.querySelector('#f_dir');
-    return dirEl && (dirEl.value === 'online_in' || dirEl.value === 'online_out');
-  }
+
   function applyDirectionState(){
     if(!hasDir) return;
     const dirEl = wrap.querySelector('#f_dir');
@@ -3171,6 +3168,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const onlineSupportBox = wrap.querySelector('#onlineSupportBox');
     const noteDetailBox = wrap.querySelector('#noteDetailBox');
     const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
+    const isOnlineDir = (dir === 'online_in' || dir === 'online_out');
+
     if(isOnlineSup){
       wrap.querySelectorAll('[id^="out_"]').forEach(i=>i.value='');
       wrap.querySelectorAll('[id^="in_"]').forEach(i=>i.value='');
@@ -3181,16 +3180,19 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       recalc();
       return;
     } else if(onlineSupportBox) onlineSupportBox.classList.remove('active');
-    const clearNotes = (p)=>{ wrap.querySelectorAll('[id^="'+p+'_"]').forEach(inp=> inp.value=''); };
-    if(dir === 'online_in' || dir === 'online_out'){
-      clearNotes('out'); clearNotes('in');
+
+    if(isOnlineDir){
+      wrap.querySelectorAll('[id^="out_"]').forEach(i=>i.value='');
+      wrap.querySelectorAll('[id^="in_"]').forEach(i=>i.value='');
       if(notesCols) notesCols.style.display = 'none';
       if(noteDetailBox) noteDetailBox.style.display = 'none';
       if(onlineBox){
         onlineBox.classList.add('active');
         const desc = wrap.querySelector('#onlineDesc');
-        desc.className = 'desc';
-        desc.innerHTML = dir === 'online_in' ? '💡 অনলাইনে আসা — <b style="color:#fff">যোগ</b>' : '💡 অনলাইন পাঠানো — <b style="color:#fff">বিয়োগ</b>';
+        if(desc){
+          desc.className = 'desc';
+          desc.innerHTML = dir === 'online_in' ? '💡 অনলাইনে আসা — <b style="color:#fff">যোগ</b>' : '💡 অনলাইন পাঠানো — <b style="color:#fff">বিয়োগ</b>';
+        }
       }
     } else {
       if(notesCols) notesCols.style.display = 'grid';
@@ -3198,12 +3200,13 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       if(onlineBox) onlineBox.classList.remove('active');
     }
     if(type === 'other_bank'){
-      if(dir === 'in'){ outCol.classList.add('disabled'); inCol.classList.remove('disabled'); clearNotes('out'); }
-      else if(dir === 'out'){ outCol.classList.remove('disabled'); inCol.classList.add('disabled'); clearNotes('in'); }
+      if(dir === 'in'){ outCol.classList.add('disabled'); inCol.classList.remove('disabled'); wrap.querySelectorAll('[id^="out_"]').forEach(i=>i.value=''); }
+      else if(dir === 'out'){ outCol.classList.remove('disabled'); inCol.classList.add('disabled'); wrap.querySelectorAll('[id^="in_"]').forEach(i=>i.value=''); }
       else { outCol.classList.remove('disabled'); inCol.classList.remove('disabled'); }
     } else if(type === 'support'){
       outCol.classList.remove('disabled'); inCol.classList.remove('disabled');
     }
+    recalc();
   }
   if(hasDir){
     const dirEl = wrap.querySelector('#f_dir');
@@ -3453,7 +3456,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   });
 
   /* ============================================================
-     SAVE HANDLER — Loan Given-এ Online + Cash Mixed Support
+     SAVE HANDLER — Fixed: Online modes need no notes
      ============================================================ */
   const saveBtn = wrap.querySelector('#f_save');
   saveBtn.addEventListener('click', async ()=>{
@@ -3471,6 +3474,10 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       let onlineAmount = 0;
       let onlineSupportAcc = '', onlineSupportName = '', onlineSupportAmount = 0, onlineSupportNote = '';
       const isOnlineSup = (dir === 'online_support_out' || dir === 'online_support_in');
+      const isOnline = isOnlineMode();
+      const isTransferForm = (type === 'branch_transfer');
+
+      /* ===== 1) Online support validation ===== */
       if(isOnlineSup){
         onlineSupportAcc = wrap.querySelector('#f_acc')?.value.trim() || '';
         onlineSupportName = wrap.querySelector('#f_name')?.value.trim() || '';
@@ -3479,25 +3486,39 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         if(!onlineSupportAcc && !onlineSupportName){ alert('🌐 গ্রাহকের নাম/অ্যাকাউন্ট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
         if(onlineSupportAmount <= 0){ alert('🌐 পরিমাণ দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
-      if(isOnlineMode()){
-        onlineAmount = parseFloat(wrap.querySelector('#online_amount').value) || 0;
-        if(onlineAmount <= 0){ alert('পরিমাণ দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
-      } else if(isOnlineSup){}
-      else if(type === 'branch_transfer'){
-        if(outSum <= 0 && inSum <= 0){ alert('অন্তত একটি নোট'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
+
+      /* ===== 2) Online other-bank validation ===== */
+      if(isOnline && type === 'other_bank'){
+        onlineAmount = parseFloat(wrap.querySelector('#online_amount')?.value) || 0;
+        if(onlineAmount <= 0){ alert('🌐 অনলাইন পরিমাণ দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
-      else if(type === 'other_bank'){
+
+      /* ===== 3) Branch transfer validation ===== */
+      if(isTransferForm){
+        if(outSum <= 0 && inSum <= 0){
+          alert('অন্তত একটি নোট দিন');
+          saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return;
+        }
+      }
+
+      /* ===== 4) Other bank physical validation ===== */
+      if(type === 'other_bank' && !isOnline){
         if(dir === 'in' && inSum <= 0){ alert('📥 কলামে নোট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
         if(dir === 'out' && outSum <= 0){ alert('💸 কলামে নোট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
-      else if(type === 'support'){
-        if(outSum <= 0 && inSum <= 0){ alert('💸 বা 📥 অন্তত একটি নোট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
+
+      /* ===== 5) Support physical validation ===== */
+      if(type === 'support' && !isOnlineSup){
+        if(outSum <= 0 && inSum <= 0){
+          alert('💸 বা 📥 অন্তত একটি নোট দিন');
+          saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return;
+        }
         const pAcc = wrap.querySelector('#f_acc')?.value.trim() || '';
         const pName = wrap.querySelector('#f_name')?.value.trim() || '';
         if(!pAcc && !pName){ alert('🤝 গ্রাহকের নাম/অ্যাকাউন্ট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
 
-      /* ✅ Loan Given — Online Transfer + Cash Mixed */
+      /* ===== 6) Loan given validation ===== */
       let onlineTransfer = false;
       let onlineBankName = '';
       let onlineAmt = 0;
@@ -3510,40 +3531,21 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         if(tickEl && tickEl.checked){
           onlineBankName = bnInput ? bnInput.value.trim() : '';
           onlineAmt = parseFloat(amtInput ? amtInput.value : '') || 0;
-          if(!onlineBankName){
-            alert('⚠️ ব্যাংকের নাম দিন। না দিলে লেনদেন বাতিল হবে।');
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = originalBtnText;
-            return;
-          }
-          if(onlineAmt <= 0){
-            alert('⚠️ অনলাইন ট্রান্সফারের পরিমাণ দিন (০ এর বেশি)।');
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = originalBtnText;
-            return;
-          }
+          if(!onlineBankName){ alert('⚠️ ব্যাংকের নাম দিন।'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
+          if(onlineAmt <= 0){ alert('⚠️ অনলাইন পরিমাণ দিন।'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
           onlineTransfer = true;
         }
-        if(!onlineTransfer && cashAmount <= 0){
-          alert('💸 অন্তত একটি নোট দিন অথবা অনলাইন ট্রান্সফার টিক দিন।');
-          saveBtn.disabled = false;
-          saveBtn.innerHTML = originalBtnText;
-          return;
-        }
-        if(onlineTransfer && cashAmount <= 0 && onlineAmt <= 0){
-          alert('💸 ক্যাশ নোট অথবা অনলাইন পরিমাণ — অন্তত একটি দিতে হবে।');
-          saveBtn.disabled = false;
-          saveBtn.innerHTML = originalBtnText;
-          return;
-        }
-      }
-      else if(amount <= 0){
-        alert('অন্তত একটি নোট');
-        saveBtn.disabled = false;
-        saveBtn.innerHTML = originalBtnText;
-        return;
+        if(!onlineTransfer && cashAmount <= 0){ alert('💸 অন্তত একটি নোট দিন অথবা অনলাইন টিক দিন।'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
 
+      /* ===== 7) Generic amount check (শুধু যেসব ক্ষেত্রে notes/amount দুটোই নেই) ===== */
+      const needsNotesCheck = !isOnlineSup && !isOnline && !isTransferForm && type !== 'loan_given' && type !== 'other_bank' && type !== 'support';
+      if(needsNotesCheck && amount <= 0){
+        alert('অন্তত একটি নোট দিন');
+        saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return;
+      }
+
+      /* ===== 8) txnBranch/custBranch calculation ===== */
       let txnBranch, custBranch;
       if(type === 'branch_transfer'){
         const from = wrap.querySelector('#f_from').value;
@@ -3586,7 +3588,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         txAmount = Math.round((cashAmount + onlineAmt) * 100) / 100;
       } else if(isOnlineSup){
         txAmount = onlineSupportAmount;
-      } else if(isOnlineMode()){
+      } else if(isOnline){
         txAmount = onlineAmount;
       } else if(type === 'branch_transfer'){
         txAmount = Math.max(outSum, inSum);
@@ -3600,7 +3602,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         txAmount = amount;
       }
 
-      /* ✅ Auto Note Generate */
+      /* ===== 9) Note generation ===== */
       let finalNote;
       if(type === 'loan_given' && onlineTransfer){
         const cashPart = cashAmount > 0 ? toBn(fmt(cashAmount)) + ' টাকা ক্যাশ এবং ' : '';
@@ -3618,11 +3620,12 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         from: type === 'branch_transfer' ? wrap.querySelector('#f_from').value : null,
         to: type === 'branch_transfer' ? wrap.querySelector('#f_to').value : null,
         dir, amount: Math.round(txAmount*100)/100,
-        onlineAmount: (type === 'loan_given') ? (onlineTransfer ? Math.round(onlineAmt*100)/100 : 0) : ((isOnlineMode() || isOnlineSup) ? txAmount : null),
-        onlineRef: isOnlineMode() ? (wrap.querySelector('#online_ref')?.value.trim() || '') : null,
+        onlineAmount: (type === 'loan_given') ? (onlineTransfer ? Math.round(onlineAmt*100)/100 : 0) : ((isOnline || isOnlineSup) ? txAmount : null),
+        onlineRef: isOnline ? (wrap.querySelector('#online_ref')?.value.trim() || '') : null,
         supportAcc: isOnlineSup ? onlineSupportAcc : '',
         supportName: isOnlineSup ? onlineSupportName : '',
-        notesOut: outNotes, notesIn: inNotes,
+        notesOut: isOnlineSup ? {} : outNotes,
+        notesIn: isOnlineSup ? {} : inNotes,
         custAcc: (isOnlineSup ? onlineSupportAcc : '') || (wrap.querySelector('#f_acc') ? wrap.querySelector('#f_acc').value.trim() : ''),
         custName: (isOnlineSup ? onlineSupportName : '') || (wrap.querySelector('#f_name') ? wrap.querySelector('#f_name').value.trim() : ''),
         custMobile: wrap.querySelector('#f_mobile') ? wrap.querySelector('#f_mobile').value.trim() : '',
@@ -3642,10 +3645,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       if(!editing){
         const confirmed = await confirmDuplicate(tx, 60);
         if(!confirmed){
-          saveBtn.disabled = false;
-          saveBtn.innerHTML = originalBtnText;
-          toast('❌ ডাবল এন্ট্রি বাতিল');
-          return;
+          saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText;
+          toast('❌ ডাবল এন্ট্রি বাতিল'); return;
         }
       }
 
@@ -3699,8 +3700,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       }
       if(type === 'support' && tx.custAcc) updateCustomerDueInDB(tx.custAcc, false);
       if(editing && editing.type === 'support' && editing.custAcc && editing.custAcc !== tx.custAcc){
-        const oldCust = DB().customers.find(x=>x.accountNo === editing.custAcc);
-        if(oldCust) updateCustomerDueInDB(editing.custAcc, false);
+        updateCustomerDueInDB(editing.custAcc, false);
       }
       recomputeLive();
       await saveDB();
@@ -3708,11 +3708,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       renderDashboard();
       toast('✅ সংরক্ষিত — ৳' + fmt(txAmount));
 
-      if(editing){
-        offerUndoForTx(tx, prevTxBackup);
-      } else {
-        offerUndoForTx(tx, null);
-      }
+      if(editing){ offerUndoForTx(tx, prevTxBackup); }
+      else { offerUndoForTx(tx, null); }
 
       if(type === 'support' && tx.custAcc){
         setTimeout(()=>{
@@ -3764,7 +3761,7 @@ async function deleteTx(id){
   toast('🗑️ ডিলিট');
 }
 
-/* ============ Money Exchange ============ */
+/* ============ Money Exchange (Fixed: Online mode hides notes) ============ */
 function openMoneyExchange(){
   if(!session) return;
   const bf = currentBranchFilter();
@@ -3806,10 +3803,21 @@ function openMoneyExchange(){
       <label>📝 বিবরণী</label>
       <input type="text" id="me_desc" placeholder="সংক্ষিপ্ত বিবরণ লিখুন...">
     </div>
+    <div class="online-box" id="me_online_box" style="display:none">
+      <h4>💳 অনলাইন লেনদেন</h4>
+      <div class="desc" id="me_online_desc"></div>
+      <div class="form-row">
+        <div class="field"><label>পরিমাণ (৳) *</label>
+          <input type="text" inputmode="decimal" id="me_online_amount" placeholder="0.00"></div>
+        <div class="field"><label>রেফারেন্স</label>
+          <input type="text" id="me_online_ref" placeholder="TXN"></div>
+      </div>
+      <div class="total-preview"><div class="l">পরিমাণ</div><div class="v" id="me_online_preview">৳ 0.00</div></div>
+    </div>
     <div class="bank-hint" id="me_hint">
       💡 <b>প্রদান</b> = আমি দিলাম | <b>গ্রহণ</b> = আমি নিলাম
     </div>
-    <div class="notes-cols">
+    <div class="notes-cols" id="me_notes_cols">
       <div class="notes-col out">
         <h4>💸 প্রদান</h4>
         ${notesRowHTML('me_out', null)}
@@ -3853,28 +3861,66 @@ function setupMoneyExchange(wrap, close, initialBranch){
   const sumInEl = wrap.querySelector('#me_sumIn');
   const netEl = wrap.querySelector('#me_netAmt');
   const hintEl = wrap.querySelector('#me_hint');
+  const notesCols = wrap.querySelector('#me_notes_cols');
+  const onlineBox = wrap.querySelector('#me_online_box');
+  const onlineDesc = wrap.querySelector('#me_online_desc');
+  const onlineAmtInput = wrap.querySelector('#me_online_amount');
+  const onlinePreview = wrap.querySelector('#me_online_preview');
+
   function currentBranch(){ return wrap.querySelector('#me_branch')?.value || initialBranch; }
   function currentDir(){ return wrap.querySelector('#me_dir')?.value || 'in_physical'; }
   function currentBank(){ return wrap.querySelector('#me_bank')?.value || 'general'; }
   function isNoteChange(){ return currentDir() === 'note_change'; }
+  function isOnlineDir(){ const d = currentDir(); return d === 'in_online' || d === 'out_online'; }
+
+  function applyDirState(){
+    const isOn = isOnlineDir();
+    if(notesCols) notesCols.style.display = isOn ? 'none' : 'grid';
+    if(onlineBox) onlineBox.style.display = isOn ? 'block' : 'none';
+    if(isOn && onlineDesc){
+      const d = currentDir();
+      onlineDesc.innerHTML = d === 'in_online'
+        ? '💡 অনলাইনে আনা — <b style="color:#fff">যোগ</b>'
+        : '💡 অনলাইনে পাঠানো — <b style="color:#fff">বিয়োগ</b>';
+    }
+    if(isOn){
+      wrap.querySelectorAll('[id^="me_out_"]').forEach(i=> i.value='');
+      wrap.querySelectorAll('[id^="me_in_"]').forEach(i=> i.value='');
+    }
+    recalc();
+  }
+
   function recalc(){
     const outNotes = readNotes(wrap, 'me_out');
     const inNotes = readNotes(wrap, 'me_in');
     const outSum = noteSum(outNotes), inSum = noteSum(inNotes);
-    sumOutEl.textContent = '৳ ' + fmt(outSum);
-    sumInEl.textContent = '৳ ' + fmt(inSum);
+    if(sumOutEl) sumOutEl.textContent = '৳ ' + fmt(outSum);
+    if(sumInEl) sumInEl.textContent = '৳ ' + fmt(inSum);
+    if(isOnlineDir()){
+      const v = parseFloat(onlineAmtInput?.value) || 0;
+      if(netEl) netEl.textContent = '৳ ' + fmt(v);
+      if(netEl) netEl.style.color = '';
+      if(onlinePreview) onlinePreview.textContent = '৳ ' + fmt(v);
+      return;
+    }
     if(isNoteChange()){
       const diff = Math.abs(outSum - inSum);
-      netEl.textContent = '৳ ' + fmt(diff);
-      netEl.style.color = (diff === 0) ? '#4ade80' : '#facc15';
+      if(netEl) netEl.textContent = '৳ ' + fmt(diff);
+      if(netEl) netEl.style.color = (diff === 0) ? '#4ade80' : '#facc15';
     } else {
-      netEl.textContent = '৳ ' + fmt(Math.abs(outSum - inSum));
-      netEl.style.color = '';
+      if(netEl) netEl.textContent = '৳ ' + fmt(Math.abs(outSum - inSum));
+      if(netEl) netEl.style.color = '';
     }
   }
+
   function updateHint(){
     if(!hintEl) return;
-    if(isNoteChange()){
+    if(isOnlineDir()){
+      hintEl.innerHTML = '🌐 <b>অনলাইন মোড:</b> নোট কলাম বন্ধ — শুধু amount দিন।';
+      hintEl.style.background = 'rgba(59,130,246,.08)';
+      hintEl.style.borderColor = 'rgba(59,130,246,.4)';
+      hintEl.style.color = '#93c5fd';
+    } else if(isNoteChange()){
       hintEl.innerHTML = '🔁 <b>নোট পরিবর্তন মোড:</b> প্রদান ও গ্রহণ — <b>সমান</b> হতে হবে।';
       hintEl.style.background = 'rgba(34,197,94,.08)';
       hintEl.style.borderColor = 'rgba(34,197,94,.4)';
@@ -3886,11 +3932,19 @@ function setupMoneyExchange(wrap, close, initialBranch){
       hintEl.style.color = '';
     }
   }
+
   wrap.querySelectorAll('.note-item input').forEach(i => i.addEventListener('input', recalc));
+  if(onlineAmtInput){
+    onlineAmtInput.addEventListener('input', ()=>{
+      onlineAmtInput.value = onlineAmtInput.value.replace(/[^0-9.]/g,'');
+      recalc();
+    });
+  }
   const dirSel = wrap.querySelector('#me_dir');
-  if(dirSel) dirSel.addEventListener('change', ()=>{ updateHint(); recalc(); });
+  if(dirSel) dirSel.addEventListener('change', ()=>{ updateHint(); applyDirState(); });
   updateHint();
-  recalc();
+  applyDirState();
+
   const meRDate = wrap.querySelector('#me_r_date');
   const meRBody = wrap.querySelector('#me_r_body');
   let currentReportList = [];
@@ -3948,25 +4002,41 @@ function setupMoneyExchange(wrap, close, initialBranch){
       const dirVal = currentDir();
       const desc = wrap.querySelector('#me_desc').value.trim();
       const isNoteChg = (dirVal === 'note_change');
-      const outNotes = readNotes(wrap, 'me_out');
-      const inNotes = readNotes(wrap, 'me_in');
+      const isOn = (dirVal === 'in_online' || dirVal === 'out_online');
+      const outNotes = isOn ? {} : readNotes(wrap, 'me_out');
+      const inNotes  = isOn ? {} : readNotes(wrap, 'me_in');
       const outSum = noteSum(outNotes), inSum = noteSum(inNotes);
-      if(outSum === 0 && inSum === 0){ alert('অন্তত একটি নোট দিন'); meSaveBtn.disabled = false; meSaveBtn.innerHTML = originalMeBtnText; return; }
-      if(isNoteChg && outSum !== inSum){
-        alert('🔁 নোট পরিবর্তন মোডে প্রদান ও গ্রহণ সমান হতে হবে!');
-        meSaveBtn.disabled = false; meSaveBtn.innerHTML = originalMeBtnText; return;
+      let txAmount = 0;
+      let onlineAmt = 0;
+      let onlineRef = '';
+
+      if(isOn){
+        onlineAmt = parseFloat(wrap.querySelector('#me_online_amount')?.value) || 0;
+        onlineRef = wrap.querySelector('#me_online_ref')?.value.trim() || '';
+        if(onlineAmt <= 0){ alert('🌐 অনলাইন পরিমাণ দিন'); meSaveBtn.disabled = false; meSaveBtn.innerHTML = originalMeBtnText; return; }
+        txAmount = onlineAmt;
+      } else {
+        if(outSum === 0 && inSum === 0){ alert('অন্তত একটি নোট দিন'); meSaveBtn.disabled = false; meSaveBtn.innerHTML = originalMeBtnText; return; }
+        if(isNoteChg && outSum !== inSum){
+          alert('🔁 নোট পরিবর্তন মোডে প্রদান ও গ্রহণ সমান হতে হবে!');
+          meSaveBtn.disabled = false; meSaveBtn.innerHTML = originalMeBtnText; return;
+        }
+        txAmount = Math.round(Math.abs(outSum - inSum) * 100) / 100;
       }
+
       const dateVal = wrap.querySelector('#me_date').value || dashDate;
       const tx = {
         id: uid(), type: 'money_exchange',
         date: dateVal, branch: br, custBranch: br, from: null, to: null,
         bank: bankKey, dir: dirVal,
-        amount: Math.round(Math.abs(outSum - inSum) * 100) / 100,
+        amount: Math.round(txAmount * 100) / 100,
+        onlineAmount: isOn ? Math.round(onlineAmt * 100) / 100 : null,
+        onlineRef: isOn ? onlineRef : null,
         notesOutSum: Math.round(outSum * 100) / 100,
         notesInSum: Math.round(inSum * 100) / 100,
         notesOut: outNotes, notesIn: inNotes,
         custAcc: '', custName: '', custMobile: '', custAddr: '',
-        note: desc || (isNoteChg ? 'নোট পরিবর্তন' : 'মানি এক্সচেঞ্জ'),
+        note: desc || (isOn ? (dirVal === 'in_online' ? 'অনলাইনে আনা' : 'অনলাইনে পাঠানো') : (isNoteChg ? 'নোট পরিবর্তন' : 'মানি এক্সচেঞ্জ')),
         user: session.name, userUsername: session.username,
         createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
         year: dateVal.slice(0,4),
@@ -3977,9 +4047,7 @@ function setupMoneyExchange(wrap, close, initialBranch){
       const confirmed = await confirmDuplicate(tx, 60);
       if(!confirmed){
         toast('❌ ডাবল এন্ট্রি বাতিল');
-        meSaveBtn.disabled = false;
-        meSaveBtn.innerHTML = originalMeBtnText;
-        return;
+        meSaveBtn.disabled = false; meSaveBtn.innerHTML = originalMeBtnText; return;
       }
       DB().txs.push(tx);
       logTxEdit(tx.id, 'create', null, tx);
@@ -3987,7 +4055,8 @@ function setupMoneyExchange(wrap, close, initialBranch){
       await saveDB();
       close();
       renderDashboard();
-      if(isNoteChg) toast('✅ নোট পরিবর্তন সম্পন্ন — ৳' + fmt(outSum));
+      if(isOn) toast('✅ অনলাইন মানি এক্সচেঞ্জ — ৳' + fmt(txAmount));
+      else if(isNoteChg) toast('✅ নোট পরিবর্তন সম্পন্ন — ৳' + fmt(outSum));
       else toast('✅ মানি এক্সচেঞ্জ — ৳' + fmt(Math.abs(outSum - inSum)));
       offerUndoForTx(tx, null);
     } catch(err){
@@ -4002,7 +4071,6 @@ function setupMoneyExchange(wrap, close, initialBranch){
 }
 </script>
 
-<!-- ⬇️ Part 5 এখানে যোগ হবে (Export, Customer, User Manager, Init) -->
 <script>
 /* ============================================================
    Part 5: Export, Print, Customer, User Manager, Init
@@ -5203,7 +5271,6 @@ function openUserEditModal(userId){
         }, 100);
         toast('✅ আপডেট হয়েছে');
       });
-      w.querySelector('#u_cancel')?.addEventListener('click', close);
       w.querySelector('#ue_cancel').addEventListener('click', close);
     }
   });
@@ -5263,4 +5330,3 @@ function toast(msg){
 </script>
 </body>
 </html>
-
