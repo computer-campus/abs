@@ -93,6 +93,8 @@ body{
 .btn.xlsx{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;}
 .btn.dup{background:linear-gradient(135deg,#dc2626,#f59e0b);color:#fff;border:none;box-shadow:0 4px 16px rgba(220,38,38,.35);}
 .btn.dup:hover{box-shadow:0 8px 24px rgba(220,38,38,.5);filter:brightness(1.1);}
+.btn.bt{background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;border:none;box-shadow:0 4px 16px rgba(139,92,246,.35);}
+.btn.bt:hover{box-shadow:0 8px 24px rgba(139,92,246,.5);filter:brightness(1.1);}
 .topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 22px;background:rgba(4,6,13,.9);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--line-2);box-shadow:0 4px 24px rgba(0,0,0,.7), 0 0 40px rgba(59,130,246,.08);}
 .brand{display:flex;align-items:center;gap:14px;}
 .brand .logo{width:50px;height:50px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,rgba(59,130,246,.18),rgba(34,197,94,.1));border:1px solid var(--line-3);box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 16px rgba(59,130,246,.25);transition:transform .3s;}
@@ -102,7 +104,8 @@ body{
 .top-actions input[type=date],.top-actions select{padding:11px 15px;border-radius:11px;background:#080c1a;border:1px solid var(--line-2);color:var(--txt);font-family:inherit;font-size:14px;outline:none;transition:.2s;}
 .who{font-size:14px;font-weight:600;padding:10px 15px;border-radius:11px;background:linear-gradient(145deg,rgba(59,130,246,.12),rgba(34,197,94,.06));border:1px solid var(--line-3);white-space:nowrap;}
 .who b{color:var(--green-2);font-weight:700;}
-.sync-status{font-size:12.5px;padding:7px 14px;border-radius:20px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:var(--green-2);font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+.sync-status{font-size:12.5px;padding:7px 14px;border-radius:20px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:var(--green-2);font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:all .2s;}
+.sync-status:hover{filter:brightness(1.15);}
 .sync-status::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green-2);animation:pulseGreen 1.8s ease-in-out infinite;}
 .sync-status.offline{background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.4);color:#f87171;}
 .sync-status.offline::before{background:#dc2626;animation:none;}
@@ -394,17 +397,27 @@ input, select, button{transition:all .2s;}
 <div id="modalRoot"></div>
 <div id="rtStack" class="rt-stack"></div>
 
+
+// ভাগ ২/৫ — Config + Constants + DB + Supabase + Realtime + Delete Tracking + Duplicate
 <script>
+/* ============================================================
+   🔐 CONFIG SECTION — শুধু এখানে পাসওয়ার্ড/URL পরিবর্তন করবেন
+   ============================================================ */
 window.SUPABASE_URL = 'https://xmjemenswfharaptazxn.supabase.co';
 window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamVtZW5zd2ZoYXJhcHRhenhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDI2MDIsImV4cCI6MjEwNTMxODYwMn0.akRSS-22xeU72gdVye9B7xrV09QkjJY_9zoA9xXNiJc';
 window.SUPABASE_TABLE = 'agent_bank';
 window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
+
+/* 🔐 Admin Password (Base64 encoded)
+   নতুন পাসওয়ার্ড সেট করতে Browser Console-এ চালান:
+     btoa('আপনার-নতুন-পাসওয়ার্ড')
+   তারপর প্রাপ্ত string নিচে বসান। ডিফল্ট = 8182 */
+window.ADMIN_PASS_B64 = 'ODE4Mg==';
 </script>
 
 <script>
 /* ============================================================
-   Computer Campus — Agent Banking System (v16)
-   Part 2: Constants, Helpers, DB, Supabase, Realtime, Duplicate
+   Part 2: Constants, Helpers, DB, Supabase, Realtime, Delete Tracking
    ============================================================ */
 
 const BRANCHES = {
@@ -419,16 +432,27 @@ const BANKS = {
   brac_dhaka:           { name:'ব্র্যাক ব্যাংক (ঢাকা)',         en:'BRAC Bank (Dhaka)' }
 };
 const DENOMS = [1000,500,200,100,50,20,10,5,2,1];
-const APP_VERSION = 'v16';
+const APP_VERSION = 'v17';
 const SKEY = 'cc_agent_bank_session_' + APP_VERSION;
 const LOCAL_DB_KEY = 'cc_agent_bank_local_' + APP_VERSION;
 const VERSION_KEY = 'cc_agent_bank_version';
 const SESSION_TIMEOUT_MS = 20 * 60 * 1000;
-const DEFAULT_ADMIN_PASSWORD = '8182';
 const KEEP_FULL_SNAPSHOT_DAYS = 400;
 const ARCHIVE_YEARS_AFTER = 2;
 const SUPABASE_TIMEOUT_MS = 12000;
 const SUPABASE_MAX_RETRY = 10;
+
+/* ===== Admin Password — decode from config ===== */
+const DEFAULT_ADMIN_PASSWORD = (function(){
+  try{
+    const encoded = window.ADMIN_PASS_B64 || 'ODE4Mg==';
+    const decoded = decodeURIComponent(escape(atob(encoded)));
+    return decoded || '8182';
+  }catch(e){
+    console.warn('⚠️ Password decode failed, using fallback');
+    return '8182';
+  }
+})();
 
 const TX_CFG = {
   loan_given:      { title:'ঋণের টাকা বিতরণ',       en:'Loan Given',       icon:'💸', primary:'out', cust:true  },
@@ -580,10 +604,33 @@ async function saveToSupabase(data){
       SUPABASE_TIMEOUT_MS,
       { error:'timeout' }
     );
-    if(result.error){ console.warn('Supabase write:', result.error); updateConnStatus('offline'); return false; }
+    if(result.error){
+      console.error('❌ Supabase write FAILED:', result.error);
+      updateConnStatus('offline');
+      const errMsg = result.error.message || result.error.code || JSON.stringify(result.error);
+      if(window.__supabaseErrorShown !== errMsg){
+        window.__supabaseErrorShown = errMsg;
+        if(typeof showRealtimeToast === 'function'){
+          showRealtimeToast('delete', '⚠️ ক্লাউড সিঙ্ক ব্যর্থ',
+            `<div style="font-size:13px;line-height:1.8">
+              ডেটা শুধু এই ডিভাইসে সেভ হয়েছে।<br>
+              <b style="color:#f87171">Error:</b> ${esc(errMsg)}<br>
+              <small style="color:#a5b4d8">Supabase RLS policy বা connection চেক করুন।</small>
+            </div>`,
+            { icon:'⚠️', ttl: 15000 }
+          );
+        }
+      }
+      return false;
+    }
     updateConnStatus('online');
+    window.__supabaseErrorShown = null;
     return true;
-  }catch(e){ updateConnStatus('offline'); return false; }
+  }catch(e){
+    console.error('❌ Supabase write exception:', e);
+    updateConnStatus('offline');
+    return false;
+  }
 }
 async function forceCleanSupabase(){
   if(!supabaseReady) return false;
@@ -595,14 +642,19 @@ async function forceCleanSupabase(){
   }catch(e){ console.warn('forceCleanSupabase error:', e); return false; }
 }
 
-/* ===== REALTIME MERGE HELPERS ===== */
+/* ===== REALTIME MERGE HELPERS — with DELETE TRACKING ===== */
 function mergeTxs(localArr, remoteArr){
   const map = new Map();
   const seen = new Set();
+  const deletedIds = new Set(Object.keys((DB() && DB().deletedTxIds) || {}));
+
   (localArr||[]).forEach(t => { map.set(t.id, t); seen.add(t.id); });
+
   const newOnes = [];
   (remoteArr||[]).forEach(rt => {
     if(!rt || !rt.id) return;
+    // ✅ ডিলিট করা এন্ট্রি আর ফিরে আসবে না
+    if(deletedIds.has(rt.id)) return;
     if(!seen.has(rt.id)){
       map.set(rt.id, rt);
       newOnes.push(rt);
@@ -652,11 +704,12 @@ function mergeUsers(localArr, remoteArr){
 }
 function mergeYearlyArchive(localArch, remoteArch){
   const result = {};
+  const delSet = new Set(Object.keys((DB() && DB().deletedTxIds) || {}));
   const allYears = new Set([...Object.keys(localArch||{}), ...Object.keys(remoteArch||{})]);
   allYears.forEach(y => {
     const map = new Map();
-    (localArch?.[y]||[]).forEach(t => map.set(t.id, t));
-    (remoteArch?.[y]||[]).forEach(rt => { if(!map.has(rt.id)) map.set(rt.id, rt); });
+    (localArch?.[y]||[]).forEach(t => { if(!delSet.has(t.id)) map.set(t.id, t); });
+    (remoteArch?.[y]||[]).forEach(rt => { if(!delSet.has(rt.id) && !map.has(rt.id)) map.set(rt.id, rt); });
     result[y] = Array.from(map.values());
   });
   return result;
@@ -685,6 +738,18 @@ function mergeDailyFullSnapshots(localSnaps, remoteSnaps){
   });
   return result;
 }
+function mergeDeletedTxIds(localDel, remoteDel){
+  const result = { ...(localDel||{}) };
+  Object.keys(remoteDel||{}).forEach(id => {
+    if(!result[id]) result[id] = remoteDel[id];
+    else {
+      const lt = result[id] || '';
+      const rt = remoteDel[id] || '';
+      if(rt > lt) result[id] = remoteDel[id];
+    }
+  });
+  return result;
+}
 function mergeRemoteIntoLocal(remote){
   const local = DB();
   const result = { ...local };
@@ -695,6 +760,19 @@ function mergeRemoteIntoLocal(remote){
   result.yearlyArchive = mergeYearlyArchive(local.yearlyArchive, remote.yearlyArchive);
   result.dailyClose = mergeDailyClose(local.dailyClose, remote.dailyClose);
   result.dailyFullSnapshots = mergeDailyFullSnapshots(local.dailyFullSnapshots, remote.dailyFullSnapshots);
+  result.deletedTxIds = mergeDeletedTxIds(local.deletedTxIds, remote.deletedTxIds);
+
+  // ✅ Extra safety — deleted tx সবজায়গা থেকে বাদ
+  const delSet = new Set(Object.keys(result.deletedTxIds || {}));
+  result.txs = result.txs.filter(t => !delSet.has(t.id));
+  if(result.yearlyArchive){
+    Object.keys(result.yearlyArchive).forEach(y=>{
+      if(Array.isArray(result.yearlyArchive[y])){
+        result.yearlyArchive[y] = result.yearlyArchive[y].filter(t => !delSet.has(t.id));
+      }
+    });
+  }
+
   const logMap = new Map();
   (local.txEditLog||[]).forEach(l => logMap.set(l.id, l));
   (remote.txEditLog||[]).forEach(r => { if(!logMap.has(r.id)) logMap.set(r.id, r); });
@@ -907,7 +985,7 @@ function startSupabaseListener(){
         const mergedResult = mergeRemoteIntoLocal(remote);
         const { mergedDB, newTxs } = mergedResult;
 
-        // ✅ পরিবর্তন: total count (main + archive) মিলিয়ে দেখুন
+        // Total count check (main + archive)
         const localMainCount = (DB().txs||[]).length;
         const localArchiveCount = Object.values(DB().yearlyArchive||{})
           .reduce((s,a)=> s + (Array.isArray(a) ? a.length : 0), 0);
@@ -918,7 +996,6 @@ function startSupabaseListener(){
           .reduce((s,a)=> s + (Array.isArray(a) ? a.length : 0), 0);
         const remoteTotal = remoteMainCount + remoteArchiveCount;
 
-        // ✅ যদি remote-এ নতুন কিছু না থাকে, skip
         if(remoteTotal <= localTotal && newTxs.length === 0) return;
 
         __isApplyingRemote = true;
@@ -928,7 +1005,6 @@ function startSupabaseListener(){
           saveLocalDB();
           if(session){ renderTopbar(); renderDashboard(); }
 
-          // ✅ শুধু notification এখানে suppress করুন — merge নয়
           if(!isRecentLocalSave){
             newTxs.forEach(tx => {
               if(__rtEventSeen.has(tx.id)) return;
@@ -959,7 +1035,7 @@ function startSupabaseListener(){
         updateConnStatus('online');
       } else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED'){
         updateConnStatus('offline');
-        // ✅ Mobile network recovery: ৫ সেকেন্ড পর আবার subscribe চেষ্টা
+        // ✅ Mobile network auto-recovery
         if(session && supabaseReady){
           setTimeout(()=>{
             if(session && supabaseReady){
@@ -1021,6 +1097,18 @@ async function saveDB(){
       }
       __lastRolloverCheck = today;
     }
+
+    // ✅ deletedTxIds cleanup — ৩০ দিনের বেশি পুরনো হলে মুছে ফেলুন (৫০০+ হলে)
+    if(DB().deletedTxIds && Object.keys(DB().deletedTxIds).length > 500){
+      const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+      const cleaned = {};
+      Object.keys(DB().deletedTxIds).forEach(k=>{
+        const t = new Date(DB().deletedTxIds[k]).getTime();
+        if(t > cutoff) cleaned[k] = DB().deletedTxIds[k];
+      });
+      DB().deletedTxIds = cleaned;
+    }
+
     DB().__saveToken = uid();
     DB().__lastUpdate = new Date().toISOString();
     DB().__version = APP_VERSION;
@@ -1049,8 +1137,9 @@ async function saveDB(){
     });
     if(__lastSnapshotDate !== d){
       if(!DB().dailyFullSnapshots) DB().dailyFullSnapshots = {};
+      const delSet = new Set(Object.keys(DB().deletedTxIds || {}));
       DB().dailyFullSnapshots[d] = {
-        txs: JSON.parse(JSON.stringify(DB().txs||[])),
+        txs: JSON.parse(JSON.stringify((DB().txs||[]).filter(t=>!delSet.has(t.id)))),
         customers: JSON.parse(JSON.stringify(DB().customers||[])),
         liveAccounts: JSON.parse(JSON.stringify(DB().liveAccounts||{})),
         liveVault: JSON.parse(JSON.stringify(DB().liveVault||{})),
@@ -1162,6 +1251,7 @@ function defaultDB(){
     totalCapital: 0,
     baseVault, baseAccounts, liveVault, liveAccounts,
     dailyClose: {}, dailyFullSnapshots: {}, yearlyArchive: {},
+    deletedTxIds: {},
     lastBaseDate: todayStr(), __firstSetupDone: false
   };
 }
@@ -1192,6 +1282,7 @@ function normalizeDB(){
   if(!d.yearlyArchive || typeof d.yearlyArchive !== 'object') d.yearlyArchive = {};
   if(!d.dailyFullSnapshots || typeof d.dailyFullSnapshots !== 'object') d.dailyFullSnapshots = {};
   if(!Array.isArray(d.txEditLog)) d.txEditLog = [];
+  if(!d.deletedTxIds || typeof d.deletedTxIds !== 'object') d.deletedTxIds = {};
   if(typeof d.totalCapital !== 'number') d.totalCapital = 0;
   (d.txs||[]).forEach(t=>{ if(!t.year && t.date) t.year = t.date.slice(0,4); });
   Object.values(d.yearlyArchive).forEach(arr=>{
@@ -1303,6 +1394,7 @@ function migrateOldDB(old){
     dailyClose: old.dailyClose || {},
     dailyFullSnapshots: old.dailyFullSnapshots || {},
     yearlyArchive: old.yearlyArchive || {},
+    deletedTxIds: {},
     lastBaseDate: old.lastBaseDate || todayStr(),
     __firstSetupDone: true
   };
@@ -1445,13 +1537,15 @@ function getAllTxs(){
   Object.values(DB().yearlyArchive || {}).forEach(arr=>{
     if(Array.isArray(arr)) pool = pool.concat(arr);
   });
-  return pool;
+  const delSet = new Set(Object.keys(DB().deletedTxIds || {}));
+  return pool.filter(t => !delSet.has(t.id));
 }
 function getAllTxsForYear(year){
   year = String(year);
+  const delSet = new Set(Object.keys(DB().deletedTxIds || {}));
   const fromArchive = (DB().yearlyArchive?.[year]) || [];
   const fromMain = (DB().txs||[]).filter(t => (t.date||'').startsWith(year));
-  const all = [...fromArchive, ...fromMain];
+  const all = [...fromArchive, ...fromMain].filter(t => !delSet.has(t.id));
   all.sort((a,b)=> (a.createdAt || a.date || '').localeCompare(b.createdAt || b.date || ''));
   return all;
 }
@@ -1517,6 +1611,8 @@ function updateCustomerDueInDB(accountNo, save){
 /* ===== Session ===== */
 let session = null, viewBranch = 'all', dashDate = todayStr(), isDateViewMode = false;
 let sessionTimer = null, lastActivityTime = Date.now();
+let __realtimeWatchdog = null;
+
 function resetSessionTimer(){
   lastActivityTime = Date.now();
   if(sessionTimer){ clearInterval(sessionTimer); sessionTimer = null; }
@@ -1886,12 +1982,11 @@ async function doLogin(){
     btn.innerHTML = '🔐 লগইন করুন';
   }
 }
-
 function logout(){
   stopSessionTimer();
   stopSupabaseListener();
 
-  // ✅ Watchdog বন্ধ করুন
+  // ✅ Watchdog বন্ধ
   if(typeof __realtimeWatchdog !== 'undefined' && __realtimeWatchdog){
     clearInterval(__realtimeWatchdog);
     __realtimeWatchdog = null;
@@ -1912,27 +2007,6 @@ function logout(){
   const btn = $('#loginBtn');
   if(btn){ btn.disabled = false; btn.innerHTML = '🔐 লগইন করুন'; }
 }
-
-function startApp(){
-  if(!session) return;
-  $('#loginScreen').classList.add('hidden');
-  $('#app').classList.remove('hidden');
-  performDailyRollover(false);
-  __lastRolloverCheck = todayStr();
-  recalcAllCustomerDues(false);
-  recomputeLive();
-  dashDate = todayStr();
-  isDateViewMode = false;
-  renderTopbar();
-  renderDashboard();
-  saveDB();
-  resetSessionTimer();
-  lastActivityTime = Date.now();
-  if(session && session.role === 'admin' && isSystemEmpty()){
-    setTimeout(()=> openSetupWizard(), 500);
-  }
-}
-
 function startApp(){
   if(!session) return;
   $('#loginScreen').classList.add('hidden');
@@ -1949,15 +2023,15 @@ function startApp(){
   resetSessionTimer();
   lastActivityTime = Date.now();
 
-  // ✅ Watchdog চালু
-  try{ startRealtimeWatchdog(); }catch(e){ console.warn('Watchdog start failed:', e); }
+  // ✅ Watchdog চালু (Part 5-এ define করা হবে)
+  try{ if(typeof startRealtimeWatchdog === 'function') startRealtimeWatchdog(); }catch(e){ console.warn('Watchdog start failed:', e); }
 
   if(session && session.role === 'admin' && isSystemEmpty()){
     setTimeout(()=> openSetupWizard(), 500);
   }
 }
-
 </script>
+
 
 <script>
 /* ============================================================
@@ -1992,7 +2066,7 @@ function renderTopbar(){
       </div>
     </div>
     <div class="top-actions">
-      <span class="sync-status ${supabaseReady ? '' : 'offline'}">${supabaseReady ? 'সিঙ্ক' : 'অফলাইন'}</span>
+      <span class="sync-status ${supabaseReady ? '' : 'offline'}" id="syncStatusBtn" title="ক্লিক করে manual sync করুন">${supabaseReady ? 'সিঙ্ক' : 'অফলাইন'}</span>
       <label style="font-size:12px;color:#a5b4d8;font-weight:600">📅</label>
       <input type="date" id="dashDateInput" value="${dashDate}">
       ${isAdmin ? `
@@ -2026,6 +2100,35 @@ function renderTopbar(){
   }
   $('#btnDupList').addEventListener('click', openDuplicateListModal);
   $('#btnLogout').addEventListener('click', logout);
+
+  // ✅ Manual sync button
+  const syncBtn = document.getElementById('syncStatusBtn');
+  if(syncBtn){
+    syncBtn.addEventListener('click', async ()=>{
+      if(!supabaseReady){ toast('❌ Supabase ready নয়'); return; }
+      toast('🔄 Manual sync চলছে...');
+      try{
+        const remote = await loadFromSupabase();
+        if(remote && (!remote.__version || remote.__version === APP_VERSION)){
+          const mergedResult = mergeRemoteIntoLocal(remote);
+          window.db = mergedResult.mergedDB;
+          normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive();
+          saveLocalDB();
+          renderDashboard();
+        }
+        const ok = await saveToSupabase(DB());
+        if(ok){
+          toast('✅ Cloud sync সফল');
+          renderTopbar();
+        } else {
+          toast('❌ Cloud sync ব্যর্থ — Console দেখুন');
+        }
+      }catch(e){
+        console.error(e);
+        toast('❌ Sync error: ' + e.message);
+      }
+    });
+  }
 }
 
 function renderDateBanner(){
@@ -2402,7 +2505,7 @@ function showDuePopup(customer, opts){
 }
 
 /* ============================================================
-   ⚠️ DUPLICATE LIST MODAL — সব ডুপ্লিকেট এন্ট্রি ম্যানেজ
+   ⚠️ DUPLICATE LIST MODAL
    ============================================================ */
 function getDuplicateGroups(){
   const all = getAllTxs();
@@ -2527,7 +2630,7 @@ function openDuplicateListModal(){
           const id = b.dataset.dupDel;
           const t = getAllTxs().find(x => x.id === id);
           if(!t) return;
-          if(!confirm('⚠️ এই লেনদেনটি ডিলিট করবেন?\n\n৳ ' + fmt(t.amount) + '\n' + fmtDateTime(t.createdAt) + '\nইউজার: ' + (t.user||'-'))) return;
+          if(!confirm('⚠️ এই লেনদেনটি স্থায়ীভাবে ডিলিট করবেন?\n\n৳ ' + fmt(t.amount) + '\n' + fmtDateTime(t.createdAt) + '\nইউজার: ' + (t.user||'-') + '\n\nএটি আর কখনো ফিরে আসবে না।')) return;
           await deleteTx(id);
           cl();
           setTimeout(()=> openDuplicateListModal(), 200);
@@ -2538,7 +2641,7 @@ function openDuplicateListModal(){
           const gi = parseInt(b.dataset.dupKeepfirst, 10);
           const g = groups[gi];
           if(!g) return;
-          if(!confirm('⚠️ প্রথম এন্ট্রি রেখে বাকি ' + (g.txs.length - 1) + ' টি ডিলিট করবেন?')) return;
+          if(!confirm('⚠️ প্রথম এন্ট্রি রেখে বাকি ' + (g.txs.length - 1) + ' টি স্থায়ীভাবে ডিলিট করবেন?')) return;
           for(let i = 1; i < g.txs.length; i++){
             await deleteTx(g.txs[i].id);
           }
@@ -2585,9 +2688,10 @@ function openDuplicateListModal(){
 }
 </script>
 
+
 <script>
 /* ============================================================
-   Part 4: Branch Setup, Main Tx Modal, Money Exchange
+   Part 4: Branch Setup, Main Tx Modal, Money Exchange, BT Printer
    ============================================================ */
 
 /* ============ Branch Setup / Setup Wizard / Backup ============ */
@@ -2798,6 +2902,7 @@ function openBackupModal(){
   const totalArchive = Object.values(DB().yearlyArchive||{}).reduce((s,arr)=> s + (arr?.length||0), 0);
   const snapCount = Object.keys(DB().dailyFullSnapshots||{}).length;
   const logCount = (DB().txEditLog||[]).length;
+  const delCount = Object.keys(DB().deletedTxIds||{}).length;
   openModal({
     title: '💾 ব্যাকআপ / রিস্টোর',
     bodyHTML: `
@@ -2817,6 +2922,7 @@ function openBackupModal(){
           • গ্রাহক: <b style="color:#fff">${toBn(DB().customers.length)}</b><br>
           • বকেয়াধারী: <b style="color:#fff">${toBn(DB().customers.filter(c=>(c.supportDue||0)>0).length)}</b><br>
           • Edit Log: <b style="color:#fff">${toBn(logCount)}</b><br>
+          • Deleted Markers: <b style="color:#fff">${toBn(delCount)}</b><br>
           • Supabase: <b>${supabaseReady ? '🟢 সক্রিয়' : '🔴 নিষ্ক্রিয়'}</b>
         </div>
       </div>`,
@@ -3542,7 +3648,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       const isOnline = isOnlineMode();
       const isTransferForm = (type === 'branch_transfer');
 
-      /* ===== 1) Online support validation ===== */
       if(isOnlineSup){
         onlineSupportAcc = wrap.querySelector('#f_acc')?.value.trim() || '';
         onlineSupportName = wrap.querySelector('#f_name')?.value.trim() || '';
@@ -3552,13 +3657,11 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         if(onlineSupportAmount <= 0){ alert('🌐 পরিমাণ দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
 
-      /* ===== 2) Online other-bank validation ===== */
       if(isOnline && type === 'other_bank'){
         onlineAmount = parseFloat(wrap.querySelector('#online_amount')?.value) || 0;
         if(onlineAmount <= 0){ alert('🌐 অনলাইন পরিমাণ দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
 
-      /* ===== 3) Branch transfer validation ===== */
       if(isTransferForm){
         if(outSum <= 0 && inSum <= 0){
           alert('অন্তত একটি নোট দিন');
@@ -3566,13 +3669,11 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         }
       }
 
-      /* ===== 4) Other bank physical validation ===== */
       if(type === 'other_bank' && !isOnline){
         if(dir === 'in' && inSum <= 0){ alert('📥 কলামে নোট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
         if(dir === 'out' && outSum <= 0){ alert('💸 কলামে নোট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
 
-      /* ===== 5) Support physical validation ===== */
       if(type === 'support' && !isOnlineSup){
         if(outSum <= 0 && inSum <= 0){
           alert('💸 বা 📥 অন্তত একটি নোট দিন');
@@ -3583,7 +3684,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         if(!pAcc && !pName){ alert('🤝 গ্রাহকের নাম/অ্যাকাউন্ট দিন'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
 
-      /* ===== 6) Loan given validation ===== */
       let onlineTransfer = false;
       let onlineBankName = '';
       let onlineAmt = 0;
@@ -3603,14 +3703,12 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         if(!onlineTransfer && cashAmount <= 0){ alert('💸 অন্তত একটি নোট দিন অথবা অনলাইন টিক দিন।'); saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return; }
       }
 
-      /* ===== 7) Generic amount check (শুধু যেসব ক্ষেত্রে notes/amount দুটোই নেই) ===== */
       const needsNotesCheck = !isOnlineSup && !isOnline && !isTransferForm && type !== 'loan_given' && type !== 'other_bank' && type !== 'support';
       if(needsNotesCheck && amount <= 0){
         alert('অন্তত একটি নোট দিন');
         saveBtn.disabled = false; saveBtn.innerHTML = originalBtnText; return;
       }
 
-      /* ===== 8) txnBranch/custBranch calculation ===== */
       let txnBranch, custBranch;
       if(type === 'branch_transfer'){
         const from = wrap.querySelector('#f_from').value;
@@ -3667,7 +3765,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         txAmount = amount;
       }
 
-      /* ===== 9) Note generation ===== */
       let finalNote;
       if(type === 'loan_given' && onlineTransfer){
         const cashPart = cashAmount > 0 ? toBn(fmt(cashAmount)) + ' টাকা ক্যাশ এবং ' : '';
@@ -3815,15 +3912,42 @@ async function acceptTransfer(id, wrap, type, close){
   renderDashboard();
   toast('✅ গৃহীত');
 }
+
+/* ============ DELETE — with permanent tracking ============ */
 async function deleteTx(id){
   const t = DB().txs.find(x=>x.id === id);
+
+  // ✅ Permanent deletion marker
+  if(!DB().deletedTxIds) DB().deletedTxIds = {};
+  DB().deletedTxIds[id] = new Date().toISOString();
+
   if(t) logTxEdit(id, 'delete', t, null);
+
+  // Main array থেকে মুছুন
   DB().txs = DB().txs.filter(x=>x.id !== id);
+
+  // Yearly archive থেকেও মুছুন
+  Object.keys(DB().yearlyArchive || {}).forEach(y=>{
+    if(Array.isArray(DB().yearlyArchive[y])){
+      DB().yearlyArchive[y] = DB().yearlyArchive[y].filter(x=>x.id !== id);
+    }
+  });
+
+  // আজকের snapshot থেকেও মুছুন
+  const today = todayStr();
+  if(DB().dailyFullSnapshots && DB().dailyFullSnapshots[today]){
+    const snap = DB().dailyFullSnapshots[today];
+    if(Array.isArray(snap.txs)){
+      snap.txs = snap.txs.filter(x=>x.id !== id);
+    }
+  }
+
   if(t && t.type === 'support' && t.custAcc) updateCustomerDueInDB(t.custAcc, false);
+
   recomputeLive();
   await saveDB();
   renderDashboard();
-  toast('🗑️ ডিলিট');
+  toast('🗑️ ডিলিট (স্থায়ীভাবে)');
 }
 
 /* ============ Money Exchange (Fixed: Online mode hides notes) ============ */
@@ -3921,6 +4045,7 @@ function openMoneyExchange(){
     onMount: (w, close) => setupMoneyExchange(w, close, targetBranch)
   });
 }
+
 function setupMoneyExchange(wrap, close, initialBranch){
   const sumOutEl = wrap.querySelector('#me_sumOut');
   const sumInEl = wrap.querySelector('#me_sumIn');
@@ -4136,13 +4261,18 @@ function setupMoneyExchange(wrap, close, initialBranch){
 }
 </script>
 
+
 <script>
 /* ============================================================
-   Part 5: Export, Print, Customer, User Manager, Init
+   Part 5: Export, Print (Bluetooth direct), Customer, User Manager,
+           Realtime Watchdog, Init
    ============================================================ */
 
 const REPORT_HEADERS = ['Date','Type','Txn Branch','Customer','Direction','Amount','Description','Notes','User','Time','Cust Branch'];
 
+/* ============================================================
+   PDF / XLSX Export
+   ============================================================ */
 function exportToPDF(title, headers, rows, filename, opts){
   opts = opts || {};
   const mode = opts.mode || 'a4-dark';
@@ -4216,29 +4346,258 @@ function exportToPDF(title, headers, rows, filename, opts){
   }catch(e){ console.error(e); toast('❌ PDF failed'); }
 }
 
+function exportToXLSX(title, headers, rows, filename){
+  try{
+    const aoa = [[title], [], headers, ...rows];
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws['!cols'] = headers.map(()=> ({ wch: 18 }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Report');
+    XLSX.writeFile(wb, filename || 'report.xlsx');
+    toast('📊 XLSX');
+  }catch(e){ console.error(e); toast('❌ XLSX failed'); }
+}
+
+/* ============================================================
+   Bluetooth Printer Manager
+   ============================================================ */
+const BT_PRINTER = {
+  device: null,
+  characteristic: null,
+  service: null,
+  isConnected: false,
+
+  KNOWN_SERVICES: [
+    '000018f0-0000-1000-8000-00805f9b34fb',
+    '0000ff00-0000-1000-8000-00805f9b34fb',
+    '0000ffe0-0000-1000-8000-00805f9b34fb',
+    '49535343-fe7d-4ae5-8fa9-9fafd205e455',
+    'e7810a71-73ae-499d-8c15-faa9aef0c3f2',
+    '0000ae30-0000-1000-8000-00805f9b34fb',
+  ],
+  KNOWN_CHARS: [
+    '00002af1-0000-1000-8000-00805f9b34fb',
+    '0000ff01-0000-1000-8000-00805f9b34fb',
+    '0000ffe1-0000-1000-8000-00805f9b34fb',
+    '49535343-8841-43f4-a8d4-ecbe34729bb3',
+    'bef8d6c9-9c21-4c9e-b632-bd58c1009f9f',
+    '0000ae01-0000-1000-8000-00805f9b34fb',
+  ],
+
+  async connect(){
+    if(!navigator.bluetooth){
+      throw new Error('Web Bluetooth supported নয় — Chrome/Edge ব্যবহার করুন');
+    }
+    this.device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: this.KNOWN_SERVICES
+    });
+    const server = await this.device.gatt.connect();
+    let foundService = null, foundChar = null;
+
+    for(const svcUuid of this.KNOWN_SERVICES){
+      try{
+        const service = await server.getPrimaryService(svcUuid);
+        const chars = await service.getCharacteristics();
+        for(const c of chars){
+          if(c.properties.write || c.properties.writeWithoutResponse){
+            foundService = service;
+            foundChar = c;
+            break;
+          }
+        }
+        if(foundChar) break;
+      }catch(e){ }
+    }
+
+    if(!foundChar){
+      try{
+        const services = await server.getPrimaryServices();
+        for(const svc of services){
+          const chars = await svc.getCharacteristics();
+          for(const c of chars){
+            if(c.properties.write || c.properties.writeWithoutResponse){
+              foundService = svc;
+              foundChar = c;
+              break;
+            }
+          }
+          if(foundChar) break;
+        }
+      }catch(e){}
+    }
+
+    if(!foundChar){
+      throw new Error('Printer-এ writable characteristic পাওয়া যায়নি');
+    }
+
+    this.service = foundService;
+    this.characteristic = foundChar;
+    this.isConnected = true;
+    this.device.addEventListener('gattserverdisconnected', ()=>{
+      this.isConnected = false;
+      console.warn('🔌 Printer disconnected');
+    });
+    return this.device.name || 'Bluetooth Printer';
+  },
+
+  disconnect(){
+    if(this.device && this.device.gatt.connected){
+      try{ this.device.gatt.disconnect(); }catch(e){}
+    }
+    this.device = null;
+    this.characteristic = null;
+    this.service = null;
+    this.isConnected = false;
+  },
+
+  async sendBytes(bytes){
+    if(!this.characteristic) throw new Error('Printer সংযুক্ত নেই');
+    const CHUNK = 180;
+    for(let i = 0; i < bytes.length; i += CHUNK){
+      const chunk = bytes.slice(i, i + CHUNK);
+      if(this.characteristic.properties.writeWithoutResponse){
+        await this.characteristic.writeValueWithoutResponse(chunk);
+      } else {
+        await this.characteristic.writeValue(chunk);
+      }
+      await new Promise(r => setTimeout(r, 20));
+    }
+  },
+
+  async printText(text){
+    const ESC = 0x1B, GS = 0x1D;
+    const chunks = [];
+    chunks.push(new Uint8Array([ESC, 0x40]));
+    chunks.push(new Uint8Array([ESC, 0x74, 0x00]));
+
+    const encoder = new TextEncoder();
+    const lines = String(text).split('\n');
+    for(const line of lines){
+      chunks.push(encoder.encode(line + '\n'));
+    }
+    chunks.push(new Uint8Array([0x0A, 0x0A, 0x0A]));
+    chunks.push(new Uint8Array([GS, 0x56, 0x00]));
+
+    let total = 0;
+    chunks.forEach(c => total += c.length);
+    const merged = new Uint8Array(total);
+    let offset = 0;
+    chunks.forEach(c => { merged.set(c, offset); offset += c.length; });
+
+    await this.sendBytes(merged);
+  }
+};
+
+function buildThermalText(title, headers, rows, opts){
+  opts = opts || {};
+  const width = opts.width === 58 ? 32 : 42;
+  const sep = '-'.repeat(width);
+  const dblSep = '='.repeat(width);
+  const center = (s)=>{ s = String(s||''); const sp = Math.max(0, Math.floor((width - s.length)/2)); return ' '.repeat(sp) + s; };
+  const right = (s)=>{ s = String(s||''); const sp = Math.max(0, width - s.length); return ' '.repeat(sp) + s; };
+
+  let out = '';
+  out += center('COMPUTER CAMPUS') + '\n';
+  out += center('Agent Banking System') + '\n';
+  out += sep + '\n';
+  out += center(title) + '\n';
+  out += center(fmtDateTimeEN(new Date().toISOString())) + '\n';
+  out += center('By: ' + (session?.username || 'System')) + '\n';
+  out += dblSep + '\n';
+
+  rows.forEach((row, idx)=>{
+    out += sep + '\n';
+    out += '#' + (idx + 1) + '  ' + (row[0] || '-') + '\n';
+    const type = String(row[1] || '-');
+    const branch = String(row[2] || '-');
+    out += type + '\n';
+    if(branch) out += '  ' + branch + '\n';
+    if(row[3]) out += '  Customer: ' + row[3] + '\n';
+    if(row[4]) out += '  ' + row[4] + '\n';
+    out += '  Amount: ' + (row[5] || '-') + '\n';
+    if(row[6] && row[6] !== '-') out += '  ' + row[6] + '\n';
+    if(row[7] && row[7] !== '-') out += '  Notes: ' + row[7] + '\n';
+    out += '  By: ' + (row[8] || '-') + '\n';
+    if(row[9]) out += '  ' + row[9] + '\n';
+    if(row[10]) out += '  ' + row[10] + '\n';
+  });
+
+  out += dblSep + '\n';
+  const totalAmt = rows.reduce((s, r)=>{
+    const m = String(r[5] || '').match(/[\d,]+\.?\d*/);
+    return s + (m ? parseFloat(m[0].replace(/,/g,'')) : 0);
+  }, 0);
+  out += right('TOTAL: BDT ' + fmt(totalAmt)) + '\n';
+  out += right('Items: ' + rows.length) + '\n';
+  out += dblSep + '\n';
+  out += center('Thank you!') + '\n';
+  out += center('Computer Campus') + '\n';
+  out += '\n\n\n';
+  return out;
+}
+
+/* ============================================================
+   Print Report Modal (BT + System + PDF)
+   ============================================================ */
 function printReport(title, headers, rows, filenameBase){
+  const btSupported = !!(navigator.bluetooth);
+  const btConnected = BT_PRINTER.isConnected;
+  const btName = BT_PRINTER.device?.name || '';
+
   const wrap = document.createElement('div');
   wrap.className = 'modal-overlay';
   wrap.innerHTML = `
-    <div class="modal" style="max-width:460px">
+    <div class="modal" style="max-width:520px">
       <div class="modal-head">
         <h3>🖨️ প্রিন্ট অপশন</h3>
         <button class="x" type="button">✕</button>
       </div>
       <div class="modal-body">
-        <div class="bank-hint" style="margin-bottom:14px">
-          💡 <b>Direct Print</b> — Bluetooth বা WiFi printer সিলেক্ট করে সরাসরি প্রিন্ট করুন।
+
+        ${btSupported ? `
+        <div style="padding:14px 16px;border-radius:12px;background:linear-gradient(145deg,rgba(139,92,246,.12),rgba(59,130,246,.06));border:1px solid rgba(139,92,246,.4);margin-bottom:14px">
+          <div style="font-size:13.5px;font-weight:800;color:#a78bfa;margin-bottom:10px">📶 ব্লুটুথ প্রিন্টার (সরাসরি)</div>
+          <div id="bt_status_box" style="font-size:13px;color:#e0eaff;padding:10px 12px;border-radius:8px;background:rgba(0,0,0,.35);border:1px solid var(--line-2);margin-bottom:10px;line-height:1.7">
+            ${btConnected
+              ? `✅ সংযুক্ত: <b style="color:#4ade80">${esc(btName)}</b>`
+              : `⚪ কোনো প্রিন্টার সংযুক্ত নেই`}
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${btConnected
+              ? `<button class="btn green" data-action="bt-print-80" style="flex:1;min-width:130px;padding:11px;font-size:13px">🖨️ 80mm প্রিন্ট</button>
+                 <button class="btn green" data-action="bt-print-58" style="flex:1;min-width:130px;padding:11px;font-size:13px">🖨️ 58mm প্রিন্ট</button>
+                 <button class="btn gray" data-action="bt-disconnect" style="padding:11px 14px;font-size:13px">🔌 বিচ্ছিন্ন</button>`
+              : `<button class="btn bt" data-action="bt-connect" style="flex:1;padding:12px;font-size:13.5px">🔗 ব্লুটুথ প্রিন্টার খুঁজুন</button>`}
+          </div>
         </div>
-        <div style="display:grid;gap:10px;margin-bottom:16px">
-          <button class="btn" data-action="print-a4" style="padding:14px;font-size:14px">📄 A4 Paper — Bluetooth / WiFi Printer</button>
-          <button class="btn" data-action="print-thermal-58" style="padding:14px;font-size:14px;background:linear-gradient(135deg,#8b5cf6,#6366f1)">🧾 Thermal 58mm</button>
-          <button class="btn" data-action="print-thermal-80" style="padding:14px;font-size:14px;background:linear-gradient(135deg,#8b5cf6,#6366f1)">🧾 Thermal 80mm</button>
+        ` : `
+        <div style="padding:12px 14px;border-radius:12px;background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.4);margin-bottom:14px;font-size:13px;color:#facc15;line-height:1.7">
+          ⚠️ এই ব্রাউজারে Web Bluetooth নেই। Chrome/Edge (Android/Desktop) ব্যবহার করুন।
         </div>
-        <div style="display:grid;gap:10px;margin-bottom:16px">
-          <button class="btn gray" data-action="pdf-a4-dark" style="padding:12px;font-size:13px">🖤 A4 PDF (Dark)</button>
-          <button class="btn gray" data-action="pdf-a4-light" style="padding:12px;font-size:13px">📄 A4 PDF (Light)</button>
-          <button class="btn gray" data-action="pdf-thermal" style="padding:12px;font-size:13px">🧾 Thermal PDF</button>
+        `}
+
+        <div style="padding:14px 16px;border-radius:12px;background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(34,197,94,.04));border:1px solid var(--line-3);margin-bottom:14px">
+          <div style="font-size:13.5px;font-weight:800;color:#60a5fa;margin-bottom:10px">🖨️ A4 / WiFi প্রিন্টার (System)</div>
+          <div style="font-size:12.5px;color:#a5b4d8;margin-bottom:10px;line-height:1.7">
+            💡 WiFi printer সিলেক্ট করতে system print dialog ব্যবহার করুন।
+          </div>
+          <div style="display:grid;gap:8px">
+            <button class="btn" data-action="print-a4" style="padding:12px;font-size:13.5px">📄 A4 Paper — System Dialog</button>
+            <button class="btn" data-action="print-thermal-58" style="padding:12px;font-size:13px;background:linear-gradient(135deg,#8b5cf6,#6366f1)">🧾 Thermal 58mm (System)</button>
+            <button class="btn" data-action="print-thermal-80" style="padding:12px;font-size:13px;background:linear-gradient(135deg,#8b5cf6,#6366f1)">🧾 Thermal 80mm (System)</button>
+          </div>
         </div>
+
+        <div style="padding:14px 16px;border-radius:12px;background:linear-gradient(145deg,#0a0f1e,#050810);border:1px solid var(--line-2);margin-bottom:14px">
+          <div style="font-size:13.5px;font-weight:800;color:#facc15;margin-bottom:10px">📄 PDF (Save)</div>
+          <div style="display:grid;gap:8px">
+            <button class="btn gray" data-action="pdf-a4-dark" style="padding:11px;font-size:13px">🖤 A4 PDF (Dark)</button>
+            <button class="btn gray" data-action="pdf-a4-light" style="padding:11px;font-size:13px">📄 A4 PDF (Light)</button>
+            <button class="btn gray" data-action="pdf-thermal" style="padding:11px;font-size:13px">🧾 Thermal PDF</button>
+          </div>
+        </div>
+
         <button class="btn gray" data-action="cancel" style="width:100%;padding:12px">বাতিল</button>
       </div>
     </div>`;
@@ -4247,9 +4606,60 @@ function printReport(title, headers, rows, filenameBase){
   wrap.querySelector('.x').addEventListener('click', close);
   wrap.addEventListener('click', e => { if(e.target === wrap) close(); });
   wrap.querySelector('[data-action="cancel"]').addEventListener('click', close);
+
   wrap.querySelectorAll('[data-action]').forEach(btn => {
-    btn.addEventListener('click', ()=>{
+    btn.addEventListener('click', async ()=>{
       const action = btn.dataset.action;
+
+      if(action === 'bt-connect'){
+        btn.disabled = true;
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> সংযোগ হচ্ছে...';
+        try{
+          const name = await BT_PRINTER.connect();
+          toast('✅ প্রিন্টার সংযুক্ত: ' + name);
+          close();
+          setTimeout(()=> printReport(title, headers, rows, filenameBase), 200);
+        }catch(err){
+          console.error('BT connect error:', err);
+          if(err.name === 'NotFoundError' || /cancelled/i.test(err.message||'')){
+            toast('❌ প্রিন্টার নির্বাচন বাতিল');
+          } else {
+            toast('❌ সংযোগ ব্যর্থ: ' + (err.message || 'Unknown'));
+          }
+          btn.disabled = false;
+          btn.innerHTML = orig;
+        }
+        return;
+      }
+
+      if(action === 'bt-disconnect'){
+        BT_PRINTER.disconnect();
+        toast('🔌 প্রিন্টার বিচ্ছিন্ন');
+        close();
+        setTimeout(()=> printReport(title, headers, rows, filenameBase), 200);
+        return;
+      }
+
+      if(action === 'bt-print-80' || action === 'bt-print-58'){
+        const width = action === 'bt-print-58' ? 58 : 80;
+        btn.disabled = true;
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> প্রিন্ট হচ্ছে...';
+        try{
+          const text = buildThermalText(title, headers, rows, { width });
+          await BT_PRINTER.printText(text);
+          toast('✅ প্রিন্ট সফল');
+          close();
+        }catch(err){
+          console.error('BT print error:', err);
+          toast('❌ প্রিন্ট ব্যর্থ: ' + (err.message || 'Unknown'));
+          btn.disabled = false;
+          btn.innerHTML = orig;
+        }
+        return;
+      }
+
       close();
       if(action === 'print-a4'){ directPrintHTML(title, headers, rows, 'a4'); }
       else if(action === 'print-thermal-58'){ directPrintHTML(title, headers, rows, 'thermal-58'); }
@@ -4340,18 +4750,9 @@ function directPrintHTML(title, headers, rows, format){
   printWindow.document.close();
 }
 
-function exportToXLSX(title, headers, rows, filename){
-  try{
-    const aoa = [[title], [], headers, ...rows];
-    const ws = XLSX.utils.aoa_to_sheet(aoa);
-    ws['!cols'] = headers.map(()=> ({ wch: 18 }));
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Report');
-    XLSX.writeFile(wb, filename || 'report.xlsx');
-    toast('📊 XLSX');
-  }catch(e){ console.error(e); toast('❌ XLSX failed'); }
-}
-
+/* ============================================================
+   Report row builder + txListHTML
+   ============================================================ */
 function buildReportRow(t){
   const typeEn = txEN(t.type);
   const branchEn = branchEN(t.branch);
@@ -5360,15 +5761,14 @@ function toast(msg){
   }, 2500);
 }
 
-/* ===== Realtime Connection Watchdog + Visibility Recovery ===== */
-let __realtimeWatchdog = null;
-
+/* ============================================================
+   Realtime Connection Watchdog + Visibility Recovery
+   ============================================================ */
 function startRealtimeWatchdog(){
   if(__realtimeWatchdog) clearInterval(__realtimeWatchdog);
   __realtimeWatchdog = setInterval(async ()=>{
     if(!supabaseReady || !session) return;
     try{
-      const start = Date.now();
       const res = await withTimeout(
         supabaseClient.from(window.SUPABASE_TABLE)
           .select('updated_at')
@@ -5391,22 +5791,19 @@ function startRealtimeWatchdog(){
     }catch(e){
       console.warn('🔌 Watchdog error:', e);
     }
-  }, 30000); // প্রতি ৩০ সেকেন্ডে
+  }, 30000);
 }
 
-/* ===== Screen unlock / tab visible হলে cloud থেকে catch-up ===== */
 document.addEventListener('visibilitychange', async ()=>{
   if(document.visibilityState !== 'visible') return;
   if(!session || !supabaseReady) return;
 
   console.log('👁️ App visible — syncing from cloud...');
 
-  // 1) Channel আবার join করান
   if(!realtimeChannel || realtimeChannel.state !== 'joined'){
     startSupabaseListener();
   }
 
-  // 2) Cloud থেকে fresh data এনে merge করুন
   try{
     const remote = await loadFromSupabase();
     if(!remote || (remote.__version && remote.__version !== APP_VERSION)) return;
@@ -5420,7 +5817,6 @@ document.addEventListener('visibilitychange', async ()=>{
     renderTopbar();
     renderDashboard();
 
-    // প্রতিটি নতুন tx-এর notification দেখান (যা __rtEventSeen-এ নেই)
     newTxs.forEach(tx => {
       if(__rtEventSeen.has(tx.id)) return;
       __rtEventSeen.add(tx.id);
@@ -5444,7 +5840,6 @@ document.addEventListener('visibilitychange', async ()=>{
   }
 });
 
-/* ===== Online/Offline network event handle ===== */
 window.addEventListener('online', ()=>{
   console.log('📶 Network online');
   if(session && supabaseReady) {
