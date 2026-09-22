@@ -899,45 +899,76 @@ function startSupabaseListener(){
       if(!remote) return;
       if(__isApplyingRemote) return;
       if(remote.__version && remote.__version !== APP_VERSION) return;
+
       const __now = Date.now();
-      if(__now - (window.__lastSaveAt||0) < 2000) return;
+      const isRecentLocalSave = (__now - (window.__lastSaveAt||0) < 2000);
+
       try{
         const mergedResult = mergeRemoteIntoLocal(remote);
         const { mergedDB, newTxs } = mergedResult;
-        const localTxCount = (DB().txs||[]).length;
-        if(mergedDB.txs.length === localTxCount && newTxs.length === 0) return;
+
+        // ✅ পরিবর্তন: total count (main + archive) মিলিয়ে দেখুন
+        const localMainCount = (DB().txs||[]).length;
+        const localArchiveCount = Object.values(DB().yearlyArchive||{})
+          .reduce((s,a)=> s + (Array.isArray(a) ? a.length : 0), 0);
+        const localTotal = localMainCount + localArchiveCount;
+
+        const remoteMainCount = (remote.txs||[]).length;
+        const remoteArchiveCount = Object.values(remote.yearlyArchive||{})
+          .reduce((s,a)=> s + (Array.isArray(a) ? a.length : 0), 0);
+        const remoteTotal = remoteMainCount + remoteArchiveCount;
+
+        // ✅ যদি remote-এ নতুন কিছু না থাকে, skip
+        if(remoteTotal <= localTotal && newTxs.length === 0) return;
+
         __isApplyingRemote = true;
         try{
           window.db = mergedDB;
           try{ normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); }catch(e){}
           saveLocalDB();
           if(session){ renderTopbar(); renderDashboard(); }
-          newTxs.forEach(tx => {
-            if(__rtEventSeen.has(tx.id)) return;
-            __rtEventSeen.add(tx.id);
-            if(__rtEventSeen.size > 500){
-              __rtEventSeen = new Set(Array.from(__rtEventSeen).slice(-200));
-            }
-            const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
-            const branchName = BRANCHES[tx.branch]?.name || tx.branch || '-';
-            const kind = tx.accepted === false && tx.type === 'branch_transfer' ? 'accept' : 'new-tx';
-            const title = `🔔 নতুন লেনদেন (${branchName})`;
-            const body = `
-              <div style="margin-bottom:4px">${cfg.icon||''} <b>${esc(cfg.title||tx.type)}</b></div>
-              <div style="margin-bottom:4px">💰 পরিমাণ: <b>৳ ${fmt(tx.amount)}</b></div>
-              ${tx.custName ? `<div style="margin-bottom:4px">👤 ${esc(tx.custName)}</div>` : ''}
-              <div style="font-size:12px;color:#a5b4d8">👤 ${esc(tx.user||'-')} • ${esc(fmtDateTime(tx.createdAt))}</div>
-            `;
-            showRealtimeToast(kind, title, body, { icon: cfg.icon || '🔔', ttl: 8000 });
-          });
+
+          // ✅ শুধু notification এখানে suppress করুন — merge নয়
+          if(!isRecentLocalSave){
+            newTxs.forEach(tx => {
+              if(__rtEventSeen.has(tx.id)) return;
+              __rtEventSeen.add(tx.id);
+              if(__rtEventSeen.size > 500){
+                __rtEventSeen = new Set(Array.from(__rtEventSeen).slice(-200));
+              }
+              const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
+              const branchName = BRANCHES[tx.branch]?.name || tx.branch || '-';
+              const kind = tx.accepted === false && tx.type === 'branch_transfer' ? 'accept' : 'new-tx';
+              const title = `🔔 নতুন লেনদেন (${branchName})`;
+              const body = `
+                <div style="margin-bottom:4px">${cfg.icon||''} <b>${esc(cfg.title||tx.type)}</b></div>
+                <div style="margin-bottom:4px">💰 পরিমাণ: <b>৳ ${fmt(tx.amount)}</b></div>
+                ${tx.custName ? `<div style="margin-bottom:4px">👤 ${esc(tx.custName)}</div>` : ''}
+                <div style="font-size:12px;color:#a5b4d8">👤 ${esc(tx.user||'-')} • ${esc(fmtDateTime(tx.createdAt))}</div>
+              `;
+              showRealtimeToast(kind, title, body, { icon: cfg.icon || '🔔', ttl: 8000 });
+            });
+          }
         } finally {
           setTimeout(()=>{ __isApplyingRemote = false; }, 500);
         }
       }catch(e){ console.warn('Realtime merge error:', e); }
     })
-    .subscribe((status)=>{
-      if(status === 'SUBSCRIBED') updateConnStatus('online');
-      else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') updateConnStatus('offline');
+    .subscribe((status, err)=>{
+      if(status === 'SUBSCRIBED'){
+        updateConnStatus('online');
+      } else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED'){
+        updateConnStatus('offline');
+        // ✅ Mobile network recovery: ৫ সেকেন্ড পর আবার subscribe চেষ্টা
+        if(session && supabaseReady){
+          setTimeout(()=>{
+            if(session && supabaseReady){
+              console.log('🔄 Reconnecting realtime channel...');
+              startSupabaseListener();
+            }
+          }, 5000);
+        }
+      }
     });
 }
 
@@ -1855,9 +1886,17 @@ async function doLogin(){
     btn.innerHTML = '🔐 লগইন করুন';
   }
 }
+
 function logout(){
   stopSessionTimer();
   stopSupabaseListener();
+
+  // ✅ Watchdog বন্ধ করুন
+  if(typeof __realtimeWatchdog !== 'undefined' && __realtimeWatchdog){
+    clearInterval(__realtimeWatchdog);
+    __realtimeWatchdog = null;
+  }
+
   sessionStorage.removeItem(SKEY);
   session = null;
   viewBranch = 'all';
@@ -1873,6 +1912,7 @@ function logout(){
   const btn = $('#loginBtn');
   if(btn){ btn.disabled = false; btn.innerHTML = '🔐 লগইন করুন'; }
 }
+
 function startApp(){
   if(!session) return;
   $('#loginScreen').classList.add('hidden');
@@ -1892,6 +1932,31 @@ function startApp(){
     setTimeout(()=> openSetupWizard(), 500);
   }
 }
+
+function startApp(){
+  if(!session) return;
+  $('#loginScreen').classList.add('hidden');
+  $('#app').classList.remove('hidden');
+  performDailyRollover(false);
+  __lastRolloverCheck = todayStr();
+  recalcAllCustomerDues(false);
+  recomputeLive();
+  dashDate = todayStr();
+  isDateViewMode = false;
+  renderTopbar();
+  renderDashboard();
+  saveDB();
+  resetSessionTimer();
+  lastActivityTime = Date.now();
+
+  // ✅ Watchdog চালু
+  try{ startRealtimeWatchdog(); }catch(e){ console.warn('Watchdog start failed:', e); }
+
+  if(session && session.role === 'admin' && isSystemEmpty()){
+    setTimeout(()=> openSetupWizard(), 500);
+  }
+}
+
 </script>
 
 <script>
@@ -5294,6 +5359,104 @@ function toast(msg){
     setTimeout(()=>el.remove(), 320);
   }, 2500);
 }
+
+/* ===== Realtime Connection Watchdog + Visibility Recovery ===== */
+let __realtimeWatchdog = null;
+
+function startRealtimeWatchdog(){
+  if(__realtimeWatchdog) clearInterval(__realtimeWatchdog);
+  __realtimeWatchdog = setInterval(async ()=>{
+    if(!supabaseReady || !session) return;
+    try{
+      const start = Date.now();
+      const res = await withTimeout(
+        supabaseClient.from(window.SUPABASE_TABLE)
+          .select('updated_at')
+          .eq('id', window.SUPABASE_ROW_ID)
+          .maybeSingle(),
+        8000,
+        { data:null, error:'timeout' }
+      );
+      if(res.error){
+        console.warn('🔌 Watchdog: connection dead, reconnecting');
+        updateConnStatus('offline');
+        startSupabaseListener();
+      } else {
+        updateConnStatus('online');
+        if(!realtimeChannel || realtimeChannel.state !== 'joined'){
+          console.log('🔌 Watchdog: channel not joined, restarting');
+          startSupabaseListener();
+        }
+      }
+    }catch(e){
+      console.warn('🔌 Watchdog error:', e);
+    }
+  }, 30000); // প্রতি ৩০ সেকেন্ডে
+}
+
+/* ===== Screen unlock / tab visible হলে cloud থেকে catch-up ===== */
+document.addEventListener('visibilitychange', async ()=>{
+  if(document.visibilityState !== 'visible') return;
+  if(!session || !supabaseReady) return;
+
+  console.log('👁️ App visible — syncing from cloud...');
+
+  // 1) Channel আবার join করান
+  if(!realtimeChannel || realtimeChannel.state !== 'joined'){
+    startSupabaseListener();
+  }
+
+  // 2) Cloud থেকে fresh data এনে merge করুন
+  try{
+    const remote = await loadFromSupabase();
+    if(!remote || (remote.__version && remote.__version !== APP_VERSION)) return;
+
+    const mergedResult = mergeRemoteIntoLocal(remote);
+    const { mergedDB, newTxs } = mergedResult;
+
+    window.db = mergedDB;
+    try{ normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); }catch(e){}
+    saveLocalDB();
+    renderTopbar();
+    renderDashboard();
+
+    // প্রতিটি নতুন tx-এর notification দেখান (যা __rtEventSeen-এ নেই)
+    newTxs.forEach(tx => {
+      if(__rtEventSeen.has(tx.id)) return;
+      __rtEventSeen.add(tx.id);
+      const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
+      const branchName = BRANCHES[tx.branch]?.name || tx.branch || '-';
+      const title = `🔔 নতুন লেনদেন (${branchName})`;
+      const body = `
+        <div style="margin-bottom:4px">${cfg.icon||''} <b>${esc(cfg.title||tx.type)}</b></div>
+        <div style="margin-bottom:4px">💰 পরিমাণ: <b>৳ ${fmt(tx.amount)}</b></div>
+        ${tx.custName ? `<div style="margin-bottom:4px">👤 ${esc(tx.custName)}</div>` : ''}
+        <div style="font-size:12px;color:#a5b4d8">👤 ${esc(tx.user||'-')} • ${esc(fmtDateTime(tx.createdAt))}</div>
+      `;
+      showRealtimeToast('new-tx', title, body, { icon: cfg.icon || '🔔', ttl: 8000 });
+    });
+
+    if(newTxs.length > 0){
+      toast('🔄 ' + toBn(newTxs.length) + ' টি নতুন লেনদেন সিঙ্ক হয়েছে');
+    }
+  }catch(e){
+    console.warn('Visibility sync error:', e);
+  }
+});
+
+/* ===== Online/Offline network event handle ===== */
+window.addEventListener('online', ()=>{
+  console.log('📶 Network online');
+  if(session && supabaseReady) {
+    startSupabaseListener();
+    updateConnStatus('online');
+  }
+});
+
+window.addEventListener('offline', ()=>{
+  console.log('📴 Network offline');
+  updateConnStatus('offline');
+});
 
 /* ============ Init ============ */
 (async function init(){
