@@ -308,7 +308,7 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
     <section class="section" id="pendingTransfersSection"></section>
     <section class="section" id="vaultSection"></section>
     <section class="section" id="balanceSection"></section>
-    <section class="section" id="pendingCollectionsSection"></section>
+    <!-- <section class="section" id="pendingCollectionsSection"></section> -->
     <section class="section" id="dueSection"></section>
   </main>
 </div>
@@ -1149,7 +1149,7 @@ function renderDashboard(){
   renderPendingTransfersCard();
   renderVault(bf);
   renderBalances(bf, st);
-  renderPendingCollections();
+    // renderPendingCollections();   // ⏳ অপেক্ষমাণ ঋণ সংগ্রহ সেকশন সরানো হয়েছে
   renderDueSection();
 }
 
