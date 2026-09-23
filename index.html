@@ -278,6 +278,20 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
   .mini{font-size:12.5px;padding:6px 10px}
   .db-tab-btn{font-size:12px;padding:8px 12px}
 }
+
+.realtime-status{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.4);color:var(--blue-3);font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:all .3s}
+.realtime-status.online{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--green-2);animation:pulseGreen 2s ease-in-out infinite}
+.realtime-status.offline{background:rgba(122,138,184,.12);border-color:rgba(122,138,184,.3);color:var(--muted)}
+.realtime-status.connecting{background:rgba(250,204,21,.15);border-color:rgba(250,204,21,.5);color:var(--yellow-2)}
+.realtime-status.error{background:rgba(220,38,38,.15);border-color:rgba(220,38,38,.5);color:#f87171}
+.rt-dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.presence-badge{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.4);color:#f9a8d4;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+.presence-badge b{color:#fff;font-weight:900}
+@keyframes slideInRT{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.rt-toast{position:fixed;top:78px;right:18px;z-index:9999;padding:13px 18px;border-radius:14px;background:linear-gradient(135deg,rgba(34,197,94,.95),rgba(59,130,246,.9));color:#fff;font-weight:800;font-size:13.5px;box-shadow:0 12px 40px rgba(0,0,0,.85);animation:slideInRT .35s;display:flex;align-items:center;gap:10px;max-width:340px}
+.rt-toast.err{background:linear-gradient(135deg,rgba(220,38,38,.95),rgba(153,27,27,.9))}
+@media(max-width:640px){.realtime-status,.presence-badge{font-size:10.5px;padding:5px 9px}}
+
 ::selection{background:var(--blue);color:#fff}
 </style>
 </head>
@@ -583,10 +597,15 @@ let __supabaseClient = null;
 let __remoteSaveTimer = null;
 let __isRemoteReady = false;
 
+let __realtimeChannel = null;
+let __realtimeStatus = 'offline';
+let __isApplyingRemote = false;
+
 function initSupabase(){
   try{
     if(typeof window.supabase === 'undefined' || !window.supabase.createClient){
       console.warn('[Supabase] library not loaded — local-only mode');
+      updateRealtimeIndicator('offline');
       return;
     }
     if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) return;
@@ -596,11 +615,153 @@ function initSupabase(){
     const ind = document.getElementById('syncIndicator');
     if(ind){ ind.textContent = 'Cloud ✓'; ind.classList.add('active'); setTimeout(()=>{ ind.classList.remove('active'); ind.textContent = 'Sync'; }, 2000); }
     pullRemoteDB().catch(err => console.warn('[Supabase] initial pull failed:', err.message));
+    // ⚡ Realtime চ্যানেল চালু
+    setupRealtime();
   }catch(e){
     console.warn('[Supabase] init failed:', e.message);
     __supabaseClient = null;
     __isRemoteReady = false;
+    updateRealtimeIndicator('error');
   }
+}
+
+/* ═══ REALTIME SETUP ═══ */
+function setupRealtime(){
+  if(!__isRemoteReady || !__supabaseClient) return;
+  try{
+    if(__realtimeChannel){ __supabaseClient.removeChannel(__realtimeChannel); __realtimeChannel = null; }
+    updateRealtimeIndicator('connecting');
+    __realtimeChannel = __supabaseClient
+      .channel('agent_bank_rt_' + window.SUPABASE_ROW_ID, { config: { presence: { key: (session?.id || 'anon_' + Date.now()) } } })
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: window.SUPABASE_TABLE, filter: 'id=eq.' + window.SUPABASE_ROW_ID },
+        (payload) => { handleRealtimeUpdate(payload); }
+      )
+      .on('presence', { event: 'sync' }, () => {
+        try{
+          const state = __realtimeChannel.presenceState();
+          const flat = Object.values(state).flat();
+          updatePresenceUI(flat);
+        }catch(e){}
+      })
+      .subscribe(async (status) => {
+        console.log('[Realtime]', status);
+        if(status === 'SUBSCRIBED'){
+          updateRealtimeIndicator('online');
+          try{
+            await __realtimeChannel.track({
+              user: (session?.name) || 'Anonymous',
+              username: (session?.username) || '',
+              branch: (session?.branch) || 'all',
+              role: (session?.role) || '',
+              joined_at: new Date().toISOString()
+            });
+          }catch(e){}
+        } else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT'){
+          updateRealtimeIndicator('error');
+          setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 5000);
+        } else if(status === 'CLOSED'){
+          updateRealtimeIndicator('offline');
+        }
+      });
+  }catch(e){
+    console.warn('[Realtime] setup error:', e.message);
+    updateRealtimeIndicator('error');
+  }
+}
+
+/* ═══ REALTIME UPDATE HANDLER ═══ */
+function handleRealtimeUpdate(payload){
+  try{
+    if(__isApplyingRemote) return;
+    if(!payload || payload.eventType === 'DELETE') return;
+    const remote = payload.new && payload.new.data;
+    if(!remote || typeof remote !== 'object') return;
+
+    const remoteTs = Date.parse(remote.__lastUpdate || 0) || 0;
+    const localTs  = Date.parse((DB() && DB().__lastUpdate) || 0) || 0;
+
+    if(remoteTs <= localTs){
+      console.log('[Realtime] local is newer/equal — skip');
+      return;
+    }
+
+    console.log('[Realtime] applying remote update @', remote.__lastUpdate);
+    __isApplyingRemote = true;
+
+    // দৃশ্যাবস্থা মনে রাখুন
+    const prevWasDateView = isDateViewMode;
+    const prevDashDate = dashDate;
+    const prevViewBranch = viewBranch;
+
+    window.db = remote;
+    normalizeDB();
+    forceFixAdmin();
+    recalcAllCustomerDues(false);
+    recomputeLive();
+    saveLocalDB();
+
+    // পুনঃস্থাপন
+    dashDate = prevWasDateView ? prevDashDate : todayStr();
+    viewBranch = (session && session.role === 'admin') ? prevViewBranch : viewBranch;
+
+    if(session){
+      renderTopbar();
+      renderDashboard();
+      renderSidebar();
+    }
+
+    showRTToast('🔄 অন্য ডিভাইস থেকে আপডেট এসেছে', false);
+    __isApplyingRemote = false;
+  }catch(e){
+    console.error('[Realtime] handler error:', e);
+    __isApplyingRemote = false;
+  }
+}
+
+/* ═══ REALTIME INDICATOR ═══ */
+function updateRealtimeIndicator(state){
+  __realtimeStatus = state;
+  const el = document.getElementById('realtimeStatus');
+  const txt = document.getElementById('rtText');
+  if(!el || !txt) return;
+  el.classList.remove('online','offline','connecting','error');
+  el.classList.add(state);
+  const labels = {
+    online:     '🟢 লাইভ',
+    offline:    '⚪ অফলাইন',
+    connecting: '🟡 সংযোগ...',
+    error:      '🔴 ত্রুটি'
+  };
+  txt.textContent = labels[state] || '⚪';
+}
+
+/* ═══ PRESENCE UI ═══ */
+function updatePresenceUI(users){
+  const cnt = document.getElementById('presenceCount');
+  const bdg = document.getElementById('presenceBadge');
+  if(!cnt || !bdg) return;
+  const uniq = new Set();
+  users.forEach(u => { if(u && u.username) uniq.add(u.username); });
+  cnt.textContent = toBn(uniq.size);
+  const names = Array.from(uniq).slice(0, 8).join(', ');
+  bdg.title = 'অনলাইন: ' + (names || 'শুধু আপনি');
+  if(uniq.size > 1){
+    bdg.style.animation = 'pulseGreen 2s ease-in-out infinite';
+  } else {
+    bdg.style.animation = '';
+  }
+}
+
+/* ═══ RT TOAST ═══ */
+function showRTToast(msg, isErr){
+  try{
+    const el = document.createElement('div');
+    el.className = 'rt-toast' + (isErr ? ' err' : '');
+    el.innerHTML = msg;
+    document.body.appendChild(el);
+    setTimeout(()=>{ el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; el.style.transition = '.4s'; setTimeout(()=> el.remove(), 420); }, 3200);
+  }catch(e){}
 }
 async function pullRemoteDB(){
   if(!__isRemoteReady || !__supabaseClient) return;
@@ -631,6 +792,7 @@ function queueRemoteSave(){
 }
 async function pushRemoteDB(){
   if(!__isRemoteReady || !__supabaseClient) return;
+  if(__isApplyingRemote) return; // রিমোট আপডেট থেকে echo প্রতিরোধ
   try{
     const payload = { id: window.SUPABASE_ROW_ID, data: DB(), updated_at: new Date().toISOString() };
     const res = await withTimeout(
@@ -1066,6 +1228,8 @@ function renderTopbar(){
       '<div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>এজেন্ট ব্যাংকিং • v28</p></div></div></div>' +
     '<div class="tb-right">' +
       '<span class="sync-status" id="syncStatusBtn">সিঙ্ক</span>' +
+'<span class="realtime-status offline" id="realtimeStatus"><span class="rt-dot"></span><span id="rtText">⚪ Offline</span></span>' +
+'<span class="presence-badge" id="presenceBadge" title="অনলাইন ইউজার">👥 <b id="presenceCount">০</b></span>' +
       (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় শাখা</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') +
       '<input type="date" class="tb-date" id="dashDateInput" value="' + dashDate + '">' +
       '<span class="tb-time"><span class="dot"></span><span id="liveClock">--:--:-- --</span></span>' +
@@ -2334,6 +2498,15 @@ async function doLogin(){
 }
 async function logout(){
   try{ if(DB()) await saveDB(); }catch(e){}
+  try{
+    if(__realtimeChannel && __supabaseClient){
+      await __realtimeChannel.untrack();
+      __supabaseClient.removeChannel(__realtimeChannel);
+      __realtimeChannel = null;
+    }
+  }catch(e){}
+  updateRealtimeIndicator('offline');
+  updatePresenceUI([]);
   sessionStorage.removeItem(SKEY);
   session = null; viewBranch = 'all'; dashDate = todayStr(); isDateViewMode = false;
   $('#app').classList.add('hidden');
@@ -2352,6 +2525,20 @@ function startApp(){
   dashDate = todayStr(); isDateViewMode = false;
   renderTopbar(); renderDashboard(); renderSidebar();
   startClock(); saveDB();
+  // ⚡ Realtime-এ নিজের presence ট্র্যাক
+  setTimeout(() => {
+    try{
+      if(__realtimeChannel && __realtimeChannel.state === 'joined'){
+        __realtimeChannel.track({
+          user: session.name,
+          username: session.username,
+          branch: session.branch || 'all',
+          role: session.role,
+          joined_at: new Date().toISOString()
+        }).catch(()=>{});
+      }
+    }catch(e){}
+  }, 800);
 }
 
 /* ═══ INIT ═══ */
@@ -2359,6 +2546,13 @@ document.getElementById('sidebarOverlay')?.addEventListener('click', closeSideba
 document.getElementById('sidebarClose')?.addEventListener('click', closeSidebar);
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSidebar(); });
 setupEnterNavigation();
+window.addEventListener('beforeunload', () => {
+  try{
+    if(__realtimeChannel && __supabaseClient){
+      __realtimeChannel.untrack().catch(()=>{});
+    }
+  }catch(e){}
+});
 
 (async function init(){
   console.log('🚀 Computer Campus v28');
