@@ -1963,58 +1963,113 @@ function buildPrintHTML(title, bodyHTML){
 <title>${esc(title)}</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  @page{ size: A4 portrait; margin: 12mm 10mm; }
-  @page{ size: A4 portrait; margin: 8mm 8mm 8mm 8mm; }
-  @media print{ body{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } .no-print{ display: none !important; } thead{ display: table-header-group; } tr, td, th{ page-break-inside: avoid; } }
+  @page{
+    size: A4 portrait;
+    margin: 6mm 8mm 6mm 8mm;
+  }
+  @media print{
+    html, body{ width: 100%; height: auto; }
+    body{
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      transform: scale(0.85);
+      transform-origin: top left;
+      width: 117%;
+    }
+    .no-print{ display: none !important; }
+    thead{ display: table-header-group; }
+    tr, td, th{ page-break-inside: avoid; }
+    .print-container{ page-break-inside: auto; }
+  }
   *{ margin:0; padding:0; box-sizing:border-box; }
-  body{ font-family:'Noto Sans Bengali', sans-serif; color:#111; background:#fff; font-size:11.5px; line-height:1.5; }
-  .print-container{ max-width:21cm; margin:0 auto; padding:0; page-break-inside:auto; }
-@media print{
-  .print-container{ max-width:none; margin:0; padding:0; }
-  body{ margin:0; padding:0; }
-  .print-header{ page-break-after:avoid; }
-  .print-title{ page-break-after:avoid; }
-  .footer{ page-break-inside:avoid; }
-  .info-grid{ page-break-inside:avoid; }
-  .summary-line{ page-break-inside:avoid; }
-  table.tbl-print tr{ page-break-inside:avoid; }
-  table.tbl-print thead{ display:table-header-group; }
-  table.tbl-print tfoot{ display:table-footer-group; }
-}
-  .print-header{ display:flex; align-items:center; gap:12px; padding-bottom:10px; border-bottom:2.5px solid #1e40af; margin-bottom:14px; }
-  .print-logo{ width:54px; height:54px; flex-shrink:0; }
+  body{
+    font-family:'Noto Sans Bengali', sans-serif;
+    color:#111; background:#fff; font-size:10px; line-height:1.35;
+  }
+  .print-container{
+    max-width:21cm; margin:0 auto; padding:0;
+  }
+  .print-header{
+    display:flex; align-items:center; gap:10px;
+    padding-bottom:6px; border-bottom:2px solid #1e40af; margin-bottom:8px;
+  }
+  .print-logo{ width:44px; height:44px; flex-shrink:0; }
   .print-header-text{ flex:1; }
-  .print-header-text h1{ font-size:20px; font-weight:900; color:#1e40af; letter-spacing:-.3px; }
-  .print-header-text h2{ font-size:12px; color:#475569; font-weight:700; margin-top:2px; }
-  .print-meta{ text-align:right; font-size:10.5px; color:#475569; font-weight:700; line-height:1.7; }
-  .print-title{ font-size:15px; font-weight:900; color:#0f172a; margin-bottom:12px; padding:10px 14px; background:linear-gradient(90deg,#dbeafe,#eff6ff); border-left:4px solid #1e40af; border-radius:4px; }
-  .print-title .sub{ font-size:11.5px; font-weight:700; color:#475569; margin-top:4px; }
-  .info-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:12px; }
-  .info-cell{ padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc; }
-  .info-cell .lbl{ font-size:9.5px; color:#64748b; font-weight:700; text-transform:uppercase; }
-  .info-cell .val{ font-size:13px; color:#0f172a; font-weight:900; margin-top:2px; }
-  .info-cell.green{ background:#f0fdf4; border-color:#86efac; } .info-cell.green .val{ color:#15803d; }
-  .info-cell.blue{ background:#eff6ff; border-color:#93c5fd; } .info-cell.blue .val{ color:#1e40af; }
-  .info-cell.yellow{ background:#fefce8; border-color:#fde047; } .info-cell.yellow .val{ color:#a16207; }
-  .info-cell.red{ background:#fef2f2; border-color:#fca5a5; } .info-cell.red .val{ color:#b91c1c; }
-  table.tbl-print{ width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:10px; }
-  table.tbl-print th{ background:#1e40af; color:#fff; padding:8px 6px; text-align:left; font-weight:800; font-size:9.5px; text-transform:uppercase; border:1px solid #1e40af; }
-  table.tbl-print td{ padding:6px; border:1px solid #cbd5e1; color:#0f172a; font-weight:600; vertical-align:top; }
+  .print-header-text h1{ font-size:16px; font-weight:900; color:#1e40af; letter-spacing:-.2px; }
+  .print-header-text h2{ font-size:10.5px; color:#475569; font-weight:700; margin-top:1px; }
+  .print-meta{ text-align:right; font-size:9.5px; color:#475569; font-weight:700; line-height:1.5; }
+  .print-title{
+    font-size:12px; font-weight:900; color:#0f172a;
+    margin-bottom:6px; padding:6px 10px;
+    background:linear-gradient(90deg,#dbeafe,#eff6ff);
+    border-left:3px solid #1e40af; border-radius:3px;
+  }
+  .print-title .sub{ font-size:10px; font-weight:700; color:#475569; margin-top:2px; }
+  .info-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:4px; margin-bottom:6px; }
+  .info-cell{ padding:5px 8px; border:1px solid #cbd5e1; border-radius:4px; background:#f8fafc; }
+  .info-cell .lbl{ font-size:8.5px; color:#64748b; font-weight:700; text-transform:uppercase; }
+  .info-cell .val{ font-size:11px; color:#0f172a; font-weight:900; margin-top:1px; }
+  .info-cell.green{ background:#f0fdf4; border-color:#86efac; }
+  .info-cell.green .val{ color:#15803d; }
+  .info-cell.blue{ background:#eff6ff; border-color:#93c5fd; }
+  .info-cell.blue .val{ color:#1e40af; }
+  .info-cell.yellow{ background:#fefce8; border-color:#fde047; }
+  .info-cell.yellow .val{ color:#a16207; }
+  .info-cell.red{ background:#fef2f2; border-color:#fca5a5; }
+  .info-cell.red .val{ color:#b91c1c; }
+  table.tbl-print{
+    width:100%; border-collapse:collapse; font-size:9.5px; margin-bottom:6px;
+  }
+  table.tbl-print th{
+    background:#1e40af; color:#fff; padding:5px 6px; text-align:left;
+    font-weight:800; font-size:8.5px; text-transform:uppercase;
+    border:1px solid #1e40af;
+  }
+  table.tbl-print td{
+    padding:4px 6px; border:1px solid #cbd5e1;
+    color:#0f172a; font-weight:600; vertical-align:top;
+  }
   table.tbl-print tbody tr:nth-child(even) td{ background:#f8fafc; }
   table.tbl-print td.amt{ font-weight:900; color:#15803d; text-align:right; white-space:nowrap; }
-  table.tbl-print td.small{ font-size:9.5px; color:#475569; }
-  .footer{ margin-top:12px; padding-top:8px; border-top:1.5px dashed #94a3b8; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; page-break-inside:avoid; }
-  .footer .sig{ text-align:center; padding-top:30px; font-size:10.5px; font-weight:700; color:#334155; }
-  .footer .sig::before{ content:''; display:block; width:78%; margin:0 auto 4px; border-top:1px solid #64748b; }
-  .summary-line{ display:flex; justify-content:space-between; padding:9px 14px; background:#f1f5f9; border-radius:6px; margin-bottom:12px; font-weight:800; font-size:12px; }
-  .summary-line .k{ color:#475569; } .summary-line .v{ color:#0f172a; }
-  .print-toolbar{ position:fixed; top:12px; right:12px; z-index:999; display:flex; gap:8px; }
-  .print-toolbar button{ padding:10px 18px; border-radius:10px; font-family:inherit; font-weight:800; font-size:13px; cursor:pointer; border:none; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+  table.tbl-print td.small{ font-size:8.5px; color:#475569; }
+  .footer{
+    margin-top:10px; padding-top:8px;
+    border-top:1.5px dashed #94a3b8;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+    page-break-inside:avoid;
+  }
+  .footer .sig{
+    text-align:center; padding-top:26px;
+    font-size:9.5px; font-weight:700; color:#334155;
+  }
+  .footer .sig::before{
+    content:''; display:block; width:78%; margin:0 auto 3px;
+    border-top:1px solid #64748b;
+  }
+  .summary-line{
+    display:flex; justify-content:space-between;
+    padding:5px 10px; background:#f1f5f9; border-radius:4px;
+    margin-bottom:6px; font-weight:800; font-size:10.5px;
+  }
+  .summary-line .k{ color:#475569; }
+  .summary-line .v{ color:#0f172a; }
+  .print-toolbar{
+    position:fixed; top:12px; right:12px; z-index:999;
+    display:flex; gap:8px;
+  }
+  .print-toolbar button{
+    padding:10px 18px; border-radius:10px;
+    font-family:inherit; font-weight:800; font-size:13px;
+    cursor:pointer; border:none;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+  }
   .print-toolbar .btn-print{ background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; }
   .print-toolbar .btn-close{ background:#e2e8f0; color:#334155; }
   @media print{ .print-toolbar{ display:none !important; } }
-  @media screen{ body{ background:#e5e7eb; padding:20px; } .print-container{ background:#fff; padding:12mm 10mm; box-shadow:0 4px 20px rgba(0,0,0,.15); border-radius:4px; } }
-  @media(max-width:700px){ .info-grid{ grid-template-columns:1fr 1fr; } table.tbl-print{ font-size:9.5px; } }
+  @media screen{
+    body{ background:#e5e7eb; padding:20px; }
+    .print-container{ background:#fff; padding:8mm; box-shadow:0 4px 20px rgba(0,0,0,.15); border-radius:4px; }
+  }
 </style>
 </head>
 <body>
@@ -2042,6 +2097,7 @@ function buildPrintHTML(title, bodyHTML){
 </body>
 </html>`;
 }
+
 function openPrintWindow(title, bodyHTML){
   const w = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
   if(!w){ toast('❌ Pop-up ব্লক — Allow করুন'); return; }
@@ -2618,64 +2674,63 @@ function printDashboardSnapshot(){
     const total = (bal.bank||0) + (bal.cash||0) + (bal.other||0);
     const deficit = totalCapital - total;
 
-    // Vault rows
     const vaultRows = DENOMS.filter(d => (vault.totals[d]||0) > 0).map(d =>
-      `<tr><td style="padding:4px 6px;font-size:10px">৳ ${toBn(d)}</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(vault.totals[d])} টি</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(d * vault.totals[d])}</td></tr>`
+      `<tr><td style="padding:3px 5px;font-size:9px">৳ ${toBn(d)}</td><td style="text-align:center;padding:3px 5px;font-size:9px">${toBn(vault.totals[d])} টি</td><td class="amt" style="padding:3px 5px;font-size:9px">৳ ${fmt(d * vault.totals[d])}</td></tr>`
     ).join('');
     const vaultTotal = DENOMS.reduce((s,d)=> s + d*(vault.totals[d]||0), 0);
 
     const body = `
-      <div class="print-title" style="padding:8px 12px;margin-bottom:8px;font-size:14px">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub" style="font-size:11px;margin-top:2px">আউটলেট: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
+      <div class="print-title" style="padding:5px 9px;margin-bottom:5px;font-size:11.5px">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub" style="font-size:9.5px;margin-top:1px">আউটলেট: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
 
-      <div class="info-grid" style="gap:5px;margin-bottom:6px">
-        <div class="info-cell blue" style="padding:6px 8px"><div class="lbl" style="font-size:9px">🏦 ব্যাংক</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(bal.bank)}</div></div>
-        <div class="info-cell green" style="padding:6px 8px"><div class="lbl" style="font-size:9px">💵 ক্যাশ</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(bal.cash)}</div></div>
-        <div class="info-cell" style="padding:6px 8px"><div class="lbl" style="font-size:9px">🏛️ অন্যান্য</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(bal.other)}</div></div>
+      <div class="info-grid" style="gap:4px;margin-bottom:5px">
+        <div class="info-cell blue" style="padding:5px 8px"><div class="lbl" style="font-size:8px">🏦 ব্যাংক</div><div class="val" style="font-size:11px;margin-top:1px">৳ ${fmt(bal.bank)}</div></div>
+        <div class="info-cell green" style="padding:5px 8px"><div class="lbl" style="font-size:8px">💵 ক্যাশ</div><div class="val" style="font-size:11px;margin-top:1px">৳ ${fmt(bal.cash)}</div></div>
+        <div class="info-cell" style="padding:5px 8px"><div class="lbl" style="font-size:8px">🏛️ অন্যান্য</div><div class="val" style="font-size:11px;margin-top:1px">৳ ${fmt(bal.other)}</div></div>
       </div>
 
-      <div class="print-title" style="margin-top:8px;padding:6px 10px;font-size:12px">💼 লেনদেন সারসংক্ষেপ</div>
-      <table class="tbl-print" style="margin-bottom:6px">
-        <thead><tr><th style="padding:5px 6px;font-size:9.5px;width:55%">ধরন</th><th style="padding:5px 6px;font-size:9.5px;width:15%;text-align:center">সংখ্যা</th><th style="padding:5px 6px;font-size:9.5px;width:30%;text-align:right">পরিমাণ</th></tr></thead>
+      <div class="print-title" style="padding:5px 9px;margin-bottom:4px;font-size:11px">💼 লেনদেন সারসংক্ষেপ</div>
+      <table class="tbl-print" style="margin-bottom:5px">
+        <thead><tr><th style="padding:4px 5px;font-size:8.5px;width:55%">ধরন</th><th style="padding:4px 5px;font-size:8.5px;width:15%;text-align:center">সংখ্যা</th><th style="padding:4px 5px;font-size:8.5px;width:30%;text-align:right">পরিমাণ</th></tr></thead>
         <tbody>
-          <tr><td style="padding:4px 6px;font-size:10px">💸 ঋণ বিতরণ</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.loan_given.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.loan_given.amt)}</td></tr>
-          <tr><td style="padding:4px 6px;font-size:10px">📥 ঋণ গ্রহণ</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.loan_received.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.loan_received.amt)}</td></tr>
-          <tr><td style="padding:4px 6px;font-size:10px">🏦 জমা</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.deposit.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.deposit.amt)}</td></tr>
-          <tr><td style="padding:4px 6px;font-size:10px">💵 উত্তোলন</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.withdrawal.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.withdrawal.amt)}</td></tr>
-          <tr><td style="padding:4px 6px;font-size:10px">🔁 আউটলেট-থেকে-আউটলেট</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.transfer.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
-          <tr><td style="padding:4px 6px;font-size:10px">🏛️ ব্যাংক ফান্ড</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.bank_transfer.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">+৳ ${fmt(st.bank_transfer.in)} / −৳ ${fmt(st.bank_transfer.out)}</td></tr>
-          <tr><td style="padding:4px 6px;font-size:10px">🧾 ক্যাশ খরচ</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.expense.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.expense.amt)}</td></tr>
-          <tr><td style="padding:4px 6px;font-size:10px">🤝 সাপোর্ট</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.support.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">+৳ ${fmt(st.support.out)} / −৳ ${fmt(st.support.in)}</td></tr>
-          <tr><td style="padding:4px 6px;font-size:10px">💱 মানি এক্সচেঞ্জ</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.money_exchange.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.money_exchange.out)} / ৳ ${fmt(st.money_exchange.in)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">💸 ঋণ বিতরণ</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.loan_given.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">৳ ${fmt(st.loan_given.amt)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">📥 ঋণ গ্রহণ</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.loan_received.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">৳ ${fmt(st.loan_received.amt)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">🏦 জমা</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.deposit.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">৳ ${fmt(st.deposit.amt)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">💵 উত্তোলন</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.withdrawal.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">৳ ${fmt(st.withdrawal.amt)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">🔁 আউটলেট-থেকে-আউটলেট</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.transfer.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">🏛️ ব্যাংক ফান্ড</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.bank_transfer.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">+৳ ${fmt(st.bank_transfer.in)} / −৳ ${fmt(st.bank_transfer.out)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">🧾 ক্যাশ খরচ</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.expense.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">৳ ${fmt(st.expense.amt)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">🤝 সাপোর্ট</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.support.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">+৳ ${fmt(st.support.out)} / −৳ ${fmt(st.support.in)}</td></tr>
+          <tr><td style="padding:3px 5px;font-size:9.5px">💱 মানি এক্সচেঞ্জ</td><td style="text-align:center;padding:3px 5px;font-size:9.5px">${toBn(st.money_exchange.cnt)}</td><td class="amt" style="padding:3px 5px;font-size:9.5px">৳ ${fmt(st.money_exchange.out)} / ৳ ${fmt(st.money_exchange.in)}</td></tr>
         </tbody>
       </table>
 
       ${vaultRows ? `
-      <div class="print-title" style="margin-top:8px;padding:6px 10px;font-size:12px">🗄️ ভল্ট ইনভেন্টরি</div>
-      <table class="tbl-print" style="margin-bottom:6px">
-        <thead><tr><th style="padding:5px 6px;font-size:9.5px">নোট</th><th style="padding:5px 6px;font-size:9.5px;text-align:center">সংখ্যা</th><th style="padding:5px 6px;font-size:9.5px;text-align:right">মান</th></tr></thead>
+      <div class="print-title" style="padding:5px 9px;margin-bottom:4px;font-size:11px">🗄️ ভল্ট ইনভেন্টরি</div>
+      <table class="tbl-print" style="margin-bottom:5px">
+        <thead><tr><th style="padding:4px 5px;font-size:8.5px">নোট</th><th style="padding:4px 5px;font-size:8.5px;text-align:center">সংখ্যা</th><th style="padding:4px 5px;font-size:8.5px;text-align:right">মান</th></tr></thead>
         <tbody>
           ${vaultRows}
-          <tr style="background:#dbeafe"><td style="font-weight:900;padding:4px 6px;font-size:10px">মোট</td><td></td><td class="amt" style="font-weight:900;padding:4px 6px;font-size:10px">৳ ${fmt(vaultTotal)}</td></tr>
+          <tr style="background:#dbeafe"><td style="font-weight:900;padding:3px 5px;font-size:9.5px">মোট</td><td></td><td class="amt" style="font-weight:900;padding:3px 5px;font-size:9.5px">৳ ${fmt(vaultTotal)}</td></tr>
         </tbody>
       </table>` : ''}
 
-      <div class="print-title" style="margin-top:8px;padding:6px 10px;font-size:12px">💰 মূলধন ও ব্যালেন্স</div>
-      <div class="info-grid" style="gap:5px;margin-bottom:6px">
-        <div class="info-cell yellow" style="padding:6px 8px"><div class="lbl" style="font-size:9px">মূলধন</div><div class="val" style="font-size:12px;margin-top:1px;color:#a16207">৳ ${fmt(totalCapital)}</div></div>
-        <div class="info-cell blue" style="padding:6px 8px"><div class="lbl" style="font-size:9px">সর্বমোট ব্যালেন্স</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(total)}</div></div>
-        <div class="info-cell ${deficit>0?'red':'green'}" style="padding:6px 8px"><div class="lbl" style="font-size:9px">${deficit>0?'ঘাটতি':'উদ্বৃত্ত'}</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(Math.abs(deficit))}</div></div>
+      <div class="print-title" style="padding:5px 9px;margin-bottom:4px;font-size:11px">💰 মূলধন ও ব্যালেন্স</div>
+      <div class="info-grid" style="gap:4px;margin-bottom:5px">
+        <div class="info-cell yellow" style="padding:5px 8px"><div class="lbl" style="font-size:8px">মূলধন</div><div class="val" style="font-size:11px;margin-top:1px;color:#a16207">৳ ${fmt(totalCapital)}</div></div>
+        <div class="info-cell blue" style="padding:5px 8px"><div class="lbl" style="font-size:8px">সর্বমোট ব্যালেন্স</div><div class="val" style="font-size:11px;margin-top:1px">৳ ${fmt(total)}</div></div>
+        <div class="info-cell ${deficit>0?'red':'green'}" style="padding:5px 8px"><div class="lbl" style="font-size:8px">${deficit>0?'ঘাটতি':'উদ্বৃত্ত'}</div><div class="val" style="font-size:11px;margin-top:1px">৳ ${fmt(Math.abs(deficit))}</div></div>
       </div>
 
-      <div class="print-title" style="margin-top:8px;padding:6px 10px;font-size:12px">⏳ অপেক্ষমাণ</div>
-      <div class="info-grid" style="gap:5px;margin-bottom:6px">
-        <div class="info-cell yellow" style="padding:6px 8px"><div class="lbl" style="font-size:9px">🔁 আউটলেট ট্রান্সফার</div><div class="val" style="font-size:12px;margin-top:1px">${toBn(pending.transfers.length)} টি</div></div>
-        <div class="info-cell yellow" style="padding:6px 8px"><div class="lbl" style="font-size:9px">💰 ঋণ সংগ্রহ</div><div class="val" style="font-size:12px;margin-top:1px">${toBn(pending.collections.length)} টি</div></div>
-        <div class="info-cell red" style="padding:6px 8px"><div class="lbl" style="font-size:9px">সর্বমোট</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(pending.totalAmount)}</div></div>
+      <div class="print-title" style="padding:5px 9px;margin-bottom:4px;font-size:11px">⏳ অপেক্ষমাণ</div>
+      <div class="info-grid" style="gap:4px;margin-bottom:5px">
+        <div class="info-cell yellow" style="padding:5px 8px"><div class="lbl" style="font-size:8px">🔁 আউটলেট ট্রান্সফার</div><div class="val" style="font-size:11px;margin-top:1px">${toBn(pending.transfers.length)} টি</div></div>
+        <div class="info-cell yellow" style="padding:5px 8px"><div class="lbl" style="font-size:8px">💰 ঋণ সংগ্রহ</div><div class="val" style="font-size:11px;margin-top:1px">${toBn(pending.collections.length)} টি</div></div>
+        <div class="info-cell red" style="padding:5px 8px"><div class="lbl" style="font-size:8px">সর্বমোট</div><div class="val" style="font-size:11px;margin-top:1px">৳ ${fmt(pending.totalAmount)}</div></div>
       </div>
 
-      <div style="margin-top:8px;padding:6px 10px;border:1.5px dashed #64748b;border-radius:5px;background:#f8fafc;text-align:center">
-        <div style="font-size:9.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
-        <div style="font-size:12.5px;color:#1e40af;font-weight:900;margin-top:1px">${esc(bl)}</div>
+      <div style="margin-top:6px;padding:5px 9px;border:1.5px dashed #64748b;border-radius:4px;background:#f8fafc;text-align:center">
+        <div style="font-size:8.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
+        <div style="font-size:11px;color:#1e40af;font-weight:900;margin-top:1px">${esc(bl)}</div>
       </div>`;
 
     openPrintWindow(`Dashboard Snapshot — ${dashDate}`, body);
