@@ -2297,14 +2297,11 @@ function renderTopbar(){
       (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় আউটলেট</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া আউটলেট</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা আউটলেট</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') +
       '<input type="date" class="tb-date" id="dashDateInput" value="' + dashDate + '">' +
       '<span class="tb-time"><span class="dot"></span><span id="liveClock">--:--:-- --</span></span>' +
-      '<button class="btn sm cyan" id="tbQuickPrint" style="padding:8px 14px;font-size:13px" title="A4 Print (Ctrl+P)">🖨️ Print</button>' +
     '</div>';
   $('#dashDateInput').addEventListener('change', e=>{ dashDate = e.target.value || todayStr(); isDateViewMode = dashDate !== todayStr(); renderDashboard(); });
   document.getElementById('btnMenu').addEventListener('click', openSidebar);
   const bs = document.getElementById('tbBranchSel');
   if(bs) bs.addEventListener('change', e=>{ viewBranch = e.target.value; renderTopbar(); renderDashboard(); renderSidebar(); });
-  const qp = document.getElementById('tbQuickPrint');
-  if(qp) qp.addEventListener('click', () => printDashboardSnapshot());
   const sb = document.getElementById('syncStatusBtn');
   if(sb) sb.addEventListener('click', ()=>{ if(__isRemoteReady){ sb.textContent = 'Syncing...'; forceSyncNow().finally(()=>{ sb.textContent = 'সিঙ্ক'; }); } else { toast('ℹ️ Local-only mode'); } });
   document.getElementById('queueBadge')?.addEventListener('click', () => forceSyncNow());
@@ -2356,6 +2353,91 @@ function renderSidebar(){
       }, 250);
     });
   });
+}
+
+/* ═══ DASHBOARD PRINT — সবাই ব্যবহার করতে পারবে ═══ */
+function printDashboardSnapshot(){
+  if(!session){
+    toast('❌ লগইন করুন');
+    return;
+  }
+  
+  try{
+    const bf = currentBranchFilter();
+    const bl = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || bf);
+    const st = computeStats(bf, dashDate);
+    const bal = getBalancesForDate(dashDate, bf);
+    const vault = getVaultForDate(dashDate, bf);
+    const totalCapital = Number(DB().totalCapital) || 0;
+    const pending = getAllPending();
+    const total = (bal.bank||0) + (bal.cash||0) + (bal.other||0);
+    const deficit = totalCapital - total;
+
+    // Vault rows
+    const vaultRows = DENOMS.filter(d => (vault.totals[d]||0) > 0).map(d =>
+      `<tr><td style="padding:4px 6px;font-size:10px">৳ ${toBn(d)}</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(vault.totals[d])} টি</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(d * vault.totals[d])}</td></tr>`
+    ).join('');
+    const vaultTotal = DENOMS.reduce((s,d)=> s + d*(vault.totals[d]||0), 0);
+
+    const body = `
+      <div class="print-title" style="padding:8px 12px;margin-bottom:8px;font-size:14px">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub" style="font-size:11px;margin-top:2px">আউটলেট: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
+
+      <div class="info-grid" style="gap:5px;margin-bottom:6px">
+        <div class="info-cell blue" style="padding:6px 8px"><div class="lbl" style="font-size:9px">🏦 ব্যাংক</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(bal.bank)}</div></div>
+        <div class="info-cell green" style="padding:6px 8px"><div class="lbl" style="font-size:9px">💵 ক্যাশ</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(bal.cash)}</div></div>
+        <div class="info-cell" style="padding:6px 8px"><div class="lbl" style="font-size:9px">🏛️ অন্যান্য</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(bal.other)}</div></div>
+      </div>
+
+      <div class="print-title" style="margin-top:8px;padding:6px 10px;font-size:12px">💼 লেনদেন সারসংক্ষেপ</div>
+      <table class="tbl-print" style="margin-bottom:6px">
+        <thead><tr><th style="padding:5px 6px;font-size:9.5px;width:55%">ধরন</th><th style="padding:5px 6px;font-size:9.5px;width:15%;text-align:center">সংখ্যা</th><th style="padding:5px 6px;font-size:9.5px;width:30%;text-align:right">পরিমাণ</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:4px 6px;font-size:10px">💸 ঋণ বিতরণ</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.loan_given.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.loan_given.amt)}</td></tr>
+          <tr><td style="padding:4px 6px;font-size:10px">📥 ঋণ গ্রহণ</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.loan_received.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.loan_received.amt)}</td></tr>
+          <tr><td style="padding:4px 6px;font-size:10px">🏦 জমা</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.deposit.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.deposit.amt)}</td></tr>
+          <tr><td style="padding:4px 6px;font-size:10px">💵 উত্তোলন</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.withdrawal.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.withdrawal.amt)}</td></tr>
+          <tr><td style="padding:4px 6px;font-size:10px">🔁 আউটলেট-থেকে-আউটলেট</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.transfer.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
+          <tr><td style="padding:4px 6px;font-size:10px">🏛️ ব্যাংক ফান্ড</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.bank_transfer.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">+৳ ${fmt(st.bank_transfer.in)} / −৳ ${fmt(st.bank_transfer.out)}</td></tr>
+          <tr><td style="padding:4px 6px;font-size:10px">🧾 ক্যাশ খরচ</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.expense.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.expense.amt)}</td></tr>
+          <tr><td style="padding:4px 6px;font-size:10px">🤝 সাপোর্ট</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.support.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">+৳ ${fmt(st.support.out)} / −৳ ${fmt(st.support.in)}</td></tr>
+          <tr><td style="padding:4px 6px;font-size:10px">💱 মানি এক্সচেঞ্জ</td><td style="text-align:center;padding:4px 6px;font-size:10px">${toBn(st.money_exchange.cnt)}</td><td class="amt" style="padding:4px 6px;font-size:10px">৳ ${fmt(st.money_exchange.out)} / ৳ ${fmt(st.money_exchange.in)}</td></tr>
+        </tbody>
+      </table>
+
+      ${vaultRows ? `
+      <div class="print-title" style="margin-top:8px;padding:6px 10px;font-size:12px">🗄️ ভল্ট ইনভেন্টরি</div>
+      <table class="tbl-print" style="margin-bottom:6px">
+        <thead><tr><th style="padding:5px 6px;font-size:9.5px">নোট</th><th style="padding:5px 6px;font-size:9.5px;text-align:center">সংখ্যা</th><th style="padding:5px 6px;font-size:9.5px;text-align:right">মান</th></tr></thead>
+        <tbody>
+          ${vaultRows}
+          <tr style="background:#dbeafe"><td style="font-weight:900;padding:4px 6px;font-size:10px">মোট</td><td></td><td class="amt" style="font-weight:900;padding:4px 6px;font-size:10px">৳ ${fmt(vaultTotal)}</td></tr>
+        </tbody>
+      </table>` : ''}
+
+      <div class="print-title" style="margin-top:8px;padding:6px 10px;font-size:12px">💰 মূলধন ও ব্যালেন্স</div>
+      <div class="info-grid" style="gap:5px;margin-bottom:6px">
+        <div class="info-cell yellow" style="padding:6px 8px"><div class="lbl" style="font-size:9px">মূলধন</div><div class="val" style="font-size:12px;margin-top:1px;color:#a16207">৳ ${fmt(totalCapital)}</div></div>
+        <div class="info-cell blue" style="padding:6px 8px"><div class="lbl" style="font-size:9px">সর্বমোট ব্যালেন্স</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(total)}</div></div>
+        <div class="info-cell ${deficit>0?'red':'green'}" style="padding:6px 8px"><div class="lbl" style="font-size:9px">${deficit>0?'ঘাটতি':'উদ্বৃত্ত'}</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(Math.abs(deficit))}</div></div>
+      </div>
+
+      <div class="print-title" style="margin-top:8px;padding:6px 10px;font-size:12px">⏳ অপেক্ষমাণ</div>
+      <div class="info-grid" style="gap:5px;margin-bottom:6px">
+        <div class="info-cell yellow" style="padding:6px 8px"><div class="lbl" style="font-size:9px">🔁 আউটলেট ট্রান্সফার</div><div class="val" style="font-size:12px;margin-top:1px">${toBn(pending.transfers.length)} টি</div></div>
+        <div class="info-cell yellow" style="padding:6px 8px"><div class="lbl" style="font-size:9px">💰 ঋণ সংগ্রহ</div><div class="val" style="font-size:12px;margin-top:1px">${toBn(pending.collections.length)} টি</div></div>
+        <div class="info-cell red" style="padding:6px 8px"><div class="lbl" style="font-size:9px">সর্বমোট</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(pending.totalAmount)}</div></div>
+      </div>
+
+      <div style="margin-top:8px;padding:6px 10px;border:1.5px dashed #64748b;border-radius:5px;background:#f8fafc;text-align:center">
+        <div style="font-size:9.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
+        <div style="font-size:12.5px;color:#1e40af;font-weight:900;margin-top:1px">${esc(bl)}</div>
+      </div>`;
+
+    openPrintWindow(`Dashboard Snapshot — ${dashDate}`, body);
+  }catch(err){
+    console.error('[printDashboardSnapshot] error:', err);
+    toast('❌ Print error: ' + err.message);
+  }
 }
 function openSidebar(){ document.getElementById('sidebar')?.classList.add('open'); document.getElementById('sidebarOverlay')?.classList.add('active'); }
 function closeSidebar(){ document.getElementById('sidebar')?.classList.remove('open'); document.getElementById('sidebarOverlay')?.classList.remove('active'); }
