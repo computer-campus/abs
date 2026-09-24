@@ -1923,18 +1923,9 @@ function openModal({ title, bodyHTML, wide=false, xwide=false, onMount }){
   $('#modalRoot').appendChild(wrap);
   const close = () => wrap.remove();
   wrap.querySelector('.x').addEventListener('click', close);
-  wrap.addEventListener('click', e => { if(e.target === wrap) close(); });
+  // ⚡ বাইরে ক্লিক করলে বন্ধ হবে না
   if(onMount) onMount(wrap, close);
   return { wrap, close };
-}
-function attachTxHistoryCustomerClick(scope){
-  scope.querySelectorAll('tr.clickable-row[data-cust-acc]').forEach(tr => {
-    tr.addEventListener('click', (e) => {
-      if(e.target.closest('button')) return;
-      const acc = tr.dataset.custAcc, name = tr.dataset.custName;
-      if(acc) openCustomerDetailPopup(acc, name);
-    });
-  });
 }
 
 /* WINDOWS PRINT SYSTEM */
