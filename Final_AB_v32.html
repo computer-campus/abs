@@ -1590,22 +1590,51 @@ function openPrintWindow(title, bodyHTML){
 function printSingleTransaction(tx){
   if(!tx){ toast('❌ নেই'); return; }
   const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
-  const notes = tx.notesOut || tx.notesIn || {};
-  const notesRows = Object.keys(notes).sort((a,b)=>b-a).map(d => `<tr><td>৳ ${toBn(d)} × ${toBn(notes[d])} টি</td><td class="amt">৳ ${fmt(d * notes[d])}</td></tr>`).join('');
-  const notesTotal = Object.keys(notes).reduce((s,d)=> s + d*notes[d], 0);
-  const body = `<div class="print-title">${cfg.icon || ''} ${esc(cfg.title || tx.type)} — লেনদেন রশিদ<span class="sub">আইডি: ${esc(tx.id)}</span></div>
+
+  // টাকার বিবরণী (Notes)
+  const nOut = tx.notesOut || {};
+  const nIn = tx.notesIn || {};
+  const outRows = Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).map(d =>
+    `<tr><td>📤 ৳ ${toBn(d)} × ${toBn(nOut[d])} টি</td><td class="amt">৳ ${fmt(d * nOut[d])}</td></tr>`
+  ).join('');
+  const inRows = Object.keys(nIn).filter(k => nIn[k] > 0).sort((a,b)=>b-a).map(d =>
+    `<tr><td>📥 ৳ ${toBn(d)} × ${toBn(nIn[d])} টি</td><td class="amt">৳ ${fmt(d * nIn[d])}</td></tr>`
+  ).join('');
+  const outTotal = Object.keys(nOut).reduce((s,d)=> s + d*nOut[d], 0);
+  const inTotal = Object.keys(nIn).reduce((s,d)=> s + d*nIn[d], 0);
+
+  const notesSection = (outRows || inRows) ? `
+    <div class="print-title" style="margin-top:10px">🗄️ টাকার বিবরণী (নোট)</div>
+    <table class="tbl-print">
+      <thead><tr><th>নোট বিবরণ</th><th style="text-align:right">পরিমাণ</th></tr></thead>
+      <tbody>
+        ${outRows}
+        ${inRows}
+        ${outTotal ? `<tr style="background:#fef3c7"><td style="font-weight:900">📤 প্রদান মোট</td><td class="amt" style="font-weight:900;color:#a16207">৳ ${fmt(outTotal)}</td></tr>` : ''}
+        ${inTotal ? `<tr style="background:#dcfce7"><td style="font-weight:900">📥 গ্রহণ মোট</td><td class="amt" style="font-weight:900;color:#15803d">৳ ${fmt(inTotal)}</td></tr>` : ''}
+      </tbody>
+    </table>` : '';
+
+  const outletName = BRANCHES[tx.branch]?.name || 'উভয় আউটলেট';
+
+  const body = `
+    <div class="print-title">${cfg.icon || ''} ${esc(cfg.title || tx.type)} — লেনদেন রশিদ<span class="sub">আইডি: ${esc(tx.id)}</span></div>
     <div class="info-grid">
       <div class="info-cell blue"><div class="lbl">তারিখ</div><div class="val">${toBn(tx.date || '-')}</div></div>
       <div class="info-cell green"><div class="lbl">পরিমাণ</div><div class="val">৳ ${fmt(tx.amount)}</div></div>
-      <div class="info-cell"><div class="lbl">আউটলেট</div><div class="val">${esc(BRANCHES[tx.branch]?.name || '-')}</div></div>
+      <div class="info-cell"><div class="lbl">আউটলেট</div><div class="val">${esc(outletName)}</div></div>
       <div class="info-cell"><div class="lbl">ইউজার</div><div class="val">${esc(tx.user || '-')}</div></div>
       <div class="info-cell"><div class="lbl">তৈরি</div><div class="val" style="font-size:10.5px">${esc(fmtDateTime(tx.createdAt))}</div></div>
       <div class="info-cell ${tx.accepted === false ? 'yellow' : 'green'}"><div class="lbl">স্ট্যাটাস</div><div class="val">${tx.accepted === false ? '⏳ অপেক্ষমাণ' : '✅ সফল'}</div></div>
     </div>
     ${tx.type === 'branch_transfer' ? `<div class="summary-line"><span class="k">📤 প্রেরক ➜ 📥 গ্রহণকারী</span><span class="v">${esc(BRANCHES[tx.from]?.name||'')} ➜ ${esc(BRANCHES[tx.to]?.name||'')}</span></div>` : ''}
     ${tx.custName ? `<div class="info-grid"><div class="info-cell blue" style="grid-column:1/-1"><div class="lbl">👤 গ্রাহক</div><div class="val">${esc(tx.custName)} ${tx.custAcc ? ' — ' + esc(tx.custAcc) : ''} ${tx.custMobile ? ' • 📱 ' + esc(tx.custMobile) : ''}</div></div></div>` : ''}
-    ${notesRows ? `<div class="print-title" style="margin-top:10px">🗄️ নোট বিবরণ</div><table class="tbl-print"><thead><tr><th>নোট বিবরণ</th><th style="text-align:right">পরিমাণ</th></tr></thead><tbody>${notesRows}<tr style="background:#dbeafe"><td style="font-weight:900">মোট</td><td class="amt" style="font-weight:900">৳ ${fmt(notesTotal)}</td></tr></tbody></table>` : ''}
-    ${tx.note ? `<div class="info-cell yellow" style="margin-bottom:10px"><div class="lbl">📝 মন্তব্য</div><div class="val" style="font-weight:700;font-size:12px">${esc(tx.note)}</div></div>` : ''}`;
+    ${notesSection}
+    ${tx.note ? `<div class="info-cell yellow" style="margin-top:10px;margin-bottom:10px"><div class="lbl">📝 মন্তব্য</div><div class="val" style="font-weight:700;font-size:12px">${esc(tx.note)}</div></div>` : ''}
+    <div style="margin-top:18px;padding:10px 14px;border:1.5px dashed #64748b;border-radius:6px;background:#f8fafc;text-align:center">
+      <div style="font-size:10.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
+      <div style="font-size:14px;color:#1e40af;font-weight:900;margin-top:2px">${esc(outletName)}</div>
+    </div>`;
   openPrintWindow(`${cfg.title || tx.type} — ৳ ${fmt(tx.amount)}`, body);
 }
 function printCustomerHistory(accountNo, custName){
@@ -1617,10 +1646,41 @@ function printCustomerHistory(accountNo, custName){
   const sPaid = sTxs.filter(t => t.dir === 'out' || t.dir === 'online_support_out').reduce((s,t)=> s+Number(t.amount||0),0);
   const sRefund = sTxs.filter(t => t.dir === 'in' || t.dir === 'online_support_in').reduce((s,t)=> s+Number(t.amount||0),0);
   const sNet = sPaid - sRefund;
+
+  // ⚡ প্রতিটি লেনদেনের জন্য Notes + Note সহ rows তৈরি
   const rows = allTxs.map((t,i) => {
     const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
-    return `<tr><td style="text-align:center;font-weight:700">${toBn(i+1)}</td><td style="white-space:nowrap;font-weight:700">${toBn(t.date)}</td><td><b>${cfg.icon||''} ${esc(cfg.title||t.type)}</b>${t.note ? '<br><span class="small" style="color:#475569">📝 ' + esc(t.note) + '</span>' : ''}</td><td style="font-size:10px">${esc(BRANCHES[t.branch]?.name||'-')}</td><td class="amt">৳ ${fmt(t.amount)}</td><td class="small">${esc(t.user||'-')}</td></tr>`;
+    // টাকার বিবরণী
+    let notesParts = [];
+    const nOut = t.notesOut || {};
+    const nIn = t.notesIn || {};
+    Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).forEach(d => {
+      notesParts.push('📤 ৳' + toBn(d) + '×' + toBn(nOut[d]));
+    });
+    Object.keys(nIn).filter(k => nIn[k] > 0).sort((a,b)=>b-a).forEach(d => {
+      notesParts.push('📥 ৳' + toBn(d) + '×' + toBn(nIn[d]));
+    });
+    const notesLine = notesParts.length ? notesParts.join(' • ') : '';
+    // মন্তব্য
+    const noteLine = t.note ? '📝 ' + esc(t.note) : '';
+    // দ্বিতীয় লাইন কম্বাইন
+    let detailLine = '';
+    if(notesLine) detailLine += '<div style="font-size:9.5px;color:#1e40af;font-weight:700;margin-top:3px">' + notesLine + '</div>';
+    if(noteLine) detailLine += '<div style="font-size:9.5px;color:#a16207;font-weight:700;margin-top:2px;font-style:italic">' + noteLine + '</div>';
+
+    return `<tr>
+      <td style="text-align:center;font-weight:700;vertical-align:top">${toBn(i+1)}</td>
+      <td style="white-space:nowrap;font-weight:700;vertical-align:top">${toBn(t.date)}</td>
+      <td style="vertical-align:top"><b>${cfg.icon||''} ${esc(cfg.title||t.type)}</b>${detailLine}</td>
+      <td style="font-size:10px;vertical-align:top">${esc(BRANCHES[t.branch]?.name||'-')}</td>
+      <td class="amt" style="vertical-align:top">৳ ${fmt(t.amount)}</td>
+      <td class="small" style="vertical-align:top">${esc(t.user||'-')}</td>
+    </tr>`;
   }).join('');
+
+  // Footer-এ outlet নাম
+  const outletName = BRANCHES[cust?.branch]?.name || (session?.branch && BRANCHES[session.branch]?.name) || 'উভয় আউটলেট';
+
   const body = `<div class="print-title">👤 গ্রাহক লেনদেন ইতিহাস — ${esc(name)}<span class="sub">অ্যাকাউন্ট: ${esc(accountNo)} • মোবাইল: ${esc(cust?.mobile||'-')} • আউটলেট: ${esc(BRANCHES[cust?.branch]?.name||'-')}</span></div>
     <div class="info-grid">
       <div class="info-cell blue"><div class="lbl">মোট লেনদেন</div><div class="val">${toBn(allTxs.length)} টি</div></div>
@@ -1628,51 +1688,12 @@ function printCustomerHistory(accountNo, custName){
       <div class="info-cell green"><div class="lbl">সাপোর্ট ফেরত</div><div class="val" style="color:#15803d">৳ ${fmt(sRefund)}</div></div>
     </div>
     <div class="summary-line" style="background:${sNet>0?'#fef2f2':'#f0fdf4'};border:1px solid ${sNet>0?'#fca5a5':'#86efac'}"><span class="k">📊 নেট সাপোর্ট ${sNet>0?'(বকেয়া)':'(পরিশোধিত)'}</span><span class="v" style="color:${sNet>0?'#b91c1c':'#15803d'};font-size:14px">৳ ${fmt(Math.abs(sNet))}</span></div>
-    <table class="tbl-print"><thead><tr><th style="width:6%">#</th><th style="width:13%">তারিখ</th><th style="width:33%">ধরন / বিবরণ</th><th style="width:18%">আউটলেট</th><th style="width:16%;text-align:right">টাকা</th><th style="width:14%">ইউজার</th></tr></thead><tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody></table>`;
-  openPrintWindow(`গ্রাহক: ${name} — ${accountNo}`, body);
-}
-function printDashboardSnapshot(){
-  if(!session){ toast('❌ লগইন করুন'); return; }
-  const bf = currentBranchFilter();
-  const bl = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || bf);
-  const st = computeStats(bf, dashDate);
-  const bal = getBalancesForDate(dashDate, bf);
-  const vault = getVaultForDate(dashDate, bf);
-  const totalCapital = Number(DB().totalCapital) || 0;
-  const pending = getAllPending();
-  const total = (bal.bank||0) + (bal.cash||0) + (bal.other||0);
-  const deficit = totalCapital - total;
-  const vaultRows = DENOMS.filter(d => (vault.totals[d]||0) > 0).map(d => `<tr><td>৳ ${toBn(d)}</td><td style="text-align:center">${toBn(vault.totals[d])} টি</td><td class="amt">৳ ${fmt(d * vault.totals[d])}</td></tr>`).join('');
-  const vaultTotal = DENOMS.reduce((s,d)=> s + d*(vault.totals[d]||0), 0);
-  const body = `<div class="print-title">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub">আউটলেট: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
-    <div class="info-grid">
-      <div class="info-cell blue"><div class="lbl">🏦 ব্যাংক</div><div class="val">৳ ${fmt(bal.bank)}</div></div>
-      <div class="info-cell green"><div class="lbl">💵 ক্যাশ</div><div class="val">৳ ${fmt(bal.cash)}</div></div>
-      <div class="info-cell"><div class="lbl">🏛️ অন্যান্য</div><div class="val">৳ ${fmt(bal.other)}</div></div>
-    </div>
-    <div class="print-title" style="margin-top:12px">💼 লেনদেন সারসংক্ষেপ</div>
-    <table class="tbl-print"><thead><tr><th style="width:55%">ধরন</th><th style="width:15%;text-align:center">সংখ্যা</th><th style="width:30%;text-align:right">পরিমাণ</th></tr></thead><tbody>
-      <tr><td>💸 ঋণ বিতরণ</td><td style="text-align:center">${toBn(st.loan_given.cnt)}</td><td class="amt">৳ ${fmt(st.loan_given.amt)}</td></tr>
-      <tr><td>📥 ঋণ গ্রহণ</td><td style="text-align:center">${toBn(st.loan_received.cnt)}</td><td class="amt">৳ ${fmt(st.loan_received.amt)}</td></tr>
-      <tr><td>🏦 জমা</td><td style="text-align:center">${toBn(st.deposit.cnt)}</td><td class="amt">৳ ${fmt(st.deposit.amt)}</td></tr>
-      <tr><td>💵 উত্তোলন</td><td style="text-align:center">${toBn(st.withdrawal.cnt)}</td><td class="amt">৳ ${fmt(st.withdrawal.amt)}</td></tr>
-      <tr><td>🔁 আউটলেট-থেকে-আউটলেট</td><td style="text-align:center">${toBn(st.transfer.cnt)}</td><td class="amt">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
-      <tr><td>🧾 খরচ</td><td style="text-align:center">${toBn(st.expense.cnt)}</td><td class="amt">৳ ${fmt(st.expense.amt)}</td></tr>
-    </tbody></table>
-    ${vaultRows ? `<div class="print-title" style="margin-top:12px">🗄️ ভল্ট ইনভেন্টরি</div><table class="tbl-print"><thead><tr><th>নোট</th><th style="text-align:center">সংখ্যা</th><th style="text-align:right">মান</th></tr></thead><tbody>${vaultRows}<tr style="background:#dbeafe"><td style="font-weight:900">মোট</td><td></td><td class="amt" style="font-weight:900">৳ ${fmt(vaultTotal)}</td></tr></tbody></table>` : ''}
-    <div class="print-title" style="margin-top:12px">💰 মূলধন ও ব্যালেন্স</div>
-    <div class="info-grid">
-      <div class="info-cell yellow"><div class="lbl">মূলধন</div><div class="val" style="color:#a16207">৳ ${fmt(totalCapital)}</div></div>
-      <div class="info-cell blue"><div class="lbl">সর্বমোট ব্যালেন্স</div><div class="val">৳ ${fmt(total)}</div></div>
-      <div class="info-cell ${deficit>0?'red':'green'}"><div class="lbl">${deficit>0?'ঘাটতি':'উদ্বৃত্ত'}</div><div class="val">৳ ${fmt(Math.abs(deficit))}</div></div>
-    </div>
-    <div class="print-title" style="margin-top:12px">⏳ অপেক্ষমাণ</div>
-    <div class="info-grid">
-      <div class="info-cell yellow"><div class="lbl">🔁 আউটলেট ট্রান্সফার</div><div class="val">${toBn(pending.transfers.length)} টি</div></div>
-      <div class="info-cell yellow"><div class="lbl">💰 ঋণ সংগ্রহ</div><div class="val">${toBn(pending.collections.length)} টি</div></div>
-      <div class="info-cell red"><div class="lbl">সর্বমোট</div><div class="val">৳ ${fmt(pending.totalAmount)}</div></div>
+    <table class="tbl-print"><thead><tr><th style="width:6%">#</th><th style="width:13%">তারিখ</th><th style="width:33%">ধরন / বিবরণ / মন্তব্য</th><th style="width:18%">আউটলেট</th><th style="width:16%;text-align:right">টাকা</th><th style="width:14%">ইউজার</th></tr></thead><tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody></table>
+    <div style="margin-top:18px;padding:10px 14px;border:1.5px dashed #64748b;border-radius:6px;background:#f8fafc;text-align:center">
+      <div style="font-size:10.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
+      <div style="font-size:14px;color:#1e40af;font-weight:900;margin-top:2px">${esc(outletName)}</div>
     </div>`;
-  openPrintWindow(`Dashboard Snapshot — ${dashDate}`, body);
+  openPrintWindow(`গ্রাহক: ${name} — ${accountNo}`, body);
 }
 
 /* CUSTOMER DETAIL */
@@ -1700,9 +1721,19 @@ function openCustomerDetailPopup(accountNo, custName){
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📉 নেট</div><div style="font-size:18px;font-weight:900;color:' + (sNet>0?'#f87171':'#4ade80') + '">৳ ' + fmt(Math.abs(sNet)) + '</div></div>' +
       '</div></div>' +
       '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সব লেনদেন (' + toBn(allTxs.length) + ' টি)</div>' +
-        (allTxs.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>তারিখ</th><th>ধরন</th><th>আউটলেট</th><th>টাকা</th><th>বিবরণ</th><th>ইউজার</th></tr></thead><tbody>' + allTxs.map((t,i)=>{
+        (allTxs.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>তারিখ</th><th>ধরন</th><th>আউটলেট</th><th>টাকা</th><th>বিবরণ / মন্তব্য</th><th>ইউজার</th></tr></thead><tbody>' + allTxs.map((t,i)=>{
           const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
-          return '<tr><td>' + toBn(i+1) + '</td><td>' + toBn(t.date) + '</td><td>' + (cfg.icon||'') + ' <b>' + esc(cfg.title||t.type) + '</b></td><td>' + esc(BRANCHES[t.branch]?.name||'-') + '</td><td class="amt">৳ ' + fmt(t.amount) + '</td><td style="font-size:12.5px">' + esc(t.note||'-') + '</td><td>' + esc(t.user||'-') + '</td></tr>';
+          // ⚡ টাকার বিবরণী (Notes) তৈরি
+          const nOut = t.notesOut || {};
+          const nIn = t.notesIn || {};
+          const outParts = Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(nOut[d]));
+          const inParts = Object.keys(nIn).filter(k => nIn[k] > 0).sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(nIn[d]));
+          let notesHtml = '';
+          if(outParts.length) notesHtml += '<div style="font-size:11.5px;color:#fde047;margin-top:3px"><b>📤</b> ' + outParts.join(' • ') + '</div>';
+          if(inParts.length) notesHtml += '<div style="font-size:11.5px;color:#4ade80;margin-top:3px"><b>📥</b> ' + inParts.join(' • ') + '</div>';
+          const noteHtml = t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:4px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '';
+          const detailHtml = (notesHtml || noteHtml) ? (notesHtml + noteHtml) : '<span style="color:#7a8ab8">—</span>';
+          return '<tr><td>' + toBn(i+1) + '</td><td>' + toBn(t.date) + '</td><td>' + (cfg.icon||'') + ' <b>' + esc(cfg.title||t.type) + '</b></td><td>' + esc(BRANCHES[t.branch]?.name||'-') + '</td><td class="amt">৳ ' + fmt(t.amount) + '</td><td style="font-size:12px;line-height:1.7">' + detailHtml + '</td><td>' + esc(t.user||'-') + '</td></tr>';
         }).join('') + '</tbody></table></div>' : '<div class="empty">📭 নেই</div>') +
       '</div>' +
       '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">' +
@@ -2653,7 +2684,18 @@ function txListHTML(list, opts){
     const sb = t.type === 'branch_transfer' ? (t.accepted ? '<span class="badge accepted">✅</span>' : '<span class="badge pending">⏳</span>') : '';
     const ab = opts.admin ? '<button class="mini" data-edit="' + t.id + '">✏️</button><button class="mini danger" data-del="' + t.id + '">🗑️</button><button class="mini print-btn" data-print="' + t.id + '">🖨️</button>' : '<button class="mini print-btn" data-print="' + t.id + '">🖨️</button>';
     const cn = t.custName || '', ca = t.custAcc || '', cl = !!ca;
-    const noteHtml = t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:5px;line-height:1.6">📝 ' + esc(t.note) + '</div>' : '';
+    
+	// ⚡ Notes বিবরণী
+	const nOut = t.notesOut || {};
+	const nIn = t.notesIn || {};
+	const outParts = Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(nOut[d]));
+	const inParts = Object.keys(nIn).filter(k => nIn[k] > 0).sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(nIn[d]));
+	let notesHtml = '';
+	if(outParts.length) notesHtml += '<div style="font-size:11px;color:#fde047;margin-top:3px"><b>📤</b> ' + outParts.join(' • ') + '</div>';
+	if(inParts.length) notesHtml += '<div style="font-size:11px;color:#4ade80;margin-top:3px"><b>📥</b> ' + inParts.join(' • ') + '</div>';
+
+	
+	const noteHtml = t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:5px;line-height:1.6">📝 ' + esc(t.note) + '</div>' : '';
     return '<tr class="' + (cl?'clickable-row':'') + '" ' + (cl ? 'data-cust-acc="' + esc(ca) + '" data-cust-name="' + esc(cn) + '"' : '') + '>' +
       '<td>' + toBn(t.date) + '</td><td>' + (cfg.icon||'') + ' ' + esc(cfg.title||t.type) + '</td>' +
       '<td>' + (cl ? '👤 <b style="color:#4ade80">' + esc(cn) + '</b><br><small>' + esc(ca) + '</small>' : '—') + '</td>' +
