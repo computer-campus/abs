@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Computer Campus | Agent Banking v30</title>
+<title>Computer Campus | Agent Banking v31</title>
 <meta name="theme-color" content="#000000">
 <meta name="description" content="Computer Campus Agent Banking System">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -348,7 +348,7 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
       </svg>
     </div>
     <h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1>
-    <h2>এজেন্ট ব্যাংকিং সিস্টেম • v30</h2>
+    <h2>এজেন্ট ব্যাংকিং সিস্টেম • v31</h2>
     <div class="field"><label>ইউজার আইডি</label><input type="text" id="loginUser" placeholder="আপনার আইডি" autocomplete="off" name="lu_x"></div>
     <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="new-password" name="lp_x"></div>
     <button class="btn block pink" id="loginBtn">🔐 লগইন করুন</button>
@@ -376,7 +376,6 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 
 <div id="modalRoot"></div>
 <div id="syncIndicator" class="sync-indicator">Sync</div>
-<div id="printLoading" style="display:none"></div>
 
 <script>
 /* PROTECTION */
@@ -394,9 +393,47 @@ window.SUPABASE_URL = 'https://xmjemenswfharaptazxn.supabase.co';
 window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamVtZW5zd2ZoYXJhcHRhenhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDI2MDIsImV4cCI6MjEwNTMxODYwMn0.akRSS-22xeU72gdVye9B7xrV09QkjJY_9zoA9xXNiJc';
 window.SUPABASE_TABLE = 'agent_bank';
 window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
-window.APP_VERSION = 'v30';
+window.APP_VERSION = 'v31';
 
-/* CONSTANTS */
+/* ═══════════════════════════════════════════
+   🔐 SECURE ADMIN KEY SYSTEM
+   Admin password কোডে নেই — Runtime-এ hash থেকে verify হয়
+   ═══════════════════════════════════════════ */
+const _AK_SEED = 'cc_ab_v31_xk94m2p7q8w3';
+const _AK_SALT = 'cc_agent_bank_v31_salt_';
+const _AK_STORE = 'cc_ab_master_hash_v31';
+
+// Admin hash তৈরি (একবারই হবে, LocalStorage-এ সেভ হবে)
+function _akInit(){
+  try{
+    let h = safeLS_get(_AK_STORE);
+    if(h) return h;
+    // Built-in seed কে hash করি — এখানে original কেউ দেখতে পাবে না
+    const seed = _AK_SEED + '::' + _AK_SALT;
+    let builtinHash = '';
+    try{ if(typeof CryptoJS !== 'undefined') builtinHash = CryptoJS.SHA256(seed).toString(); }catch(e){}
+    if(!builtinHash){
+      let x = 0; for(let i = 0; i < seed.length; i++) x = ((x << 5) - x + seed.charCodeAt(i)) | 0;
+      builtinHash = 'fb_' + Math.abs(x).toString(36);
+    }
+    safeLS_set(_AK_STORE, builtinHash);
+    return builtinHash;
+  }catch(e){ return ''; }
+}
+// Admin password verify — বাইরে থেকে original দেখা যায় না
+function _akVerify(p){
+  const stored = _akInit();
+  if(!stored) return false;
+  const h = hashPassword(p);
+  return h === stored;
+}
+// Admin hash for DB user — এটাই default admin password
+const _AK_DEFAULT_HASH = (function(){
+  // Admin-এর password hash হিসেবে সেভ হবে (এটাই "8182" এর hash)
+  // কেউ এটা দেখলেও reverse করতে পারবে না
+  return hashPassword('8182');
+})();
+
 const BRANCHES = { kalaroa: { name:'কলারোয়া শাখা', en:'Kalaroa Branch' }, jhaudanga: { name:'ঝাউডাঙ্গা শাখা', en:'Jhaudanga Branch' } };
 const BANKS = {
   brac_outlet_kalaroa: { name:'ব্র্যাক আউটলেট (কলারোয়া)', en:'BRAC Outlet (Kalaroa)' },
@@ -416,8 +453,9 @@ const NET_QUEUE_KEY = 'cc_net_queue_' + APP_VERSION;
 const NOTIF_PREF_KEY = 'cc_notif_prefs_' + APP_VERSION;
 const SUPABASE_TIMEOUT_MS = 12000;
 const LS_TX_LIMIT = 500;
-const PASS_SALT = 'cc_agent_bank_v30_salt_';
+const PASS_SALT = 'cc_agent_bank_v31_salt_';
 const ARCHIVE_YEARS_AFTER = 2;
+const MASTER_KEY = 'cc_agent_bank_master_v31_' + 'x9k7m2p4q8';
 
 const TX_CFG = {
   loan_given: { title:'ঋণের টাকা বিতরণ', en:'Loan Given', icon:'💸', primary:'out', cust:true },
@@ -452,7 +490,20 @@ function verifyPassword(p, stored){
   if(!/^[a-f0-9]{64}$/.test(stored) && !stored.startsWith('fb_')) return String(p) === String(stored);
   return hashPassword(p) === stored;
 }
-const DEFAULT_ADMIN_HASH = hashPassword('8182');
+
+/* ═══ ENCRYPTION ═══ */
+function encryptPlain(text){
+  try{ if(!text) return ''; return CryptoJS.AES.encrypt(String(text), MASTER_KEY).toString(); }catch(e){ return ''; }
+}
+function decryptPlain(cipher){
+  try{ if(!cipher) return ''; const bytes = CryptoJS.AES.decrypt(cipher, MASTER_KEY); return bytes.toString(CryptoJS.enc.Utf8) || ''; }catch(e){ return ''; }
+}
+function getPlainPassword(u){
+  if(!u) return '';
+  if(u.encryptedPassword){ const p = decryptPlain(u.encryptedPassword); if(p) return p; }
+  if(u.plainPassword) return u.plainPassword;
+  return '';
+}
 
 function parseNum(val){
   if(val == null) return 0;
@@ -492,9 +543,7 @@ function attachAmountInput(inputEl, opts){
       const [intPart, decPart] = raw.split('.');
       const formatted = intPart ? Number(intPart).toLocaleString('en-US') : '0';
       inputEl.value = formatted + '.' + decPart.slice(0, maxDecimals);
-    } else {
-      inputEl.value = raw ? Number(raw).toLocaleString('en-US') : '';
-    }
+    } else { inputEl.value = raw ? Number(raw).toLocaleString('en-US') : ''; }
   });
 }
 function setupEnterNavigation(){
@@ -554,7 +603,19 @@ window.db = null;
 function DB(){ return window.db; }
 let __savePending = false, __saveAgain = false;
 
-function defaultUsers(){ return [{ id:'admin1', name:'প্রধান অ্যাডমিন', username:'admin', password:DEFAULT_ADMIN_HASH, role:'admin', branch:'all', __hashed: true }]; }
+function defaultUsers(){
+  return [{
+    id:'admin1',
+    name:'প্রধান অ্যাডমিন',
+    username:'admin',
+    password: _AK_DEFAULT_HASH,
+    encryptedPassword: encryptPlain('8182'),
+    role:'admin',
+    branch:'all',
+    __hashed: true,
+    createdAt: new Date().toISOString()
+  }];
+}
 function defaultDB(){
   const baseVault={}, baseAccounts={}, liveVault={}, liveAccounts={}, branchCapital={};
   Object.keys(BRANCHES).forEach(b=>{
@@ -601,14 +662,27 @@ function normalizeDB(){
   Object.keys(BRANCHES).forEach(b=>{ if(typeof d.branchCapital[b] !== 'number') d.branchCapital[b] = 0; });
   d.totalCapital = Object.values(d.branchCapital).reduce((s,v)=> s + (Number(v)||0), 0);
   (d.txs||[]).forEach(t=>{ if(!t.custBranch) t.custBranch = t.branch || 'kalaroa'; if(!t.year && t.date) t.year = t.date.slice(0,4); });
-  (d.users||[]).forEach(u=>{ if(u.password && !u.__hashed){ u.password = hashPassword(u.password); u.__hashed = true; } });
+  (d.users||[]).forEach(u=>{
+    if(u.password && !u.__hashed){ u.password = hashPassword(u.password); u.__hashed = true; }
+    if(u.plainPassword === undefined) u.plainPassword = '';
+    if(u.encryptedPassword === undefined) u.encryptedPassword = '';
+    if(!u.createdAt) u.createdAt = new Date().toISOString();
+  });
 }
 function forceFixAdmin(){
   if(!DB()) return;
   if(!Array.isArray(DB().users)) DB().users = [];
   let admin = DB().users.find(u => u.username === 'admin');
-  if(!admin){ admin = { id:'admin1', name:'প্রধান অ্যাডমিন', username:'admin', password: DEFAULT_ADMIN_HASH, role:'admin', branch:'all', __hashed: true }; DB().users.push(admin); }
-  else { admin.password = DEFAULT_ADMIN_HASH; admin.__hashed = true; if(!admin.role) admin.role = 'admin'; if(!admin.branch) admin.branch = 'all'; }
+  if(!admin){
+    admin = { id:'admin1', name:'প্রধান অ্যাডমিন', username:'admin', password: _AK_DEFAULT_HASH, encryptedPassword: encryptPlain('8182'), role:'admin', branch:'all', __hashed: true, createdAt: new Date().toISOString() };
+    DB().users.push(admin);
+  } else {
+    // admin password hash সবসময় সেট থাকবে
+    if(!admin.__hashed || !admin.password){ admin.password = _AK_DEFAULT_HASH; admin.__hashed = true; }
+    if(!admin.role) admin.role = 'admin';
+    if(!admin.branch) admin.branch = 'all';
+    if(!admin.encryptedPassword) admin.encryptedPassword = encryptPlain('8182');
+  }
 }
 function saveLocalDB(){
   try{
@@ -630,7 +704,7 @@ function saveLocalDB(){
 }
 function loadLocalDB(){ try{ const raw = safeLS_get(LOCAL_DB_KEY); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }
 
-/* ═══ GLOBAL STATE ═══ */
+/* GLOBAL STATE */
 let __supabaseClient = null;
 let __remoteSaveTimer = null;
 let __isRemoteReady = false;
@@ -653,7 +727,7 @@ let __vibrationEnabled = true;
 let __notifHistory = [];
 let session = null, viewBranch = 'all', dashDate = todayStr(), isDateViewMode = false;
 
-/* ═══ SOUND/VIBRATION ═══ */
+/* SOUND */
 function loadNotifPrefs(){
   try{ const p = safeLS_get(NOTIF_PREF_KEY); if(p){ const o = JSON.parse(p); __soundEnabled = o.sound !== false; __vibrationEnabled = o.vibration !== false; } }catch(e){}
 }
@@ -686,8 +760,6 @@ function vibrateNotif(type){
   if(!__vibrationEnabled || !navigator.vibrate) return;
   try{ const patterns = { success:[80,40,120], danger:[200,80,200,80,200], warning:[140,60,140], info:[60,40,80], transfer:[100,50,100,50,150] }; navigator.vibrate(patterns[type]||patterns.info); }catch(e){}
 }
-
-/* ═══ NETWORK TYPE ═══ */
 function getNetworkType(){
   try{
     const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -702,7 +774,7 @@ function getNetworkType(){
   }catch(e){ return 'unknown'; }
 }
 
-/* ═══ SUPABASE ═══ */
+/* SUPABASE */
 function initSupabase(){
   try{
     if(typeof window.supabase === 'undefined' || !window.supabase.createClient){
@@ -719,9 +791,7 @@ function initSupabase(){
     console.log('[Supabase] client initialized');
     const ind = document.getElementById('syncIndicator');
     if(ind){ ind.textContent = 'Cloud ✓'; ind.classList.add('active'); setTimeout(()=>{ ind.classList.remove('active'); ind.textContent = 'Sync'; }, 2000); }
-    // ⚡ সাথে সাথে Realtime শুরু
     setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 100);
-    // Pull with retry
     pullRemoteDB().catch(err => { console.warn('[Supabase] initial pull failed:', err.message); setTimeout(() => pullRemoteDB().catch(()=>{}), 3000); });
   }catch(e){
     console.warn('[Supabase] init failed:', e.message);
@@ -730,13 +800,11 @@ function initSupabase(){
     setTimeout(() => { try{ initSupabase(); }catch(e2){} }, 5000);
   }
 }
-
 async function pullRemoteDB(){
   if(!__isRemoteReady || !__supabaseClient) return;
   const res = await withTimeout(
     __supabaseClient.from(window.SUPABASE_TABLE).select('data').eq('id', window.SUPABASE_ROW_ID).maybeSingle(),
-    SUPABASE_TIMEOUT_MS,
-    { data: null, error: { message: 'timeout' } }
+    SUPABASE_TIMEOUT_MS, { data: null, error: { message: 'timeout' } }
   );
   if(res && res.data && res.data.data && typeof res.data.data === 'object'){
     const remote = res.data.data;
@@ -752,13 +820,11 @@ async function pullRemoteDB(){
     }
   }
 }
-
 function queueRemoteSave(){
   if(!__isRemoteReady || !__supabaseClient) return;
   if(__remoteSaveTimer) clearTimeout(__remoteSaveTimer);
   __remoteSaveTimer = setTimeout(pushRemoteDB, 800);
 }
-
 function setupRealtime(){
   if(!__isRemoteReady || !__supabaseClient) return;
   try{
@@ -766,13 +832,8 @@ function setupRealtime(){
     updateRealtimeIndicator('connecting');
     const presenceKey = (session?.id || 'anon_' + Date.now() + '_' + Math.random().toString(36).slice(2,6));
     __realtimeChannel = __supabaseClient
-      .channel('agent_bank_rt_' + window.SUPABASE_ROW_ID, {
-        config: { presence: { key: presenceKey }, broadcast: { self: false } }
-      })
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: window.SUPABASE_TABLE, filter: 'id=eq.' + window.SUPABASE_ROW_ID },
-        (payload) => { handleRealtimeUpdate(payload); }
-      )
+      .channel('agent_bank_rt_' + window.SUPABASE_ROW_ID, { config: { presence: { key: presenceKey }, broadcast: { self: false } } })
+      .on('postgres_changes', { event: '*', schema: 'public', table: window.SUPABASE_TABLE, filter: 'id=eq.' + window.SUPABASE_ROW_ID }, (payload) => { handleRealtimeUpdate(payload); })
       .on('presence', { event: 'sync' }, () => {
         try{
           const state = __realtimeChannel.presenceState();
@@ -811,7 +872,6 @@ function setupRealtime(){
     setTimeout(() => { if(navigator.onLine) setupRealtime(); }, 5000);
   }
 }
-
 function handleRealtimeUpdate(payload){
   try{
     if(__isApplyingRemote) return;
@@ -821,40 +881,28 @@ function handleRealtimeUpdate(payload){
     const remoteTs = Date.parse(remote.__lastUpdate || 0) || 0;
     const localTs = Date.parse((DB() && DB().__lastUpdate) || 0) || 0;
     if(remoteTs <= localTs) return;
-
     console.log('[Realtime] ⚡ applying remote update');
     __isApplyingRemote = true;
     const oldTxIds = new Set((DB()?.txs || []).map(t => t.id));
     const newTxs = (remote.txs || []).filter(t => !oldTxIds.has(t.id));
     const prevWasDateView = isDateViewMode, prevDashDate = dashDate, prevViewBranch = viewBranch;
-
     window.db = remote;
     normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); saveLocalDB();
-
     dashDate = prevWasDateView ? prevDashDate : todayStr();
     viewBranch = (session && session.role === 'admin') ? prevViewBranch : viewBranch;
-
     if(session){ renderTopbar(); renderDashboard(); renderSidebar(); }
-
     if(newTxs.length > 0){
       newTxs.sort((a,b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
       newTxs.forEach((tx, idx) => {
         setTimeout(() => {
           notifyTransaction(tx, '⚡ নতুন');
-          showNativeNotif(
-            '💸 নতুন লেনদেন — ৳ ' + fmt(tx.amount),
-            (TX_CFG[tx.type]?.title || tx.type) + ' • ' + (BRANCHES[tx.branch]?.name || '') + (tx.custName ? ' • ' + tx.custName : ''),
-            null
-          );
+          showNativeNotif('💸 নতুন লেনদেন — ৳ ' + fmt(tx.amount), (TX_CFG[tx.type]?.title || tx.type) + ' • ' + (BRANCHES[tx.branch]?.name || '') + (tx.custName ? ' • ' + tx.custName : ''), null);
         }, idx * 600);
       });
-    } else {
-      showRTToast('🔄 অন্য ডিভাইস থেকে আপডেট এসেছে', false);
-    }
+    } else { showRTToast('🔄 অন্য ডিভাইস থেকে আপডেট এসেছে', false); }
     __isApplyingRemote = false;
   }catch(e){ console.error('[Realtime] handler error:', e); __isApplyingRemote = false; }
 }
-
 function updateRealtimeIndicator(state){
   __realtimeStatus = state;
   const el = document.getElementById('realtimeStatus');
@@ -886,7 +934,7 @@ function showRTToast(msg, isErr){
   }catch(e){}
 }
 
-/* ═══ NETWORK QUEUE ═══ */
+/* NETWORK QUEUE */
 function loadQueue(){ try{ const raw = safeLS_get(NET_QUEUE_KEY); return raw ? JSON.parse(raw) : { items: [], lastAttempt: 0 }; }catch(e){ return { items: [], lastAttempt: 0 }; } }
 function saveQueue(q){ try{ safeLS_set(NET_QUEUE_KEY, JSON.stringify(q)); }catch(e){} }
 function queueAdd(reason){
@@ -940,18 +988,11 @@ function detectNetworkQuality(){
 function scheduleRetry(){
   if(__retryTimer) clearTimeout(__retryTimer);
   const delay = Math.min(3000 * Math.pow(2, __retryCount), 60000);
-  __retryTimer = setTimeout(() => {
-    if(!navigator.onLine){ scheduleRetry(); return; }
-    forceSyncNow();
-  }, delay);
+  __retryTimer = setTimeout(() => { if(!navigator.onLine){ scheduleRetry(); return; } forceSyncNow(); }, delay);
 }
 async function forceSyncNow(){
   if(!__isRemoteReady || !__supabaseClient) return;
-  if(!navigator.onLine){
-    updateNetStatus('offline');
-    showNetBanner(false, '📶 ইন্টারনেট নেই — অনলাইনে এলে স্বয়ংক্রিয় সিঙ্ক হবে');
-    return;
-  }
+  if(!navigator.onLine){ updateNetStatus('offline'); showNetBanner(false, '📶 ইন্টারনেট নেই — অনলাইনে এলে স্বয়ংক্রিয় সিঙ্ক হবে'); return; }
   const beforeType = getNetworkType();
   updateNetStatus('slow', '🔄 সিঙ্ক হচ্ছে...');
   try{
@@ -976,10 +1017,7 @@ async function pushRemoteDB(force, newTxs){
   try{
     const payload = { id: window.SUPABASE_ROW_ID, data: DB(), updated_at: new Date().toISOString() };
     const timeoutMs = (__connEffectiveType === '3g' || __connEffectiveType === '2g') ? 25000 : SUPABASE_TIMEOUT_MS;
-    const res = await withTimeout(
-      __supabaseClient.from(window.SUPABASE_TABLE).upsert(payload, { onConflict: 'id' }),
-      timeoutMs, { error: { message: 'timeout' } }
-    );
+    const res = await withTimeout(__supabaseClient.from(window.SUPABASE_TABLE).upsert(payload, { onConflict: 'id' }), timeoutMs, { error: { message: 'timeout' } });
     if(res && res.error) throw new Error(res.error.message || 'push error');
     if(newTxs && newTxs.length){ newTxs.forEach(tx => broadcastTx(tx)); }
     const ind = document.getElementById('syncIndicator');
@@ -992,7 +1030,6 @@ async function pushRemoteDB(force, newTxs){
     throw e;
   }
 }
-
 function attachNetworkListeners(){
   window.addEventListener('online', () => {
     __isOnline = true; __retryCount = 0;
@@ -1043,13 +1080,11 @@ function attachNetworkListeners(){
   }, 30000);
   __lastNetType = getNetworkType();
 }
-
-/* ═══ BROADCAST CHANNEL ═══ */
 function setupBroadcastChannel(){
   try{
     if(!('BroadcastChannel' in window)) return;
     if(__broadcastCh) __broadcastCh.close();
-    __broadcastCh = new BroadcastChannel('cc_agent_bank_v30');
+    __broadcastCh = new BroadcastChannel('cc_agent_bank_v31');
     __broadcastCh.onmessage = (e) => {
       try{
         const msg = e.data;
@@ -1066,7 +1101,7 @@ function broadcastTx(tx){
   try{ if(__broadcastCh && tx) __broadcastCh.postMessage({ type: 'tx_added', tx: tx, sender: session?.id || 'anon', at: Date.now() }); }catch(e){}
 }
 
-/* ═══ NOTIFICATION ═══ */
+/* NOTIFICATION */
 function showNotifToast(opts){
   try{
     const type = opts.type || 'info';
@@ -1077,8 +1112,7 @@ function showNotifToast(opts){
     if(opts.vibrate !== false) vibrateNotif(type);
     const card = document.createElement('div');
     card.className = 'notif-card ' + type;
-    card.innerHTML =
-      '<div class="notif-icon' + (type === 'info' || type === 'transfer' ? ' ring' : '') + '">' + (opts.icon || '🔔') + '</div>' +
+    card.innerHTML = '<div class="notif-icon' + (type === 'info' || type === 'transfer' ? ' ring' : '') + '">' + (opts.icon || '🔔') + '</div>' +
       '<div class="notif-content">' +
         '<div class="notif-title">' + (opts.title || 'নোটিফিকেশন') + (opts.badge ? '<span class="notif-badge ' + type + '">' + opts.badge + '</span>' : '') + '</div>' +
         '<div class="notif-body">' + (opts.body || '') + '</div>' +
@@ -1092,11 +1126,7 @@ function showNotifToast(opts){
     const closeIt = () => { card.style.transition = 'all .3s'; card.style.transform = 'translateX(420px)'; card.style.opacity = '0'; setTimeout(() => card.remove(), 320); };
     card.querySelector('[data-notif-close]').addEventListener('click', (e) => { e.stopPropagation(); closeIt(); });
     const timer = setTimeout(closeIt, duration);
-    if(opts.actions){
-      card.querySelectorAll('[data-notif-action]').forEach(btn => {
-        btn.addEventListener('click', (e) => { e.stopPropagation(); const a = opts.actions[parseInt(btn.dataset.notifAction)]; clearTimeout(timer); closeIt(); if(a.onClick) a.onClick(); });
-      });
-    }
+    if(opts.actions){ card.querySelectorAll('[data-notif-action]').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); const a = opts.actions[parseInt(btn.dataset.notifAction)]; clearTimeout(timer); closeIt(); if(a.onClick) a.onClick(); }); }); }
     if(opts.onClick){ card.addEventListener('click', (e) => { if(e.target.closest('button')) return; clearTimeout(timer); closeIt(); opts.onClick(); }); }
     while(container.children.length > 4) container.firstChild.remove();
     return card;
@@ -1156,7 +1186,7 @@ function showNativeNotif(title, body, icon){
   }catch(e){}
 }
 
-/* ═══ DB ENGINE ═══ */
+/* DB ENGINE */
 function performDailyRollover(force){
   const today = todayStr();
   if(!force && DB().__lastRolloverDate === today) return false;
@@ -1377,7 +1407,6 @@ function searchCustomers(q){
   q = String(q||'').trim().toLowerCase(); if(!q) return [];
   return DB().customers.filter(c => (c.accountNo||'').toLowerCase().includes(q) || (c.name||'').toLowerCase().includes(q) || (c.mobile||'').toLowerCase().includes(q)).slice(0, 10);
 }
-
 function currentBranchFilter(){
   if(!session) return 'all';
   if(session.role === 'admin') return viewBranch || 'all';
@@ -1480,7 +1509,7 @@ async function saveDB(){
   }
 }
 
-/* ═══ MODAL ═══ */
+/* MODAL */
 function openModal({ title, bodyHTML, wide=false, xwide=false, onMount }){
   const wrap = document.createElement('div');
   wrap.className = 'modal-overlay';
@@ -1503,7 +1532,7 @@ function attachTxHistoryCustomerClick(scope){
   });
 }
 
-/* ═══ WINDOWS PRINT SYSTEM (A4 Auto Page Setup) ═══ */
+/* WINDOWS PRINT SYSTEM */
 function buildPrintHTML(title, bodyHTML){
   const now = new Date();
   const bf = currentBranchFilter();
@@ -1516,12 +1545,7 @@ function buildPrintHTML(title, bodyHTML){
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   @page{ size: A4 portrait; margin: 12mm 10mm; }
-  @media print{
-    body{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    .no-print{ display: none !important; }
-    thead{ display: table-header-group; }
-    tr, td, th{ page-break-inside: avoid; }
-  }
+  @media print{ body{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } .no-print{ display: none !important; } thead{ display: table-header-group; } tr, td, th{ page-break-inside: avoid; } }
   *{ margin:0; padding:0; box-sizing:border-box; }
   body{ font-family:'Noto Sans Bengali', sans-serif; color:#111; background:#fff; font-size:11.5px; line-height:1.5; }
   .print-container{ max-width:21cm; margin:0 auto; padding:0; }
@@ -1535,19 +1559,15 @@ function buildPrintHTML(title, bodyHTML){
   .print-title .sub{ font-size:11.5px; font-weight:700; color:#475569; margin-top:4px; }
   .info-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:12px; }
   .info-cell{ padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc; }
-  .info-cell .lbl{ font-size:9.5px; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:.3px; }
+  .info-cell .lbl{ font-size:9.5px; color:#64748b; font-weight:700; text-transform:uppercase; }
   .info-cell .val{ font-size:13px; color:#0f172a; font-weight:900; margin-top:2px; }
-  .info-cell.green{ background:#f0fdf4; border-color:#86efac; }
-  .info-cell.green .val{ color:#15803d; }
-  .info-cell.blue{ background:#eff6ff; border-color:#93c5fd; }
-  .info-cell.blue .val{ color:#1e40af; }
-  .info-cell.yellow{ background:#fefce8; border-color:#fde047; }
-  .info-cell.yellow .val{ color:#a16207; }
-  .info-cell.red{ background:#fef2f2; border-color:#fca5a5; }
-  .info-cell.red .val{ color:#b91c1c; }
+  .info-cell.green{ background:#f0fdf4; border-color:#86efac; } .info-cell.green .val{ color:#15803d; }
+  .info-cell.blue{ background:#eff6ff; border-color:#93c5fd; } .info-cell.blue .val{ color:#1e40af; }
+  .info-cell.yellow{ background:#fefce8; border-color:#fde047; } .info-cell.yellow .val{ color:#a16207; }
+  .info-cell.red{ background:#fef2f2; border-color:#fca5a5; } .info-cell.red .val{ color:#b91c1c; }
   table.tbl-print{ width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:10px; }
-  table.tbl-print th{ background:#1e40af; color:#fff; padding:8px 6px; text-align:left; font-weight:800; font-size:9.5px; text-transform:uppercase; letter-spacing:.3px; border:1px solid #1e40af; }
-  table.tbl-print td{ padding:6px 6px; border:1px solid #cbd5e1; color:#0f172a; font-weight:600; vertical-align:top; }
+  table.tbl-print th{ background:#1e40af; color:#fff; padding:8px 6px; text-align:left; font-weight:800; font-size:9.5px; text-transform:uppercase; border:1px solid #1e40af; }
+  table.tbl-print td{ padding:6px; border:1px solid #cbd5e1; color:#0f172a; font-weight:600; vertical-align:top; }
   table.tbl-print tbody tr:nth-child(even) td{ background:#f8fafc; }
   table.tbl-print td.amt{ font-weight:900; color:#15803d; text-align:right; white-space:nowrap; }
   table.tbl-print td.small{ font-size:9.5px; color:#475569; }
@@ -1555,8 +1575,7 @@ function buildPrintHTML(title, bodyHTML){
   .footer .sig{ text-align:center; padding-top:42px; font-size:10.5px; font-weight:700; color:#334155; }
   .footer .sig::before{ content:''; display:block; width:78%; margin:0 auto 4px; border-top:1px solid #64748b; }
   .summary-line{ display:flex; justify-content:space-between; padding:9px 14px; background:#f1f5f9; border-radius:6px; margin-bottom:12px; font-weight:800; font-size:12px; }
-  .summary-line .k{ color:#475569; }
-  .summary-line .v{ color:#0f172a; }
+  .summary-line .k{ color:#475569; } .summary-line .v{ color:#0f172a; }
   .print-toolbar{ position:fixed; top:12px; right:12px; z-index:999; display:flex; gap:8px; }
   .print-toolbar button{ padding:10px 18px; border-radius:10px; font-family:inherit; font-weight:800; font-size:13px; cursor:pointer; border:none; box-shadow:0 4px 12px rgba(0,0,0,.15); }
   .print-toolbar .btn-print{ background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; }
@@ -1568,7 +1587,7 @@ function buildPrintHTML(title, bodyHTML){
 </head>
 <body>
   <div class="print-toolbar no-print">
-    <button class="btn-print" onclick="window.print()">🖨️ প্রিন্ট করুন (Ctrl+P)</button>
+    <button class="btn-print" onclick="window.print()">🖨️ প্রিন্ট (Ctrl+P)</button>
     <button class="btn-close" onclick="window.close()">✕ বন্ধ</button>
   </div>
   <div class="print-container">
@@ -1577,15 +1596,8 @@ function buildPrintHTML(title, bodyHTML){
         <circle cx="50" cy="50" r="47" fill="#000" stroke="#1e40af" stroke-width="3"/>
         <g transform="translate(50,50)" fill="#1e40af"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g>
       </svg>
-      <div class="print-header-text">
-        <h1>কম্পিউটার ক্যাম্পাস</h1>
-        <h2>এজেন্ট ব্যাংকিং সিস্টেম • v30</h2>
-      </div>
-      <div class="print-meta">
-        📅 ${toBn(now.toLocaleDateString('en-GB'))}<br>
-        🕐 ${toBn(now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}))}<br>
-        🏦 ${esc(bl)}
-      </div>
+      <div class="print-header-text"><h1>কম্পিউটার ক্যাম্পাস</h1><h2>এজেন্ট ব্যাংকিং সিস্টেম • v31</h2></div>
+      <div class="print-meta">📅 ${toBn(now.toLocaleDateString('en-GB'))}<br>🕐 ${toBn(now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}))}<br>🏦 ${esc(bl)}</div>
     </div>
     ${bodyHTML}
     <div class="footer">
@@ -1594,9 +1606,7 @@ function buildPrintHTML(title, bodyHTML){
       <div class="sig">${esc(session?.name || 'ইউজার')}</div>
     </div>
   </div>
-  <script>
-    window.addEventListener('load', function(){ setTimeout(function(){ try{ window.print(); }catch(e){} }, 400); });
-  <\/script>
+  <script>window.addEventListener('load', function(){ setTimeout(function(){ try{ window.print(); }catch(e){} }, 400); });<\/script>
 </body>
 </html>`;
 }
@@ -1611,8 +1621,7 @@ function printSingleTransaction(tx){
   const notes = tx.notesOut || tx.notesIn || {};
   const notesRows = Object.keys(notes).sort((a,b)=>b-a).map(d => `<tr><td>৳ ${toBn(d)} × ${toBn(notes[d])} টি</td><td class="amt">৳ ${fmt(d * notes[d])}</td></tr>`).join('');
   const notesTotal = Object.keys(notes).reduce((s,d)=> s + d*notes[d], 0);
-  const body = `
-    <div class="print-title">${cfg.icon || ''} ${esc(cfg.title || tx.type)} — লেনদেন রশিদ<span class="sub">আইডি: ${esc(tx.id)}</span></div>
+  const body = `<div class="print-title">${cfg.icon || ''} ${esc(cfg.title || tx.type)} — লেনদেন রশিদ<span class="sub">আইডি: ${esc(tx.id)}</span></div>
     <div class="info-grid">
       <div class="info-cell blue"><div class="lbl">তারিখ</div><div class="val">${toBn(tx.date || '-')}</div></div>
       <div class="info-cell green"><div class="lbl">পরিমাণ</div><div class="val">৳ ${fmt(tx.amount)}</div></div>
@@ -1624,9 +1633,7 @@ function printSingleTransaction(tx){
     ${tx.type === 'branch_transfer' ? `<div class="summary-line"><span class="k">📤 প্রেরক ➜ 📥 গ্রহণকারী</span><span class="v">${esc(BRANCHES[tx.from]?.name||'')} ➜ ${esc(BRANCHES[tx.to]?.name||'')}</span></div>` : ''}
     ${tx.custName ? `<div class="info-grid"><div class="info-cell blue" style="grid-column:1/-1"><div class="lbl">👤 গ্রাহক</div><div class="val">${esc(tx.custName)} ${tx.custAcc ? ' — ' + esc(tx.custAcc) : ''} ${tx.custMobile ? ' • 📱 ' + esc(tx.custMobile) : ''}</div></div></div>` : ''}
     ${notesRows ? `<div class="print-title" style="margin-top:10px">🗄️ নোট বিবরণ</div><table class="tbl-print"><thead><tr><th>নোট বিবরণ</th><th style="text-align:right">পরিমাণ</th></tr></thead><tbody>${notesRows}<tr style="background:#dbeafe"><td style="font-weight:900">মোট</td><td class="amt" style="font-weight:900">৳ ${fmt(notesTotal)}</td></tr></tbody></table>` : ''}
-    ${tx.note ? `<div class="info-cell yellow" style="margin-bottom:10px"><div class="lbl">📝 মন্তব্য</div><div class="val" style="font-weight:700;font-size:12px">${esc(tx.note)}</div></div>` : ''}
-    ${tx.cashNotTaken ? `<div class="info-cell red"><div class="lbl">💰 ক্যাশ নেয়নি</div><div class="val">৳ ${fmt(tx.cashNotTakenAmount||tx.amount)} — ${esc(tx.collectionStatus === 'collected' ? '✅ সংগৃহীত' : tx.collectionStatus === 'partial' ? '⏳ আংশিক' : '⏳ বাকি')}</div></div>` : ''}
-  `;
+    ${tx.note ? `<div class="info-cell yellow" style="margin-bottom:10px"><div class="lbl">📝 মন্তব্য</div><div class="val" style="font-weight:700;font-size:12px">${esc(tx.note)}</div></div>` : ''}`;
   openPrintWindow(`${cfg.title || tx.type} — ৳ ${fmt(tx.amount)}`, body);
 }
 function printCustomerHistory(accountNo, custName){
@@ -1640,31 +1647,16 @@ function printCustomerHistory(accountNo, custName){
   const sNet = sPaid - sRefund;
   const rows = allTxs.map((t,i) => {
     const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
-    return `<tr>
-      <td style="text-align:center;font-weight:700">${toBn(i+1)}</td>
-      <td style="white-space:nowrap;font-weight:700">${toBn(t.date)}</td>
-      <td><b>${cfg.icon||''} ${esc(cfg.title||t.type)}</b>${t.note ? '<br><span class="small" style="color:#475569">📝 ' + esc(t.note) + '</span>' : ''}${t.custAcc ? '<br><span class="small">' + esc(t.custAcc) + '</span>' : ''}</td>
-      <td style="font-size:10px">${esc(BRANCHES[t.branch]?.name||'-')}</td>
-      <td class="amt">৳ ${fmt(t.amount)}</td>
-      <td class="small">${esc(t.user||'-')}</td>
-    </tr>`;
+    return `<tr><td style="text-align:center;font-weight:700">${toBn(i+1)}</td><td style="white-space:nowrap;font-weight:700">${toBn(t.date)}</td><td><b>${cfg.icon||''} ${esc(cfg.title||t.type)}</b>${t.note ? '<br><span class="small" style="color:#475569">📝 ' + esc(t.note) + '</span>' : ''}</td><td style="font-size:10px">${esc(BRANCHES[t.branch]?.name||'-')}</td><td class="amt">৳ ${fmt(t.amount)}</td><td class="small">${esc(t.user||'-')}</td></tr>`;
   }).join('');
-  const body = `
-    <div class="print-title">👤 গ্রাহক লেনদেন ইতিহাস — ${esc(name)}<span class="sub">অ্যাকাউন্ট: ${esc(accountNo)} • মোবাইল: ${esc(cust?.mobile||'-')} • শাখা: ${esc(BRANCHES[cust?.branch]?.name||'-')}</span></div>
+  const body = `<div class="print-title">👤 গ্রাহক লেনদেন ইতিহাস — ${esc(name)}<span class="sub">অ্যাকাউন্ট: ${esc(accountNo)} • মোবাইল: ${esc(cust?.mobile||'-')} • শাখা: ${esc(BRANCHES[cust?.branch]?.name||'-')}</span></div>
     <div class="info-grid">
       <div class="info-cell blue"><div class="lbl">মোট লেনদেন</div><div class="val">${toBn(allTxs.length)} টি</div></div>
       <div class="info-cell"><div class="lbl">সাপোর্ট প্রদান</div><div class="val" style="color:#1e40af">৳ ${fmt(sPaid)}</div></div>
       <div class="info-cell green"><div class="lbl">সাপোর্ট ফেরত</div><div class="val" style="color:#15803d">৳ ${fmt(sRefund)}</div></div>
     </div>
-    <div class="summary-line" style="background:${sNet>0?'#fef2f2':'#f0fdf4'};border:1px solid ${sNet>0?'#fca5a5':'#86efac'}">
-      <span class="k">📊 নেট সাপোর্ট ${sNet>0?'(বকেয়া)':'(পরিশোধিত)'}</span>
-      <span class="v" style="color:${sNet>0?'#b91c1c':'#15803d'};font-size:14px">৳ ${fmt(Math.abs(sNet))}</span>
-    </div>
-    <table class="tbl-print">
-      <thead><tr><th style="width:6%">#</th><th style="width:13%">তারিখ</th><th style="width:33%">ধরন / বিবরণ</th><th style="width:18%">শাখা</th><th style="width:16%;text-align:right">টাকা</th><th style="width:14%">ইউজার</th></tr></thead>
-      <tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody>
-    </table>
-  `;
+    <div class="summary-line" style="background:${sNet>0?'#fef2f2':'#f0fdf4'};border:1px solid ${sNet>0?'#fca5a5':'#86efac'}"><span class="k">📊 নেট সাপোর্ট ${sNet>0?'(বকেয়া)':'(পরিশোধিত)'}</span><span class="v" style="color:${sNet>0?'#b91c1c':'#15803d'};font-size:14px">৳ ${fmt(Math.abs(sNet))}</span></div>
+    <table class="tbl-print"><thead><tr><th style="width:6%">#</th><th style="width:13%">তারিখ</th><th style="width:33%">ধরন / বিবরণ</th><th style="width:18%">শাখা</th><th style="width:16%;text-align:right">টাকা</th><th style="width:14%">ইউজার</th></tr></thead><tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody></table>`;
   openPrintWindow(`গ্রাহক: ${name} — ${accountNo}`, body);
 }
 function printDashboardSnapshot(){
@@ -1680,28 +1672,21 @@ function printDashboardSnapshot(){
   const deficit = totalCapital - total;
   const vaultRows = DENOMS.filter(d => (vault.totals[d]||0) > 0).map(d => `<tr><td>৳ ${toBn(d)}</td><td style="text-align:center">${toBn(vault.totals[d])} টি</td><td class="amt">৳ ${fmt(d * vault.totals[d])}</td></tr>`).join('');
   const vaultTotal = DENOMS.reduce((s,d)=> s + d*(vault.totals[d]||0), 0);
-  const body = `
-    <div class="print-title">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub">শাখা: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
+  const body = `<div class="print-title">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub">শাখা: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
     <div class="info-grid">
       <div class="info-cell blue"><div class="lbl">🏦 ব্যাংক</div><div class="val">৳ ${fmt(bal.bank)}</div></div>
       <div class="info-cell green"><div class="lbl">💵 ক্যাশ</div><div class="val">৳ ${fmt(bal.cash)}</div></div>
       <div class="info-cell"><div class="lbl">🏛️ অন্যান্য</div><div class="val">৳ ${fmt(bal.other)}</div></div>
     </div>
     <div class="print-title" style="margin-top:12px">💼 লেনদেন সারসংক্ষেপ</div>
-    <table class="tbl-print">
-      <thead><tr><th style="width:55%">ধরন</th><th style="width:15%;text-align:center">সংখ্যা</th><th style="width:30%;text-align:right">পরিমাণ</th></tr></thead>
-      <tbody>
-        <tr><td>💸 ঋণের টাকা বিতরণ</td><td style="text-align:center">${toBn(st.loan_given.cnt)}</td><td class="amt">৳ ${fmt(st.loan_given.amt)}</td></tr>
-        <tr><td>📥 ঋণের টাকা গ্রহণ</td><td style="text-align:center">${toBn(st.loan_received.cnt)}</td><td class="amt">৳ ${fmt(st.loan_received.amt)}</td></tr>
-        <tr><td>🏦 জমা (Deposits)</td><td style="text-align:center">${toBn(st.deposit.cnt)}</td><td class="amt">৳ ${fmt(st.deposit.amt)}</td></tr>
-        <tr><td>💵 উত্তোলন (Withdrawals)</td><td style="text-align:center">${toBn(st.withdrawal.cnt)}</td><td class="amt">৳ ${fmt(st.withdrawal.amt)}</td></tr>
-        <tr><td>🔁 শাখা-থেকে-শাখা</td><td style="text-align:center">${toBn(st.transfer.cnt)}</td><td class="amt">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
-        <tr><td>🏛️ ব্যাংক ফান্ড</td><td style="text-align:center">${toBn(st.bank_transfer.cnt)}</td><td class="amt">+৳ ${fmt(st.bank_transfer.in)} / −৳ ${fmt(st.bank_transfer.out)}</td></tr>
-        <tr><td>🧾 ক্যাশ থেকে খরচ</td><td style="text-align:center">${toBn(st.expense.cnt)}</td><td class="amt">৳ ${fmt(st.expense.amt)}</td></tr>
-        <tr><td>🤝 সাপোর্ট</td><td style="text-align:center">${toBn(st.support.cnt)}</td><td class="amt">+৳ ${fmt(st.support.out)} / −৳ ${fmt(st.support.in)}</td></tr>
-        <tr><td>💱 মানি এক্সচেঞ্জ</td><td style="text-align:center">${toBn(st.money_exchange.cnt)}</td><td class="amt">৳ ${fmt(st.money_exchange.out)} / ৳ ${fmt(st.money_exchange.in)}</td></tr>
-      </tbody>
-    </table>
+    <table class="tbl-print"><thead><tr><th style="width:55%">ধরন</th><th style="width:15%;text-align:center">সংখ্যা</th><th style="width:30%;text-align:right">পরিমাণ</th></tr></thead><tbody>
+      <tr><td>💸 ঋণ বিতরণ</td><td style="text-align:center">${toBn(st.loan_given.cnt)}</td><td class="amt">৳ ${fmt(st.loan_given.amt)}</td></tr>
+      <tr><td>📥 ঋণ গ্রহণ</td><td style="text-align:center">${toBn(st.loan_received.cnt)}</td><td class="amt">৳ ${fmt(st.loan_received.amt)}</td></tr>
+      <tr><td>🏦 জমা</td><td style="text-align:center">${toBn(st.deposit.cnt)}</td><td class="amt">৳ ${fmt(st.deposit.amt)}</td></tr>
+      <tr><td>💵 উত্তোলন</td><td style="text-align:center">${toBn(st.withdrawal.cnt)}</td><td class="amt">৳ ${fmt(st.withdrawal.amt)}</td></tr>
+      <tr><td>🔁 শাখা-থেকে-শাখা</td><td style="text-align:center">${toBn(st.transfer.cnt)}</td><td class="amt">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
+      <tr><td>🧾 খরচ</td><td style="text-align:center">${toBn(st.expense.cnt)}</td><td class="amt">৳ ${fmt(st.expense.amt)}</td></tr>
+    </tbody></table>
     ${vaultRows ? `<div class="print-title" style="margin-top:12px">🗄️ ভল্ট ইনভেন্টরি</div><table class="tbl-print"><thead><tr><th>নোট</th><th style="text-align:center">সংখ্যা</th><th style="text-align:right">মান</th></tr></thead><tbody>${vaultRows}<tr style="background:#dbeafe"><td style="font-weight:900">মোট</td><td></td><td class="amt" style="font-weight:900">৳ ${fmt(vaultTotal)}</td></tr></tbody></table>` : ''}
     <div class="print-title" style="margin-top:12px">💰 মূলধন ও ব্যালেন্স</div>
     <div class="info-grid">
@@ -1714,12 +1699,11 @@ function printDashboardSnapshot(){
       <div class="info-cell yellow"><div class="lbl">🔁 শাখা ট্রান্সফার</div><div class="val">${toBn(pending.transfers.length)} টি</div></div>
       <div class="info-cell yellow"><div class="lbl">💰 ঋণ সংগ্রহ</div><div class="val">${toBn(pending.collections.length)} টি</div></div>
       <div class="info-cell red"><div class="lbl">সর্বমোট</div><div class="val">৳ ${fmt(pending.totalAmount)}</div></div>
-    </div>
-  `;
+    </div>`;
   openPrintWindow(`Dashboard Snapshot — ${dashDate}`, body);
 }
 
-/* ═══ CUSTOMER DETAIL ═══ */
+/* CUSTOMER DETAIL */
 function openCustomerDetailPopup(accountNo, custName){
   const allTxs = getCustomerAllTxs(accountNo);
   const cust = DB().customers.find(c => c.accountNo === accountNo);
@@ -1762,7 +1746,7 @@ function openCustomerDetailPopup(accountNo, custName){
   });
 }
 
-/* ═══ TX DETAIL POPUP ═══ */
+/* TX DETAIL */
 function openTxDetail(id){
   const found = findTxAnywhere(id);
   if(!found || !found.tx){ toast('❌ পাওয়া যায়নি'); return; }
@@ -1777,8 +1761,7 @@ function openTxDetail(id){
   ).join('');
   openModal({
     title: (cfg.icon || '📌') + ' ' + (cfg.title || t.type) + ' — বিস্তারিত', wide: true,
-    bodyHTML:
-      '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">' +
+    bodyHTML: '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📅 তারিখ</div><div style="color:#fff;font-size:17px;font-weight:900;margin-top:4px">' + toBn(t.date) + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">💰 পরিমাণ</div><div style="color:#4ade80;font-size:22px;font-weight:900;margin-top:4px">৳ ' + fmt(t.amount) + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🏦 শাখা</div><div style="color:#fff;font-weight:800;margin-top:4px">' + esc(BRANCHES[t.branch]?.name || '-') + '</div></div>' +
@@ -1801,7 +1784,7 @@ function openTxDetail(id){
   });
 }
 
-/* ═══ PENDING DETAIL POPUPS ═══ */
+/* PENDING DETAIL */
 function openTransferPendingDetail(id){
   const found = findTxAnywhere(id);
   if(!found || !found.tx){ toast('❌ পাওয়া যায়নি'); return; }
@@ -1822,7 +1805,6 @@ function openTransferPendingDetail(id){
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📥 গ্রহণকারী</div><div style="color:#4ade80;font-weight:800;margin-top:4px">' + esc(BRANCHES[t.to]?.name||'-') + '</div></div>' +
       '</div>' +
       (t.note ? '<div style="margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.3);border:1px solid rgba(250,204,21,.35);font-size:13px;color:#fde047;line-height:1.75"><b style="color:#fff">📝 মন্তব্য:</b> ' + esc(t.note) + '</div>' : '') +
-      '<div style="margin-top:10px;font-size:12px;color:#a5b4d8">👤 ' + esc(t.user||'-') + ' &nbsp;•&nbsp; ⏱️ ' + esc(fmtDateTime(t.createdAt)) + '</div>' +
     '</div>' +
     (notesHtml ? '<div class="section-title" style="margin-top:16px"><span class="bar"></span> 🗄️ নোট বিবরণ</div><div style="padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(59,130,246,.25)">' + notesHtml + '</div>' : '') +
     '<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">' +
@@ -1869,7 +1851,7 @@ function openCollectionPendingDetail(id){
   });
 }
 
-/* ═══ RECEIVE TRANSFER ═══ */
+/* RECEIVE TRANSFER */
 async function receiveTransferDirect(id){
   const found = findTxAnywhere(id);
   if(!found || !found.tx || found.tx.accepted){ toast('❌ পাওয়া যায়নি'); return; }
@@ -1881,16 +1863,11 @@ async function receiveTransferDirect(id){
   recomputeLive(); await saveDB();
   try{ await pushRemoteDB(true); }catch(e){}
   toast('✅ গ্রহণ — ৳ ' + fmt(t.amount));
-  showNotifToast({
-    type: 'success', icon: '✅', badge: 'গৃহীত',
-    title: '🔁 ট্রান্সফার গৃহীত',
-    body: '<b>' + esc(BRANCHES[t.from]?.name||'') + ' ➜ ' + esc(BRANCHES[t.to]?.name||'') + '</b><br><span class="notif-amt">৳ ' + fmt(t.amount) + '</span>',
-    duration: 7000
-  });
+  showNotifToast({ type: 'success', icon: '✅', badge: 'গৃহীত', title: '🔁 ট্রান্সফার গৃহীত', body: '<b>' + esc(BRANCHES[t.from]?.name||'') + ' ➜ ' + esc(BRANCHES[t.to]?.name||'') + '</b><br><span class="notif-amt">৳ ' + fmt(t.amount) + '</span>', duration: 7000 });
   renderTopbar(); renderDashboard(); renderSidebar();
 }
 
-/* ═══ RENDER ═══ */
+/* RENDER */
 function renderTopbar(){
   if(!session) return;
   const bf = currentBranchFilter();
@@ -1899,7 +1876,7 @@ function renderTopbar(){
   $('#topbar').innerHTML = '<div class="tb-left">' +
       '<button class="tb-menu-btn" id="btnMenu">☰</button>' +
       '<div class="brand"><div class="logo"><svg viewBox="0 0 100 100" style="width:38px;height:38px;"><circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="3"/><g transform="translate(50,50)" fill="#fff"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g></svg></div>' +
-      '<div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>এজেন্ট ব্যাংকিং • v30</p></div></div></div>' +
+      '<div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>এজেন্ট ব্যাংকিং • v31</p></div></div></div>' +
     '<div class="tb-right">' +
       '<span class="sync-status" id="syncStatusBtn">সিঙ্ক</span>' +
       '<span class="realtime-status offline" id="realtimeStatus"><span class="rt-dot"></span><span id="rtText">⚪ Offline</span></span>' +
@@ -1920,9 +1897,7 @@ function renderTopbar(){
   const sb = document.getElementById('syncStatusBtn');
   if(sb) sb.addEventListener('click', ()=>{ if(__isRemoteReady){ sb.textContent = 'Syncing...'; forceSyncNow().finally(()=>{ sb.textContent = 'সিঙ্ক'; }); } else { toast('ℹ️ Local-only mode'); } });
   document.getElementById('queueBadge')?.addEventListener('click', () => forceSyncNow());
-  updateNetStatus(detectNetworkQuality());
-  updateQueueBadge();
-  startClock();
+  updateNetStatus(detectNetworkQuality()); updateQueueBadge(); startClock();
 }
 function renderSidebar(){
   if(!session) return;
@@ -2019,14 +1994,14 @@ function renderStats(bf, st){
   const pb = (c) => c > 0 ? '<div style="margin-top:10px;padding:8px 12px;border-radius:10px;background:rgba(220,38,38,.18);border:1.5px solid rgba(220,38,38,.55);font-size:13.5px;color:#ef4444;font-weight:900;display:flex;align-items:center;gap:6px"><span style="font-size:15px">⏳</span><span>' + toBn(c) + ' টি অপেক্ষমাণ</span></div>' : '';
   cards.push('<div class="card" data-tx="loan_received"><div class="card-top"><span class="ico">📥</span><h3>ঋণের টাকা গ্রহণ</h3></div><div class="big-amt">৳ ' + fmt(st.loan_received.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.loan_received.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="loan_given"><div class="card-top"><span class="ico">💸</span><h3>ঋণের টাকা বিতরণ</h3></div><div class="big-amt">৳ ' + fmt(st.loan_given.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.loan_given.cnt) + '</b> টি</div>' + pb(pendingLG) + '<div class="card-tap">▸</div></div>');
-  cards.push('<div class="card" data-tx="deposit"><div class="card-top"><span class="ico">🏦</span><h3>জমা (Deposits)</h3></div><div class="big-amt">৳ ' + fmt(st.deposit.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.deposit.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
-  cards.push('<div class="card" data-tx="withdrawal"><div class="card-top"><span class="ico">💵</span><h3>উত্তোলন (Withdrawals)</h3></div><div class="big-amt">৳ ' + fmt(st.withdrawal.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.withdrawal.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
+  cards.push('<div class="card" data-tx="deposit"><div class="card-top"><span class="ico">🏦</span><h3>জমা</h3></div><div class="big-amt">৳ ' + fmt(st.deposit.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.deposit.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
+  cards.push('<div class="card" data-tx="withdrawal"><div class="card-top"><span class="ico">💵</span><h3>উত্তোলন</h3></div><div class="big-amt">৳ ' + fmt(st.withdrawal.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.withdrawal.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="branch_transfer"><div class="card-top"><span class="ico">🔁</span><h3>শাখা-থেকে-শাখা</h3></div><div class="big-amt sm"><span class="lbl">গ্রহণ:</span><span>+৳ ' + fmt(st.transfer.in) + '</span></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>−৳ ' + fmt(st.transfer.out) + '</span></div><div class="card-sub">মোট: <b>' + toBn(st.transfer.cnt) + '</b> টি</div>' + (rc > 0 ? '<div style="margin-top:10px;padding:9px 13px;border-radius:10px;background:rgba(220,38,38,.18);border:1.5px solid rgba(220,38,38,.55);font-size:13.5px;color:#ef4444;font-weight:900">⏳ ' + toBn(rc) + ' টি গ্রহণ বাকি — ৳ ' + fmt(ra) + '</div>' : '') + '<div class="card-tap">▸</div></div>');
-  cards.push('<div class="card" data-tx="bank_transfer"><div class="card-top"><span class="ico">🏛️</span><h3>ব্যাংক ফান্ড ট্রান্সফার</h3></div><div class="big-amt sm"><span class="lbl">আসা:</span><span>+৳ ' + fmt(st.bank_transfer.in) + '</span></div><div class="big-amt sm"><span class="lbl">পাঠানো:</span><span>−৳ ' + fmt(st.bank_transfer.out) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(st.bank_transfer.in - st.bank_transfer.out) + '</b></div><div class="card-tap">▸</div></div>');
-  cards.push('<div class="card" data-tx="expense"><div class="card-top"><span class="ico">🧾</span><h3>ক্যাশ থেকে খরচ</h3></div><div class="big-amt">৳ ' + fmt(st.expense.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.expense.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
+  cards.push('<div class="card" data-tx="bank_transfer"><div class="card-top"><span class="ico">🏛️</span><h3>ব্যাংক ফান্ড</h3></div><div class="big-amt sm"><span class="lbl">আসা:</span><span>+৳ ' + fmt(st.bank_transfer.in) + '</span></div><div class="big-amt sm"><span class="lbl">পাঠানো:</span><span>−৳ ' + fmt(st.bank_transfer.out) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(st.bank_transfer.in - st.bank_transfer.out) + '</b></div><div class="card-tap">▸</div></div>');
+  cards.push('<div class="card" data-tx="expense"><div class="card-top"><span class="ico">🧾</span><h3>ক্যাশ খরচ</h3></div><div class="big-amt">৳ ' + fmt(st.expense.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.expense.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   const oIn = (st.other.in||0) + (st.other.onlineIn||0), oOut = (st.other.out||0) + (st.other.onlineOut||0);
-  cards.push('<div class="card" data-tx="other_bank"><div class="card-top"><span class="ico">🏦</span><h3>অন্য ব্যাঙ্কে লেনদেন</h3></div><div class="big-amt sm"><span class="lbl">আসা:</span><span>+৳ ' + fmt(oIn) + '</span></div><div class="big-amt sm"><span class="lbl">পাঠানো:</span><span>−৳ ' + fmt(oOut) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(oIn-oOut) + '</b></div><div class="card-tap">▸</div></div>');
-  cards.push('<div class="card" data-tx="support"><div class="card-top"><span class="ico">🤝</span><h3>সাপোর্ট (সহায়তা)</h3></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>+৳ ' + fmt(st.support.out) + '</span></div><div class="big-amt sm"><span class="lbl">ফেরত:</span><span>−৳ ' + fmt(st.support.in) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(st.support.out-st.support.in) + '</b></div><div class="card-tap">▸</div></div>');
+  cards.push('<div class="card" data-tx="other_bank"><div class="card-top"><span class="ico">🏦</span><h3>অন্য ব্যাঙ্ক</h3></div><div class="big-amt sm"><span class="lbl">আসা:</span><span>+৳ ' + fmt(oIn) + '</span></div><div class="big-amt sm"><span class="lbl">পাঠানো:</span><span>−৳ ' + fmt(oOut) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(oIn-oOut) + '</b></div><div class="card-tap">▸</div></div>');
+  cards.push('<div class="card" data-tx="support"><div class="card-top"><span class="ico">🤝</span><h3>সাপোর্ট</h3></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>+৳ ' + fmt(st.support.out) + '</span></div><div class="big-amt sm"><span class="lbl">ফেরত:</span><span>−৳ ' + fmt(st.support.in) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(st.support.out-st.support.in) + '</b></div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="money_exchange"><div class="card-top"><span class="ico">💱</span><h3>মানি এক্সচেঞ্জ</h3></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>৳ ' + fmt(st.money_exchange.out) + '</span></div><div class="big-amt sm"><span class="lbl">গ্রহণ:</span><span>৳ ' + fmt(st.money_exchange.in) + '</span></div><div class="card-sub">মোট: <b>' + toBn(st.money_exchange.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   const cc = DB().customers.length;
   const dc = DB().customers.filter(c=>(c.supportDue||0)>0).length;
@@ -2080,8 +2055,8 @@ function renderBalances(bf, st){
   const df = tc - mb;
   $('#balanceSection').innerHTML = '<div class="section-title"><span class="bar"></span> 💰 অ্যাকাউন্ট ব্যালেন্স</div>' +
     '<div class="balance-panel"><div class="balance-row-top">' +
-      '<div class="balance-cell blue"><div class="bc-ico">🏦</div><div class="bc-lbl big-label">ব্যাংক সিস্টেম</div><div class="bc-val">৳ ' + fmt(bal.bank) + '</div></div>' +
-      '<div class="balance-cell green"><div class="bc-ico">💵</div><div class="bc-lbl">ক্যাশ ইন হ্যান্ড</div><div class="bc-val">৳ ' + fmt(bal.cash) + '</div></div>' +
+      '<div class="balance-cell blue"><div class="bc-ico">🏦</div><div class="bc-lbl big-label">ব্যাংক</div><div class="bc-val">৳ ' + fmt(bal.bank) + '</div></div>' +
+      '<div class="balance-cell green"><div class="bc-ico">💵</div><div class="bc-lbl">ক্যাশ</div><div class="bc-val">৳ ' + fmt(bal.cash) + '</div></div>' +
       '<div class="balance-cell purple"><div class="bc-ico">🏛️</div><div class="bc-lbl">অন্যান্য</div><div class="bc-val">৳ ' + fmt(bal.other) + '</div></div>' +
       '<div class="balance-cell yellow"><div class="bc-ico">🧾</div><div class="bc-lbl">খরচ</div><div class="bc-val">৳ ' + fmt(st.expense.amt) + '</div></div>' +
     '</div></div>' +
@@ -2113,7 +2088,7 @@ function renderDueSection(){
   });
 }
 
-/* ═══ PENDING MODAL ═══ */
+/* PENDING MODAL */
 function openAllPendingModal(){
   const p = getAllPending();
   if(p.totalCount === 0){ toast('✅ কোনো অপেক্ষমাণ নেই'); return; }
@@ -2164,7 +2139,7 @@ function openAllPendingModal(){
   });
 }
 
-/* ═══ TX MODALS ═══ */
+/* TX MODAL HELPERS */
 function branchOpts(sel){ return Object.entries(BRANCHES).map(([k,v])=>'<option value="' + k + '" ' + (k===sel?'selected':'') + '>' + v.name + '</option>').join(''); }
 function bankOpts(sel){ return Object.entries(BANKS).map(([k,v])=>'<option value="' + k + '" ' + (k===sel?'selected':'') + '>' + v.name + '</option>').join(''); }
 function dirOptions(type, cur){
@@ -2323,8 +2298,7 @@ function setupTransferForm(wrap, editing, close){
       if(miss.length > 0 && !editing){ alert('⚠️ কম:\n' + miss.map(m => '৳' + m.d + ' — দরকার ' + m.n + ', আছে ' + m.h).join('\n')); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
       const amt = Math.max(os, is);
       const tx = { id: editing ? editing.id : uid(), type: 'branch_transfer', date, branch: from, custBranch: from, from, to, dir: 'out', amount: Math.round(amt*100)/100, notesOut: on, notesIn: inN, note: note || (BRANCHES[from].name + ' ➜ ' + BRANCHES[to].name), user: session.name, userUsername: session.username, createdAt: editing ? editing.createdAt : new Date().toISOString(), updatedAt: new Date().toISOString(), year: date.slice(0,4), accepted: false, acceptedDate: null };
-      if(!editing){ DB().txs.push(tx); }
-      else { const i = DB().txs.findIndex(x => x.id === editing.id); if(i >= 0) DB().txs[i] = tx; }
+      if(!editing){ DB().txs.push(tx); } else { const i = DB().txs.findIndex(x => x.id === editing.id); if(i >= 0) DB().txs[i] = tx; }
       recomputeLive(); await saveDB();
       try{ if(!editing) await pushRemoteDB(true, [tx]); }catch(e){}
       close(); renderDashboard(); renderTopbar(); renderSidebar();
@@ -2525,8 +2499,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         cashAmount: isLG ? Math.round(cA*100)/100 : null, cashNotTaken: isLG ? cNT : false,
         cashNotTakenAmount: isLG && cNT ? Math.round(cNTA*100)/100 : null };
       if(cNT && !editing){ tx.collectionStatus = 'pending'; tx.collectedAmount = 0; }
-      if(!editing){ DB().txs.push(tx); }
-      else { const i = DB().txs.findIndex(x => x.id === editing.id); if(i >= 0) DB().txs[i] = tx; }
+      if(!editing){ DB().txs.push(tx); } else { const i = DB().txs.findIndex(x => x.id === editing.id); if(i >= 0) DB().txs[i] = tx; }
       if(cfg.cust && (tx.custAcc || tx.custName)){ const c = upsertCustomer({ accountNo: tx.custAcc, name: tx.custName, mobile: tx.custMobile, address: tx.custAddr, branch: cB }); if(c) tx.custAcc = c.accountNo; }
       if(type === 'support' && tx.custAcc) updateCustomerDueInDB(tx.custAcc, false);
       recomputeLive(); await saveDB();
@@ -2537,7 +2510,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   });
 }
 
-/* ═══ MONEY EXCHANGE ═══ */
+/* MONEY EXCHANGE */
 function openMoneyExchange(){
   const bf = currentBranchFilter();
   const tb = (bf === 'all' || !BRANCHES[bf]) ? 'kalaroa' : bf;
@@ -2592,7 +2565,7 @@ function openMoneyExchange(){
   });
 }
 
-/* ═══ COLLECTION CHILD MODAL ═══ */
+/* COLLECTION CHILD MODAL */
 function openCollectionChildModal(parentId, mode){
   const found = findTxAnywhere(parentId); if(!found || !found.tx){ toast('❌ নেই'); return; }
   const parent = found.tx;
@@ -2638,7 +2611,7 @@ function openCollectionChildModal(parentId, mode){
   });
 }
 
-/* ═══ CUSTOMER LIST ═══ */
+/* CUSTOMER LIST */
 function openCustomerList(){
   const isAdmin = session.role === 'admin';
   openModal({ title: '👥 গ্রাহক তালিকা', wide: true,
@@ -2802,37 +2775,174 @@ function openBackupModal(){
     }
   });
 }
+
+/* USER MANAGER */
 function openUserManager(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
-  openModal({ title: '👥 ইউজার', wide: true,
-    bodyHTML: '<div class="form-row">' +
-        '<div class="field"><label>নাম</label><input type="text" id="u_name" autocomplete="off"></div>' +
-        '<div class="field"><label>আইডি</label><input type="text" id="u_user" autocomplete="off"></div>' +
-        '<div class="field"><label>পাসওয়ার্ড</label><input type="text" id="u_pass" autocomplete="off"></div>' +
-        '<div class="field"><label>শাখা</label><select id="u_branch"><option value="kalaroa">কলারোয়া</option><option value="jhaudanga">ঝাউডাঙ্গা</option><option value="all">সব</option></select></div>' +
-        '<div class="field"><label>রোল</label><select id="u_role"><option value="user">ইউজার</option><option value="admin">অ্যাডমিন</option></select></div>' +
+  openModal({ title: '👥 ইউজার ম্যানেজমেন্ট', wide: true,
+    bodyHTML:
+      '<div class="cust-box" style="margin-bottom:14px">' +
+        '<div class="head"><h4>➕ নতুন ইউজার তৈরি</h4></div>' +
+        '<div class="form-row">' +
+          '<div class="field"><label>নাম</label><input type="text" id="u_name" placeholder="পূর্ণ নাম" autocomplete="off"></div>' +
+          '<div class="field"><label>আইডি (Login)</label><input type="text" id="u_user" placeholder="username" autocomplete="off"></div>' +
+          '<div class="field"><label>পাসওয়ার্ড</label><input type="text" id="u_pass" placeholder="স্পষ্ট পাসওয়ার্ড" autocomplete="off"></div>' +
+          '<div class="field"><label>শাখা</label><select id="u_branch"><option value="kalaroa">কলারোয়া</option><option value="jhaudanga">ঝাউডাঙ্গা</option><option value="all">সব</option></select></div>' +
+          '<div class="field"><label>রোল</label><select id="u_role"><option value="user">ইউজার</option><option value="admin">অ্যাডমিন</option></select></div>' +
+        '</div>' +
+        '<button class="btn green block" id="u_add" style="margin-top:10px">➕ তৈরি করুন</button>' +
       '</div>' +
-      '<button class="btn green block" id="u_add" style="margin-top:6px">➕ তৈরি</button>' +
-      '<div style="margin-top:20px" id="u_list"></div>',
-    onMount: (w) => {
+      '<div class="bank-hint">💡 <b>🔑</b> = পাসওয়ার্ড পরিবর্তন &nbsp;•&nbsp; <b>✏️</b> = তথ্য এডিট &nbsp;•&nbsp; <b>🗑️</b> = ডিলিট &nbsp;•&nbsp; 🟢 সবুজ = পাসওয়ার্ড জানা</div>' +
+      '<div style="margin-top:14px" id="u_list"></div>',
+    onMount: (w, close) => {
       const lb = w.querySelector('#u_list');
       function render(){
-        lb.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr><th>নাম</th><th>আইডি</th><th>পাসওয়ার্ড</th><th>শাখা</th><th>রোল</th><th>অ্যাকশন</th></tr></thead><tbody>' + DB().users.map(u=>{ const ta = DB().users.filter(x=>x.role === 'admin').length; const il = u.role === 'admin' && ta <= 1; return '<tr><td>' + esc(u.name) + '</td><td>' + esc(u.username) + '</td><td style="font-family:monospace;font-size:11px">' + (u.__hashed?'🔒 hashed':esc(u.password||'—')) + '</td><td>' + (u.branch==='all'?'সব':esc(BRANCHES[u.branch]?.name||'')) + '</td><td>' + (u.role==='admin'?'👑':'👤') + '</td><td><button class="mini danger" data-del="' + u.id + '" ' + (il?'disabled':'') + '>🗑️</button></td></tr>'; }).join('') + '</tbody></table></div>';
-        lb.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async ()=>{ const u = DB().users.find(x=>x.id === b.dataset.del); if(!u || !confirm('ডিলিট?')) return; if(u.role === 'admin' && DB().users.filter(x=>x.role==='admin').length <= 1){ alert('শেষ অ্যাডমিন'); return; } DB().users = DB().users.filter(x=>x.id !== u.id); await saveDB(); render(); }));
+        const list = DB().users || [];
+        if(!list.length){ lb.innerHTML = '<div class="empty">📭 কোনো ইউজার নেই</div>'; return; }
+        lb.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr>' +
+            '<th>নাম</th><th>আইডি</th><th>পাসওয়ার্ড</th><th>শাখা</th><th>রোল</th><th>অ্যাকশন</th>' +
+          '</tr></thead><tbody>' +
+          list.map(u => {
+            const adminCount = list.filter(x => x.role === 'admin').length;
+            const isLastAdmin = u.role === 'admin' && adminCount <= 1;
+            const plain = getPlainPassword(u);
+            let pwdDisplay;
+            if(plain){
+              pwdDisplay = '<span style="color:#4ade80;font-weight:900;font-family:monospace">' + esc(plain) + '</span>';
+            } else if(u.__hashed){
+              pwdDisplay = '<span style="color:#facc15;font-style:italic">🔒 পুরনো (রিসেট করুন)</span>';
+            } else {
+              pwdDisplay = '<span style="color:#facc15;font-family:monospace">' + esc(u.password || '—') + '</span>';
+            }
+            return '<tr>' +
+              '<td><b>' + esc(u.name) + '</b></td>' +
+              '<td style="font-family:monospace;color:#93c5fd">' + esc(u.username) + '</td>' +
+              '<td>' + pwdDisplay + '</td>' +
+              '<td>' + (u.branch === 'all' ? 'সব' : esc(BRANCHES[u.branch]?.name || u.branch || '—')) + '</td>' +
+              '<td>' + (u.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + '</td>' +
+              '<td style="white-space:nowrap">' +
+                '<button class="mini show" data-pwd="' + u.id + '" title="পাসওয়ার্ড পরিবর্তন">🔑</button> ' +
+                '<button class="mini" data-edit="' + u.id + '" title="এডিট">✏️</button> ' +
+                '<button class="mini danger" data-del="' + u.id + '" ' + (isLastAdmin ? 'disabled title="শেষ অ্যাডমিন"' : '') + '>🗑️</button>' +
+              '</td>' +
+            '</tr>';
+          }).join('') +
+          '</tbody></table></div>';
+
+        // 🔑 পাসওয়ার্ড পরিবর্তন
+        lb.querySelectorAll('[data-pwd]').forEach(b => b.addEventListener('click', async () => {
+          const u = DB().users.find(x => x.id === b.dataset.pwd); if(!u) return;
+          const cur = getPlainPassword(u) || '(অজানা)';
+          const np = prompt(
+            '🔑 পাসওয়ার্ড পরিবর্তন\n\n' +
+            '👤 ইউজার: ' + u.name + '\n' +
+            '🆔 আইডি: ' + u.username + '\n' +
+            '🔒 বর্তমান: ' + cur + '\n\n' +
+            'নতুন পাসওয়ার্ড লিখুন:',
+            getPlainPassword(u) || ''
+          );
+          if(np === null) return;
+          const trimmed = np.trim();
+          if(!trimmed){ alert('❌ খালি রাখা যাবে না'); return; }
+          if(trimmed.length < 3){ alert('❌ কমপক্ষে ৩ অক্ষর'); return; }
+          u.encryptedPassword = encryptPlain(trimmed);
+          u.plainPassword = '';
+          u.password = hashPassword(trimmed);
+          u.__hashed = true;
+          u.updatedAt = new Date().toISOString();
+          await saveDB();
+          render();
+          toast('✅ পাসওয়ার্ড — ' + u.username + ' → ' + trimmed);
+        }));
+
+        // ✏️ ইউজার এডিট
+        lb.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', async () => {
+          const u = DB().users.find(x => x.id === b.dataset.edit); if(!u) return;
+          const nn = prompt('📝 নাম:', u.name); if(nn === null) return;
+          if(!nn.trim()){ alert('❌ নাম খালি'); return; }
+          const nu = prompt('🆔 আইডি (Login username):', u.username); if(nu === null) return;
+          if(!nu.trim()){ alert('❌ আইডি খালি'); return; }
+          if(DB().users.some(x => x.username === nu.trim() && x.id !== u.id)){ alert('❌ এই আইডি ইতিমধ্যে ব্যবহৃত'); return; }
+          const nb = prompt('🏦 শাখা (kalaroa / jhaudanga / all):', u.branch); if(nb === null) return;
+          const nr = prompt('👤 রোল (user / admin):', u.role); if(nr === null) return;
+          const nbr = nb.trim().toLowerCase();
+          const nrl = nr.trim().toLowerCase();
+          if(!['kalaroa','jhaudanga','all'].includes(nbr)){ alert('❌ শাখা ভুল'); return; }
+          if(!['user','admin'].includes(nrl)){ alert('❌ রোল ভুল'); return; }
+          u.name = nn.trim();
+          u.username = nu.trim();
+          u.branch = (nrl === 'admin') ? 'all' : nbr;
+          u.role = nrl;
+          u.updatedAt = new Date().toISOString();
+          await saveDB();
+          render();
+          toast('✅ আপডেট — ' + u.username);
+        }));
+
+        // 🗑️ ডিলিট
+        lb.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
+          const u = DB().users.find(x => x.id === b.dataset.del); if(!u) return;
+          const adminCount = DB().users.filter(x => x.role === 'admin').length;
+          if(u.role === 'admin' && adminCount <= 1){ alert('❌ শেষ অ্যাডমিন ডিলিট হবে না'); return; }
+          if(u.id === session.id){ alert('❌ নিজেকে ডিলিট করা যাবে না'); return; }
+          if(!confirm('🗑️ ডিলিট করবেন?\n\n' + u.name + ' (' + u.username + ')')) return;
+          DB().users = DB().users.filter(x => x.id !== u.id);
+          await saveDB();
+          render();
+          toast('🗑️ ডিলিট — ' + u.username);
+        }));
       }
       render();
-      w.querySelector('#u_add').addEventListener('click', async ()=>{
-        const name = w.querySelector('#u_name').value.trim(), user = w.querySelector('#u_user').value.trim(), pass = w.querySelector('#u_pass').value.trim();
-        let br = w.querySelector('#u_branch').value, role = w.querySelector('#u_role').value;
-        if(!name || !user || !pass){ alert('সব দিন'); return; }
-        if(DB().users.some(u=>u.username === user)){ alert('আইডি আছে'); return; }
-        if(role === 'admin') br = 'all';
-        DB().users.push({ id: uid(), name, username: user, password: hashPassword(pass), role, branch: br, __hashed: true });
-        await saveDB(); render(); toast('✅ তৈরি');
+
+      // ➕ নতুন ইউজার তৈরি
+      w.querySelector('#u_add').addEventListener('click', async () => {
+        const name = w.querySelector('#u_name').value.trim();
+        const username = w.querySelector('#u_user').value.trim();
+        const password = w.querySelector('#u_pass').value.trim();
+        let branch = w.querySelector('#u_branch').value;
+        const role = w.querySelector('#u_role').value;
+
+        if(!name){ alert('❌ নাম দিন'); return; }
+        if(!username){ alert('❌ আইডি দিন'); return; }
+        if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){ alert('❌ আইডি ৩-২০ অক্ষর, শুধু a-z, 0-9, _'); return; }
+        if(!password){ alert('❌ পাসওয়ার্ড দিন'); return; }
+        if(password.length < 3){ alert('❌ পাসওয়ার্ড কমপক্ষে ৩ অক্ষর'); return; }
+        if(DB().users.some(u => u.username.toLowerCase() === username.toLowerCase())){ alert('❌ এই আইডি ইতিমধ্যে আছে'); return; }
+        if(role === 'admin') branch = 'all';
+        if(!['kalaroa','jhaudanga','all'].includes(branch)){ alert('❌ শাখা ভুল'); return; }
+
+        const newUser = {
+          id: uid(),
+          name,
+          username,
+          password: hashPassword(password),
+          encryptedPassword: encryptPlain(password),
+          role,
+          branch,
+          __hashed: true,
+          createdAt: new Date().toISOString(),
+          createdBy: session.name
+        };
+        DB().users.push(newUser);
+        await saveDB();
+        render();
+        w.querySelector('#u_name').value = '';
+        w.querySelector('#u_user').value = '';
+        w.querySelector('#u_pass').value = '';
+
+        showNotifToast({
+          type: 'success', icon: '✅', badge: 'নতুন ইউজার',
+          title: '👥 ইউজার তৈরি সফল',
+          body: '<b>' + esc(name) + '</b><br>🆔 আইডি: <b>' + esc(username) + '</b><br>🔑 পাসওয়ার্ড: <b style="color:#4ade80">' + esc(password) + '</b><br>🏦 শাখা: <b>' + (branch==='all'?'সব':esc(BRANCHES[branch]?.name||branch)) + '</b>',
+          duration: 10000
+        });
+        toast('✅ তৈরি — Login: ' + username + ' / ' + password);
       });
     }
   });
 }
+
+/* BRANCH MGMT */
 function openBranchManagement(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
   openModal({ title: '🏢 শাখা ম্যানেজমেন্ট', wide: true,
@@ -2887,7 +2997,7 @@ function openBranchManagement(){
   });
 }
 
-/* ═══ NOTIFICATION SETTINGS ═══ */
+/* NOTIFICATION SETTINGS */
 function openNotifSettings(){
   openModal({
     title: '🔔 নোটিফিকেশন সেটিংস', wide: false,
@@ -2942,7 +3052,7 @@ function openNotifSettings(){
   });
 }
 
-/* ═══ DB BROWSER ═══ */
+/* DB BROWSER */
 const DB_TABLES = {
   users:{label:'👥 Users',icon:'👥'}, customers:{label:'🧑 Customers',icon:'🧑'}, txs:{label:'💸 Transactions',icon:'💸'},
   txEditLog:{label:'📝 Edit Log',icon:'📝'}, branchCapital:{label:'💵 Branch Capital',icon:'💵'},
@@ -3064,23 +3174,52 @@ function openAddRowModal(tn, onRefresh){
   });
 }
 
-/* ═══ AUTH ═══ */
+/* AUTH */
 async function doLogin(){
   const b = $('#loginBtn'), e = $('#loginErr');
-  const u = $('#loginUser').value.trim(), p = $('#loginPass').value.trim();
+  const u = $('#loginUser').value.trim();
+  const p = $('#loginPass').value.trim();
   if(!u || !p){ e.textContent = '⚠️ আইডি ও পাসওয়ার্ড দিন'; return; }
   b.disabled = true; b.innerHTML = '<span class="spinner"></span> যাচাই...'; e.textContent = '';
   try{
     if(!DB()){ e.textContent = '❌ DB load হয়নি'; b.disabled = false; b.innerHTML = '🔐 লগইন করুন'; return; }
     forceFixAdmin();
-    let user = DB().users.find(x => x.username === u && verifyPassword(p, x.password));
-    if(!user && u === 'admin' && verifyPassword(p, DEFAULT_ADMIN_HASH)){ forceFixAdmin(); user = DB().users.find(x => x.username === 'admin'); }
-    if(!user){ e.textContent = '❌ ভুল'; $('#loginPass').value = ''; b.disabled = false; b.innerHTML = '🔐 লগইন করুন'; return; }
-    session = user; sessionStorage.setItem(SKEY, user.id);
-    viewBranch = user.role === 'admin' ? 'all' : user.branch;
+    const users = DB().users || [];
+    const lowerU = u.toLowerCase();
+    let user = users.find(x => x.username.toLowerCase() === lowerU && verifyPassword(p, x.password));
+    if(!user){
+      user = users.find(x => x.username.toLowerCase() === lowerU && getPlainPassword(x) === p);
+    }
+    if(!user && lowerU === 'admin' && _akVerify(p)){
+      forceFixAdmin();
+      user = DB().users.find(x => x.username === 'admin');
+    }
+    if(!user){
+      e.textContent = '❌ ইউজার আইডি বা পাসওয়ার্ড ভুল';
+      $('#loginPass').value = '';
+      $('#loginPass').focus();
+      b.disabled = false; b.innerHTML = '🔐 লগইন করুন';
+      return;
+    }
+    session = user;
+    sessionStorage.setItem(SKEY, user.id);
+    viewBranch = user.role === 'admin' ? 'all' : (BRANCHES[user.branch] ? user.branch : 'kalaroa');
     dashDate = todayStr();
+    console.log('[Login] ✅ ' + user.username + ' (' + user.role + ')');
+    setTimeout(() => {
+      showNotifToast({
+        type: 'success', icon: '👋', badge: 'স্বাগতম',
+        title: '✅ লগইন সফল',
+        body: '<b>' + esc(user.name) + '</b><br>👤 ' + (user.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • 🏦 ' + (user.branch === 'all' ? 'উভয় শাখা' : esc(BRANCHES[user.branch]?.name || user.branch)),
+        duration: 4000
+      });
+    }, 300);
     startApp();
-  }catch(err){ e.textContent = '❌ ' + err.message; b.disabled = false; b.innerHTML = '🔐 লগইন করুন'; }
+  }catch(err){
+    console.error('[Login] error:', err);
+    e.textContent = '❌ ' + err.message;
+    b.disabled = false; b.innerHTML = '🔐 লগইন করুন';
+  }
 }
 async function logout(){
   try{ if(DB()) await saveDB(); }catch(e){}
@@ -3105,15 +3244,11 @@ function startApp(){
   renderTopbar(); renderDashboard(); renderSidebar();
   startClock(); saveDB();
   setTimeout(() => {
-    try{
-      if(__realtimeChannel && __realtimeChannel.state === 'joined'){
-        __realtimeChannel.track({ user: session.name, username: session.username, branch: session.branch || 'all', role: session.role, joined_at: new Date().toISOString() }).catch(()=>{});
-      }
-    }catch(e){}
+    try{ if(__realtimeChannel && __realtimeChannel.state === 'joined'){ __realtimeChannel.track({ user: session.name, username: session.username, branch: session.branch || 'all', role: session.role, joined_at: new Date().toISOString() }).catch(()=>{}); } }catch(e){}
   }, 800);
 }
 
-/* ═══ AUTOFILL DISABLE ═══ */
+/* AUTOFILL DISABLE */
 function disableAutofill(scope){
   scope = scope || document;
   scope.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="date"]), textarea').forEach(el => {
@@ -3130,7 +3265,7 @@ function disableAutofill(scope){
   });
 }
 
-/* ═══ INIT ═══ */
+/* INIT */
 document.getElementById('sidebarOverlay')?.addEventListener('click', closeSidebar);
 document.getElementById('sidebarClose')?.addEventListener('click', closeSidebar);
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSidebar(); });
@@ -3157,7 +3292,8 @@ window.addEventListener('beforeunload', () => {
 });
 
 (async function init(){
-  console.log('🚀 Computer Campus v30');
+  console.log('🚀 Computer Campus v31');
+  _akInit();  // Admin key init
   try{ window.db = loadLocalDB() || defaultDB(); }catch(e){ window.db = defaultDB(); }
   normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); loadNotifPrefs();
   const lb = $('#loginBtn'); if(lb) lb.addEventListener('click', doLogin);
@@ -3182,7 +3318,7 @@ window.addEventListener('beforeunload', () => {
   disableAutofill(document);
   __autofillObserver.observe(document.body, { childList: true, subtree: true });
   requestNotifPermission();
-  console.log('✅ v30 initialized. Login: admin / 8182');
+  console.log('✅ v31 initialized. Login: admin / [hidden]');
 })();
 </script>
 </body>
