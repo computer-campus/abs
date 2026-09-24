@@ -926,22 +926,49 @@ async function pullRemoteDB(){
   if(!__isRemoteReady || !__supabaseClient) return;
   const res = await withTimeout(
     __supabaseClient.from(window.SUPABASE_TABLE).select('data').eq('id', window.SUPABASE_ROW_ID).maybeSingle(),
-    SUPABASE_TIMEOUT_MS, { data: null, error: { message: 'timeout' } }
+    SUPABASE_TIMEOUT_MS,
+    { data: null, error: { message: 'timeout' } }
   );
+
   if(res && res.data && res.data.data && typeof res.data.data === 'object'){
     const remote = res.data.data;
+    const remoteTxCount = (remote.txs || []).length;
+    const remoteCustCount = (remote.customers || []).length;
+
+    // ⚡ যদি remote খালি এবং local-এ ডেটা আছে → pull করা উচিত নয়
+    const localTxCount = (DB()?.txs || []).length;
+    const localCustCount = (DB()?.customers || []).length;
+
+    if(remoteTxCount === 0 && remoteCustCount === 0 && (localTxCount > 0 || localCustCount > 0)){
+      console.warn('[Supabase] ⚠️ Remote empty but local has data — refusing to adopt');
+      window.__hasSyncedOnce = true;  // এখন push করার অনুমতি দিই
+      return;
+    }
+
     const localTs = Date.parse((DB() && DB().__lastUpdate) || 0) || 0;
     const remoteTs = Date.parse(remote.__lastUpdate || 0) || 0;
-    if(remoteTs > localTs){
-      console.log('[Supabase] remote is newer, adopting');
+
+    if(remoteTs >= localTs || localTxCount === 0){
+      // ⚡ Remote adopt করি
       __isApplyingRemote = true;
       window.db = remote;
       normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); saveLocalDB();
       __isApplyingRemote = false;
+      // ✅ সফল pull — sync flag সেট
+      window.__hasSyncedOnce = true;
+      console.log('[Supabase] ✅ Pull success — synced once flag set');
       if(session){ renderTopbar(); renderDashboard(); renderSidebar(); }
+    } else {
+      // Local নতুন — pull করি না কিন্তু flag সেট
+      window.__hasSyncedOnce = true;
     }
+  } else {
+    // ⚡ Remote-এ কোনো row নেই — local push করার অনুমতি দিই
+    window.__hasSyncedOnce = true;
+    console.log('[Supabase] ℹ️ Remote empty — allowing push');
   }
 }
+
 function queueRemoteSave(){
   if(!__isRemoteReady || !__supabaseClient) return;
   if(__remoteSaveTimer) clearTimeout(__remoteSaveTimer);
@@ -1313,26 +1340,64 @@ async function pushRemoteDB(force, newTxs){
   if(!__isRemoteReady || !__supabaseClient) return;
   if(__isApplyingRemote) return;
   if(!navigator.onLine && !force){ queueAdd('push_offline'); return; }
+
+  // 🛡️ GUARD 1: Local DB কখনো sync হয়নি এবং খালি হলে push করব না
+  const localDb = DB();
+  const localTxCount = (localDb?.txs || []).length;
+  const localCustCount = (localDb?.customers || []).length;
+  const hasLocalData = localTxCount > 0 || localCustCount > 0 ||
+    (localDb?.users || []).length > 1 ||  // admin ছাড়া অন্য ইউজার থাকলে
+    Object.values(localDb?.baseVault || {}).some(v => Object.values(v||{}).some(n => n > 0));
+
+  // যদি first-time sync না হয়ে থাকে এবং local DB খালি হয়
+  if(!window.__hasSyncedOnce && !hasLocalData){
+    console.warn('[Supabase] 🛡️ BLOCKED empty push — never synced + no local data');
+    // Remote pull করার চেষ্টা করি
+    setTimeout(() => pullRemoteDB().catch(()=>{}), 500);
+    return;
+  }
+
   try{
-    // ⚡ Device info collected
+    // 🛡️ GUARD 2: Remote vs Local তুলনা — যদি remote-এ বেশি ডেটা থাকে
+    if(!force){
+      try{
+        const chk = await withTimeout(
+          __supabaseClient.from(window.SUPABASE_TABLE).select('data').eq('id', window.SUPABASE_ROW_ID).maybeSingle(),
+          4000, { data: null }
+        );
+        if(chk && chk.data && chk.data.data){
+          const remote = chk.data.data;
+          const remoteTxCount = (remote.txs || []).length;
+          const remoteCustCount = (remote.customers || []).length;
+          const remoteTs = Date.parse(remote.__lastUpdate || 0) || 0;
+          const localTs = Date.parse(localDb.__lastUpdate || 0) || 0;
+
+          // ⚡ যদি local-এ কম ডেটা কিন্তু remote-এ বেশি → abort
+          if((remoteTxCount > localTxCount + 5 || remoteCustCount > localCustCount + 5) && !hasLocalData){
+            console.warn('[Supabase] 🛡️ BLOCKED — remote has more data, not overwriting');
+            window.db = remote;
+            normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); saveLocalDB();
+            if(session){ renderTopbar(); renderDashboard(); renderSidebar(); }
+            return;
+          }
+        }
+      }catch(e){ /* ignore — continue with push */ }
+    }
+
     let deviceInfo = null;
     try{ deviceInfo = await buildDeviceInfo(); }catch(e){}
 
     const dbCopy = JSON.parse(JSON.stringify(DB()));
-    // ⚡ Device info সাথে যুক্ত করি (meta হিসেবে)
     dbCopy.__lastDevice = deviceInfo || {
       device: getDeviceName(),
-      location: 'Unknown',
       user: session?.name || 'Unknown',
       username: session?.username || '',
       branch: session?.role === 'admin' ? 'Admin' : (BRANCHES[session?.branch]?.name || 'Unknown'),
       role: session?.role || 'user'
     };
-    // ⚡ নতুন transaction গুলো trace
     if(newTxs && newTxs.length){
       dbCopy.__lastUpdateInfo = {
         device: dbCopy.__lastDevice.device,
-        location: dbCopy.__lastDevice.location,
         user: dbCopy.__lastDevice.user,
         username: dbCopy.__lastDevice.username,
         branch: dbCopy.__lastDevice.branch,
@@ -1345,7 +1410,6 @@ async function pushRemoteDB(force, newTxs){
     } else {
       dbCopy.__lastUpdateInfo = {
         device: dbCopy.__lastDevice.device,
-        location: dbCopy.__lastDevice.location,
         user: dbCopy.__lastDevice.user,
         username: dbCopy.__lastDevice.username,
         branch: dbCopy.__lastDevice.branch,
@@ -1361,6 +1425,10 @@ async function pushRemoteDB(force, newTxs){
     const timeoutMs = (__connEffectiveType === '3g' || __connEffectiveType === '2g') ? 25000 : SUPABASE_TIMEOUT_MS;
     const res = await withTimeout(__supabaseClient.from(window.SUPABASE_TABLE).upsert(payload, { onConflict: 'id' }), timeoutMs, { error: { message: 'timeout' } });
     if(res && res.error) throw new Error(res.error.message || 'push error');
+
+    // ✅ সফল push — flag সেট করি
+    window.__hasSyncedOnce = true;
+
     if(newTxs && newTxs.length){ newTxs.forEach(tx => broadcastTx(tx)); }
     const ind = document.getElementById('syncIndicator');
     if(ind){ ind.classList.add('active'); ind.textContent = 'Synced ✓'; setTimeout(()=>{ ind.classList.remove('active'); ind.textContent = 'Sync'; }, 1500); }
@@ -1907,7 +1975,12 @@ async function saveDB(){
     DB().__version = APP_VERSION;
     if(DB().branchCapital) DB().totalCapital = Object.values(DB().branchCapital).reduce((s,v)=> s + (Number(v)||0), 0);
     saveLocalDB();
-    queueRemoteSave();
+    // ⚡ Guard: প্রথম sync হওয়ার আগে push করব না
+    if(window.__hasSyncedOnce){
+      queueRemoteSave();
+    } else {
+      console.log('[saveDB] Skipping remote push — not yet synced');
+    }
   } finally {
     __savePending = false;
     if(__saveAgain){ __saveAgain = false; setTimeout(saveDB, 50); }
@@ -4228,17 +4301,48 @@ window.addEventListener('beforeunload', () => {
 
 (async function init(){
   console.log('🚀 Computer Campus Agent Banking');
+  window.__hasSyncedOnce = false;  // ⚡ শুরুতে flag false
+
   try{ window.db = loadLocalDB() || defaultDB(); }catch(e){ window.db = defaultDB(); }
   normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); loadNotifPrefs();
-  // ⚡ Login button — Mobile touch সহ
-const lb = $('#loginBtn');
-if(lb){
-  lb.addEventListener('click', doLogin);
-  lb.addEventListener('touchend', function(e){
-    e.preventDefault();
-    setTimeout(doLogin, 50);
-  }, { passive: false });
-}
+
+  const lb = $('#loginBtn'); if(lb) lb.addEventListener('click', doLogin);
+  const lu = $('#loginUser'), lp = $('#loginPass');
+  if(lu) lu.addEventListener('keydown', e => { if(e.key === 'Enter') lp.focus(); });
+  if(lp) lp.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+
+  const sid = sessionStorage.getItem(SKEY);
+  if(sid){ const u = DB().users.find(x => x.id === sid); if(u){ session = u; viewBranch = u.role === 'admin' ? 'all' : u.branch; startApp(); } }
+
+  attachNetworkListeners();
+  updateNetStatus(detectNetworkQuality());
+  updateQueueBadge();
+  setupBroadcastChannel();
+
+  const unlockAudio = () => {
+    try{ if(!__audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; if(AC) __audioCtx = new AC(); } if(__audioCtx && __audioCtx.state === 'suspended') __audioCtx.resume(); }catch(e){}
+    document.removeEventListener('click', unlockAudio); document.removeEventListener('touchstart', unlockAudio); document.removeEventListener('keydown', unlockAudio);
+  };
+  document.addEventListener('click', unlockAudio, { once: true });
+  document.addEventListener('touchstart', unlockAudio, { once: true });
+  document.addEventListener('keydown', unlockAudio, { once: true });
+
+  // ⚡ Supabase init — প্রথমে pull, তারপর push
+  initSupabase();
+
+  // ⚡ 3 সেকেন্ড অপেক্ষা করি pull শেষ হওয়ার জন্য, তারপর push check
+  setTimeout(() => {
+    if(window.__hasSyncedOnce && navigator.onLine && queueSize() > 0){
+      forceSyncNow();
+    }
+  }, 3000);
+
+  disableAutofill(document);
+  __autofillObserver.observe(document.body, { childList: true, subtree: true });
+  requestNotifPermission();
+  console.log('✅ Ready. Login: admin + password');
+})();
+
   const lu = $('#loginUser'), lp = $('#loginPass');
   if(lu) lu.addEventListener('keydown', e => { if(e.key === 'Enter') lp.focus(); });
   if(lp) lp.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
