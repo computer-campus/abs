@@ -349,9 +349,10 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
     </div>
     <h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1>
     <h2>এজেন্ট ব্যাংকিং সিস্টেম • কলারোয়া ও ঝাউডাঙ্গা আউটলেট</h2>
-    <div class="field"><label>ইউজার আইডি</label><input type="text" id="loginUser" placeholder="আপনার আইডি" autocomplete="off" name="lu_cc_x"></div>
-    <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="new-password" name="lp_cc_x"></div>
-    <button class="btn block pink" id="loginBtn">🔐 লগইন করুন</button>
+	
+<div class="field"><label>ইউজার আইডি</label><input type="text" id="loginUser" placeholder="আপনার আইডি" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="text" name="lu_cc_x" enterkeyhint="next"></div>
+    <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="text" name="lp_cc_x" enterkeyhint="go"></div>    
+	<button class="btn block pink" id="loginBtn">🔐 লগইন করুন</button>
     <div id="loginErr" style="color:#fff;font-size:13px;text-align:center;margin-top:10px;min-height:18px"></div>
   </div>
 </div>
@@ -3257,44 +3258,82 @@ function openAddRowModal(tn, onRefresh){
 /* AUTH */
 async function doLogin(){
   const b = $('#loginBtn'), e = $('#loginErr');
-  const u = $('#loginUser').value.trim();
-  const p = $('#loginPass').value.trim();
+  // ⚡ মোবাইল-সেফ input পড়া
+  const u = String($('#loginUser').value || '').replace(/\s+/g, ' ').trim();
+  const p = String($('#loginPass').value || '').trim();
+
+  console.log('[Login] attempting...', { user: u, passLen: p.length, ua: navigator.userAgent });
+
   if(!u || !p){ e.textContent = '⚠️ আইডি ও পাসওয়ার্ড দিন'; return; }
   b.disabled = true; b.innerHTML = '<span class="spinner"></span> যাচাই...'; e.textContent = '';
+
   try{
-    if(!DB()){ e.textContent = '❌ DB load হয়নি'; b.disabled = false; b.innerHTML = '🔐 লগইন করুন'; return; }
-    forceFixAdmin();
-    const users = DB().users || [];
-    const lowerU = u.toLowerCase();
-    let user = users.find(x => x.username.toLowerCase() === lowerU && verifyPassword(p, x.password));
-    if(!user){ user = users.find(x => x.username.toLowerCase() === lowerU && getPlainPassword(x) === p); }
-    if(!user && lowerU === 'admin' && _akVerify(p)){ forceFixAdmin(); user = DB().users.find(x => x.username === 'admin'); }
-    if(!user){
-      e.textContent = '❌ ইউজার আইডি বা পাসওয়ার্ড ভুল';
-      $('#loginPass').value = ''; $('#loginPass').focus();
+    if(!DB()){
+      e.textContent = '❌ DB load হয়নি — পেজ রিফ্রেশ করুন';
       b.disabled = false; b.innerHTML = '🔐 লগইন করুন';
       return;
     }
+    forceFixAdmin();
+    const users = DB().users || [];
+    const lowerU = u.toLowerCase();
+
+    // ⚡ ১ম চেষ্টা: Username hash verify
+    let user = users.find(x => String(x.username||'').toLowerCase() === lowerU && verifyPassword(p, x.password));
+
+    // ⚡ ২য় চেষ্টা: plainPassword fallback
+    if(!user){
+      user = users.find(x => String(x.username||'').toLowerCase() === lowerU && getPlainPassword(x) === p);
+    }
+
+    // ⚡ ৩য় চেষ্টা: admin special case
+    if(!user && lowerU === 'admin' && _akVerify(p)){
+      forceFixAdmin();
+      user = DB().users.find(x => x.username === 'admin');
+    }
+
+    // ⚡ ৪র্থ চেষ্টা: partial match (অনেক সময় hidden space থাকে)
+    if(!user){
+      user = users.find(x => String(x.username||'').toLowerCase().trim() === lowerU && (String(x.password||'') === p || getPlainPassword(x) === p));
+    }
+
+    if(!user){
+      console.warn('[Login] failed. Users in DB:', users.map(x => x.username));
+      e.textContent = '❌ ইউজার আইডি বা পাসওয়ার্ড ভুল';
+      $('#loginPass').value = '';
+      try{ $('#loginPass').focus(); }catch(ex){}
+      b.disabled = false; b.innerHTML = '🔐 লগইন করুন';
+      return;
+    }
+
+    // ✅ সফল
     session = user;
-    sessionStorage.setItem(SKEY, user.id);
+    try{ sessionStorage.setItem(SKEY, user.id); }catch(ex){
+      try{ localStorage.setItem(SKEY + '_fb', user.id); }catch(e2){}
+    }
     viewBranch = user.role === 'admin' ? 'all' : (BRANCHES[user.branch] ? user.branch : 'kalaroa');
     dashDate = todayStr();
-    console.log('[Login] ✅ ' + user.username);
-    setTimeout(() => {
-      showNotifToast({
-        type: 'success', icon: '👋', badge: 'স্বাগতম',
-        title: '✅ লগইন সফল',
-        body: '<b>' + esc(user.name) + '</b><br>' + (user.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • 🏦 ' + (user.branch === 'all' ? 'উভয় আউটলেট' : esc(BRANCHES[user.branch]?.name || user.branch)),
-        duration: 4000
-      });
-    }, 300);
+    console.log('[Login] ✅ Success:', user.username);
+
+    // Notif (mobile-safe)
+    try{
+      setTimeout(() => {
+        showNotifToast({
+          type: 'success', icon: '👋', badge: 'স্বাগতম',
+          title: '✅ লগইন সফল',
+          body: '<b>' + esc(user.name) + '</b><br>' + (user.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • 🏦 ' + (user.branch === 'all' ? 'উভয় আউটলেট' : esc(BRANCHES[user.branch]?.name || user.branch)),
+          duration: 4000
+        });
+      }, 300);
+    }catch(ex){}
+
     startApp();
   }catch(err){
     console.error('[Login] error:', err);
-    e.textContent = '❌ ' + err.message;
+    e.textContent = '❌ ' + (err.message || 'Error');
     b.disabled = false; b.innerHTML = '🔐 লগইন করুন';
   }
 }
+
 async function logout(){
   try{ if(DB()) await saveDB(); }catch(e){}
   try{ if(__realtimeChannel && __supabaseClient){ await __realtimeChannel.untrack(); __supabaseClient.removeChannel(__realtimeChannel); __realtimeChannel = null; } }catch(e){}
@@ -3323,6 +3362,24 @@ function startApp(){
 }
 
 /* AUTOFILL DISABLE */
+function disableAutofill(scope){
+  scope = scope || document;
+  // ⚡ Login screen-এ autofill disable করা যাবে না (mobile-এ সমস্যা হয়)
+  const loginScreen = document.getElementById('loginScreen');
+  scope.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="date"]), textarea').forEach(el => {
+    if(loginScreen && loginScreen.contains(el)) return;  // ⚡ Login inputs skip
+    el.setAttribute('autocomplete', 'off');
+    el.setAttribute('autocorrect', 'off');
+    el.setAttribute('autocapitalize', 'none');
+    el.setAttribute('spellcheck', 'false');
+    if(!el.dataset.noAutofillApplied){
+      el.dataset.noAutofillApplied = '1';
+      el.setAttribute('readonly', 'readonly');
+      const handler = function(){ this.removeAttribute('readonly'); this.removeEventListener('focus', handler); };
+      el.addEventListener('focus', handler);
+    }
+  });
+}
 function disableAutofill(scope){
   scope = scope || document;
   scope.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="date"]), textarea').forEach(el => {
@@ -3369,7 +3426,15 @@ window.addEventListener('beforeunload', () => {
   console.log('🚀 Computer Campus Agent Banking');
   try{ window.db = loadLocalDB() || defaultDB(); }catch(e){ window.db = defaultDB(); }
   normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); loadNotifPrefs();
-  const lb = $('#loginBtn'); if(lb) lb.addEventListener('click', doLogin);
+  // ⚡ Login button — Mobile touch সহ
+const lb = $('#loginBtn');
+if(lb){
+  lb.addEventListener('click', doLogin);
+  lb.addEventListener('touchend', function(e){
+    e.preventDefault();
+    setTimeout(doLogin, 50);
+  }, { passive: false });
+}
   const lu = $('#loginUser'), lp = $('#loginPass');
   if(lu) lu.addEventListener('keydown', e => { if(e.key === 'Enter') lp.focus(); });
   if(lp) lp.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
