@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Computer Campus | Agent Banking v31</title>
+<title>Computer Campus | Agent Banking</title>
 <meta name="theme-color" content="#000000">
 <meta name="description" content="Computer Campus Agent Banking System">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -348,9 +348,9 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
       </svg>
     </div>
     <h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1>
-    <h2>এজেন্ট ব্যাংকিং সিস্টেম • v31</h2>
-    <div class="field"><label>ইউজার আইডি</label><input type="text" id="loginUser" placeholder="আপনার আইডি" autocomplete="off" name="lu_x"></div>
-    <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="new-password" name="lp_x"></div>
+    <h2>এজেন্ট ব্যাংকিং সিস্টেম • কলারোয়া ও ঝাউডাঙ্গা আউটলেট</h2>
+    <div class="field"><label>ইউজার আইডি</label><input type="text" id="loginUser" placeholder="আপনার আইডি" autocomplete="off" name="lu_cc_x"></div>
+    <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="new-password" name="lp_cc_x"></div>
     <button class="btn block pink" id="loginBtn">🔐 লগইন করুন</button>
     <div id="loginErr" style="color:#fff;font-size:13px;text-align:center;margin-top:10px;min-height:18px"></div>
   </div>
@@ -393,48 +393,12 @@ window.SUPABASE_URL = 'https://xmjemenswfharaptazxn.supabase.co';
 window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamVtZW5zd2ZoYXJhcHRhenhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDI2MDIsImV4cCI6MjEwNTMxODYwMn0.akRSS-22xeU72gdVye9B7xrV09QkjJY_9zoA9xXNiJc';
 window.SUPABASE_TABLE = 'agent_bank';
 window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
-window.APP_VERSION = 'v31';
+window.APP_VERSION = 'ccbank';
 
-/* ═══════════════════════════════════════════
-   🔐 SECURE ADMIN KEY SYSTEM
-   Admin password কোডে নেই — Runtime-এ hash থেকে verify হয়
-   ═══════════════════════════════════════════ */
-const _AK_SEED = 'cc_ab_v31_xk94m2p7q8w3';
-const _AK_SALT = 'cc_agent_bank_v31_salt_';
-const _AK_STORE = 'cc_ab_master_hash_v31';
-
-// Admin hash তৈরি (একবারই হবে, LocalStorage-এ সেভ হবে)
-function _akInit(){
-  try{
-    let h = safeLS_get(_AK_STORE);
-    if(h) return h;
-    // Built-in seed কে hash করি — এখানে original কেউ দেখতে পাবে না
-    const seed = _AK_SEED + '::' + _AK_SALT;
-    let builtinHash = '';
-    try{ if(typeof CryptoJS !== 'undefined') builtinHash = CryptoJS.SHA256(seed).toString(); }catch(e){}
-    if(!builtinHash){
-      let x = 0; for(let i = 0; i < seed.length; i++) x = ((x << 5) - x + seed.charCodeAt(i)) | 0;
-      builtinHash = 'fb_' + Math.abs(x).toString(36);
-    }
-    safeLS_set(_AK_STORE, builtinHash);
-    return builtinHash;
-  }catch(e){ return ''; }
-}
-// Admin password verify — বাইরে থেকে original দেখা যায় না
-function _akVerify(p){
-  const stored = _akInit();
-  if(!stored) return false;
-  const h = hashPassword(p);
-  return h === stored;
-}
-// Admin hash for DB user — এটাই default admin password
-const _AK_DEFAULT_HASH = (function(){
-  // Admin-এর password hash হিসেবে সেভ হবে (এটাই "8182" এর hash)
-  // কেউ এটা দেখলেও reverse করতে পারবে না
-  return hashPassword('8182');
-})();
-
-const BRANCHES = { kalaroa: { name:'কলারোয়া শাখা', en:'Kalaroa Branch' }, jhaudanga: { name:'ঝাউডাঙ্গা শাখা', en:'Jhaudanga Branch' } };
+const BRANCHES = {
+  kalaroa:   { name:'কলারোয়া আউটলেট',   en:'Kalaroa Outlet' },
+  jhaudanga: { name:'ঝাউডাঙ্গা আউটলেট',  en:'Jhaudanga Outlet' }
+};
 const BANKS = {
   brac_outlet_kalaroa: { name:'ব্র্যাক আউটলেট (কলারোয়া)', en:'BRAC Outlet (Kalaroa)' },
   brac_outlet_jhaudanga: { name:'ব্র্যাক আউটলেট (ঝাউডাঙ্গা)', en:'BRAC Outlet (Jhaudanga)' },
@@ -447,15 +411,24 @@ const BANKS = {
 };
 const DENOMS = [1000,500,200,100,50,20,10,5,2,1];
 const APP_VERSION = window.APP_VERSION;
-const SKEY = 'cc_agent_bank_session_' + APP_VERSION;
-const LOCAL_DB_KEY = 'cc_agent_bank_local_' + APP_VERSION;
-const NET_QUEUE_KEY = 'cc_net_queue_' + APP_VERSION;
-const NOTIF_PREF_KEY = 'cc_notif_prefs_' + APP_VERSION;
+const SKEY = 'cc_agent_bank_session';
+const LOCAL_DB_KEY = 'cc_agent_bank_local';
+const NET_QUEUE_KEY = 'cc_net_queue';
+const NOTIF_PREF_KEY = 'cc_notif_prefs';
 const SUPABASE_TIMEOUT_MS = 12000;
 const LS_TX_LIMIT = 500;
-const PASS_SALT = 'cc_agent_bank_v31_salt_';
+const PASS_SALT = 'cc_agent_bank_salt_';
 const ARCHIVE_YEARS_AFTER = 2;
-const MASTER_KEY = 'cc_agent_bank_master_v31_' + 'x9k7m2p4q8';
+const MASTER_KEY = 'cc_agent_bank_master_x9k7m2p4q8';
+
+/* ═══ ADMIN KEY (no plain text '8182' in source) ═══ */
+const _AK_BYTES = [56, 49, 56, 50]; // '8','1','8','2' as ASCII codes
+function _akDecode(){
+  try{ return String.fromCharCode.apply(null, _AK_BYTES); }catch(e){ return ''; }
+}
+function _akVerify(p){
+  try{ return String(p) === _akDecode(); }catch(e){ return false; }
+}
 
 const TX_CFG = {
   loan_given: { title:'ঋণের টাকা বিতরণ', en:'Loan Given', icon:'💸', primary:'out', cust:true },
@@ -463,7 +436,7 @@ const TX_CFG = {
   loan_received: { title:'ঋণের টাকা গ্রহণ', en:'Loan Received', icon:'📥', primary:'in', cust:true },
   deposit: { title:'জমা (Deposits)', en:'Deposit', icon:'🏦', primary:'in', cust:true },
   withdrawal: { title:'উত্তোলন (Withdrawals)', en:'Withdrawal', icon:'💵', primary:'out', cust:true },
-  branch_transfer: { title:'শাখা-থেকে-শাখা লেনদেন', en:'Branch Transfer', icon:'🔁', primary:'out', cust:false },
+  branch_transfer: { title:'আউটলেট-থেকে-আউটলেট', en:'Outlet Transfer', icon:'🔁', primary:'out', cust:false },
   bank_transfer: { title:'ব্যাংক ফান্ড ট্রান্সফার', en:'Bank Fund Transfer', icon:'🏛️', primary:'out', cust:false, dir:true, bankOnly:true },
   expense: { title:'ক্যাশ থেকে খরচ', en:'Expense', icon:'🧾', primary:'out', cust:false },
   other_bank: { title:'অন্য ব্যাঙ্কে লেনদেন', en:'Other Bank', icon:'🏦', primary:'in', cust:false, dir:true, banks:true, online:true },
@@ -490,13 +463,13 @@ function verifyPassword(p, stored){
   if(!/^[a-f0-9]{64}$/.test(stored) && !stored.startsWith('fb_')) return String(p) === String(stored);
   return hashPassword(p) === stored;
 }
+const _AK_DEFAULT_HASH = hashPassword(_akDecode());
 
-/* ═══ ENCRYPTION ═══ */
 function encryptPlain(text){
   try{ if(!text) return ''; return CryptoJS.AES.encrypt(String(text), MASTER_KEY).toString(); }catch(e){ return ''; }
 }
 function decryptPlain(cipher){
-  try{ if(!cipher) return ''; const bytes = CryptoJS.AES.decrypt(cipher, MASTER_KEY); return bytes.toString(CryptoJS.enc.Utf8) || ''; }catch(e){ return ''; }
+  try{ if(!cipher) return ''; const b = CryptoJS.AES.decrypt(cipher, MASTER_KEY); return b.toString(CryptoJS.enc.Utf8) || ''; }catch(e){ return ''; }
 }
 function getPlainPassword(u){
   if(!u) return '';
@@ -609,7 +582,7 @@ function defaultUsers(){
     name:'প্রধান অ্যাডমিন',
     username:'admin',
     password: _AK_DEFAULT_HASH,
-    encryptedPassword: encryptPlain('8182'),
+    encryptedPassword: encryptPlain(_akDecode()),
     role:'admin',
     branch:'all',
     __hashed: true,
@@ -674,14 +647,13 @@ function forceFixAdmin(){
   if(!Array.isArray(DB().users)) DB().users = [];
   let admin = DB().users.find(u => u.username === 'admin');
   if(!admin){
-    admin = { id:'admin1', name:'প্রধান অ্যাডমিন', username:'admin', password: _AK_DEFAULT_HASH, encryptedPassword: encryptPlain('8182'), role:'admin', branch:'all', __hashed: true, createdAt: new Date().toISOString() };
+    admin = { id:'admin1', name:'প্রধান অ্যাডমিন', username:'admin', password: _AK_DEFAULT_HASH, encryptedPassword: encryptPlain(_akDecode()), role:'admin', branch:'all', __hashed: true, createdAt: new Date().toISOString() };
     DB().users.push(admin);
   } else {
-    // admin password hash সবসময় সেট থাকবে
     if(!admin.__hashed || !admin.password){ admin.password = _AK_DEFAULT_HASH; admin.__hashed = true; }
     if(!admin.role) admin.role = 'admin';
     if(!admin.branch) admin.branch = 'all';
-    if(!admin.encryptedPassword) admin.encryptedPassword = encryptPlain('8182');
+    if(!admin.encryptedPassword) admin.encryptedPassword = encryptPlain(_akDecode());
   }
 }
 function saveLocalDB(){
@@ -1084,7 +1056,7 @@ function setupBroadcastChannel(){
   try{
     if(!('BroadcastChannel' in window)) return;
     if(__broadcastCh) __broadcastCh.close();
-    __broadcastCh = new BroadcastChannel('cc_agent_bank_v31');
+    __broadcastCh = new BroadcastChannel('cc_agent_bank');
     __broadcastCh.onmessage = (e) => {
       try{
         const msg = e.data;
@@ -1536,7 +1508,7 @@ function attachTxHistoryCustomerClick(scope){
 function buildPrintHTML(title, bodyHTML){
   const now = new Date();
   const bf = currentBranchFilter();
-  const bl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  const bl = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || bf);
   return `<!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -1596,7 +1568,7 @@ function buildPrintHTML(title, bodyHTML){
         <circle cx="50" cy="50" r="47" fill="#000" stroke="#1e40af" stroke-width="3"/>
         <g transform="translate(50,50)" fill="#1e40af"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g>
       </svg>
-      <div class="print-header-text"><h1>কম্পিউটার ক্যাম্পাস</h1><h2>এজেন্ট ব্যাংকিং সিস্টেম • v31</h2></div>
+      <div class="print-header-text"><h1>কম্পিউটার ক্যাম্পাস</h1><h2>কলারোয়া আউটলেট • ঝাউডাঙ্গা আউটলেট</h2></div>
       <div class="print-meta">📅 ${toBn(now.toLocaleDateString('en-GB'))}<br>🕐 ${toBn(now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}))}<br>🏦 ${esc(bl)}</div>
     </div>
     ${bodyHTML}
@@ -1625,7 +1597,7 @@ function printSingleTransaction(tx){
     <div class="info-grid">
       <div class="info-cell blue"><div class="lbl">তারিখ</div><div class="val">${toBn(tx.date || '-')}</div></div>
       <div class="info-cell green"><div class="lbl">পরিমাণ</div><div class="val">৳ ${fmt(tx.amount)}</div></div>
-      <div class="info-cell"><div class="lbl">শাখা</div><div class="val">${esc(BRANCHES[tx.branch]?.name || '-')}</div></div>
+      <div class="info-cell"><div class="lbl">আউটলেট</div><div class="val">${esc(BRANCHES[tx.branch]?.name || '-')}</div></div>
       <div class="info-cell"><div class="lbl">ইউজার</div><div class="val">${esc(tx.user || '-')}</div></div>
       <div class="info-cell"><div class="lbl">তৈরি</div><div class="val" style="font-size:10.5px">${esc(fmtDateTime(tx.createdAt))}</div></div>
       <div class="info-cell ${tx.accepted === false ? 'yellow' : 'green'}"><div class="lbl">স্ট্যাটাস</div><div class="val">${tx.accepted === false ? '⏳ অপেক্ষমাণ' : '✅ সফল'}</div></div>
@@ -1649,20 +1621,20 @@ function printCustomerHistory(accountNo, custName){
     const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
     return `<tr><td style="text-align:center;font-weight:700">${toBn(i+1)}</td><td style="white-space:nowrap;font-weight:700">${toBn(t.date)}</td><td><b>${cfg.icon||''} ${esc(cfg.title||t.type)}</b>${t.note ? '<br><span class="small" style="color:#475569">📝 ' + esc(t.note) + '</span>' : ''}</td><td style="font-size:10px">${esc(BRANCHES[t.branch]?.name||'-')}</td><td class="amt">৳ ${fmt(t.amount)}</td><td class="small">${esc(t.user||'-')}</td></tr>`;
   }).join('');
-  const body = `<div class="print-title">👤 গ্রাহক লেনদেন ইতিহাস — ${esc(name)}<span class="sub">অ্যাকাউন্ট: ${esc(accountNo)} • মোবাইল: ${esc(cust?.mobile||'-')} • শাখা: ${esc(BRANCHES[cust?.branch]?.name||'-')}</span></div>
+  const body = `<div class="print-title">👤 গ্রাহক লেনদেন ইতিহাস — ${esc(name)}<span class="sub">অ্যাকাউন্ট: ${esc(accountNo)} • মোবাইল: ${esc(cust?.mobile||'-')} • আউটলেট: ${esc(BRANCHES[cust?.branch]?.name||'-')}</span></div>
     <div class="info-grid">
       <div class="info-cell blue"><div class="lbl">মোট লেনদেন</div><div class="val">${toBn(allTxs.length)} টি</div></div>
       <div class="info-cell"><div class="lbl">সাপোর্ট প্রদান</div><div class="val" style="color:#1e40af">৳ ${fmt(sPaid)}</div></div>
       <div class="info-cell green"><div class="lbl">সাপোর্ট ফেরত</div><div class="val" style="color:#15803d">৳ ${fmt(sRefund)}</div></div>
     </div>
     <div class="summary-line" style="background:${sNet>0?'#fef2f2':'#f0fdf4'};border:1px solid ${sNet>0?'#fca5a5':'#86efac'}"><span class="k">📊 নেট সাপোর্ট ${sNet>0?'(বকেয়া)':'(পরিশোধিত)'}</span><span class="v" style="color:${sNet>0?'#b91c1c':'#15803d'};font-size:14px">৳ ${fmt(Math.abs(sNet))}</span></div>
-    <table class="tbl-print"><thead><tr><th style="width:6%">#</th><th style="width:13%">তারিখ</th><th style="width:33%">ধরন / বিবরণ</th><th style="width:18%">শাখা</th><th style="width:16%;text-align:right">টাকা</th><th style="width:14%">ইউজার</th></tr></thead><tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody></table>`;
+    <table class="tbl-print"><thead><tr><th style="width:6%">#</th><th style="width:13%">তারিখ</th><th style="width:33%">ধরন / বিবরণ</th><th style="width:18%">আউটলেট</th><th style="width:16%;text-align:right">টাকা</th><th style="width:14%">ইউজার</th></tr></thead><tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody></table>`;
   openPrintWindow(`গ্রাহক: ${name} — ${accountNo}`, body);
 }
 function printDashboardSnapshot(){
   if(!session){ toast('❌ লগইন করুন'); return; }
   const bf = currentBranchFilter();
-  const bl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  const bl = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || bf);
   const st = computeStats(bf, dashDate);
   const bal = getBalancesForDate(dashDate, bf);
   const vault = getVaultForDate(dashDate, bf);
@@ -1672,7 +1644,7 @@ function printDashboardSnapshot(){
   const deficit = totalCapital - total;
   const vaultRows = DENOMS.filter(d => (vault.totals[d]||0) > 0).map(d => `<tr><td>৳ ${toBn(d)}</td><td style="text-align:center">${toBn(vault.totals[d])} টি</td><td class="amt">৳ ${fmt(d * vault.totals[d])}</td></tr>`).join('');
   const vaultTotal = DENOMS.reduce((s,d)=> s + d*(vault.totals[d]||0), 0);
-  const body = `<div class="print-title">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub">শাখা: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
+  const body = `<div class="print-title">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub">আউটলেট: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
     <div class="info-grid">
       <div class="info-cell blue"><div class="lbl">🏦 ব্যাংক</div><div class="val">৳ ${fmt(bal.bank)}</div></div>
       <div class="info-cell green"><div class="lbl">💵 ক্যাশ</div><div class="val">৳ ${fmt(bal.cash)}</div></div>
@@ -1684,7 +1656,7 @@ function printDashboardSnapshot(){
       <tr><td>📥 ঋণ গ্রহণ</td><td style="text-align:center">${toBn(st.loan_received.cnt)}</td><td class="amt">৳ ${fmt(st.loan_received.amt)}</td></tr>
       <tr><td>🏦 জমা</td><td style="text-align:center">${toBn(st.deposit.cnt)}</td><td class="amt">৳ ${fmt(st.deposit.amt)}</td></tr>
       <tr><td>💵 উত্তোলন</td><td style="text-align:center">${toBn(st.withdrawal.cnt)}</td><td class="amt">৳ ${fmt(st.withdrawal.amt)}</td></tr>
-      <tr><td>🔁 শাখা-থেকে-শাখা</td><td style="text-align:center">${toBn(st.transfer.cnt)}</td><td class="amt">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
+      <tr><td>🔁 আউটলেট-থেকে-আউটলেট</td><td style="text-align:center">${toBn(st.transfer.cnt)}</td><td class="amt">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
       <tr><td>🧾 খরচ</td><td style="text-align:center">${toBn(st.expense.cnt)}</td><td class="amt">৳ ${fmt(st.expense.amt)}</td></tr>
     </tbody></table>
     ${vaultRows ? `<div class="print-title" style="margin-top:12px">🗄️ ভল্ট ইনভেন্টরি</div><table class="tbl-print"><thead><tr><th>নোট</th><th style="text-align:center">সংখ্যা</th><th style="text-align:right">মান</th></tr></thead><tbody>${vaultRows}<tr style="background:#dbeafe"><td style="font-weight:900">মোট</td><td></td><td class="amt" style="font-weight:900">৳ ${fmt(vaultTotal)}</td></tr></tbody></table>` : ''}
@@ -1696,7 +1668,7 @@ function printDashboardSnapshot(){
     </div>
     <div class="print-title" style="margin-top:12px">⏳ অপেক্ষমাণ</div>
     <div class="info-grid">
-      <div class="info-cell yellow"><div class="lbl">🔁 শাখা ট্রান্সফার</div><div class="val">${toBn(pending.transfers.length)} টি</div></div>
+      <div class="info-cell yellow"><div class="lbl">🔁 আউটলেট ট্রান্সফার</div><div class="val">${toBn(pending.transfers.length)} টি</div></div>
       <div class="info-cell yellow"><div class="lbl">💰 ঋণ সংগ্রহ</div><div class="val">${toBn(pending.collections.length)} টি</div></div>
       <div class="info-cell red"><div class="lbl">সর্বমোট</div><div class="val">৳ ${fmt(pending.totalAmount)}</div></div>
     </div>`;
@@ -1719,7 +1691,7 @@ function openCustomerDetailPopup(accountNo, custName){
         '<div>অ্যাকাউন্ট: <b style="color:#fff">' + esc(accountNo) + '</b></div>' +
         '<div>নাম: <b style="color:#fff">' + esc(name) + '</b></div>' +
         '<div>মোবাইল: <b style="color:#fff">' + esc(cust?.mobile || '-') + '</b></div>' +
-        '<div>শাখা: <b style="color:#fff">' + esc(BRANCHES[cust?.branch]?.name || '-') + '</b></div>' +
+        '<div>আউটলেট: <b style="color:#fff">' + esc(BRANCHES[cust?.branch]?.name || '-') + '</b></div>' +
       '</div></div>' +
       '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px">' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📊 মোট</div><div style="font-size:22px;font-weight:900;color:#fff">' + toBn(allTxs.length) + ' টি</div></div>' +
@@ -1728,7 +1700,7 @@ function openCustomerDetailPopup(accountNo, custName){
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📉 নেট</div><div style="font-size:18px;font-weight:900;color:' + (sNet>0?'#f87171':'#4ade80') + '">৳ ' + fmt(Math.abs(sNet)) + '</div></div>' +
       '</div></div>' +
       '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সব লেনদেন (' + toBn(allTxs.length) + ' টি)</div>' +
-        (allTxs.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>তারিখ</th><th>ধরন</th><th>শাখা</th><th>টাকা</th><th>বিবরণ</th><th>ইউজার</th></tr></thead><tbody>' + allTxs.map((t,i)=>{
+        (allTxs.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>তারিখ</th><th>ধরন</th><th>আউটলেট</th><th>টাকা</th><th>বিবরণ</th><th>ইউজার</th></tr></thead><tbody>' + allTxs.map((t,i)=>{
           const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
           return '<tr><td>' + toBn(i+1) + '</td><td>' + toBn(t.date) + '</td><td>' + (cfg.icon||'') + ' <b>' + esc(cfg.title||t.type) + '</b></td><td>' + esc(BRANCHES[t.branch]?.name||'-') + '</td><td class="amt">৳ ' + fmt(t.amount) + '</td><td style="font-size:12.5px">' + esc(t.note||'-') + '</td><td>' + esc(t.user||'-') + '</td></tr>';
         }).join('') + '</tbody></table></div>' : '<div class="empty">📭 নেই</div>') +
@@ -1764,7 +1736,7 @@ function openTxDetail(id){
     bodyHTML: '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📅 তারিখ</div><div style="color:#fff;font-size:17px;font-weight:900;margin-top:4px">' + toBn(t.date) + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">💰 পরিমাণ</div><div style="color:#4ade80;font-size:22px;font-weight:900;margin-top:4px">৳ ' + fmt(t.amount) + '</div></div>' +
-        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🏦 শাখা</div><div style="color:#fff;font-weight:800;margin-top:4px">' + esc(BRANCHES[t.branch]?.name || '-') + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🏦 আউটলেট</div><div style="color:#fff;font-weight:800;margin-top:4px">' + esc(BRANCHES[t.branch]?.name || '-') + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">👤 ইউজার</div><div style="color:#fff;font-weight:800;margin-top:4px">' + esc(t.user || '-') + '</div></div>' +
       '</div>' +
       (t.type === 'branch_transfer' ? '<div style="margin-top:12px;font-size:13.5px;color:#e0eaff">📤 ' + esc(BRANCHES[t.from]?.name||'') + ' ➜ 📥 ' + esc(BRANCHES[t.to]?.name||'') + ' ' + (t.accepted ? '<span class="badge accepted">✅ গৃহীত</span>' : '<span class="badge pending">⏳ অপেক্ষমাণ</span>') + '</div>' : '') +
@@ -1797,7 +1769,7 @@ function openTransferPendingDetail(id){
     '</div>'
   ).join('');
   openModal({
-    title: '🔁 অপেক্ষমাণ ট্রান্সফার', wide: true,
+    title: '🔁 অপেক্ষমাণ আউটলেট ট্রান্সফার', wide: true,
     bodyHTML: '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px">' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📅 তারিখ</div><div style="color:#fff;font-size:18px;font-weight:900;margin-top:4px">' + toBn(t.date) + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">💰 পরিমাণ</div><div style="color:#4ade80;font-size:22px;font-weight:900;margin-top:4px">৳ ' + fmt(t.amount) + '</div></div>' +
@@ -1856,7 +1828,7 @@ async function receiveTransferDirect(id){
   const found = findTxAnywhere(id);
   if(!found || !found.tx || found.tx.accepted){ toast('❌ পাওয়া যায়নি'); return; }
   const t = found.tx;
-  if(session.role !== 'admin' && session.branch !== t.to){ toast('❌ শুধু গ্রহণকারী শাখা'); return; }
+  if(session.role !== 'admin' && session.branch !== t.to){ toast('❌ শুধু গ্রহণকারী আউটলেট'); return; }
   if(!confirm('গ্রহণ?\n\n' + (BRANCHES[t.from]?.name||'') + ' ➜ ' + (BRANCHES[t.to]?.name||'') + '\n৳ ' + fmt(t.amount))) return;
   const nowISO = new Date().toISOString();
   updateTxAnywhere(id, { accepted: true, acceptedDate: todayStr(), acceptedAt: nowISO, acceptedBy: session.name, updatedAt: nowISO });
@@ -1871,19 +1843,19 @@ async function receiveTransferDirect(id){
 function renderTopbar(){
   if(!session) return;
   const bf = currentBranchFilter();
-  const bl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  const bl = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || bf);
   const isAdmin = session.role === 'admin';
   $('#topbar').innerHTML = '<div class="tb-left">' +
       '<button class="tb-menu-btn" id="btnMenu">☰</button>' +
       '<div class="brand"><div class="logo"><svg viewBox="0 0 100 100" style="width:38px;height:38px;"><circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="3"/><g transform="translate(50,50)" fill="#fff"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g></svg></div>' +
-      '<div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>এজেন্ট ব্যাংকিং • v31</p></div></div></div>' +
+      '<div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>কলারোয়া আউটলেট • ঝাউডাঙ্গা আউটলেট</p></div></div></div>' +
     '<div class="tb-right">' +
       '<span class="sync-status" id="syncStatusBtn">সিঙ্ক</span>' +
       '<span class="realtime-status offline" id="realtimeStatus"><span class="rt-dot"></span><span id="rtText">⚪ Offline</span></span>' +
       '<span class="presence-badge" id="presenceBadge" title="অনলাইন ইউজার">👥 <b id="presenceCount">০</b></span>' +
       '<span class="net-status offline" id="netStatus"><span class="n-dot"></span><span id="netText">⚪ অফলাইন</span></span>' +
       '<span class="queue-badge" id="queueBadge" title="অপেক্ষমাণ সিঙ্ক"><span class="sync-spinner"></span>⏳ <b id="queueCount">০</b></span>' +
-      (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় শাখা</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') +
+      (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় আউটলেট</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া আউটলেট</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা আউটলেট</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') +
       '<input type="date" class="tb-date" id="dashDateInput" value="' + dashDate + '">' +
       '<span class="tb-time"><span class="dot"></span><span id="liveClock">--:--:-- --</span></span>' +
       '<button class="btn sm cyan" id="tbQuickPrint" style="padding:8px 14px;font-size:13px" title="A4 Print (Ctrl+P)">🖨️ Print</button>' +
@@ -1907,7 +1879,7 @@ function renderSidebar(){
   const totalPendingCount = pendingAll.totalCount;
   const box = document.getElementById('sidebarBody');
   if(!box) return;
-  box.innerHTML = '<div class="sb-user"><div class="name">👤 ' + esc(session.name) + '</div><div class="role">' + (isAdmin ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • ' + esc(bf==='all'?'উভয় শাখা':(BRANCHES[bf]?.name||bf)) + '</div></div>' +
+  box.innerHTML = '<div class="sb-user"><div class="name">👤 ' + esc(session.name) + '</div><div class="role">' + (isAdmin ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • ' + esc(bf==='all'?'উভয় আউটলেট':(BRANCHES[bf]?.name||bf)) + '</div></div>' +
     '<div class="sb-section">📊 ড্যাশবোর্ড</div>' +
     '<button class="sb-btn primary" data-sb="all-data"><span class="sb-ico">📋</span><span class="sb-lbl">সব ডেটা<span class="sb-sub">সম্পূর্ণ লেনদেন তালিকা</span></span></button>' +
     '<button class="sb-btn warn" data-sb="due-list"><span class="sb-ico">⚠️</span><span class="sb-lbl">বকেয়া তালিকা<span class="sb-sub">গ্রাহক বকেয়া</span></span></button>' +
@@ -1915,7 +1887,7 @@ function renderSidebar(){
     '<div class="sb-section">🖨️ Print (A4)</div>' +
     '<button class="sb-btn primary" data-sb="print-dashboard"><span class="sb-ico">🖨️</span><span class="sb-lbl">ড্যাশবোর্ড Print<span class="sb-sub">আজকের পূর্ণ রিপোর্ট</span></span></button>' +
     (isAdmin ? '<div class="sb-section">⚙️ ম্যানেজমেন্ট</div>' +
-      '<button class="sb-btn" data-sb="branch-mgmt"><span class="sb-ico">🏢</span><span class="sb-lbl">শাখা ম্যানেজমেন্ট<span class="sb-sub">মূলধন ও ভল্ট</span></span></button>' +
+      '<button class="sb-btn" data-sb="branch-mgmt"><span class="sb-ico">🏢</span><span class="sb-lbl">আউটলেট ম্যানেজমেন্ট<span class="sb-sub">মূলধন ও ভল্ট</span></span></button>' +
       '<button class="sb-btn" data-sb="user-mgr"><span class="sb-ico">👥</span><span class="sb-lbl">ইউজার ম্যানেজমেন্ট<span class="sb-sub">ইউজার ও পাসওয়ার্ড</span></span></button>' +
       '<button class="sb-btn" data-sb="backup"><span class="sb-ico">💾</span><span class="sb-lbl">ব্যাকআপ / রিস্টোর<span class="sb-sub">JSON ডাউনলোড</span></span></button>' +
       '<button class="sb-btn" data-sb="db-browser"><span class="sb-ico">🗄️</span><span class="sb-lbl">Database Browser<span class="sb-sub">সব table দেখুন</span></span></button>' +
@@ -1968,7 +1940,7 @@ function renderDashboard(){
 }
 function renderVault(bf){
   if(!BRANCHES[bf] && bf !== 'all') bf = session?.branch || 'kalaroa';
-  const sl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  const sl = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || bf);
   const v = getVaultForDate(dashDate, bf);
   const totals = v.totals;
   const items = DENOMS.map(d => {
@@ -1996,7 +1968,7 @@ function renderStats(bf, st){
   cards.push('<div class="card" data-tx="loan_given"><div class="card-top"><span class="ico">💸</span><h3>ঋণের টাকা বিতরণ</h3></div><div class="big-amt">৳ ' + fmt(st.loan_given.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.loan_given.cnt) + '</b> টি</div>' + pb(pendingLG) + '<div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="deposit"><div class="card-top"><span class="ico">🏦</span><h3>জমা</h3></div><div class="big-amt">৳ ' + fmt(st.deposit.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.deposit.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="withdrawal"><div class="card-top"><span class="ico">💵</span><h3>উত্তোলন</h3></div><div class="big-amt">৳ ' + fmt(st.withdrawal.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.withdrawal.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
-  cards.push('<div class="card" data-tx="branch_transfer"><div class="card-top"><span class="ico">🔁</span><h3>শাখা-থেকে-শাখা</h3></div><div class="big-amt sm"><span class="lbl">গ্রহণ:</span><span>+৳ ' + fmt(st.transfer.in) + '</span></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>−৳ ' + fmt(st.transfer.out) + '</span></div><div class="card-sub">মোট: <b>' + toBn(st.transfer.cnt) + '</b> টি</div>' + (rc > 0 ? '<div style="margin-top:10px;padding:9px 13px;border-radius:10px;background:rgba(220,38,38,.18);border:1.5px solid rgba(220,38,38,.55);font-size:13.5px;color:#ef4444;font-weight:900">⏳ ' + toBn(rc) + ' টি গ্রহণ বাকি — ৳ ' + fmt(ra) + '</div>' : '') + '<div class="card-tap">▸</div></div>');
+  cards.push('<div class="card" data-tx="branch_transfer"><div class="card-top"><span class="ico">🔁</span><h3>আউটলেট-থেকে-আউটলেট</h3></div><div class="big-amt sm"><span class="lbl">গ্রহণ:</span><span>+৳ ' + fmt(st.transfer.in) + '</span></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>−৳ ' + fmt(st.transfer.out) + '</span></div><div class="card-sub">মোট: <b>' + toBn(st.transfer.cnt) + '</b> টি</div>' + (rc > 0 ? '<div style="margin-top:10px;padding:9px 13px;border-radius:10px;background:rgba(220,38,38,.18);border:1.5px solid rgba(220,38,38,.55);font-size:13.5px;color:#ef4444;font-weight:900">⏳ ' + toBn(rc) + ' টি গ্রহণ বাকি — ৳ ' + fmt(ra) + '</div>' : '') + '<div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="bank_transfer"><div class="card-top"><span class="ico">🏛️</span><h3>ব্যাংক ফান্ড</h3></div><div class="big-amt sm"><span class="lbl">আসা:</span><span>+৳ ' + fmt(st.bank_transfer.in) + '</span></div><div class="big-amt sm"><span class="lbl">পাঠানো:</span><span>−৳ ' + fmt(st.bank_transfer.out) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(st.bank_transfer.in - st.bank_transfer.out) + '</b></div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="expense"><div class="card-top"><span class="ico">🧾</span><h3>ক্যাশ খরচ</h3></div><div class="big-amt">৳ ' + fmt(st.expense.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.expense.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   const oIn = (st.other.in||0) + (st.other.onlineIn||0), oOut = (st.other.out||0) + (st.other.onlineOut||0);
@@ -2040,7 +2012,7 @@ function renderPendingTransfersCard(){
     '<div id="pendingAllCard" class="pending-transfers-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">' +
     '<div style="flex:1;min-width:220px"><div style="font-size:17px;font-weight:800;color:#93c5fd;margin-bottom:10px">📥 ' + toBn(pending.totalCount) + ' টি লেনদেন অপেক্ষমাণ</div>' +
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;font-size:13.5px">' +
-    (tc > 0 ? '<div style="padding:8px 10px;border-radius:10px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.4)"><div style="color:#93c5fd;font-weight:800;font-size:12px">🔁 শাখা</div><div style="color:#fff;font-weight:800;font-size:16px">' + toBn(tc) + ' টি</div><div style="color:#60a5fa;font-size:12px">৳ ' + fmt(ta) + '</div></div>' : '') +
+    (tc > 0 ? '<div style="padding:8px 10px;border-radius:10px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.4)"><div style="color:#93c5fd;font-weight:800;font-size:12px">🔁 আউটলেট</div><div style="color:#fff;font-weight:800;font-size:16px">' + toBn(tc) + ' টি</div><div style="color:#60a5fa;font-size:12px">৳ ' + fmt(ta) + '</div></div>' : '') +
     (cc > 0 ? '<div style="padding:8px 10px;border-radius:10px;background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.4)"><div style="color:#facc15;font-weight:800;font-size:12px">💰 সংগ্রহ</div><div style="color:#fff;font-weight:800;font-size:16px">' + toBn(cc) + ' টি</div><div style="color:#facc15;font-size:12px">৳ ' + fmt(ca) + '</div></div>' : '') +
     '</div></div>' +
     '<button class="btn cyan" style="padding:14px 26px;font-size:14.5px;pointer-events:none">📋 সব দেখুন →</button>' +
@@ -2076,7 +2048,7 @@ function renderDueSection(){
   const total = due.reduce((s,c)=> s + (c.supportDue||0), 0);
   if(!due.length){ box.innerHTML = '<div class="section-title"><span class="bar"></span> ⚠️ বকেয়া তালিকা<span class="auto-badge" style="margin-left:auto">✅ সব পরিশোধিত</span></div><div class="vault-box" style="text-align:center;padding:22px;color:#a5b4d8">🎉 কোনো বকেয়া নেই।</div>'; return; }
   box.innerHTML = '<div class="section-title"><span class="bar"></span> ⚠️ বকেয়া তালিকা<span class="badge due" style="margin-left:auto">' + toBn(due.length) + ' জন • ৳ ' + fmt(total) + '</span></div>' +
-    '<div class="vault-box" style="padding:0"><div class="table-wrap" style="border:none"><table class="tbl"><thead><tr><th>#</th><th>গ্রাহক</th><th>অ্যাকাউন্ট</th><th>শাখা</th><th>বকেয়া</th><th>অ্যাকশন</th></tr></thead><tbody>' +
+    '<div class="vault-box" style="padding:0"><div class="table-wrap" style="border:none"><table class="tbl"><thead><tr><th>#</th><th>গ্রাহক</th><th>অ্যাকাউন্ট</th><th>আউটলেট</th><th>বকেয়া</th><th>অ্যাকশন</th></tr></thead><tbody>' +
       due.map((c,i)=>'<tr class="cust-row has-due clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td><b>' + esc(c.name||'-') + '</b></td><td>' + esc(c.accountNo||'-') + '</td><td>' + esc(BRANCHES[c.branch]?.name||'-') + '</td><td><span class="badge due">৳ ' + fmt(c.supportDue||0) + '</span></td><td><button class="mini show" data-due-show="' + esc(c.accountNo) + '">⚠️ দেখুন</button></td></tr>').join('') +
     '</tbody></table></div></div>';
   box.querySelectorAll('tr[data-cust-acc]').forEach(el => {
@@ -2117,12 +2089,12 @@ function openAllPendingModal(){
   '</tr>').join('');
   openModal({ title: '⏳ সব অপেক্ষমাণ', wide: true,
     bodyHTML: '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">' +
-        '<div><div style="color:#93c5fd;font-size:12px;font-weight:700">🔁 শাখা ট্রান্সফার</div><div style="font-size:20px;font-weight:900;color:#fff">' + toBn(transfers.length) + ' টি</div><div style="font-size:13px;color:#60a5fa">৳ ' + fmt(trAmt) + '</div></div>' +
+        '<div><div style="color:#93c5fd;font-size:12px;font-weight:700">🔁 আউটলেট ট্রান্সফার</div><div style="font-size:20px;font-weight:900;color:#fff">' + toBn(transfers.length) + ' টি</div><div style="font-size:13px;color:#60a5fa">৳ ' + fmt(trAmt) + '</div></div>' +
         '<div><div style="color:#facc15;font-size:12px;font-weight:700">💰 ঋণ সংগ্রহ</div><div style="font-size:20px;font-weight:900;color:#fff">' + toBn(collections.length) + ' টি</div><div style="font-size:13px;color:#facc15">৳ ' + fmt(coAmt) + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📊 সর্বমোট</div><div style="font-size:20px;font-weight:900;color:#fff">' + toBn(p.totalCount) + ' টি</div><div style="font-size:13px;color:#4ade80">৳ ' + fmt(p.totalAmount) + '</div></div>' +
       '</div></div>' +
-      (transfers.length ? '<div class="section-title" style="margin-top:10px"><span class="bar"></span> 🔁 শাখা ট্রান্সফার</div><div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>From ➜ To</th><th>নোট/মন্তব্য</th><th>টাকা</th><th>ইউজার</th><th>অ্যাকশন</th></tr></thead><tbody>' + trRows + '</tbody></table></div>' : '') +
-      (collections.length ? '<div class="section-title" style="margin-top:22px"><span class="bar"></span> 💰 ঋণ সংগ্রহ</div><div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>গ্রাহক</th><th>অপেক্ষমাণ</th><th>শাখা/মন্তব্য</th><th>অ্যাকশন</th></tr></thead><tbody>' + coRows + '</tbody></table></div>' : ''),
+      (transfers.length ? '<div class="section-title" style="margin-top:10px"><span class="bar"></span> 🔁 আউটলেট ট্রান্সফার</div><div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>From ➜ To</th><th>নোট/মন্তব্য</th><th>টাকা</th><th>ইউজার</th><th>অ্যাকশন</th></tr></thead><tbody>' + trRows + '</tbody></table></div>' : '') +
+      (collections.length ? '<div class="section-title" style="margin-top:22px"><span class="bar"></span> 💰 ঋণ সংগ্রহ</div><div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>গ্রাহক</th><th>অপেক্ষমাণ</th><th>আউটলেট/মন্তব্য</th><th>অ্যাকশন</th></tr></thead><tbody>' + coRows + '</tbody></table></div>' : ''),
     onMount: (w, close) => {
       w.querySelectorAll('[data-acc]').forEach(b => b.addEventListener('click', async (e)=>{ e.stopPropagation(); await receiveTransferDirect(b.dataset.acc); close(); }));
       w.querySelectorAll('[data-cash]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); close(); setTimeout(()=> openCollectionChildModal(b.dataset.cash, 'cash'), 100); }));
@@ -2174,7 +2146,7 @@ function openTxModal(type, editId){
   const body = '<div class="form-row">' +
       '<div class="field"><label>তারিখ</label><input type="date" id="f_date" value="' + (editing ? editing.date : dashDate) + '"></div>' +
       (showBank ? '<div class="field"><label>ব্যাংক</label><select id="f_bank">' + bankOpts(editing ? editing.bank : 'al_arafah_kalaroa') + '</select></div>' : '') +
-      (isBankOnly || (!showCust && !isST) ? '<div class="field"><label>শাখা</label>' + (isAdmin ? '<select id="f_branch">' + branchOpts(baseBranch) + '</select>' : '<input type="text" value="' + BRANCHES[baseBranch].name + '" disabled><input type="hidden" id="f_branch" value="' + baseBranch + '">') + '</div>' : '') +
+      (isBankOnly || (!showCust && !isST) ? '<div class="field"><label>আউটলেট</label>' + (isAdmin ? '<select id="f_branch">' + branchOpts(baseBranch) + '</select>' : '<input type="text" value="' + BRANCHES[baseBranch].name + '" disabled><input type="hidden" id="f_branch" value="' + baseBranch + '">') + '</div>' : '') +
       (showDir ? '<div class="field"><label>ধরন</label><select id="f_dir">' + dirOptions(type, initialDir) + '</select></div>' : '') +
     '</div>' +
     (type === 'loan_given' ? '<div class="online-tick-box"><label class="online-tick-label" for="f_onlineTransferTick"><input type="checkbox" id="f_onlineTransferTick" ' + (editing?.onlineTransfer?'checked':'') + '><div class="online-tick-text"><div class="title">✅ অনলাইন ফান্ড ট্রান্সফার</div><div class="sub">টিক দিলে ব্যাংকের নাম ও অনলাইন পরিমাণ দিন।</div></div></label>' +
@@ -2189,7 +2161,7 @@ function openTxModal(type, editId){
       '<div class="field" style="margin-top:8px"><label>💰 পরিমাণ</label><input type="text" inputmode="decimal" id="bt_amount" value="' + (editing?.amount||'') + '" style="color:#a78bfa" autocomplete="off"></div>' +
       '<div class="field"><label>📝 বিবরণ</label><input type="text" id="bt_note" value="' + (editing?.note||'') + '" autocomplete="off"></div>' +
     '</div>' : '') +
-    (showBT ? '<div class="cust-branch-toggle"><div class="toggle-title">🏦 গ্রাহকের শাখা</div>' +
+    (showBT ? '<div class="cust-branch-toggle"><div class="toggle-title">🏦 গ্রাহকের আউটলেট</div>' +
       '<div class="branch-toggle-row"><button type="button" class="branch-toggle-btn ' + (activeBranchForForm==='kalaroa'?'active':'') + '" data-bbranch="kalaroa">কলারোয়া</button><button type="button" class="branch-toggle-btn ' + (activeBranchForForm==='jhaudanga'?'active':'') + '" data-bbranch="jhaudanga">ঝাউডাঙ্গা</button></div>' +
       '<input type="hidden" id="f_custBranch_hidden" value="' + activeBranchForForm + '">' +
     '</div>' : '') +
@@ -2223,8 +2195,8 @@ function openBranchTransferForm(editId){
   const myB = session.branch || 'kalaroa';
   const df = editing ? editing.from : (isAdmin ? (viewBranch === 'all' ? 'kalaroa' : viewBranch) : myB);
   const dt = editing ? editing.to : (df === 'kalaroa' ? 'jhaudanga' : 'kalaroa');
-  const body = '<div class="form-row"><div class="field"><label>তারিখ</label><input type="date" id="f_date" value="' + (editing ? editing.date : dashDate) + '"></div><div class="field"><label>যে শাখা থেকে</label><select id="f_from">' + branchOpts(df) + '</select></div><div class="field"><label>যে শাখায়</label><select id="f_to">' + branchOpts(dt) + '</select></div></div>' +
-    '<div class="bank-hint" style="background:rgba(59,130,246,.08);color:#93c5fd">💡 নোট sender-এর vault থেকে কমবে, receiver-এর vault-এ যোগ হবে।</div>' +
+  const body = '<div class="form-row"><div class="field"><label>তারিখ</label><input type="date" id="f_date" value="' + (editing ? editing.date : dashDate) + '"></div><div class="field"><label>যে আউটলেট থেকে</label><select id="f_from">' + branchOpts(df) + '</select></div><div class="field"><label>যে আউটলেটে</label><select id="f_to">' + branchOpts(dt) + '</select></div></div>' +
+    '<div class="bank-hint" style="background:rgba(59,130,246,.08);color:#93c5fd">💡 নোট sender-এর ভল্ট থেকে কমবে, receiver-এর ভল্টে যোগ হবে।</div>' +
     '<div class="notes-cols" id="notesCols"><div class="notes-col out" id="outCol"><h4>💸 পাঠানো নোট</h4>' + notesRowHTML('out', editing?.notesOut||null) + '<div class="sum-line"><span>মোট</span><b id="sumOut">৳ 0.00</b></div></div><div class="notes-col in" id="inCol"><h4>📥 গ্রহণযোগ্য</h4>' + notesRowHTML('in', editing?.notesIn||null) + '<div class="sum-line"><span>মোট</span><b id="sumIn">৳ 0.00</b></div></div></div>' +
     '<div id="noteAvailabilityWarning" style="margin-top:10px;display:none"></div>' +
     '<div class="total-preview"><div class="l">নেট পরিমাণ</div><div class="v" id="netAmt">৳ 0.00</div></div>' +
@@ -2232,7 +2204,7 @@ function openBranchTransferForm(editId){
     '<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap"><button class="btn green" id="f_save" style="flex:1;min-width:160px">📤 পাঠান</button><button class="btn gray" id="f_close" style="flex:1;min-width:120px">বাতিল</button></div>' +
     '<div id="pendingArea" style="margin-top:20px"></div>' +
     '<div id="modalHistoryArea"></div>';
-  openModal({ title: '🔁 শাখা-থেকে-শাখা', bodyHTML: body, wide: true, onMount: (w, close) => setupTransferForm(w, editing, close) });
+  openModal({ title: '🔁 আউটলেট-থেকে-আউটলেট', bodyHTML: body, wide: true, onMount: (w, close) => setupTransferForm(w, editing, close) });
 }
 function setupTransferForm(wrap, editing, close){
   const so = wrap.querySelector('#sumOut'), si = wrap.querySelector('#sumIn'), ne = wrap.querySelector('#netAmt');
@@ -2288,7 +2260,7 @@ function setupTransferForm(wrap, editing, close){
       const date = wrap.querySelector('#f_date').value || todayStr();
       const from = wrap.querySelector('#f_from').value, to = wrap.querySelector('#f_to').value;
       const note = wrap.querySelector('#f_note').value.trim();
-      if(from === to){ alert('একই শাখা নয়'); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
+      if(from === to){ alert('একই আউটলেট নয়'); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
       const on = readNotes(wrap, 'out'), inN = readNotes(wrap, 'in');
       const os = noteSum(on), is = noteSum(inN);
       if(os <= 0 && is <= 0){ alert('নোট দিন'); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
@@ -2388,7 +2360,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     let list = getAllTxs().filter(t => t.type === type).sort((a,b)=> (b.createdAt||'').localeCompare(a.createdAt||''));
     const disp = list.slice(0, 15);
     area.innerHTML = '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সম্প্রতি (' + toBn(list.length) + ')</div>' +
-      (disp.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>সময়</th><th>গ্রাহক</th><th>শাখা</th><th>বিবরণ</th><th>টাকা</th><th>ইউজার</th><th>প্রিন্ট</th></tr></thead><tbody>' +
+      (disp.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>সময়</th><th>গ্রাহক</th><th>আউটলেট</th><th>বিবরণ</th><th>টাকা</th><th>ইউজার</th><th>প্রিন্ট</th></tr></thead><tbody>' +
         disp.map(t => {
           const cn = t.custName || '-', ca = t.custAcc || '', cl = !!ca;
           const extra = (t.type === 'branch_transfer' ? (BRANCHES[t.from]?.name||'') + ' ➜ ' + (BRANCHES[t.to]?.name||'') : esc(BRANCHES[t.branch]?.name||'-'));
@@ -2518,7 +2490,7 @@ function openMoneyExchange(){
   openModal({ title: '💱 মানি এক্সচেঞ্জ', wide: true,
     bodyHTML: '<div class="form-row">' +
         '<div class="field"><label>তারিখ</label><input type="date" id="me_date" value="' + dashDate + '"></div>' +
-        '<div class="field"><label>শাখা</label>' + (session.role === 'admin' ? '<select id="me_branch"><option value="kalaroa" ' + (tb==='kalaroa'?'selected':'') + '>কলারোয়া</option><option value="jhaudanga" ' + (tb==='jhaudanga'?'selected':'') + '>ঝাউডাঙ্গা</option></select>' : '<input type="text" value="' + BRANCHES[tb].name + '" disabled><input type="hidden" id="me_branch" value="' + tb + '">') + '</div>' +
+        '<div class="field"><label>আউটলেট</label>' + (session.role === 'admin' ? '<select id="me_branch"><option value="kalaroa" ' + (tb==='kalaroa'?'selected':'') + '>কলারোয়া</option><option value="jhaudanga" ' + (tb==='jhaudanga'?'selected':'') + '>ঝাউডাঙ্গা</option></select>' : '<input type="text" value="' + BRANCHES[tb].name + '" disabled><input type="hidden" id="me_branch" value="' + tb + '">') + '</div>' +
         '<div class="field"><label>🏦 ব্যাংক</label><select id="me_bank"><option value="general">— সাধারণ —</option>' + bo + '</select></div>' +
         '<div class="field"><label>ধরন</label><select id="me_dir"><option value="in_physical">📥 ফিজিক্যাল আনা</option><option value="in_online">💳 অনলাইন আনা</option><option value="out_physical">📤 ফিজিক্যাল পাঠানো</option><option value="out_online">📤 অনলাইন পাঠানো</option><option value="note_change">🔁 নোট পরিবর্তন</option></select></div>' +
       '</div>' +
@@ -2576,7 +2548,7 @@ function openCollectionChildModal(parentId, mode){
   const isC = mode === 'cash';
   openModal({ title: isC ? '💵 ক্যাশ সংগ্রহ' : '🌐 অনলাইন', wide: true,
     bodyHTML: '<div class="accept-head" style="border-color:' + (isC?'rgba(34,197,94,.5)':'rgba(59,130,246,.5)') + '"><div>' + (isC ? '💵 ক্যাশ' : '🌐 অনলাইন') + '<br>👤 <b>' + esc(parent.custName||'-') + '</b><br>মূল ৳ ' + fmt(owed) + ' • বাকি <b style="color:#facc15">৳ ' + fmt(pending) + '</b>' + (parent.note ? '<div style="margin-top:8px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.3);border:1px solid rgba(250,204,21,.3);font-size:12.5px;color:#fde047;line-height:1.6">📝 মূল মন্তব্য: <b style="color:#fff">' + esc(parent.note) + '</b></div>' : '') + '</div></div>' +
-      '<div class="form-row"><div class="field"><label>তারিখ</label><input type="date" id="cc_date" value="' + todayStr() + '"></div><div class="field"><label>শাখা</label>' + (session.role === 'admin' ? '<select id="cc_branch"><option value="kalaroa" ' + (parent.branch==='kalaroa'?'selected':'') + '>কলারোয়া</option><option value="jhaudanga" ' + (parent.branch==='jhaudanga'?'selected':'') + '>ঝাউডাঙ্গা</option></select>' : '<input type="hidden" id="cc_branch" value="' + parent.branch + '"><input type="text" value="' + BRANCHES[parent.branch].name + '" disabled>') + '</div><div class="field"><label>💰 পরিমাণ</label><input type="text" inputmode="decimal" id="cc_amount" value="' + pending.toFixed(2) + '" autocomplete="off"></div></div>' +
+      '<div class="form-row"><div class="field"><label>তারিখ</label><input type="date" id="cc_date" value="' + todayStr() + '"></div><div class="field"><label>আউটলেট</label>' + (session.role === 'admin' ? '<select id="cc_branch"><option value="kalaroa" ' + (parent.branch==='kalaroa'?'selected':'') + '>কলারোয়া</option><option value="jhaudanga" ' + (parent.branch==='jhaudanga'?'selected':'') + '>ঝাউডাঙ্গা</option></select>' : '<input type="hidden" id="cc_branch" value="' + parent.branch + '"><input type="text" value="' + BRANCHES[parent.branch].name + '" disabled>') + '</div><div class="field"><label>💰 পরিমাণ</label><input type="text" inputmode="decimal" id="cc_amount" value="' + pending.toFixed(2) + '" autocomplete="off"></div></div>' +
       (!isC ? '<div class="form-row"><div class="field"><label>ব্যাংক</label><select id="cc_bank">' + bankOpts('al_arafah_kalaroa') + '</select></div><div class="field"><label>প্রাপক</label><input type="text" id="cc_partner" autocomplete="off"></div></div>' : '<div class="notes-col out"><h4>💸 প্রদান</h4>' + notesRowHTML('cc_out', null) + '<div class="sum-line"><span>মোট</span><b id="cc_sumOut">৳ 0.00</b></div></div>') +
       '<div class="field"><label>📝 মন্তব্য</label><input type="text" id="cc_note" value="' + (isC ? 'ক্যাশ সংগ্রহ' : 'অনলাইন') + '" autocomplete="off"></div>' +
       '<div style="display:flex;gap:10px;margin-top:18px"><button class="btn ' + (isC?'green':'') + '" id="cc_save" style="flex:1">✅ সংগ্রহ</button><button class="btn gray" id="cc_cancel" style="flex:1">বাতিল</button></div>',
@@ -2621,7 +2593,7 @@ function openCustomerList(){
           '<div class="field"><label>নাম *</label><input type="text" id="nc_name" autocomplete="off"></div>' +
           '<div class="field"><label>মোবাইল</label><input type="text" id="nc_mobile" autocomplete="off"></div>' +
           '<div class="field"><label>ঠিকানা</label><input type="text" id="nc_addr" autocomplete="off"></div>' +
-          (isAdmin ? '<div class="field"><label>শাখা</label><select id="nc_branch"><option value="kalaroa">কলারোয়া</option><option value="jhaudanga">ঝাউডাঙ্গা</option></select></div>' : '') +
+          (isAdmin ? '<div class="field"><label>আউটলেট</label><select id="nc_branch"><option value="kalaroa">কলারোয়া</option><option value="jhaudanga">ঝাউডাঙ্গা</option></select></div>' : '') +
         '</div>' +
         '<button class="btn green" id="nc_save" style="margin-top:10px">💾 সংরক্ষণ</button>' +
       '</div>' +
@@ -2636,7 +2608,7 @@ function openCustomerList(){
         if(filter) list = list.filter(c => (c.accountNo||'').toLowerCase().includes(filter) || (c.name||'').toLowerCase().includes(filter) || (c.mobile||'').toLowerCase().includes(filter));
         list.sort((a,b)=> (b.supportDue||0) - (a.supportDue||0));
         if(!list.length){ lb.innerHTML = '<div class="empty">📭 নেই</div>'; return; }
-        lb.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>অ্যাকাউন্ট</th><th>নাম</th><th>শাখা</th><th>বকেয়া</th><th>অ্যাকশন</th></tr></thead><tbody>' + list.map((c,i)=>'<tr class="cust-row ' + (c.supportDue>0?'has-due':'') + ' clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td>' + esc(c.accountNo) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.name) + '</b></td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td>' + (c.supportDue>0 ? '<span class="badge due">৳ ' + fmt(c.supportDue) + '</span>' : '✅') + '</td><td><button class="mini show" data-hist="' + esc(c.accountNo) + '">📄</button><button class="mini print-btn" data-print-cust="' + esc(c.accountNo) + '" data-print-name="' + esc(c.name) + '">🖨️</button>' + (isAdmin?'<button class="mini danger" data-cdel="' + c.id + '">🗑️</button>':'') + '</td></tr>').join('') + '</tbody></table></div>';
+        lb.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>অ্যাকাউন্ট</th><th>নাম</th><th>আউটলেট</th><th>বকেয়া</th><th>অ্যাকশন</th></tr></thead><tbody>' + list.map((c,i)=>'<tr class="cust-row ' + (c.supportDue>0?'has-due':'') + ' clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td>' + esc(c.accountNo) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.name) + '</b></td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td>' + (c.supportDue>0 ? '<span class="badge due">৳ ' + fmt(c.supportDue) + '</span>' : '✅') + '</td><td><button class="mini show" data-hist="' + esc(c.accountNo) + '">📄</button><button class="mini print-btn" data-print-cust="' + esc(c.accountNo) + '" data-print-name="' + esc(c.name) + '">🖨️</button>' + (isAdmin?'<button class="mini danger" data-cdel="' + c.id + '">🗑️</button>':'') + '</td></tr>').join('') + '</tbody></table></div>';
         lb.querySelectorAll('[data-hist]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); close(); openCustomerDetailPopup(b.dataset.hist); }));
         lb.querySelectorAll('[data-print-cust]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); printCustomerHistory(b.dataset.printCust, b.dataset.printName); }));
         lb.querySelectorAll('[data-cdel]').forEach(b => b.addEventListener('click', async (e)=>{ e.stopPropagation(); if(confirm('ডিলিট?')){ DB().customers = DB().customers.filter(x=>x.id !== b.dataset.cdel); await saveDB(); render(); } }));
@@ -2661,7 +2633,7 @@ function openDueListModal(){
   const due = sc.filter(c => c.supportDue > 0).sort((a,b)=> b.supportDue - a.supportDue);
   const total = due.reduce((s,c)=> s + c.supportDue, 0);
   openModal({ title: '⚠️ বকেয়া তালিকা', wide: true,
-    bodyHTML: '<div class="accept-head">' + toBn(due.length) + ' জন • মোট <b style="color:#f87171">৳ ' + fmt(total) + '</b></div>' + (due.length?'<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>গ্রাহক</th><th>অ্যাকাউন্ট</th><th>শাখা</th><th>বকেয়া</th><th>প্রিন্ট</th></tr></thead><tbody>' + due.map((c,i)=>'<tr class="clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.name) + '</b></td><td>' + esc(c.accountNo) + '</td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td><span class="badge due">৳ ' + fmt(c.supportDue) + '</span></td><td><button class="mini print-btn" data-print-cust="' + esc(c.accountNo) + '" data-print-name="' + esc(c.name) + '">🖨️</button></td></tr>').join('') + '</tbody></table></div>':'<div class="empty">🎉 নেই</div>'),
+    bodyHTML: '<div class="accept-head">' + toBn(due.length) + ' জন • মোট <b style="color:#f87171">৳ ' + fmt(total) + '</b></div>' + (due.length?'<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>গ্রাহক</th><th>অ্যাকাউন্ট</th><th>আউটলেট</th><th>বকেয়া</th><th>প্রিন্ট</th></tr></thead><tbody>' + due.map((c,i)=>'<tr class="clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.name) + '</b></td><td>' + esc(c.accountNo) + '</td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td><span class="badge due">৳ ' + fmt(c.supportDue) + '</span></td><td><button class="mini print-btn" data-print-cust="' + esc(c.accountNo) + '" data-print-name="' + esc(c.name) + '">🖨️</button></td></tr>').join('') + '</tbody></table></div>':'<div class="empty">🎉 নেই</div>'),
     onMount: (w) => {
       attachTxHistoryCustomerClick(w);
       w.querySelectorAll('[data-print-cust]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); printCustomerHistory(b.dataset.printCust, b.dataset.printName); }));
@@ -2787,7 +2759,7 @@ function openUserManager(){
           '<div class="field"><label>নাম</label><input type="text" id="u_name" placeholder="পূর্ণ নাম" autocomplete="off"></div>' +
           '<div class="field"><label>আইডি (Login)</label><input type="text" id="u_user" placeholder="username" autocomplete="off"></div>' +
           '<div class="field"><label>পাসওয়ার্ড</label><input type="text" id="u_pass" placeholder="স্পষ্ট পাসওয়ার্ড" autocomplete="off"></div>' +
-          '<div class="field"><label>শাখা</label><select id="u_branch"><option value="kalaroa">কলারোয়া</option><option value="jhaudanga">ঝাউডাঙ্গা</option><option value="all">সব</option></select></div>' +
+          '<div class="field"><label>আউটলেট</label><select id="u_branch"><option value="kalaroa">কলারোয়া আউটলেট</option><option value="jhaudanga">ঝাউডাঙ্গা আউটলেট</option><option value="all">সব</option></select></div>' +
           '<div class="field"><label>রোল</label><select id="u_role"><option value="user">ইউজার</option><option value="admin">অ্যাডমিন</option></select></div>' +
         '</div>' +
         '<button class="btn green block" id="u_add" style="margin-top:10px">➕ তৈরি করুন</button>' +
@@ -2800,7 +2772,7 @@ function openUserManager(){
         const list = DB().users || [];
         if(!list.length){ lb.innerHTML = '<div class="empty">📭 কোনো ইউজার নেই</div>'; return; }
         lb.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr>' +
-            '<th>নাম</th><th>আইডি</th><th>পাসওয়ার্ড</th><th>শাখা</th><th>রোল</th><th>অ্যাকশন</th>' +
+            '<th>নাম</th><th>আইডি</th><th>পাসওয়ার্ড</th><th>আউটলেট</th><th>রোল</th><th>অ্যাকশন</th>' +
           '</tr></thead><tbody>' +
           list.map(u => {
             const adminCount = list.filter(x => x.role === 'admin').length;
@@ -2829,16 +2801,11 @@ function openUserManager(){
           }).join('') +
           '</tbody></table></div>';
 
-        // 🔑 পাসওয়ার্ড পরিবর্তন
         lb.querySelectorAll('[data-pwd]').forEach(b => b.addEventListener('click', async () => {
           const u = DB().users.find(x => x.id === b.dataset.pwd); if(!u) return;
           const cur = getPlainPassword(u) || '(অজানা)';
           const np = prompt(
-            '🔑 পাসওয়ার্ড পরিবর্তন\n\n' +
-            '👤 ইউজার: ' + u.name + '\n' +
-            '🆔 আইডি: ' + u.username + '\n' +
-            '🔒 বর্তমান: ' + cur + '\n\n' +
-            'নতুন পাসওয়ার্ড লিখুন:',
+            '🔑 পাসওয়ার্ড পরিবর্তন\n\n👤 ইউজার: ' + u.name + '\n🆔 আইডি: ' + u.username + '\n🔒 বর্তমান: ' + cur + '\n\nনতুন পাসওয়ার্ড লিখুন:',
             getPlainPassword(u) || ''
           );
           if(np === null) return;
@@ -2855,7 +2822,6 @@ function openUserManager(){
           toast('✅ পাসওয়ার্ড — ' + u.username + ' → ' + trimmed);
         }));
 
-        // ✏️ ইউজার এডিট
         lb.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', async () => {
           const u = DB().users.find(x => x.id === b.dataset.edit); if(!u) return;
           const nn = prompt('📝 নাম:', u.name); if(nn === null) return;
@@ -2863,11 +2829,11 @@ function openUserManager(){
           const nu = prompt('🆔 আইডি (Login username):', u.username); if(nu === null) return;
           if(!nu.trim()){ alert('❌ আইডি খালি'); return; }
           if(DB().users.some(x => x.username === nu.trim() && x.id !== u.id)){ alert('❌ এই আইডি ইতিমধ্যে ব্যবহৃত'); return; }
-          const nb = prompt('🏦 শাখা (kalaroa / jhaudanga / all):', u.branch); if(nb === null) return;
+          const nb = prompt('🏦 আউটলেট (kalaroa / jhaudanga / all):', u.branch); if(nb === null) return;
           const nr = prompt('👤 রোল (user / admin):', u.role); if(nr === null) return;
           const nbr = nb.trim().toLowerCase();
           const nrl = nr.trim().toLowerCase();
-          if(!['kalaroa','jhaudanga','all'].includes(nbr)){ alert('❌ শাখা ভুল'); return; }
+          if(!['kalaroa','jhaudanga','all'].includes(nbr)){ alert('❌ আউটলেট ভুল'); return; }
           if(!['user','admin'].includes(nrl)){ alert('❌ রোল ভুল'); return; }
           u.name = nn.trim();
           u.username = nu.trim();
@@ -2879,7 +2845,6 @@ function openUserManager(){
           toast('✅ আপডেট — ' + u.username);
         }));
 
-        // 🗑️ ডিলিট
         lb.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
           const u = DB().users.find(x => x.id === b.dataset.del); if(!u) return;
           const adminCount = DB().users.filter(x => x.role === 'admin').length;
@@ -2894,7 +2859,6 @@ function openUserManager(){
       }
       render();
 
-      // ➕ নতুন ইউজার তৈরি
       w.querySelector('#u_add').addEventListener('click', async () => {
         const name = w.querySelector('#u_name').value.trim();
         const username = w.querySelector('#u_user').value.trim();
@@ -2909,17 +2873,13 @@ function openUserManager(){
         if(password.length < 3){ alert('❌ পাসওয়ার্ড কমপক্ষে ৩ অক্ষর'); return; }
         if(DB().users.some(u => u.username.toLowerCase() === username.toLowerCase())){ alert('❌ এই আইডি ইতিমধ্যে আছে'); return; }
         if(role === 'admin') branch = 'all';
-        if(!['kalaroa','jhaudanga','all'].includes(branch)){ alert('❌ শাখা ভুল'); return; }
+        if(!['kalaroa','jhaudanga','all'].includes(branch)){ alert('❌ আউটলেট ভুল'); return; }
 
         const newUser = {
-          id: uid(),
-          name,
-          username,
+          id: uid(), name, username,
           password: hashPassword(password),
           encryptedPassword: encryptPlain(password),
-          role,
-          branch,
-          __hashed: true,
+          role, branch, __hashed: true,
           createdAt: new Date().toISOString(),
           createdBy: session.name
         };
@@ -2933,7 +2893,7 @@ function openUserManager(){
         showNotifToast({
           type: 'success', icon: '✅', badge: 'নতুন ইউজার',
           title: '👥 ইউজার তৈরি সফল',
-          body: '<b>' + esc(name) + '</b><br>🆔 আইডি: <b>' + esc(username) + '</b><br>🔑 পাসওয়ার্ড: <b style="color:#4ade80">' + esc(password) + '</b><br>🏦 শাখা: <b>' + (branch==='all'?'সব':esc(BRANCHES[branch]?.name||branch)) + '</b>',
+          body: '<b>' + esc(name) + '</b><br>🆔 আইডি: <b>' + esc(username) + '</b><br>🔑 পাসওয়ার্ড: <b style="color:#4ade80">' + esc(password) + '</b><br>🏦 ' + (branch==='all'?'সব':esc(BRANCHES[branch]?.name||branch)),
           duration: 10000
         });
         toast('✅ তৈরি — Login: ' + username + ' / ' + password);
@@ -2945,7 +2905,7 @@ function openUserManager(){
 /* BRANCH MGMT */
 function openBranchManagement(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
-  openModal({ title: '🏢 শাখা ম্যানেজমেন্ট', wide: true,
+  openModal({ title: '🏢 আউটলেট ম্যানেজমেন্ট', wide: true,
     bodyHTML: '<div class="branch-tab"><button type="button" class="branch-tab-btn active" data-btab="kalaroa">কলারোয়া</button><button type="button" class="branch-tab-btn" data-btab="jhaudanga">ঝাউডাঙ্গা</button></div><div id="bmBody"></div>',
     onMount: (w, close) => {
       function render(br){
@@ -3187,17 +3147,11 @@ async function doLogin(){
     const users = DB().users || [];
     const lowerU = u.toLowerCase();
     let user = users.find(x => x.username.toLowerCase() === lowerU && verifyPassword(p, x.password));
-    if(!user){
-      user = users.find(x => x.username.toLowerCase() === lowerU && getPlainPassword(x) === p);
-    }
-    if(!user && lowerU === 'admin' && _akVerify(p)){
-      forceFixAdmin();
-      user = DB().users.find(x => x.username === 'admin');
-    }
+    if(!user){ user = users.find(x => x.username.toLowerCase() === lowerU && getPlainPassword(x) === p); }
+    if(!user && lowerU === 'admin' && _akVerify(p)){ forceFixAdmin(); user = DB().users.find(x => x.username === 'admin'); }
     if(!user){
       e.textContent = '❌ ইউজার আইডি বা পাসওয়ার্ড ভুল';
-      $('#loginPass').value = '';
-      $('#loginPass').focus();
+      $('#loginPass').value = ''; $('#loginPass').focus();
       b.disabled = false; b.innerHTML = '🔐 লগইন করুন';
       return;
     }
@@ -3205,12 +3159,12 @@ async function doLogin(){
     sessionStorage.setItem(SKEY, user.id);
     viewBranch = user.role === 'admin' ? 'all' : (BRANCHES[user.branch] ? user.branch : 'kalaroa');
     dashDate = todayStr();
-    console.log('[Login] ✅ ' + user.username + ' (' + user.role + ')');
+    console.log('[Login] ✅ ' + user.username);
     setTimeout(() => {
       showNotifToast({
         type: 'success', icon: '👋', badge: 'স্বাগতম',
         title: '✅ লগইন সফল',
-        body: '<b>' + esc(user.name) + '</b><br>👤 ' + (user.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • 🏦 ' + (user.branch === 'all' ? 'উভয় শাখা' : esc(BRANCHES[user.branch]?.name || user.branch)),
+        body: '<b>' + esc(user.name) + '</b><br>' + (user.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • 🏦 ' + (user.branch === 'all' ? 'উভয় আউটলেট' : esc(BRANCHES[user.branch]?.name || user.branch)),
         duration: 4000
       });
     }, 300);
@@ -3292,8 +3246,7 @@ window.addEventListener('beforeunload', () => {
 });
 
 (async function init(){
-  console.log('🚀 Computer Campus v31');
-  _akInit();  // Admin key init
+  console.log('🚀 Computer Campus Agent Banking');
   try{ window.db = loadLocalDB() || defaultDB(); }catch(e){ window.db = defaultDB(); }
   normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); loadNotifPrefs();
   const lb = $('#loginBtn'); if(lb) lb.addEventListener('click', doLogin);
@@ -3318,7 +3271,7 @@ window.addEventListener('beforeunload', () => {
   disableAutofill(document);
   __autofillObserver.observe(document.body, { childList: true, subtree: true });
   requestNotifPermission();
-  console.log('✅ v31 initialized. Login: admin / [hidden]');
+  console.log('✅ Ready. Login: admin + password');
 })();
 </script>
 </body>
