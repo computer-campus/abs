@@ -1915,6 +1915,29 @@ async function saveDB(){
 }
 
 /* MODAL */
+
+/* ═══ ATTACH CLICK HANDLER TO CUSTOMER ROWS ═══ */
+function attachTxHistoryCustomerClick(scope){
+  if(!scope) return;
+  try{
+    scope.querySelectorAll('tr.clickable-row[data-cust-acc]').forEach(tr => {
+      // একটি flag দিয়ে duplicate handler এড়াই
+      if(tr.dataset.clickBound === '1') return;
+      tr.dataset.clickBound = '1';
+      tr.addEventListener('click', (e) => {
+        if(e.target.closest('button')) return;
+        const acc = tr.dataset.custAcc;
+        const name = tr.dataset.custName;
+        if(acc && typeof openCustomerDetailPopup === 'function'){
+          openCustomerDetailPopup(acc, name);
+        }
+      });
+    });
+  }catch(e){
+    console.warn('[attachTxHistoryCustomerClick] error:', e);
+  }
+}
+
 function openModal({ title, bodyHTML, wide=false, xwide=false, onMount }){
   const wrap = document.createElement('div');
   wrap.className = 'modal-overlay';
@@ -2235,7 +2258,7 @@ function openCustomerDetailPopup(accountNo, custName){
       '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">' +
         '<button class="btn green" id="cust_h_support" style="flex:1">🤝 নতুন সাপোর্ট</button>' +
         '<button class="btn cyan" id="cust_h_print" style="flex:1">🖨️ History Print (A4)</button>' +
-        '<button class="btn gray" id="cust_h_close" style="flex:1">বন্ধ</button>' +
+        
       '</div>',
     onMount: (w, close) => {
       const listEl = w.querySelector('#cust_tx_list');
@@ -2335,7 +2358,7 @@ function openCustomerDetailPopup(accountNo, custName){
       }
 
       renderList();
-      w.querySelector('#cust_h_close').addEventListener('click', close);
+      
       w.querySelector('#cust_h_support').addEventListener('click', ()=>{ close(); openTxModal('support'); });
       w.querySelector('#cust_h_print').addEventListener('click', ()=>{ printCustomerHistory(accountNo, name); });
     }
@@ -2377,10 +2400,10 @@ function openTxDetail(id){
       '<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">' +
         '<button class="btn cyan" id="tdPrint" style="flex:1;min-width:140px">🖨️ A4 প্রিন্ট</button>' +
         '<button class="btn purple" id="tdFullHist" style="flex:1;min-width:140px">📜 বড় করে দেখুন</button>' +
-        '<button class="btn gray" id="tdClose" style="flex:1;min-width:120px">বন্ধ</button>' +
+        
       '</div>',
     onMount: (w, close) => {
-      w.querySelector('#tdClose').addEventListener('click', close);
+      
       w.querySelector('#tdPrint').addEventListener('click', () => { close(); setTimeout(() => printSingleTransaction(t), 100); });
       w.querySelector('#tdFullHist').addEventListener('click', () => { close(); setTimeout(() => openTxHistoryModal(id), 100); });
     }
@@ -2438,10 +2461,10 @@ function openTransferPendingDetail(id){
     '<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">' +
       '<button class="btn green" id="tp_accept" style="flex:1;min-width:180px">✅ গ্রহণ করুন</button>' +
       '<button class="btn cyan" id="tp_print" style="flex:1;min-width:140px">🖨️ A4 প্রিন্ট</button>' +
-      '<button class="btn gray" id="tp_close" style="flex:1;min-width:100px">বন্ধ</button>' +
+      
     '</div>',
     onMount: (w, close) => {
-      w.querySelector('#tp_close').addEventListener('click', close);
+      
       w.querySelector('#tp_print').addEventListener('click', () => printSingleTransaction(t));
       w.querySelector('#tp_accept').addEventListener('click', async () => { close(); await receiveTransferDirect(t.id); });
     }
@@ -2468,10 +2491,10 @@ function openCollectionPendingDetail(id){
       '<button class="btn green" id="cp_cash" style="flex:1;min-width:160px;padding:14px 22px;font-size:15px">💵 ক্যাশ সংগ্রহ</button>' +
       '<button class="btn" id="cp_online" style="flex:1;min-width:160px;padding:14px 22px;font-size:15px">🌐 অনলাইন সংগ্রহ</button>' +
       '<button class="btn cyan" id="cp_print" style="min-width:140px">🖨️ A4</button>' +
-      '<button class="btn gray" id="cp_close" style="min-width:100px">বন্ধ</button>' +
+      
     '</div>',
     onMount: (w, close) => {
-      w.querySelector('#cp_close').addEventListener('click', close);
+      
       w.querySelector('#cp_print').addEventListener('click', () => printSingleTransaction(parent));
       w.querySelector('#cp_cash').addEventListener('click', () => { close(); setTimeout(() => openCollectionChildModal(id, 'cash'), 100); });
       w.querySelector('#cp_online').addEventListener('click', () => { close(); setTimeout(() => openCollectionChildModal(id, 'online'), 100); });
@@ -3105,7 +3128,7 @@ function setupTransferForm(wrap, editing, close){
     box.querySelectorAll('[data-acc]').forEach(b => b.addEventListener('click', async ()=>{ await receiveTransferDirect(b.dataset.acc); close(); }));
   }
   renderPending();
-  wrap.querySelector('#f_close').addEventListener('click', close);
+  
   wrap.querySelector('#f_save').addEventListener('click', async ()=>{
     const sBtn = wrap.querySelector('#f_save'); if(sBtn.disabled) return;
     sBtn.disabled = true; const orig = sBtn.innerHTML; sBtn.innerHTML = '<span class="spinner"></span>';
@@ -3260,7 +3283,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const c = DB().customers.find(x=>x.accountNo === acc);
     if(c) openCustomerDetailPopup(c.accountNo, c.name); else toast('ℹ️ নেই');
   });
-  wrap.querySelector('#f_close').addEventListener('click', close);
+	
   wrap.querySelector('#f_save').addEventListener('click', async ()=>{
     const sBtn = wrap.querySelector('#f_save'); if(sBtn.disabled) return;
     sBtn.disabled = true; const orig = sBtn.innerHTML; sBtn.innerHTML = '<span class="spinner"></span>';
@@ -3370,7 +3393,7 @@ function openMoneyExchange(){
       w.querySelector('#me_dir').addEventListener('change', ()=>{ const io = isOD(); w.querySelector('#me_notes_cols').style.display = io ? 'none' : 'grid'; w.querySelector('#me_online_box').style.display = io ? 'block' : 'none'; recalc(); });
       w.querySelector('#me_dir').dispatchEvent(new Event('change'));
       recalc();
-      w.querySelector('#me_close').addEventListener('click', close);
+      
       w.querySelector('#me_save').addEventListener('click', async ()=>{
         const b = w.querySelector('#me_save'); b.disabled = true; const og = b.innerHTML; b.innerHTML = '<span class="spinner"></span>';
         try{
