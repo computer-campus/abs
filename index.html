@@ -1701,13 +1701,16 @@ function openCustomerDetailPopup(accountNo, custName){
   const allTxs = getCustomerAllTxs(accountNo);
   const cust = DB().customers.find(c => c.accountNo === accountNo);
   const name = custName || cust?.name || '-';
+  const isAdmin = session.role === 'admin';
   const sTxs = allTxs.filter(t => t.type === 'support');
   const sPaid = sTxs.filter(t => t.dir === 'out' || t.dir === 'online_support_out').reduce((s,t)=> s+Number(t.amount||0),0);
   const sRefund = sTxs.filter(t => t.dir === 'in' || t.dir === 'online_support_in').reduce((s,t)=> s+Number(t.amount||0),0);
   const sNet = sPaid - sRefund;
+
   openModal({
     title: '👤 ' + esc(name) + ' — সম্পূর্ণ লেনদেন', xwide: true,
-    bodyHTML: '<div class="cust-box" style="margin-bottom:16px"><div class="head"><h4>👤 গ্রাহকের তথ্য</h4></div>' +
+    bodyHTML:
+      '<div class="cust-box" style="margin-bottom:16px"><div class="head"><h4>👤 গ্রাহকের তথ্য</h4></div>' +
       '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;font-size:13.5px;line-height:1.9">' +
         '<div>অ্যাকাউন্ট: <b style="color:#fff">' + esc(accountNo) + '</b></div>' +
         '<div>নাম: <b style="color:#fff">' + esc(name) + '</b></div>' +
@@ -1715,15 +1718,28 @@ function openCustomerDetailPopup(accountNo, custName){
         '<div>আউটলেট: <b style="color:#fff">' + esc(BRANCHES[cust?.branch]?.name || '-') + '</b></div>' +
       '</div></div>' +
       '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px">' +
-        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📊 মোট</div><div style="font-size:22px;font-weight:900;color:#fff">' + toBn(allTxs.length) + ' টি</div></div>' +
-        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🤝 প্রদান</div><div style="font-size:16px;font-weight:800;color:#93c5fd">৳ ' + fmt(sPaid) + '</div></div>' +
-        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">↩️ ফেরত</div><div style="font-size:16px;font-weight:800;color:#4ade80">৳ ' + fmt(sRefund) + '</div></div>' +
-        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📉 নেট</div><div style="font-size:18px;font-weight:900;color:' + (sNet>0?'#f87171':'#4ade80') + '">৳ ' + fmt(Math.abs(sNet)) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📊 মোট</div><div style="font-size:22px;font-weight:900;color:#fff" id="cust_stat_total">' + toBn(allTxs.length) + ' টি</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🤝 প্রদান</div><div style="font-size:16px;font-weight:800;color:#93c5fd" id="cust_stat_paid">৳ ' + fmt(sPaid) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">↩️ ফেরত</div><div style="font-size:16px;font-weight:800;color:#4ade80" id="cust_stat_refund">৳ ' + fmt(sRefund) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📉 নেট</div><div style="font-size:18px;font-weight:900;color:' + (sNet>0?'#f87171':'#4ade80') + '" id="cust_stat_net">৳ ' + fmt(Math.abs(sNet)) + '</div></div>' +
       '</div></div>' +
-      '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সব লেনদেন (' + toBn(allTxs.length) + ' টি)</div>' +
-        (allTxs.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>তারিখ</th><th>ধরন</th><th>আউটলেট</th><th>টাকা</th><th>বিবরণ / মন্তব্য</th><th>ইউজার</th></tr></thead><tbody>' + allTxs.map((t,i)=>{
+      (isAdmin ? '<div class="bank-hint" style="margin-top:12px;font-size:12.5px">💡 <b>✏️</b> = এডিট &nbsp;•&nbsp; <b>🗑️</b> = ডিলিট &nbsp;•&nbsp; <b>🖨️</b> = প্রিন্ট</div>' : '') +
+      '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সব লেনদেন (<span id="cust_tx_count">' + toBn(allTxs.length) + '</span> টি)</div>' +
+      '<div id="cust_tx_list"></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">' +
+        '<button class="btn green" id="cust_h_support" style="flex:1">🤝 নতুন সাপোর্ট</button>' +
+        '<button class="btn cyan" id="cust_h_print" style="flex:1">🖨️ History Print (A4)</button>' +
+        '<button class="btn gray" id="cust_h_close" style="flex:1">বন্ধ</button>' +
+      '</div>',
+    onMount: (w, close) => {
+      // ⚡ টেবিল রেন্ডার (পুনরাবৃত্তি করার জন্য ফাংশন)
+      const listEl = w.querySelector('#cust_tx_list');
+      function renderList(){
+        const txs = getCustomerAllTxs(accountNo);
+        if(!txs.length){ listEl.innerHTML = '<div class="empty">📭 নেই</div>'; return; }
+        const rowsHtml = txs.map((t,i) => {
           const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
-          // ⚡ টাকার বিবরণী (Notes) তৈরি
           const nOut = t.notesOut || {};
           const nIn = t.notesIn || {};
           const outParts = Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(nOut[d]));
@@ -1733,15 +1749,77 @@ function openCustomerDetailPopup(accountNo, custName){
           if(inParts.length) notesHtml += '<div style="font-size:11.5px;color:#4ade80;margin-top:3px"><b>📥</b> ' + inParts.join(' • ') + '</div>';
           const noteHtml = t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:4px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '';
           const detailHtml = (notesHtml || noteHtml) ? (notesHtml + noteHtml) : '<span style="color:#7a8ab8">—</span>';
-          return '<tr><td>' + toBn(i+1) + '</td><td>' + toBn(t.date) + '</td><td>' + (cfg.icon||'') + ' <b>' + esc(cfg.title||t.type) + '</b></td><td>' + esc(BRANCHES[t.branch]?.name||'-') + '</td><td class="amt">৳ ' + fmt(t.amount) + '</td><td style="font-size:12px;line-height:1.7">' + detailHtml + '</td><td>' + esc(t.user||'-') + '</td></tr>';
-        }).join('') + '</tbody></table></div>' : '<div class="empty">📭 নেই</div>') +
-      '</div>' +
-      '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">' +
-        '<button class="btn green" id="cust_h_support" style="flex:1">🤝 নতুন সাপোর্ট</button>' +
-        '<button class="btn cyan" id="cust_h_print" style="flex:1">🖨️ History Print (A4)</button>' +
-        '<button class="btn gray" id="cust_h_close" style="flex:1">বন্ধ</button>' +
-      '</div>',
-    onMount: (w, close) => {
+
+          // ⚡ Action বাটন
+          let actionsHtml = '<button class="mini print-btn" data-action="print" data-txid="' + t.id + '">🖨️</button>';
+          if(isAdmin){
+            actionsHtml += ' <button class="mini" data-action="edit" data-txid="' + t.id + '">✏️</button>';
+            actionsHtml += ' <button class="mini danger" data-action="del" data-txid="' + t.id + '">🗑️</button>';
+          }
+
+          return '<tr>' +
+            '<td>' + toBn(i+1) + '</td>' +
+            '<td>' + toBn(t.date) + '</td>' +
+            '<td>' + (cfg.icon||'') + ' <b>' + esc(cfg.title||t.type) + '</b></td>' +
+            '<td>' + esc(BRANCHES[t.branch]?.name||'-') + '</td>' +
+            '<td class="amt">৳ ' + fmt(t.amount) + '</td>' +
+            '<td style="font-size:12px;line-height:1.7">' + detailHtml + '</td>' +
+            '<td>' + esc(t.user||'-') + '</td>' +
+            '<td style="white-space:nowrap">' + actionsHtml + '</td>' +
+          '</tr>';
+        }).join('');
+
+        listEl.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr>' +
+          '<th>#</th><th>তারিখ</th><th>ধরন</th><th>আউটলেট</th><th>টাকা</th><th>বিবরণ / মন্তব্য</th><th>ইউজার</th><th>অ্যাকশন</th>' +
+          '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+
+        // ⚡ Action হ্যান্ডলার
+        listEl.querySelectorAll('[data-action]').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const action = btn.dataset.action;
+            const txId = btn.dataset.txid;
+            if(action === 'print'){
+              const t = findTxAnywhere(txId)?.tx;
+              if(t) printSingleTransaction(t);
+            } else if(action === 'edit'){
+              close();
+              setTimeout(() => openTxModal(getAllTxs().find(x => x.id === txId)?.type, txId), 150);
+            } else if(action === 'del'){
+              if(!confirm('🗑️ এই লেনদেন ডিলিট করবেন?\n\nএটি ফিরিয়ে আনা যাবে না।')) return;
+              if(!DB().deletedTxIds) DB().deletedTxIds = {};
+              DB().deletedTxIds[txId] = new Date().toISOString();
+              DB().txs = DB().txs.filter(x => x.id !== txId);
+              // Yearly archive থেকেও মুছি
+              Object.keys(DB().yearlyArchive || {}).forEach(y => {
+                DB().yearlyArchive[y] = (DB().yearlyArchive[y] || []).filter(x => x.id !== txId);
+              });
+              // Parent-এর collection update (loan_given হলে)
+              recomputeLive();
+              await saveDB();
+              try{ await pushRemoteDB(true); }catch(e){}
+              toast('🗑️ লেনদেন ডিলিট হয়েছে');
+              // Stats + list refresh
+              const newTxs = getCustomerAllTxs(accountNo);
+              w.querySelector('#cust_tx_count').textContent = toBn(newTxs.length);
+              w.querySelector('#cust_stat_total').textContent = toBn(newTxs.length) + ' টি';
+              const nS = newTxs.filter(t => t.type === 'support');
+              const nP = nS.filter(t => t.dir === 'out' || t.dir === 'online_support_out').reduce((s,t)=> s+Number(t.amount||0),0);
+              const nR = nS.filter(t => t.dir === 'in' || t.dir === 'online_support_in').reduce((s,t)=> s+Number(t.amount||0),0);
+              w.querySelector('#cust_stat_paid').textContent = '৳ ' + fmt(nP);
+              w.querySelector('#cust_stat_refund').textContent = '৳ ' + fmt(nR);
+              const netEl = w.querySelector('#cust_stat_net');
+              const nNet = nP - nR;
+              netEl.textContent = '৳ ' + fmt(Math.abs(nNet));
+              netEl.style.color = nNet > 0 ? '#f87171' : '#4ade80';
+              renderList();
+              renderDashboard();
+              renderSidebar();
+            }
+          });
+        });
+      }
+      renderList();
       w.querySelector('#cust_h_close').addEventListener('click', close);
       w.querySelector('#cust_h_support').addEventListener('click', ()=>{ close(); openTxModal('support'); });
       w.querySelector('#cust_h_print').addEventListener('click', ()=>{ printCustomerHistory(accountNo, name); });
