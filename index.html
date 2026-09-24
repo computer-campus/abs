@@ -659,6 +659,153 @@ function forceFixAdmin(){
     if(!admin.encryptedPassword) admin.encryptedPassword = encryptPlain(_akDecode());
   }
 }
+
+/* ═══ AUDIT TRAIL — Complete Transaction History ═══ */
+function addTxLog(txId, action, changes, txSnapshot){
+  try{
+    if(!DB().txEditLog) DB().txEditLog = [];
+    const deviceName = getDeviceName();
+    let loc = 'Unknown';
+    try{
+      const cachedLoc = safeLS_get('cc_my_location');
+      if(cachedLoc){
+        const c = JSON.parse(cachedLoc);
+        if(c && c.loc) loc = c.loc;
+      }
+    }catch(e){}
+
+    const log = {
+      id: uid(),
+      txId: txId,
+      action: action,
+      changes: changes || null,
+      txSnapshot: txSnapshot ? JSON.parse(JSON.stringify(txSnapshot)) : null,
+      user: session?.name || 'Unknown',
+      username: session?.username || '',
+      role: session?.role || 'user',
+      branch: session?.role === 'admin' ? 'Admin' : (BRANCHES[session?.branch]?.name || 'Unknown'),
+      device: deviceName,
+      location: loc,
+      at: new Date().toISOString()
+    };
+    DB().txEditLog.push(log);
+    if(DB().txEditLog.length > 2000) DB().txEditLog = DB().txEditLog.slice(-2000);
+    console.log('[Audit]', action, '→', txId, 'by', log.user);
+    return log;
+  }catch(e){
+    console.error('[addTxLog] error:', e);
+    return null;
+  }
+}
+
+function computeTxChanges(oldTx, newTx){
+  const changes = {};
+  const keys = ['date','amount','note','type','branch','custBranch','custName','custAcc','custMobile','custAddr','dir','bank','onlineAmount','onlineBankName','cashAmount','cashNotTaken','cashNotTakenAmount','collectionStatus','collectedAmount'];
+  keys.forEach(k => {
+    const oldV = oldTx ? oldTx[k] : undefined;
+    const newV = newTx ? newTx[k] : undefined;
+    if(JSON.stringify(oldV) !== JSON.stringify(newV)){
+      changes[k] = { from: oldV, to: newV };
+    }
+  });
+  const oldNotes = JSON.stringify(oldTx?.notesOut || {}) + '|' + JSON.stringify(oldTx?.notesIn || {});
+  const newNotes = JSON.stringify(newTx?.notesOut || {}) + '|' + JSON.stringify(newTx?.notesIn || {});
+  if(oldNotes !== newNotes){
+    changes.notesOut = { from: oldTx?.notesOut || {}, to: newTx?.notesOut || {} };
+    changes.notesIn = { from: oldTx?.notesIn || {}, to: newTx?.notesIn || {} };
+  }
+  return changes;
+}
+
+function getTxHistory(txId){
+  if(!txId) return [];
+  const logs = (DB().txEditLog || []).filter(l => l.txId === txId);
+  logs.sort((a,b) => (a.at || '').localeCompare(b.at || ''));
+  return logs;
+}
+
+/* ═══ GET ALL LOGS (সব Audit) ═══ */
+function getAllTxLogs(){
+  const logs = [...(DB().txEditLog || [])];
+  logs.sort((a,b) => (b.at || '').localeCompare(a.at || ''));
+  return logs;
+}
+
+/* ═══ GENERATE REPORT FOR HISTORY ═══ */
+function buildHistoryHTML(txId, compact){
+  const logs = getTxHistory(txId);
+  if(!logs.length) return '<div style="padding:14px;text-align:center;color:#7a8ab8;font-size:13px">📭 এই লেনদেনের কোনো ইতিহাস নেই</div>';
+
+  const actionLabels = {
+    create: { label: '🆕 তৈরি', color: '#22c55e', bg: 'rgba(34,197,94,.15)' },
+    update: { label: '✏️ আপডেট', color: '#facc15', bg: 'rgba(250,204,21,.15)' },
+    delete: { label: '🗑️ ডিলিট', color: '#dc2626', bg: 'rgba(220,38,38,.15)' },
+    accept: { label: '✅ গ্রহণ', color: '#06b6d4', bg: 'rgba(6,182,212,.15)' },
+    collect: { label: '💰 সংগ্রহ', color: '#a78bfa', bg: 'rgba(167,139,250,.15)' }
+  };
+
+  const fieldNames = {
+    date: 'তারিখ', amount: 'টাকা', note: 'মন্তব্য', type: 'ধরন',
+    branch: 'আউটলেট', custBranch: 'গ্রাহক আউটলেট', custName: 'গ্রাহক নাম',
+    custAcc: 'অ্যাকাউন্ট', custMobile: 'মোবাইল', custAddr: 'ঠিকানা',
+    dir: 'দিক', bank: 'ব্যাংক', onlineAmount: 'অনলাইন পরিমাণ',
+    onlineBankName: 'অনলাইন ব্যাংক', cashAmount: 'ক্যাশ পরিমাণ',
+    cashNotTaken: 'ক্যাশ নেয়নি', cashNotTakenAmount: 'নেয়নি পরিমাণ',
+    collectionStatus: 'সংগ্রহ স্ট্যাটাস', collectedAmount: 'সংগৃহীত',
+    accepted: 'গৃহীত', acceptedBy: 'গৃহীত ইউজার',
+    notesOut: 'প্রদান নোট', notesIn: 'গ্রহণ নোট', deleted: 'ডিলিট স্ট্যাটাস'
+  };
+
+  function formatVal(k, v){
+    if(v === null || v === undefined || v === '') return '—';
+    if(typeof v === 'object'){
+      const keys = Object.keys(v).filter(k2 => v[k2] > 0);
+      if(!keys.length) return '—';
+      return keys.sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(v[d])).join(', ');
+    }
+    if(k === 'amount' || k === 'onlineAmount' || k === 'cashAmount' || k === 'cashNotTakenAmount' || k === 'collectedAmount'){
+      return '৳ ' + fmt(v);
+    }
+    if(k === 'date' || k === 'acceptedDate') return toBn(v);
+    if(typeof v === 'boolean') return v ? '✅ হ্যাঁ' : '❌ না';
+    return esc(String(v));
+  }
+
+  return logs.map((log) => {
+    const a = actionLabels[log.action] || { label: log.action, color: '#7a8ab8', bg: 'rgba(122,138,184,.15)' };
+    let changesHtml = '';
+    if(log.changes && Object.keys(log.changes).length){
+      changesHtml = '<div style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.3);border:1px solid rgba(59,130,246,.2)">' +
+        '<div style="font-size:10.5px;color:#93c5fd;font-weight:800;margin-bottom:4px">📋 পরিবর্তন:</div>' +
+        Object.keys(log.changes).map(k => {
+          const c = log.changes[k];
+          if(c && typeof c === 'object' && 'from' in c && 'to' in c){
+            return '<div style="font-size:11.5px;padding:4px 0;border-bottom:1px dashed rgba(255,255,255,.08)">' +
+              '<b style="color:#facc15">' + esc(fieldNames[k] || k) + ':</b> ' +
+              '<span style="color:#f87171;text-decoration:line-through">' + formatVal(k, c.from) + '</span>' +
+              ' <span style="color:#7a8ab8">➜</span> ' +
+              '<span style="color:#4ade80;font-weight:700">' + formatVal(k, c.to) + '</span>' +
+            '</div>';
+          }
+          return '<div style="font-size:11.5px;padding:3px 0;color:#a5b4d8">• ' + esc(fieldNames[k] || k) + ': ' + formatVal(k, c) + '</div>';
+        }).join('') +
+      '</div>';
+    }
+
+    return '<div style="padding:' + (compact ? '10px 12px' : '12px 14px') + ';border-radius:10px;background:linear-gradient(145deg,#0f1428,#07091a);border:1px solid ' + a.color.replace(')', ',.4)').replace('rgb','rgba') + ';margin-bottom:8px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">' +
+        '<div style="flex:1;min-width:200px">' +
+          '<div style="display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:900;color:' + a.color + ';background:' + a.bg + ';border:1px solid ' + a.color + '">' + a.label + '</div>' +
+          '<div style="margin-top:8px;font-size:13px;color:#fff;font-weight:800">👤 ' + esc(log.user) + ' <span style="color:#7a8ab8;font-weight:600;font-size:11px">(' + (log.role === 'admin' ? '👑 Admin' : '👤 User') + ')</span></div>' +
+          '<div style="margin-top:4px;font-size:11.5px;color:#a5b4d8">🏦 ' + esc(log.branch) + ' &nbsp;•&nbsp; 📱 ' + esc(log.device) + ' &nbsp;•&nbsp; 📍 ' + esc(log.location) + '</div>' +
+        '</div>' +
+        '<div style="text-align:right;font-size:11.5px;color:#93c5fd;font-weight:700;white-space:nowrap">' + esc(fmtDateTime(log.at)) + '</div>' +
+      '</div>' +
+      changesHtml +
+    '</div>';
+  }).join('');
+}
+
 function saveLocalDB(){
   try{
     const db = DB();
@@ -1894,10 +2041,10 @@ function printSingleTransaction(tx){
   const nIn = tx.notesIn || {};
 
   const outRows = Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).map(d =>
-    `<tr><td>💸 ৳ ${toBn(d)} × ${toBn(nOut[d])} টি</td><td class="amt" style="color:#a16207">৳ ${fmt(d * nOut[d])}</td></tr>`
+    `<tr><td style="padding:4px 6px;font-size:10px">💸 ৳ ${toBn(d)} × ${toBn(nOut[d])} টি</td><td class="amt" style="color:#a16207;padding:4px 6px;font-size:10px">৳ ${fmt(d * nOut[d])}</td></tr>`
   ).join('');
   const inRows = Object.keys(nIn).filter(k => nIn[k] > 0).sort((a,b)=>b-a).map(d =>
-    `<tr><td>📥 ৳ ${toBn(d)} × ${toBn(nIn[d])} টি</td><td class="amt" style="color:#15803d">৳ ${fmt(d * nIn[d])}</td></tr>`
+    `<tr><td style="padding:4px 6px;font-size:10px">📥 ৳ ${toBn(d)} × ${toBn(nIn[d])} টি</td><td class="amt" style="color:#15803d;padding:4px 6px;font-size:10px">৳ ${fmt(d * nIn[d])}</td></tr>`
   ).join('');
   const outTotal = Object.keys(nOut).reduce((s,d)=> s + d*nOut[d], 0);
   const inTotal = Object.keys(nIn).reduce((s,d)=> s + d*nIn[d], 0);
@@ -1905,30 +2052,78 @@ function printSingleTransaction(tx){
   let notesSection = '';
   if(outRows || inRows){
     notesSection = '<div class="print-title" style="margin-top:6px;margin-bottom:6px;padding:6px 10px;font-size:13px">🗄️ টাকার বিবরণী (নোট)</div>';
-
     if(outRows){
       notesSection += `
         <div style="font-size:10.5px;font-weight:900;color:#a16207;padding:4px 8px;background:#fef3c7;border-left:3px solid #f59e0b;border-radius:3px;margin-bottom:3px">📤 প্রদান</div>
         <table class="tbl-print" style="margin-bottom:5px">
           <thead><tr><th style="padding:5px 6px;font-size:9.5px">নোট</th><th style="padding:5px 6px;font-size:9.5px;text-align:right;width:35%">পরিমাণ</th></tr></thead>
-          <tbody>
-            ${outRows.replace(/<td>/g, '<td style="padding:4px 6px;font-size:10px">').replace(/<td class="amt"/g, '<td class="amt" style="padding:4px 6px;font-size:10px"')}
-            <tr style="background:#fef3c7"><td style="font-weight:900;color:#a16207;padding:5px 6px;font-size:10.5px">📤 প্রদান মোট</td><td class="amt" style="font-weight:900;color:#a16207;padding:5px 6px;font-size:11px">৳ ${fmt(outTotal)}</td></tr>
-          </tbody>
+          <tbody>${outRows}<tr style="background:#fef3c7"><td style="font-weight:900;color:#a16207;padding:5px 6px;font-size:10.5px">📤 প্রদান মোট</td><td class="amt" style="font-weight:900;color:#a16207;padding:5px 6px;font-size:11px">৳ ${fmt(outTotal)}</td></tr></tbody>
         </table>`;
     }
-
     if(inRows){
       notesSection += `
         <div style="font-size:10.5px;font-weight:900;color:#15803d;padding:4px 8px;background:#dcfce7;border-left:3px solid #22c55e;border-radius:3px;margin-bottom:3px;margin-top:5px">📥 গ্রহণ</div>
         <table class="tbl-print" style="margin-bottom:5px">
           <thead><tr><th style="padding:5px 6px;font-size:9.5px">নোট</th><th style="padding:5px 6px;font-size:9.5px;text-align:right;width:35%">পরিমাণ</th></tr></thead>
-          <tbody>
-            ${inRows.replace(/<td>/g, '<td style="padding:4px 6px;font-size:10px">').replace(/<td class="amt"/g, '<td class="amt" style="padding:4px 6px;font-size:10px"')}
-            <tr style="background:#dcfce7"><td style="font-weight:900;color:#15803d;padding:5px 6px;font-size:10.5px">📥 গ্রহণ মোট</td><td class="amt" style="font-weight:900;color:#15803d;padding:5px 6px;font-size:11px">৳ ${fmt(inTotal)}</td></tr>
-          </tbody>
+          <tbody>${inRows}<tr style="background:#dcfce7"><td style="font-weight:900;color:#15803d;padding:5px 6px;font-size:10.5px">📥 গ্রহণ মোট</td><td class="amt" style="font-weight:900;color:#15803d;padding:5px 6px;font-size:11px">৳ ${fmt(inTotal)}</td></tr></tbody>
         </table>`;
     }
+  }
+
+  // ⚡ History Section (সবাই দেখবে)
+  const logs = getTxHistory(tx.id);
+  const actionLabels = {
+    create: { label: '🆕 তৈরি', color: '#15803d' },
+    update: { label: '✏️ আপডেট', color: '#a16207' },
+    delete: { label: '🗑️ ডিলিট', color: '#b91c1c' },
+    accept: { label: '✅ গ্রহণ', color: '#0891b2' },
+    collect: { label: '💰 সংগ্রহ', color: '#7c3aed' }
+  };
+  const fieldNames = {
+    date: 'তারিখ', amount: 'টাকা', note: 'মন্তব্য', type: 'ধরন', branch: 'আউটলেট',
+    custName: 'গ্রাহক নাম', custAcc: 'অ্যাকাউন্ট', custMobile: 'মোবাইল',
+    dir: 'দিক', bank: 'ব্যাংক', onlineAmount: 'অনলাইন', cashAmount: 'ক্যাশ',
+    cashNotTaken: 'ক্যাশ নেয়নি', cashNotTakenAmount: 'নেয়নি পরিমাণ',
+    collectionStatus: 'সংগ্রহ স্ট্যাটাস', collectedAmount: 'সংগৃহীত',
+    accepted: 'গৃহীত', acceptedBy: 'গৃহীত ইউজার', notesOut: 'প্রদান নোট', notesIn: 'গ্রহণ নোট',
+    deleted: 'ডিলিট স্ট্যাটাস'
+  };
+  function formatVal(k, v){
+    if(v === null || v === undefined || v === '') return '—';
+    if(typeof v === 'object'){
+      const keys = Object.keys(v).filter(k2 => v[k2] > 0);
+      if(!keys.length) return '—';
+      return keys.sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(v[d])).join(', ');
+    }
+    if(k === 'amount' || k === 'onlineAmount' || k === 'cashAmount' || k === 'cashNotTakenAmount' || k === 'collectedAmount') return '৳ ' + fmt(v);
+    if(k === 'date' || k === 'acceptedDate') return toBn(v);
+    if(typeof v === 'boolean') return v ? 'হ্যাঁ' : 'না';
+    return esc(String(v));
+  }
+
+  let historySection = '';
+  if(logs.length){
+    historySection = '<div class="print-title" style="margin-top:8px;margin-bottom:6px;padding:6px 10px;font-size:13px">📜 পূর্ণ ইতিহাস (' + toBn(logs.length) + ' এন্ট্রি)</div>';
+    historySection += logs.map((log, idx) => {
+      const a = actionLabels[log.action] || { label: log.action, color: '#475569' };
+      let changeHtml = '';
+      if(log.changes && Object.keys(log.changes).length){
+        changeHtml = Object.entries(log.changes).map(([k, c]) => {
+          if(c && typeof c === 'object' && 'from' in c && 'to' in c){
+            return '<div style="font-size:9.5px;color:#334155;margin-top:2px"><b>' + esc(fieldNames[k] || k) + ':</b> <span style="color:#b91c1c;text-decoration:line-through">' + formatVal(k, c.from) + '</span> ➜ <span style="color:#15803d;font-weight:700">' + formatVal(k, c.to) + '</span></div>';
+          }
+          return '<div style="font-size:9.5px;color:#475569;margin-top:2px">• ' + esc(fieldNames[k] || k) + ': ' + formatVal(k, c) + '</div>';
+        }).join('');
+      }
+      return '<div style="padding:6px 10px;border-left:3px solid ' + a.color + ';background:#f8fafc;margin-bottom:4px;border-radius:3px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">' +
+          '<div><b style="color:' + a.color + ';font-size:11px">' + a.label + '</b> &nbsp; <span style="font-size:10.5px;color:#0f172a"><b>' + esc(log.user) + '</b> (' + (log.role === 'admin' ? '👑 Admin' : '👤 User') + ')</span> &nbsp; <span style="font-size:10px;color:#475569">🏦 ' + esc(log.branch) + '</span></div>' +
+          '<div style="font-size:10px;color:#475569">' + esc(fmtDateTime(log.at)) + '</div>' +
+        '</div>' +
+        '<div style="font-size:9.5px;color:#64748b;margin-top:2px">📱 ' + esc(log.device) + ' • 📍 ' + esc(log.location) + '</div>' +
+        changeHtml +
+      '</div>';
+    }).join('');
   }
 
   const outletName = BRANCHES[tx.branch]?.name || 'উভয় আউটলেট';
@@ -1946,6 +2141,7 @@ function printSingleTransaction(tx){
     ${tx.type === 'branch_transfer' ? `<div class="summary-line" style="padding:6px 10px;margin-bottom:6px;font-size:11.5px"><span class="k">📤 প্রেরক ➜ 📥 গ্রহণকারী</span><span class="v">${esc(BRANCHES[tx.from]?.name||'')} ➜ ${esc(BRANCHES[tx.to]?.name||'')}</span></div>` : ''}
     ${tx.custName ? `<div class="info-grid" style="margin-bottom:6px"><div class="info-cell blue" style="grid-column:1/-1;padding:6px 10px"><div class="lbl" style="font-size:9px">👤 গ্রাহক</div><div class="val" style="font-size:12px;margin-top:1px">${esc(tx.custName)} ${tx.custAcc ? ' — ' + esc(tx.custAcc) : ''} ${tx.custMobile ? ' • 📱 ' + esc(tx.custMobile) : ''}</div></div></div>` : ''}
     ${notesSection}
+    ${historySection}
     ${tx.note ? `<div class="info-cell yellow" style="margin-top:6px;padding:6px 10px"><div class="lbl" style="font-size:9px">📝 মন্তব্য</div><div class="val" style="font-weight:700;font-size:11.5px;margin-top:1px">${esc(tx.note)}</div></div>` : ''}
     <div style="margin-top:8px;padding:6px 10px;border:1.5px dashed #64748b;border-radius:5px;background:#f8fafc;text-align:center">
       <div style="font-size:9.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
@@ -1953,6 +2149,7 @@ function printSingleTransaction(tx){
     </div>`;
   openPrintWindow(`${cfg.title || tx.type} — ৳ ${fmt(tx.amount)}`, body);
 }
+
 
 function printCustomerHistory(accountNo, custName){
   if(!accountNo){ toast('❌ নেই'); return; }
@@ -2040,7 +2237,7 @@ function openCustomerDetailPopup(accountNo, custName){
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">↩️ ফেরত</div><div style="font-size:16px;font-weight:800;color:#4ade80" id="cust_stat_refund">৳ ' + fmt(sRefund) + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📉 নেট</div><div style="font-size:18px;font-weight:900;color:' + (sNet>0?'#f87171':'#4ade80') + '" id="cust_stat_net">৳ ' + fmt(Math.abs(sNet)) + '</div></div>' +
       '</div></div>' +
-      '<div class="bank-hint" style="margin-top:12px;font-size:12.5px">💡 <b>✏️</b> = এডিট / আপডেট &nbsp;•&nbsp; <b>🖨️</b> = প্রিন্ট' + (isAdmin ? ' &nbsp;•&nbsp; <b>🗑️</b> = ডিলিট (শুধু Admin)' : '') + '</div>' +
+      '<div class="bank-hint" style="margin-top:12px;font-size:12.5px">💡 <b>✏️</b> = এডিট &nbsp;•&nbsp; <b>📜</b> = পূর্ণ ইতিহাস &nbsp;•&nbsp; <b>🖨️</b> = প্রিন্ট' + (isAdmin ? ' &nbsp;•&nbsp; <b>🗑️</b> = ডিলিট (শুধু Admin)' : '') + '</div>' +
       '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সব লেনদেন (<span id="cust_tx_count">' + toBn(allTxs.length) + '</span> টি)</div>' +
       '<div id="cust_tx_list"></div>' +
       '</div>' +
@@ -2067,10 +2264,11 @@ function openCustomerDetailPopup(accountNo, custName){
           if(inParts.length) notesHtml += '<div style="font-size:11.5px;color:#4ade80;margin-top:3px"><b>📥</b> ' + inParts.join(' • ') + '</div>';
           const noteHtml = t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:4px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '';
           const detailHtml = (notesHtml || noteHtml) ? (notesHtml + noteHtml) : '<span style="color:#7a8ab8">—</span>';
+          const logCount = getTxHistory(t.id).length;
 
-          // ⚡ Action বাটন — সবার জন্য Print + Edit, শুধু Admin-এর জন্য Delete
           let actionsHtml = '<button class="mini print-btn" data-action="print" data-txid="' + t.id + '" title="প্রিন্ট">🖨️</button>';
-          actionsHtml += ' <button class="mini" data-action="edit" data-txid="' + t.id + '" title="এডিট / আপডেট" style="background:linear-gradient(135deg,#facc15,#f59e0b);color:#000;border-color:transparent">✏️</button>';
+          actionsHtml += ' <button class="mini" data-action="hist" data-txid="' + t.id + '" title="পূর্ণ ইতিহাস" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border-color:transparent">📜' + (logCount > 0 ? '<span style="font-size:9px;margin-left:2px">' + toBn(logCount) + '</span>' : '') + '</button>';
+          actionsHtml += ' <button class="mini" data-action="edit" data-txid="' + t.id + '" title="এডিট" style="background:linear-gradient(135deg,#facc15,#f59e0b);color:#000;border-color:transparent">✏️</button>';
           if(isAdmin){
             actionsHtml += ' <button class="mini danger" data-action="del" data-txid="' + t.id + '" title="ডিলিট (শুধু Admin)">🗑️</button>';
           }
@@ -2091,7 +2289,6 @@ function openCustomerDetailPopup(accountNo, custName){
           '<th>#</th><th>তারিখ</th><th>ধরন</th><th>আউটলেট</th><th>টাকা</th><th>বিবরণ / মন্তব্য</th><th>ইউজার</th><th>অ্যাকশন</th>' +
           '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
 
-        // ⚡ Action হ্যান্ডলার
         listEl.querySelectorAll('[data-action]').forEach(btn => {
           btn.addEventListener('click', async (e) => {
             e.stopPropagation();
@@ -2101,34 +2298,32 @@ function openCustomerDetailPopup(accountNo, custName){
             if(action === 'print'){
               const t = findTxAnywhere(txId)?.tx;
               if(t) printSingleTransaction(t);
-
+            } else if(action === 'hist'){
+              openTxHistoryModal(txId);
             } else if(action === 'edit'){
-              // ✅ সবাই Edit করতে পারবে
               const t = getAllTxs().find(x => x.id === txId);
               if(!t){ toast('❌ লেনদেন পাওয়া যায়নি'); return; }
               close();
               setTimeout(() => openTxModal(t.type, txId), 150);
-
             } else if(action === 'del'){
-              // 🔒 শুধু Admin Delete করতে পারবে
               if(!isAdmin){
                 toast('🔒 শুধু অ্যাডমিন ডিলিট করতে পারবে');
                 return;
               }
               if(!confirm('🗑️ এই লেনদেন ডিলিট করবেন?\n\nএটি ফিরিয়ে আনা যাবে না।')) return;
-
+              const deletedTx = getAllTxs().find(x => x.id === txId);
+              // ⚡ Audit Log
+              addTxLog(txId, 'delete', { deleted: { from: 'active', to: 'deleted' } }, deletedTx);
               if(!DB().deletedTxIds) DB().deletedTxIds = {};
               DB().deletedTxIds[txId] = new Date().toISOString();
               DB().txs = DB().txs.filter(x => x.id !== txId);
               Object.keys(DB().yearlyArchive || {}).forEach(y => {
                 DB().yearlyArchive[y] = (DB().yearlyArchive[y] || []).filter(x => x.id !== txId);
               });
-
               recomputeLive();
               await saveDB();
               try{ await pushRemoteDB(true); }catch(e){}
               toast('🗑️ লেনদেন ডিলিট হয়েছে');
-
               const newTxs = getCustomerAllTxs(accountNo);
               w.querySelector('#cust_tx_count').textContent = toBn(newTxs.length);
               w.querySelector('#cust_stat_total').textContent = toBn(newTxs.length) + ' টি';
@@ -2142,8 +2337,7 @@ function openCustomerDetailPopup(accountNo, custName){
               netEl.textContent = '৳ ' + fmt(Math.abs(nNet));
               netEl.style.color = nNet > 0 ? '#f87171' : '#4ade80';
               renderList();
-              renderDashboard();
-              renderSidebar();
+              renderDashboard(); renderSidebar();
             }
           });
         });
@@ -2170,6 +2364,8 @@ function openTxDetail(id){
       '<span style="color:#fff;font-weight:800">= ৳ ' + fmt(d * notes[d]) + '</span>' +
     '</div>'
   ).join('');
+  const logCount = getTxHistory(id).length;
+  const isAdmin = session.role === 'admin';
   openModal({
     title: (cfg.icon || '📌') + ' ' + (cfg.title || t.type) + ' — বিস্তারিত', wide: true,
     bodyHTML: '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">' +
@@ -2184,16 +2380,46 @@ function openTxDetail(id){
       '<div style="margin-top:10px;font-size:12px;color:#a5b4d8">⏱️ তৈরি: <b style="color:#fff">' + esc(fmtDateTime(t.createdAt)) + '</b></div>' +
       '</div>' +
       (notesHtml ? '<div class="section-title" style="margin-top:16px"><span class="bar"></span> 🗄️ নোট বিবরণ</div><div style="padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(59,130,246,.25)">' + notesHtml + '</div>' : '') +
+      // ⚡ Inline History (সবাই দেখবে)
+      '<div class="section-title" style="margin-top:16px"><span class="bar"></span> 📜 পূর্ণ ইতিহাস (' + toBn(logCount) + ' এন্ট্রি)</div>' +
+      '<div style="max-height:400px;overflow-y:auto;padding:4px">' + buildHistoryHTML(id, true) + '</div>' +
       '<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">' +
         '<button class="btn cyan" id="tdPrint" style="flex:1;min-width:140px">🖨️ A4 প্রিন্ট</button>' +
+        '<button class="btn purple" id="tdFullHist" style="flex:1;min-width:140px">📜 বড় করে দেখুন</button>' +
         '<button class="btn gray" id="tdClose" style="flex:1;min-width:120px">বন্ধ</button>' +
       '</div>',
     onMount: (w, close) => {
       w.querySelector('#tdClose').addEventListener('click', close);
       w.querySelector('#tdPrint').addEventListener('click', () => { close(); setTimeout(() => printSingleTransaction(t), 100); });
+      w.querySelector('#tdFullHist').addEventListener('click', () => { close(); setTimeout(() => openTxHistoryModal(id), 100); });
     }
   });
 }
+
+/* ═══ FULL SCREEN HISTORY MODAL ═══ */
+function openTxHistoryModal(txId){
+  const logs = getTxHistory(txId);
+  const found = findTxAnywhere(txId);
+  const tx = found?.tx;
+  if(!tx){ toast('❌ লেনদেন পাওয়া যায়নি'); return; }
+  const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
+  openModal({
+    title: '📜 লেনদেনের পূর্ণ ইতিহাস — ' + (cfg.icon || '') + ' ' + esc(cfg.title || tx.type),
+    xwide: true,
+    bodyHTML:
+      '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📊 মোট এন্ট্রি</div><div style="color:#fff;font-size:20px;font-weight:900;margin-top:4px">' + toBn(logs.length) + ' টি</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">💰 বর্তমান পরিমাণ</div><div style="color:#4ade80;font-size:18px;font-weight:900;margin-top:4px">৳ ' + fmt(tx.amount) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📅 লেনদেন তারিখ</div><div style="color:#fff;font-size:16px;font-weight:800;margin-top:4px">' + toBn(tx.date) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🏦 আউটলেট</div><div style="color:#fff;font-size:16px;font-weight:800;margin-top:4px">' + esc(BRANCHES[tx.branch]?.name || '-') + '</div></div>' +
+      '</div></div>' +
+      '<div class="bank-hint" style="margin-top:12px;font-size:13px">💡 কে কখন তৈরি, আপডেট, ডিলিট বা গ্রহণ করল — সবই ক্রমানুসারে দেখানো হয়েছে।</div>' +
+      '<div style="margin-top:16px;max-height:65vh;overflow-y:auto;padding-right:6px">' + buildHistoryHTML(txId, false) + '</div>',
+    onMount: (w) => {}
+  });
+}
+
+
 
 /* PENDING DETAIL */
 function openTransferPendingDetail(id){
@@ -2271,6 +2497,8 @@ async function receiveTransferDirect(id){
   if(!confirm('গ্রহণ?\n\n' + (BRANCHES[t.from]?.name||'') + ' ➜ ' + (BRANCHES[t.to]?.name||'') + '\n৳ ' + fmt(t.amount))) return;
   const nowISO = new Date().toISOString();
   updateTxAnywhere(id, { accepted: true, acceptedDate: todayStr(), acceptedAt: nowISO, acceptedBy: session.name, updatedAt: nowISO });
+    // ⚡ Audit Log — Accept
+  addTxLog(id, 'accept', { accepted: { from: false, to: true }, acceptedBy: { from: '', to: session.name } }, t);
   recomputeLive(); await saveDB();
   try{ await pushRemoteDB(true); }catch(e){}
   toast('✅ গ্রহণ — ৳ ' + fmt(t.amount));
@@ -2322,6 +2550,8 @@ function renderSidebar(){
     '<button class="sb-btn" data-sb="all-pending" style="border-color:rgba(220,38,38,.5)"><span class="sb-ico">⏳</span><span class="sb-lbl" style="color:#ef4444">অপেক্ষমাণ<span class="sb-sub">গ্রহণ ও সংগ্রহ বাকি</span></span>' + (totalPendingCount > 0 ? '<span class="sb-badge">' + toBn(totalPendingCount) + '</span>' : '') + '</button>' +
     '<div class="sb-section">🖨️ Print (A4)</div>' +
     '<button class="sb-btn primary" data-sb="print-dashboard"><span class="sb-ico">🖨️</span><span class="sb-lbl">ড্যাশবোর্ড Print<span class="sb-sub">আজকের পূর্ণ রিপোর্ট</span></span></button>' +
+	    '<div class="sb-section">📜 Audit Trail</div>' +
+    '<button class="sb-btn primary" data-sb="audit-log"><span class="sb-ico">📜</span><span class="sb-lbl">সব লেনদেনের ইতিহাস<span class="sb-sub">কে কখন কী করল</span></span></button>' +
     (isAdmin ? '<div class="sb-section">⚙️ ম্যানেজমেন্ট</div>' +
       '<button class="sb-btn" data-sb="branch-mgmt"><span class="sb-ico">🏢</span><span class="sb-lbl">আউটলেট ম্যানেজমেন্ট<span class="sb-sub">মূলধন ও ভল্ট</span></span></button>' +
       '<button class="sb-btn" data-sb="user-mgr"><span class="sb-ico">👥</span><span class="sb-lbl">ইউজার ম্যানেজমেন্ট<span class="sb-sub">ইউজার ও পাসওয়ার্ড</span></span></button>' +
@@ -2342,6 +2572,7 @@ function renderSidebar(){
           case 'due-list': openDueListModal(); break;
           case 'all-pending': openAllPendingModal(); break;
           case 'print-dashboard': printDashboardSnapshot(); break;
+          case 'audit-log': openAuditLogModal(); break;        // ⬅️ নতুন লাইন
           case 'db-browser': openDatabaseBrowser(); break;
           case 'branch-mgmt': openBranchManagement(); break;
           case 'user-mgr': openUserManager(); break;
@@ -2439,6 +2670,116 @@ function printDashboardSnapshot(){
     toast('❌ Print error: ' + err.message);
   }
 }
+
+/* ═══ GLOBAL AUDIT LOG MODAL ═══ */
+function openAuditLogModal(){
+  const logs = getAllTxLogs();
+  if(!logs.length){
+    openModal({ title: '📜 সব লেনদেনের ইতিহাস', wide: true,
+      bodyHTML: '<div class="empty">📭 এখনো কোনো ইতিহাস নেই</div>' });
+    return;
+  }
+
+  const actionLabels = {
+    create: { label: '🆕 তৈরি', color: '#22c55e' },
+    update: { label: '✏️ আপডেট', color: '#facc15' },
+    delete: { label: '🗑️ ডিলিট', color: '#dc2626' },
+    accept: { label: '✅ গ্রহণ', color: '#06b6d4' },
+    collect: { label: '💰 সংগ্রহ', color: '#a78bfa' }
+  };
+
+  let filterAction = 'all';
+  let filterUser = 'all';
+  let filterTxId = '';
+
+  function buildTable(){
+    let filtered = logs.slice();
+    if(filterAction !== 'all') filtered = filtered.filter(l => l.action === filterAction);
+    if(filterUser !== 'all') filtered = filtered.filter(l => l.username === filterUser);
+    if(filterTxId.trim()) filtered = filtered.filter(l => (l.txId || '').toLowerCase().includes(filterTxId.trim().toLowerCase()));
+
+    if(!filtered.length) return '<div class="empty">📭 কোনো এন্ট্রি নেই</div>';
+
+    return '<div style="max-height:60vh;overflow-y:auto">' + filtered.slice(0, 500).map(log => {
+      const a = actionLabels[log.action] || { label: log.action, color: '#7a8ab8' };
+      const tx = findTxAnywhere(log.txId)?.tx;
+      const txLabel = tx ? (TX_CFG[tx.type]?.icon || '') + ' ' + (TX_CFG[tx.type]?.title || tx.type) : '❓';
+      const txAmt = tx ? '৳ ' + fmt(tx.amount) : '—';
+      let changeSummary = '';
+      if(log.changes){
+        const keys = Object.keys(log.changes).slice(0, 3);
+        changeSummary = keys.map(k => {
+          return '<span style="font-size:11px;color:#93c5fd">' + esc(k) + '</span>';
+        }).join(' • ');
+        if(Object.keys(log.changes).length > 3) changeSummary += ' • +' + (Object.keys(log.changes).length - 3);
+      }
+      return '<div style="padding:10px 12px;border-radius:10px;background:linear-gradient(145deg,#0f1428,#07091a);border:1px solid ' + a.color.replace(')', ',.35)').replace('rgb','rgba') + ';margin-bottom:8px;cursor:pointer" data-log-txid="' + esc(log.txId) + '">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">' +
+          '<div style="flex:1;min-width:200px">' +
+            '<div style="display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:900;color:' + a.color + ';background:' + a.color.replace(')', ',.15)').replace('rgb','rgba') + ';border:1px solid ' + a.color + '">' + a.label + '</div>' +
+            '<div style="margin-top:6px;font-size:12.5px;color:#fff;font-weight:800">👤 ' + esc(log.user) + ' <span style="color:#7a8ab8;font-weight:600;font-size:11px">(' + (log.role === 'admin' ? '👑 Admin' : '👤 User') + ')</span></div>' +
+            '<div style="margin-top:3px;font-size:11.5px;color:#a5b4d8">🏦 ' + esc(log.branch) + ' • 📱 ' + esc(log.device) + ' • 📍 ' + esc(log.location) + '</div>' +
+            '<div style="margin-top:5px;font-size:12px;color:#fde047"><b>' + txLabel + '</b> • <b style="color:#4ade80">' + txAmt + '</b>' + (changeSummary ? ' <span style="color:#7a8ab8">|</span> ' + changeSummary : '') + '</div>' +
+          '</div>' +
+          '<div style="text-align:right;font-size:11px;color:#93c5fd;font-weight:700;white-space:nowrap">' + esc(fmtDateTime(log.at)) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+  }
+
+  const users = [...new Set(logs.map(l => l.username).filter(Boolean))];
+  const userOptions = '<option value="all">— সব ইউজার —</option>' + users.map(u => '<option value="' + esc(u) + '">' + esc(u) + '</option>').join('');
+
+  openModal({
+    title: '📜 সব লেনদেনের ইতিহাস (' + toBn(logs.length) + ' এন্ট্রি)',
+    xwide: true,
+    bodyHTML:
+      '<div class="accept-head" style="margin-bottom:12px">' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">' +
+          '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📊 মোট এন্ট্রি</div><div style="color:#fff;font-size:20px;font-weight:900">' + toBn(logs.length) + '</div></div>' +
+          '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🆕 তৈরি</div><div style="color:#4ade80;font-size:20px;font-weight:900">' + toBn(logs.filter(l=>l.action==='create').length) + '</div></div>' +
+          '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">✏️ আপডেট</div><div style="color:#facc15;font-size:20px;font-weight:900">' + toBn(logs.filter(l=>l.action==='update').length) + '</div></div>' +
+          '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🗑️ ডিলিট</div><div style="color:#f87171;font-size:20px;font-weight:900">' + toBn(logs.filter(l=>l.action==='delete').length) + '</div></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="form-row" style="margin-bottom:12px">' +
+        '<div class="field"><label>কাজ</label><select id="al_action">' +
+          '<option value="all">— সব —</option>' +
+          '<option value="create">🆕 তৈরি</option>' +
+          '<option value="update">✏️ আপডেট</option>' +
+          '<option value="delete">🗑️ ডিলিট</option>' +
+          '<option value="accept">✅ গ্রহণ</option>' +
+          '<option value="collect">💰 সংগ্রহ</option>' +
+        '</select></div>' +
+        '<div class="field"><label>ইউজার</label><select id="al_user">' + userOptions + '</select></div>' +
+        '<div class="field"><label>Tx ID</label><input type="text" id="al_txid" placeholder="আইডি লিখুন..." autocomplete="off"></div>' +
+      '</div>' +
+      '<div id="al_body"></div>',
+    onMount: (w) => {
+      const bodyEl = w.querySelector('#al_body');
+      function refresh(){ bodyEl.innerHTML = buildTable(); bindRows(); }
+      function bindRows(){
+        bodyEl.querySelectorAll('[data-log-txid]').forEach(el => {
+          el.addEventListener('click', () => {
+            const txId = el.dataset.logTxid;
+            if(findTxAnywhere(txId)){ openTxHistoryModal(txId); }
+            else toast('❌ লেনদেন পাওয়া যায়নি');
+          });
+        });
+      }
+      w.querySelector('#al_action').addEventListener('change', e => { filterAction = e.target.value; refresh(); });
+      w.querySelector('#al_user').addEventListener('change', e => { filterUser = e.target.value; refresh(); });
+      w.querySelector('#al_txid').addEventListener('input', e => { filterTxId = e.target.value; refresh(); });
+      refresh();
+    }
+  });
+}
+
+function openSidebar(){
+  document.getElementById('sidebar')?.classList.add('open');
+  document.getElementById('sidebarOverlay')?.classList.add('active');
+}
+
 function openSidebar(){ document.getElementById('sidebar')?.classList.add('open'); document.getElementById('sidebarOverlay')?.classList.add('active'); }
 function closeSidebar(){ document.getElementById('sidebar')?.classList.remove('open'); document.getElementById('sidebarOverlay')?.classList.remove('active'); }
 
@@ -2993,6 +3334,10 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
         cashNotTakenAmount: isLG && cNT ? Math.round(cNTA*100)/100 : null };
       if(cNT && !editing){ tx.collectionStatus = 'pending'; tx.collectedAmount = 0; }
       if(!editing){ DB().txs.push(tx); } else { const i = DB().txs.findIndex(x => x.id === editing.id); if(i >= 0) DB().txs[i] = tx; }
+	        // ⚡ Audit Log
+      const isCreating = !editing;
+      const changes = isCreating ? { action: 'new transaction' } : computeTxChanges(editing, tx);
+      addTxLog(tx.id, isCreating ? 'create' : 'update', changes, tx);
       if(cfg.cust && (tx.custAcc || tx.custName)){ const c = upsertCustomer({ accountNo: tx.custAcc, name: tx.custName, mobile: tx.custMobile, address: tx.custAddr, branch: cB }); if(c) tx.custAcc = c.accountNo; }
       if(type === 'support' && tx.custAcc) updateCustomerDueInDB(tx.custAcc, false);
       recomputeLive(); await saveDB();
@@ -3094,6 +3439,9 @@ function openCollectionChildModal(parentId, mode){
           const nc = Math.round(((Number(parent.collectedAmount) || 0) + amt)*100)/100;
           const ns = nc >= owed - 0.01 ? 'collected' : 'partial';
           updateTxAnywhere(parent.id, { collectedAmount: nc, collectionStatus: ns, updatedAt: new Date().toISOString() });
+		            // ⚡ Audit Log
+          addTxLog(parent.id, 'collect', { collectedAmount: { from: collected, to: nc }, collectionStatus: { from: parent.collectionStatus, to: ns } }, parent);
+          addTxLog(child.id, 'create', { action: 'collection entry created' }, child);
           recomputeLive(); await saveDB();
           try{ await pushRemoteDB(true, [child]); }catch(e){}
           close(); renderDashboard(); renderSidebar();
@@ -3229,14 +3577,22 @@ function openAllData(){
   });
 }
 async function deleteTx(id){
+  if(session.role !== 'admin'){
+    toast('🔒 শুধু অ্যাডমিন ডিলিট করতে পারবে');
+    return;
+  }
+  const t = DB().txs.find(x => x.id === id);
   if(!DB().deletedTxIds) DB().deletedTxIds = {};
   DB().deletedTxIds[id] = new Date().toISOString();
   DB().txs = DB().txs.filter(x=>x.id !== id);
+  // ⚡ Audit Log — Delete
+  addTxLog(id, 'delete', { deleted: { from: 'active', to: 'deleted' } }, t);
   recomputeLive(); await saveDB();
   try{ await pushRemoteDB(true); }catch(e){}
   renderDashboard(); renderSidebar();
   toast('🗑️ ডিলিট');
 }
+
 function openYearArchive(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
   const years = new Set();
