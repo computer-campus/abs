@@ -3,14 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Computer Campus | Agent Banking v28</title>
+<title>Computer Campus | Agent Banking v30</title>
 <meta name="theme-color" content="#000000">
+<meta name="description" content="Computer Campus Agent Banking System">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CC Bank">
+<meta name="application-name" content="CC Bank">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='%23fff'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='%23fff'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--blue:#3b82f6;--blue-2:#60a5fa;--blue-3:#93c5fd;--yellow:#facc15;--yellow-2:#fde047;--green:#22c55e;--green-2:#4ade80;--red:#dc2626;--txt:#f0f4ff;--muted:#7a8ab8;--dim:#4a5680;--line:rgba(59,130,246,.12);--line-2:rgba(59,130,246,.22);--line-3:rgba(59,130,246,.4);--pink:#ec4899;--pink-2:#f9a8d4;}
@@ -23,8 +30,14 @@ body{font-family:'Noto Sans Bengali',sans-serif;color:var(--txt);background:#040
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes popIn{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes pulseGreen{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 12px rgba(34,197,94,0)}}
+@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}50%{box-shadow:0 0 0 8px rgba(220,38,38,0)}}
+@keyframes pulsePink{0%,100%{box-shadow:0 0 0 0 rgba(236,72,153,.5)}50%{box-shadow:0 0 0 10px rgba(236,72,153,0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes notifSlide{from{opacity:0;transform:translateX(420px)}to{opacity:1;transform:translateX(0)}}
+@keyframes notifProgress{from{width:100%}to{width:0%}}
+@keyframes bellRing{0%,100%{transform:rotate(0)}20%{transform:rotate(20deg)}40%{transform:rotate(-18deg)}60%{transform:rotate(12deg)}80%{transform:rotate(-6deg)}}
+@keyframes slideInRT{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 .rgb{background:linear-gradient(90deg,var(--blue),var(--yellow),var(--green),var(--blue));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
 .sidebar-overlay{position:fixed;inset:0;z-index:400;background:rgba(2,4,10,.6);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .3s}
 .sidebar-overlay.active{opacity:1;pointer-events:auto}
@@ -63,7 +76,29 @@ body{font-family:'Noto Sans Bengali',sans-serif;color:var(--txt);background:#040
 .tb-time{font-size:13.5px;font-weight:800;padding:9px 14px;border-radius:11px;background:linear-gradient(145deg,rgba(59,130,246,.15),rgba(34,197,94,.08));border:1px solid var(--line-3);color:var(--green-2);display:flex;align-items:center;gap:6px}
 .tb-time .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green-2);animation:pulseGreen 1.8s ease-in-out infinite}
 .sync-status{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:var(--green-2);font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.sync-status.offline{background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.4);color:#f87171}
+.realtime-status{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.4);color:var(--blue-3);font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:all .3s}
+.realtime-status.online{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--green-2);animation:pulseGreen 2s ease-in-out infinite}
+.realtime-status.offline{background:rgba(122,138,184,.12);border-color:rgba(122,138,184,.3);color:var(--muted)}
+.realtime-status.connecting{background:rgba(250,204,21,.15);border-color:rgba(250,204,21,.5);color:var(--yellow-2)}
+.realtime-status.error{background:rgba(220,38,38,.15);border-color:rgba(220,38,38,.5);color:#f87171}
+.rt-dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.presence-badge{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.4);color:#f9a8d4;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+.presence-badge b{color:#fff;font-weight:900}
+.net-status{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(122,138,184,.12);border:1px solid rgba(122,138,184,.3);color:var(--muted);font-weight:700;display:inline-flex;align-items:center;gap:5px;transition:all .3s}
+.net-status.online{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--green-2)}
+.net-status.slow{background:rgba(250,204,21,.15);border-color:rgba(250,204,21,.5);color:var(--yellow-2)}
+.net-status.offline{background:rgba(220,38,38,.15);border-color:rgba(220,38,38,.5);color:#f87171;animation:pulseRed 1.5s ease-in-out infinite}
+.net-status .n-dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.queue-badge{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(236,72,153,.15);border:1px solid rgba(236,72,153,.5);color:#f9a8d4;font-weight:800;display:none;align-items:center;gap:5px;cursor:pointer}
+.queue-badge.show{display:inline-flex;animation:pulsePink 2s ease-in-out infinite}
+.queue-badge b{color:#fff;font-weight:900}
+.net-banner{position:fixed;top:0;left:0;right:0;z-index:9998;padding:10px 18px;background:linear-gradient(135deg,rgba(220,38,38,.95),rgba(153,27,27,.92));color:#fff;font-weight:800;font-size:13px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.6);transform:translateY(-100%);transition:transform .35s;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.net-banner.show{transform:translateY(0)}
+.net-banner.online-banner{background:linear-gradient(135deg,rgba(34,197,94,.95),rgba(22,163,74,.92))}
+.net-banner .retry-btn{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);padding:5px 12px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit}
+.sync-spinner{display:inline-block;width:11px;height:11px;border:2px solid rgba(255,255,255,.25);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite}
+.rt-toast{position:fixed;top:78px;right:18px;z-index:9999;padding:13px 18px;border-radius:14px;background:linear-gradient(135deg,rgba(34,197,94,.95),rgba(59,130,246,.9));color:#fff;font-weight:800;font-size:13.5px;box-shadow:0 12px 40px rgba(0,0,0,.85);animation:slideInRT .35s;display:flex;align-items:center;gap:10px;max-width:340px}
+.rt-toast.err{background:linear-gradient(135deg,rgba(220,38,38,.95),rgba(153,27,27,.9))}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 50% 30%,#0a1020,#04060d 70%)}
 .login-box{width:100%;max-width:440px;background:linear-gradient(165deg,#0f1428,#060a18);border:1px solid var(--line-2);border-radius:28px;padding:38px 30px;box-shadow:0 20px 50px rgba(0,0,0,.9);animation:popIn .5s}
 .login-logo{width:88px;height:88px;margin:0 auto 18px;display:grid;place-items:center;animation:float 3s ease-in-out infinite}
@@ -208,6 +243,7 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 .mini.accept{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border-color:transparent}
 .mini.cash-btn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-color:transparent}
 .mini.online-btn{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border-color:transparent}
+.mini.print-btn{background:linear-gradient(135deg,#06b6d4,#0891b2);color:#fff;border-color:transparent}
 .mini.show{background:rgba(34,197,94,.2);color:var(--green-2);border-color:rgba(34,197,94,.4)}
 .empty{padding:36px 24px;text-align:center;color:#a5b4d8;font-size:14.5px}
 .bank-hint{font-size:13.5px;color:#b8c8ee;background:rgba(59,130,246,.08);padding:12px 16px;border-radius:10px;margin-bottom:12px;border:1px dashed rgba(59,130,246,.35)}
@@ -250,21 +286,37 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 .modal-history{margin-top:24px;padding-top:18px;border-top:2px dashed var(--line-3)}
 .modal-history-title{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:15px;font-weight:800;color:#fff;flex-wrap:wrap}
 .modal-history-title span.bar{width:4px;height:22px;border-radius:4px;background:linear-gradient(180deg,#ec4899,#a855f7)}
-.print-loading{position:fixed;inset:0;z-index:9999;background:rgba(4,6,13,.95);display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;color:#fff}
-.print-loading.active{display:flex}
-.print-loading .spinner-big{width:60px;height:60px;border:5px solid rgba(59,130,246,.2);border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite}
-.snapshot-header{text-align:center;padding:16px;margin-bottom:16px;border-radius:14px;background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(34,197,94,.08));border:1px solid rgba(59,130,246,.4)}
-.snapshot-header h1{font-size:22px;font-weight:900;background:linear-gradient(90deg,#60a5fa,#4ade80);-webkit-background-clip:text;background-clip:text;color:transparent}
-.snapshot-header .meta{margin-top:12px;font-size:13px;color:#e0eaff;font-weight:600;display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
-.snapshot-header .meta b{color:#4ade80}
-.snapshot-footer{text-align:center;padding:12px;margin-top:16px;font-size:11.5px;color:#7a8ab8;border-top:1px dashed rgba(59,130,246,.3)}
-.snapshot-capture-area{background:#04060d!important;padding:24px;border-radius:18px}
-.due-hero{padding:24px 20px;border-radius:22px;text-align:center;background:linear-gradient(155deg,rgba(220,38,38,.15),rgba(245,158,11,.08));border:1.5px solid rgba(220,38,38,.5);margin-bottom:16px}
-.due-hero .lbl{font-size:14px;color:#e0e8ff;font-weight:700}
-.due-hero .amt{font-size:48px;font-weight:900;margin-top:8px;color:#fff}
-.due-hero .sub{font-size:13.5px;color:#b8c8ee;margin-top:8px}
-.due-actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
-.due-actions .btn{flex:1;min-width:140px;font-size:14.5px}
+.notif-container{position:fixed;top:78px;right:18px;z-index:99999;display:flex;flex-direction:column;gap:12px;max-width:420px;width:calc(100% - 36px);pointer-events:none}
+.notif-card{pointer-events:auto;position:relative;overflow:hidden;border-radius:18px;padding:16px 18px;background:linear-gradient(150deg,#0f1428,#06091a);border:1.5px solid rgba(59,130,246,.6);box-shadow:0 24px 60px rgba(0,0,0,.95);animation:notifSlide .35s cubic-bezier(.2,1,.3,1);display:flex;gap:14px;align-items:flex-start;backdrop-filter:blur(14px);cursor:pointer}
+.notif-card.success{border-color:rgba(34,197,94,.7);background:linear-gradient(150deg,rgba(34,197,94,.18),rgba(6,9,26,.95))}
+.notif-card.warning{border-color:rgba(250,204,21,.7);background:linear-gradient(150deg,rgba(250,204,21,.16),rgba(6,9,26,.95))}
+.notif-card.danger{border-color:rgba(220,38,38,.7);background:linear-gradient(150deg,rgba(220,38,38,.18),rgba(6,9,26,.95))}
+.notif-card.info{border-color:rgba(59,130,246,.7);background:linear-gradient(150deg,rgba(59,130,246,.16),rgba(6,9,26,.95))}
+.notif-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:24px;flex-shrink:0;background:linear-gradient(145deg,rgba(59,130,246,.25),rgba(34,197,94,.1));border:1px solid rgba(59,130,246,.5)}
+.notif-card.success .notif-icon{background:linear-gradient(145deg,rgba(34,197,94,.35),rgba(34,197,94,.1));border-color:rgba(34,197,94,.6)}
+.notif-card.warning .notif-icon{background:linear-gradient(145deg,rgba(250,204,21,.35),rgba(250,204,21,.1));border-color:rgba(250,204,21,.6)}
+.notif-card.danger .notif-icon{background:linear-gradient(145deg,rgba(220,38,38,.35),rgba(220,38,38,.1));border-color:rgba(220,38,38,.6)}
+.notif-icon.ring{animation:bellRing .8s ease-in-out}
+.notif-content{flex:1;min-width:0}
+.notif-title{font-size:14px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.notif-title .notif-badge{font-size:10px;padding:2px 8px;border-radius:6px;background:rgba(59,130,246,.25);border:1px solid rgba(59,130,246,.5);color:#93c5fd;font-weight:800;text-transform:uppercase}
+.notif-title .notif-badge.success{background:rgba(34,197,94,.25);border-color:rgba(34,197,94,.5);color:#4ade80}
+.notif-title .notif-badge.warning{background:rgba(250,204,21,.25);border-color:rgba(250,204,21,.5);color:#facc15}
+.notif-title .notif-badge.danger{background:rgba(220,38,38,.25);border-color:rgba(220,38,38,.5);color:#f87171}
+.notif-body{font-size:12.5px;color:#c9d5f0;line-height:1.85;word-break:break-word}
+.notif-body b{color:#fff;font-weight:800}
+.notif-body .notif-amt{color:#4ade80;font-weight:900;font-size:15px}
+.notif-body .notif-meta{display:block;margin-top:6px;font-size:11px;color:#7a8ab8}
+.notif-close{position:absolute;top:8px;right:10px;width:26px;height:26px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:#a5b4d8;cursor:pointer;font-size:13px;display:grid;place-items:center}
+.notif-close:hover{background:rgba(220,38,38,.3);color:#f87171}
+.notif-progress{position:absolute;bottom:0;left:0;height:3px;background:linear-gradient(90deg,#3b82f6,#22c55e);animation:notifProgress linear forwards}
+.notif-card.success .notif-progress{background:linear-gradient(90deg,#22c55e,#4ade80)}
+.notif-card.warning .notif-progress{background:linear-gradient(90deg,#facc15,#f59e0b)}
+.notif-card.danger .notif-progress{background:linear-gradient(90deg,#dc2626,#f87171)}
+.notif-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.notif-actions button{padding:7px 14px;border-radius:9px;border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.15);color:#93c5fd;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.notif-actions button:hover{background:rgba(59,130,246,.35);color:#fff;transform:translateY(-1px)}
+.notif-actions button.primary{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:transparent;color:#fff}
 @media(max-width:640px){
   .brand h1{font-size:15px}.brand p{font-size:10.5px}
   .topbar{padding:10px 12px}
@@ -277,21 +329,11 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
   .btn{font-size:14px;padding:12px 18px}
   .mini{font-size:12.5px;padding:6px 10px}
   .db-tab-btn{font-size:12px;padding:8px 12px}
+  .realtime-status,.presence-badge,.net-status,.queue-badge{font-size:10.5px;padding:5px 9px}
+  .notif-container{top:70px;right:10px;left:10px;width:auto;max-width:none}
+  .notif-card{padding:14px 15px;gap:11px}
+  .notif-icon{width:42px;height:42px;font-size:20px;border-radius:12px}
 }
-
-.realtime-status{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.4);color:var(--blue-3);font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:all .3s}
-.realtime-status.online{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--green-2);animation:pulseGreen 2s ease-in-out infinite}
-.realtime-status.offline{background:rgba(122,138,184,.12);border-color:rgba(122,138,184,.3);color:var(--muted)}
-.realtime-status.connecting{background:rgba(250,204,21,.15);border-color:rgba(250,204,21,.5);color:var(--yellow-2)}
-.realtime-status.error{background:rgba(220,38,38,.15);border-color:rgba(220,38,38,.5);color:#f87171}
-.rt-dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
-.presence-badge{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.4);color:#f9a8d4;font-weight:700;display:inline-flex;align-items:center;gap:5px}
-.presence-badge b{color:#fff;font-weight:900}
-@keyframes slideInRT{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
-.rt-toast{position:fixed;top:78px;right:18px;z-index:9999;padding:13px 18px;border-radius:14px;background:linear-gradient(135deg,rgba(34,197,94,.95),rgba(59,130,246,.9));color:#fff;font-weight:800;font-size:13.5px;box-shadow:0 12px 40px rgba(0,0,0,.85);animation:slideInRT .35s;display:flex;align-items:center;gap:10px;max-width:340px}
-.rt-toast.err{background:linear-gradient(135deg,rgba(220,38,38,.95),rgba(153,27,27,.9))}
-@media(max-width:640px){.realtime-status,.presence-badge{font-size:10.5px;padding:5px 9px}}
-
 ::selection{background:var(--blue);color:#fff}
 </style>
 </head>
@@ -306,9 +348,9 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
       </svg>
     </div>
     <h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1>
-    <h2>এজেন্ট ব্যাংকিং সিস্টেম • v28</h2>
-    <div class="field"><label>ইউজার আইডি</label><input type="text" id="loginUser" placeholder="আপনার আইডি" autocomplete="off"></div>
-    <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="new-password"></div>
+    <h2>এজেন্ট ব্যাংকিং সিস্টেম • v30</h2>
+    <div class="field"><label>ইউজার আইডি</label><input type="text" id="loginUser" placeholder="আপনার আইডি" autocomplete="off" name="lu_x"></div>
+    <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="new-password" name="lp_x"></div>
     <button class="btn block pink" id="loginBtn">🔐 লগইন করুন</button>
     <div id="loginErr" style="color:#fff;font-size:13px;text-align:center;margin-top:10px;min-height:18px"></div>
   </div>
@@ -322,7 +364,6 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
     <section class="section" id="pendingTransfersSection"></section>
     <section class="section" id="vaultSection"></section>
     <section class="section" id="balanceSection"></section>
-    <!-- <section class="section" id="pendingCollectionsSection"></section> -->
     <section class="section" id="dueSection"></section>
   </main>
 </div>
@@ -335,7 +376,7 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 
 <div id="modalRoot"></div>
 <div id="syncIndicator" class="sync-indicator">Sync</div>
-<div id="printLoading" class="print-loading"><div class="spinner-big"></div><div style="font-size:16px;font-weight:700;color:#e0eaff">📸 Snapshot তৈরি হচ্ছে...</div><div style="font-size:12.5px;color:#7a8ab8" id="printLoadingMsg">অপেক্ষা করুন</div></div>
+<div id="printLoading" style="display:none"></div>
 
 <script>
 /* PROTECTION */
@@ -353,7 +394,7 @@ window.SUPABASE_URL = 'https://xmjemenswfharaptazxn.supabase.co';
 window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtamVtZW5zd2ZoYXJhcHRhenhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3NDI2MDIsImV4cCI6MjEwNTMxODYwMn0.akRSS-22xeU72gdVye9B7xrV09QkjJY_9zoA9xXNiJc';
 window.SUPABASE_TABLE = 'agent_bank';
 window.SUPABASE_ROW_ID = 'cc_agent_bank_main';
-window.APP_VERSION = 'v28';
+window.APP_VERSION = 'v30';
 
 /* CONSTANTS */
 const BRANCHES = { kalaroa: { name:'কলারোয়া শাখা', en:'Kalaroa Branch' }, jhaudanga: { name:'ঝাউডাঙ্গা শাখা', en:'Jhaudanga Branch' } };
@@ -371,9 +412,11 @@ const DENOMS = [1000,500,200,100,50,20,10,5,2,1];
 const APP_VERSION = window.APP_VERSION;
 const SKEY = 'cc_agent_bank_session_' + APP_VERSION;
 const LOCAL_DB_KEY = 'cc_agent_bank_local_' + APP_VERSION;
+const NET_QUEUE_KEY = 'cc_net_queue_' + APP_VERSION;
+const NOTIF_PREF_KEY = 'cc_notif_prefs_' + APP_VERSION;
 const SUPABASE_TIMEOUT_MS = 12000;
 const LS_TX_LIMIT = 500;
-const PASS_SALT = 'cc_agent_bank_v28_salt_';
+const PASS_SALT = 'cc_agent_bank_v30_salt_';
 const ARCHIVE_YEARS_AFTER = 2;
 
 const TX_CFG = {
@@ -392,7 +435,6 @@ const TX_CFG = {
 };
 
 const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
 const uid = () => Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-4);
 const fmt = n => { const v = Math.round((Number(n)||0)*100)/100; const safe = Object.is(v,-0)?0:v; return safe.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); };
 const todayStr = () => { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
@@ -454,7 +496,6 @@ function attachAmountInput(inputEl, opts){
       inputEl.value = raw ? Number(raw).toLocaleString('en-US') : '';
     }
   });
-  inputEl.addEventListener('focus', ()=>{ setTimeout(()=> inputEl.select(), 50); });
 }
 function setupEnterNavigation(){
   document.addEventListener('keydown', (e)=>{
@@ -559,10 +600,7 @@ function normalizeDB(){
   if(!d.branchCapital || typeof d.branchCapital !== 'object') d.branchCapital = {};
   Object.keys(BRANCHES).forEach(b=>{ if(typeof d.branchCapital[b] !== 'number') d.branchCapital[b] = 0; });
   d.totalCapital = Object.values(d.branchCapital).reduce((s,v)=> s + (Number(v)||0), 0);
-  (d.txs||[]).forEach(t=>{
-    if(!t.custBranch) t.custBranch = t.branch || 'kalaroa';
-    if(!t.year && t.date) t.year = t.date.slice(0,4);
-  });
+  (d.txs||[]).forEach(t=>{ if(!t.custBranch) t.custBranch = t.branch || 'kalaroa'; if(!t.year && t.date) t.year = t.date.slice(0,4); });
   (d.users||[]).forEach(u=>{ if(u.password && !u.__hashed){ u.password = hashPassword(u.password); u.__hashed = true; } });
 }
 function forceFixAdmin(){
@@ -588,51 +626,149 @@ function saveLocalDB(){
       __lastUpdate: db.__lastUpdate || new Date().toISOString()
     };
     safeLS_set(LOCAL_DB_KEY, JSON.stringify(clean));
-  }catch(e){ console.warn('LS error:', e); }
+  }catch(e){}
 }
 function loadLocalDB(){ try{ const raw = safeLS_get(LOCAL_DB_KEY); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }
 
-/* ═══ SUPABASE SYNC ═══ */
+/* ═══ GLOBAL STATE ═══ */
 let __supabaseClient = null;
 let __remoteSaveTimer = null;
 let __isRemoteReady = false;
-
 let __realtimeChannel = null;
 let __realtimeStatus = 'offline';
 let __isApplyingRemote = false;
+let __realtimeReconnectAttempts = 0;
+let __broadcastCh = null;
+let __isOnline = navigator.onLine;
+let __netQuality = 'unknown';
+let __retryCount = 0;
+let __retryTimer = null;
+let __netCheckTimer = null;
+let __connEffectiveType = 'unknown';
+let __lastNetType = 'unknown';
+let __switchInProgress = false;
+let __audioCtx = null;
+let __soundEnabled = true;
+let __vibrationEnabled = true;
+let __notifHistory = [];
+let session = null, viewBranch = 'all', dashDate = todayStr(), isDateViewMode = false;
 
+/* ═══ SOUND/VIBRATION ═══ */
+function loadNotifPrefs(){
+  try{ const p = safeLS_get(NOTIF_PREF_KEY); if(p){ const o = JSON.parse(p); __soundEnabled = o.sound !== false; __vibrationEnabled = o.vibration !== false; } }catch(e){}
+}
+function saveNotifPrefs(){ try{ safeLS_set(NOTIF_PREF_KEY, JSON.stringify({ sound: __soundEnabled, vibration: __vibrationEnabled })); }catch(e){} }
+function playNotifSound(type){
+  if(!__soundEnabled) return;
+  try{
+    if(!__audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; if(!AC) return; __audioCtx = new AC(); }
+    if(__audioCtx.state === 'suspended'){ __audioCtx.resume(); }
+    const patterns = {
+      success:[{f:880,d:.10,t:0},{f:1100,d:.14,t:.11},{f:1320,d:.22,t:.26}],
+      danger:[{f:520,d:.16,t:0},{f:420,d:.16,t:.18},{f:520,d:.22,t:.36}],
+      warning:[{f:720,d:.13,t:0},{f:720,d:.13,t:.18}],
+      info:[{f:620,d:.10,t:0},{f:820,d:.16,t:.12}],
+      transfer:[{f:660,d:.10,t:0},{f:880,d:.10,t:.11},{f:1100,d:.20,t:.22}]
+    };
+    const notes = patterns[type] || patterns.info;
+    notes.forEach(n => {
+      const osc = __audioCtx.createOscillator(), gain = __audioCtx.createGain();
+      osc.type = 'sine'; osc.frequency.value = n.f;
+      gain.gain.setValueAtTime(0, __audioCtx.currentTime + n.t);
+      gain.gain.linearRampToValueAtTime(0.28, __audioCtx.currentTime + n.t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, __audioCtx.currentTime + n.t + n.d);
+      osc.connect(gain); gain.connect(__audioCtx.destination);
+      osc.start(__audioCtx.currentTime + n.t); osc.stop(__audioCtx.currentTime + n.t + n.d + 0.02);
+    });
+  }catch(e){}
+}
+function vibrateNotif(type){
+  if(!__vibrationEnabled || !navigator.vibrate) return;
+  try{ const patterns = { success:[80,40,120], danger:[200,80,200,80,200], warning:[140,60,140], info:[60,40,80], transfer:[100,50,100,50,150] }; navigator.vibrate(patterns[type]||patterns.info); }catch(e){}
+}
+
+/* ═══ NETWORK TYPE ═══ */
+function getNetworkType(){
+  try{
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if(!conn) return 'unknown';
+    const t = (conn.type || '').toLowerCase();
+    if(t) return t;
+    const et = conn.effectiveType || '';
+    if(et === '4g' || et === '5g') return 'fast';
+    if(et === '3g') return 'medium';
+    if(et === '2g' || et === 'slow-2g') return 'slow';
+    return 'unknown';
+  }catch(e){ return 'unknown'; }
+}
+
+/* ═══ SUPABASE ═══ */
 function initSupabase(){
   try{
     if(typeof window.supabase === 'undefined' || !window.supabase.createClient){
-      console.warn('[Supabase] library not loaded — local-only mode');
+      console.warn('[Supabase] library not loaded');
       updateRealtimeIndicator('offline');
       return;
     }
     if(!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) return;
-    __supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    __supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY, {
+      realtime: { params: { eventsPerSecond: 10 } },
+      auth: { persistSession: false }
+    });
     __isRemoteReady = true;
     console.log('[Supabase] client initialized');
     const ind = document.getElementById('syncIndicator');
     if(ind){ ind.textContent = 'Cloud ✓'; ind.classList.add('active'); setTimeout(()=>{ ind.classList.remove('active'); ind.textContent = 'Sync'; }, 2000); }
-    pullRemoteDB().catch(err => console.warn('[Supabase] initial pull failed:', err.message));
-    // ⚡ Realtime চ্যানেল চালু
-    setupRealtime();
+    // ⚡ সাথে সাথে Realtime শুরু
+    setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 100);
+    // Pull with retry
+    pullRemoteDB().catch(err => { console.warn('[Supabase] initial pull failed:', err.message); setTimeout(() => pullRemoteDB().catch(()=>{}), 3000); });
   }catch(e){
     console.warn('[Supabase] init failed:', e.message);
-    __supabaseClient = null;
-    __isRemoteReady = false;
+    __supabaseClient = null; __isRemoteReady = false;
     updateRealtimeIndicator('error');
+    setTimeout(() => { try{ initSupabase(); }catch(e2){} }, 5000);
   }
 }
 
-/* ═══ REALTIME SETUP ═══ */
+async function pullRemoteDB(){
+  if(!__isRemoteReady || !__supabaseClient) return;
+  const res = await withTimeout(
+    __supabaseClient.from(window.SUPABASE_TABLE).select('data').eq('id', window.SUPABASE_ROW_ID).maybeSingle(),
+    SUPABASE_TIMEOUT_MS,
+    { data: null, error: { message: 'timeout' } }
+  );
+  if(res && res.data && res.data.data && typeof res.data.data === 'object'){
+    const remote = res.data.data;
+    const localTs = Date.parse((DB() && DB().__lastUpdate) || 0) || 0;
+    const remoteTs = Date.parse(remote.__lastUpdate || 0) || 0;
+    if(remoteTs > localTs){
+      console.log('[Supabase] remote is newer, adopting');
+      __isApplyingRemote = true;
+      window.db = remote;
+      normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); saveLocalDB();
+      __isApplyingRemote = false;
+      if(session){ renderTopbar(); renderDashboard(); renderSidebar(); }
+    }
+  }
+}
+
+function queueRemoteSave(){
+  if(!__isRemoteReady || !__supabaseClient) return;
+  if(__remoteSaveTimer) clearTimeout(__remoteSaveTimer);
+  __remoteSaveTimer = setTimeout(pushRemoteDB, 800);
+}
+
 function setupRealtime(){
   if(!__isRemoteReady || !__supabaseClient) return;
   try{
-    if(__realtimeChannel){ __supabaseClient.removeChannel(__realtimeChannel); __realtimeChannel = null; }
+    if(__realtimeChannel){ try{ __supabaseClient.removeChannel(__realtimeChannel); }catch(e){} __realtimeChannel = null; }
     updateRealtimeIndicator('connecting');
+    const presenceKey = (session?.id || 'anon_' + Date.now() + '_' + Math.random().toString(36).slice(2,6));
     __realtimeChannel = __supabaseClient
-      .channel('agent_bank_rt_' + window.SUPABASE_ROW_ID, { config: { presence: { key: (session?.id || 'anon_' + Date.now()) } } })
+      .channel('agent_bank_rt_' + window.SUPABASE_ROW_ID, {
+        config: { presence: { key: presenceKey }, broadcast: { self: false } }
+      })
       .on('postgres_changes',
         { event: '*', schema: 'public', table: window.SUPABASE_TABLE, filter: 'id=eq.' + window.SUPABASE_ROW_ID },
         (payload) => { handleRealtimeUpdate(payload); }
@@ -647,7 +783,9 @@ function setupRealtime(){
       .subscribe(async (status) => {
         console.log('[Realtime]', status);
         if(status === 'SUBSCRIBED'){
+          __realtimeReconnectAttempts = 0;
           updateRealtimeIndicator('online');
+          try{ await pullRemoteDB(); }catch(e){}
           try{
             await __realtimeChannel.track({
               user: (session?.name) || 'Anonymous',
@@ -659,67 +797,64 @@ function setupRealtime(){
           }catch(e){}
         } else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT'){
           updateRealtimeIndicator('error');
-          setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 5000);
+          __realtimeReconnectAttempts++;
+          const delay = Math.min(1000 * Math.pow(1.5, __realtimeReconnectAttempts - 1), 15000);
+          setTimeout(() => { if(navigator.onLine) setupRealtime(); }, delay);
         } else if(status === 'CLOSED'){
           updateRealtimeIndicator('offline');
+          setTimeout(() => { if(navigator.onLine) setupRealtime(); }, 3000);
         }
       });
   }catch(e){
     console.warn('[Realtime] setup error:', e.message);
     updateRealtimeIndicator('error');
+    setTimeout(() => { if(navigator.onLine) setupRealtime(); }, 5000);
   }
 }
 
-/* ═══ REALTIME UPDATE HANDLER ═══ */
 function handleRealtimeUpdate(payload){
   try{
     if(__isApplyingRemote) return;
     if(!payload || payload.eventType === 'DELETE') return;
     const remote = payload.new && payload.new.data;
     if(!remote || typeof remote !== 'object') return;
-
     const remoteTs = Date.parse(remote.__lastUpdate || 0) || 0;
-    const localTs  = Date.parse((DB() && DB().__lastUpdate) || 0) || 0;
+    const localTs = Date.parse((DB() && DB().__lastUpdate) || 0) || 0;
+    if(remoteTs <= localTs) return;
 
-    if(remoteTs <= localTs){
-      console.log('[Realtime] local is newer/equal — skip');
-      return;
-    }
-
-    console.log('[Realtime] applying remote update @', remote.__lastUpdate);
+    console.log('[Realtime] ⚡ applying remote update');
     __isApplyingRemote = true;
-
-    // দৃশ্যাবস্থা মনে রাখুন
-    const prevWasDateView = isDateViewMode;
-    const prevDashDate = dashDate;
-    const prevViewBranch = viewBranch;
+    const oldTxIds = new Set((DB()?.txs || []).map(t => t.id));
+    const newTxs = (remote.txs || []).filter(t => !oldTxIds.has(t.id));
+    const prevWasDateView = isDateViewMode, prevDashDate = dashDate, prevViewBranch = viewBranch;
 
     window.db = remote;
-    normalizeDB();
-    forceFixAdmin();
-    recalcAllCustomerDues(false);
-    recomputeLive();
-    saveLocalDB();
+    normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); saveLocalDB();
 
-    // পুনঃস্থাপন
     dashDate = prevWasDateView ? prevDashDate : todayStr();
     viewBranch = (session && session.role === 'admin') ? prevViewBranch : viewBranch;
 
-    if(session){
-      renderTopbar();
-      renderDashboard();
-      renderSidebar();
-    }
+    if(session){ renderTopbar(); renderDashboard(); renderSidebar(); }
 
-    showRTToast('🔄 অন্য ডিভাইস থেকে আপডেট এসেছে', false);
+    if(newTxs.length > 0){
+      newTxs.sort((a,b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+      newTxs.forEach((tx, idx) => {
+        setTimeout(() => {
+          notifyTransaction(tx, '⚡ নতুন');
+          showNativeNotif(
+            '💸 নতুন লেনদেন — ৳ ' + fmt(tx.amount),
+            (TX_CFG[tx.type]?.title || tx.type) + ' • ' + (BRANCHES[tx.branch]?.name || '') + (tx.custName ? ' • ' + tx.custName : ''),
+            null
+          );
+        }, idx * 600);
+      });
+    } else {
+      showRTToast('🔄 অন্য ডিভাইস থেকে আপডেট এসেছে', false);
+    }
     __isApplyingRemote = false;
-  }catch(e){
-    console.error('[Realtime] handler error:', e);
-    __isApplyingRemote = false;
-  }
+  }catch(e){ console.error('[Realtime] handler error:', e); __isApplyingRemote = false; }
 }
 
-/* ═══ REALTIME INDICATOR ═══ */
 function updateRealtimeIndicator(state){
   __realtimeStatus = state;
   const el = document.getElementById('realtimeStatus');
@@ -727,16 +862,9 @@ function updateRealtimeIndicator(state){
   if(!el || !txt) return;
   el.classList.remove('online','offline','connecting','error');
   el.classList.add(state);
-  const labels = {
-    online:     '🟢 লাইভ',
-    offline:    '⚪ অফলাইন',
-    connecting: '🟡 সংযোগ...',
-    error:      '🔴 ত্রুটি'
-  };
+  const labels = { online:'🟢 লাইভ', offline:'⚪ অফলাইন', connecting:'🟡 সংযোগ...', error:'🔴 ত্রুটি' };
   txt.textContent = labels[state] || '⚪';
 }
-
-/* ═══ PRESENCE UI ═══ */
 function updatePresenceUI(users){
   const cnt = document.getElementById('presenceCount');
   const bdg = document.getElementById('presenceBadge');
@@ -746,14 +874,8 @@ function updatePresenceUI(users){
   cnt.textContent = toBn(uniq.size);
   const names = Array.from(uniq).slice(0, 8).join(', ');
   bdg.title = 'অনলাইন: ' + (names || 'শুধু আপনি');
-  if(uniq.size > 1){
-    bdg.style.animation = 'pulseGreen 2s ease-in-out infinite';
-  } else {
-    bdg.style.animation = '';
-  }
+  bdg.style.animation = uniq.size > 1 ? 'pulseGreen 2s ease-in-out infinite' : '';
 }
-
-/* ═══ RT TOAST ═══ */
 function showRTToast(msg, isErr){
   try{
     const el = document.createElement('div');
@@ -763,65 +885,278 @@ function showRTToast(msg, isErr){
     setTimeout(()=>{ el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; el.style.transition = '.4s'; setTimeout(()=> el.remove(), 420); }, 3200);
   }catch(e){}
 }
-async function pullRemoteDB(){
+
+/* ═══ NETWORK QUEUE ═══ */
+function loadQueue(){ try{ const raw = safeLS_get(NET_QUEUE_KEY); return raw ? JSON.parse(raw) : { items: [], lastAttempt: 0 }; }catch(e){ return { items: [], lastAttempt: 0 }; } }
+function saveQueue(q){ try{ safeLS_set(NET_QUEUE_KEY, JSON.stringify(q)); }catch(e){} }
+function queueAdd(reason){
+  const q = loadQueue();
+  q.items.push({ id: uid(), reason: reason || 'auto', at: new Date().toISOString() });
+  if(q.items.length > 50) q.items = q.items.slice(-50);
+  saveQueue(q); updateQueueBadge();
+}
+function queueClear(){ const q = loadQueue(); q.items = []; q.lastAttempt = Date.now(); saveQueue(q); updateQueueBadge(); }
+function queueSize(){ return loadQueue().items.length; }
+function updateQueueBadge(){
+  const bdg = document.getElementById('queueBadge');
+  const cnt = document.getElementById('queueCount');
+  if(!bdg || !cnt) return;
+  const n = queueSize();
+  cnt.textContent = toBn(n);
+  bdg.classList.toggle('show', n > 0);
+}
+function updateNetStatus(state, customMsg){
+  __netQuality = state;
+  const el = document.getElementById('netStatus');
+  const txt = document.getElementById('netText');
+  if(!el || !txt) return;
+  el.classList.remove('online','slow','offline');
+  el.classList.add(state);
+  const labels = { online:'🟢 অনলাইন', slow:'🟡 ধীরগতি', offline:'🔴 অফলাইন' };
+  txt.textContent = customMsg || labels[state] || '⚪';
+}
+function showNetBanner(isOnline, msg){
+  let banner = document.getElementById('netBanner');
+  if(!banner){ banner = document.createElement('div'); banner.id = 'netBanner'; banner.className = 'net-banner'; document.body.appendChild(banner); }
+  if(isOnline === null){ banner.classList.remove('show'); return; }
+  banner.className = 'net-banner' + (isOnline ? ' online-banner' : '');
+  banner.innerHTML = '<span>' + (isOnline ? '✅' : '⚠️') + '</span><span>' + msg + '</span>' + (!isOnline ? '<button class="retry-btn" id="netRetryBtn">🔄 এখন চেষ্টা করুন</button>' : '');
+  banner.classList.add('show');
+  const rb = banner.querySelector('#netRetryBtn');
+  if(rb) rb.addEventListener('click', () => { forceSyncNow(); });
+  setTimeout(() => { banner.classList.remove('show'); }, isOnline ? 2500 : 999999999);
+}
+function detectNetworkQuality(){
+  try{
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if(!conn){ __connEffectiveType = 'unknown'; return __isOnline ? 'online' : 'offline'; }
+    __connEffectiveType = conn.effectiveType || 'unknown';
+    const et = conn.effectiveType;
+    if(!__isOnline || et === 'slow-2g' || et === '2g') return __isOnline ? 'slow' : 'offline';
+    if(et === '3g') return 'slow';
+    return 'online';
+  }catch(e){ return __isOnline ? 'online' : 'offline'; }
+}
+function scheduleRetry(){
+  if(__retryTimer) clearTimeout(__retryTimer);
+  const delay = Math.min(3000 * Math.pow(2, __retryCount), 60000);
+  __retryTimer = setTimeout(() => {
+    if(!navigator.onLine){ scheduleRetry(); return; }
+    forceSyncNow();
+  }, delay);
+}
+async function forceSyncNow(){
   if(!__isRemoteReady || !__supabaseClient) return;
-  const res = await withTimeout(
-    __supabaseClient.from(window.SUPABASE_TABLE).select('data').eq('id', window.SUPABASE_ROW_ID).maybeSingle(),
-    SUPABASE_TIMEOUT_MS,
-    { data: null, error: { message: 'timeout' } }
-  );
-  if(res && res.data && res.data.data && typeof res.data.data === 'object'){
-    const remote = res.data.data;
-    const localTs = Date.parse((DB() && DB().__lastUpdate) || 0) || 0;
-    const remoteTs = Date.parse(remote.__lastUpdate || 0) || 0;
-    if(remoteTs > localTs){
-      console.log('[Supabase] remote is newer, adopting');
-      window.db = remote;
-      normalizeDB();
-      forceFixAdmin();
-      recalcAllCustomerDues(false);
-      recomputeLive();
-      saveLocalDB();
-    }
+  if(!navigator.onLine){
+    updateNetStatus('offline');
+    showNetBanner(false, '📶 ইন্টারনেট নেই — অনলাইনে এলে স্বয়ংক্রিয় সিঙ্ক হবে');
+    return;
+  }
+  const beforeType = getNetworkType();
+  updateNetStatus('slow', '🔄 সিঙ্ক হচ্ছে...');
+  try{
+    await new Promise(r => setTimeout(r, 500));
+    const afterType = getNetworkType();
+    if(beforeType !== afterType){ updateNetStatus(detectNetworkQuality()); return; }
+    await pushRemoteDB(true);
+    queueClear(); __retryCount = 0;
+    updateNetStatus(detectNetworkQuality());
+    showNetBanner(true, '✅ সিঙ্ক সফল');
+  }catch(e){
+    __retryCount++;
+    queueAdd('retry_' + __retryCount);
+    updateNetStatus('slow', '🟡 অপেক্ষমাণ (' + queueSize() + ')');
+    scheduleRetry();
   }
 }
-function queueRemoteSave(){
+async function pushRemoteDB(force, newTxs){
   if(!__isRemoteReady || !__supabaseClient) return;
-  if(__remoteSaveTimer) clearTimeout(__remoteSaveTimer);
-  __remoteSaveTimer = setTimeout(pushRemoteDB, 800);
-}
-async function pushRemoteDB(){
-  if(!__isRemoteReady || !__supabaseClient) return;
-  if(__isApplyingRemote) return; // রিমোট আপডেট থেকে echo প্রতিরোধ
+  if(__isApplyingRemote) return;
+  if(!navigator.onLine && !force){ queueAdd('push_offline'); return; }
   try{
     const payload = { id: window.SUPABASE_ROW_ID, data: DB(), updated_at: new Date().toISOString() };
+    const timeoutMs = (__connEffectiveType === '3g' || __connEffectiveType === '2g') ? 25000 : SUPABASE_TIMEOUT_MS;
     const res = await withTimeout(
       __supabaseClient.from(window.SUPABASE_TABLE).upsert(payload, { onConflict: 'id' }),
-      SUPABASE_TIMEOUT_MS,
-      { error: { message: 'timeout' } }
+      timeoutMs, { error: { message: 'timeout' } }
     );
+    if(res && res.error) throw new Error(res.error.message || 'push error');
+    if(newTxs && newTxs.length){ newTxs.forEach(tx => broadcastTx(tx)); }
     const ind = document.getElementById('syncIndicator');
-    if(ind && (!res || !res.error)){ ind.classList.add('active'); ind.textContent = 'Synced ✓'; setTimeout(()=>{ ind.classList.remove('active'); ind.textContent = 'Sync'; }, 1500); }
+    if(ind){ ind.classList.add('active'); ind.textContent = 'Synced ✓'; setTimeout(()=>{ ind.classList.remove('active'); ind.textContent = 'Sync'; }, 1500); }
+    if(queueSize() > 0) queueClear();
+    return true;
   }catch(e){
     console.warn('[Supabase] push failed:', e.message);
+    queueAdd('push_fail');
+    throw e;
   }
 }
 
-async function saveDB(){
-  if(__savePending){ __saveAgain = true; return; }
-  __savePending = true;
+function attachNetworkListeners(){
+  window.addEventListener('online', () => {
+    __isOnline = true; __retryCount = 0;
+    showNetBanner(true, '✅ ইন্টারনেট ফিরে এসেছে — সিঙ্ক হচ্ছে...');
+    updateNetStatus(detectNetworkQuality());
+    setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 500);
+    setTimeout(() => forceSyncNow(), 800);
+  });
+  window.addEventListener('offline', () => {
+    __isOnline = false;
+    updateNetStatus('offline');
+    showNetBanner(false, '📵 ইন্টারনেট নেই — ডেটা লোকালি সেভ হচ্ছে');
+    queueAdd('offline');
+  });
   try{
-    if(!DB()){ __savePending = false; return; }
-    DB().__lastUpdate = new Date().toISOString();
-    DB().__version = APP_VERSION;
-    if(DB().branchCapital) DB().totalCapital = Object.values(DB().branchCapital).reduce((s,v)=> s + (Number(v)||0), 0);
-    saveLocalDB();
-    queueRemoteSave();
-  } finally {
-    __savePending = false;
-    if(__saveAgain){ __saveAgain = false; setTimeout(saveDB, 50); }
-  }
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if(conn && conn.addEventListener){
+      conn.addEventListener('change', () => {
+        const newType = getNetworkType(), oldType = __lastNetType;
+        const quality = detectNetworkQuality();
+        const isSwitch = (oldType === 'wifi' && newType === 'cellular') || (oldType === 'cellular' && newType === 'wifi') || (oldType !== newType && newType !== 'unknown');
+        if(isSwitch && !__switchInProgress){
+          __switchInProgress = true; __lastNetType = newType;
+          setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 300);
+          setTimeout(() => { forceSyncNow(); __switchInProgress = false; }, 1200);
+          updateNetStatus('slow', '🔄 নেটওয়ার্ক বদলাচ্ছে...');
+          setTimeout(() => updateNetStatus(detectNetworkQuality()), 2500);
+          return;
+        }
+        __lastNetType = newType;
+        updateNetStatus(quality);
+        if(quality === 'online' && queueSize() > 0) setTimeout(() => forceSyncNow(), 500);
+      });
+    }
+  }catch(e){}
+  if(__netCheckTimer) clearInterval(__netCheckTimer);
+  __netCheckTimer = setInterval(async () => {
+    __isOnline = navigator.onLine;
+    const q = detectNetworkQuality();
+    if(q !== __netQuality) updateNetStatus(q);
+    if(navigator.onLine && queueSize() > 0){
+      const qd = loadQueue();
+      if(Date.now() - (qd.lastAttempt || 0) > 25000) forceSyncNow();
+    }
+    if(navigator.onLine && __realtimeChannel){
+      try{ const state = __realtimeChannel.state; if(state === 'closed' || state === 'errored') setupRealtime(); }catch(e){}
+    }
+  }, 30000);
+  __lastNetType = getNetworkType();
 }
+
+/* ═══ BROADCAST CHANNEL ═══ */
+function setupBroadcastChannel(){
+  try{
+    if(!('BroadcastChannel' in window)) return;
+    if(__broadcastCh) __broadcastCh.close();
+    __broadcastCh = new BroadcastChannel('cc_agent_bank_v30');
+    __broadcastCh.onmessage = (e) => {
+      try{
+        const msg = e.data;
+        if(!msg || !msg.type) return;
+        if(msg.type === 'tx_added' && msg.tx){
+          if(msg.sender === (session?.id || 'anon')) return;
+          setTimeout(() => notifyTransaction(msg.tx, '📱 অন্য ট্যাব'), 100);
+        }
+      }catch(err){}
+    };
+  }catch(e){}
+}
+function broadcastTx(tx){
+  try{ if(__broadcastCh && tx) __broadcastCh.postMessage({ type: 'tx_added', tx: tx, sender: session?.id || 'anon', at: Date.now() }); }catch(e){}
+}
+
+/* ═══ NOTIFICATION ═══ */
+function showNotifToast(opts){
+  try{
+    const type = opts.type || 'info';
+    const duration = opts.duration || 8000;
+    let container = document.getElementById('notifContainer');
+    if(!container){ container = document.createElement('div'); container.id = 'notifContainer'; container.className = 'notif-container'; document.body.appendChild(container); }
+    if(opts.playSound !== false) playNotifSound(type);
+    if(opts.vibrate !== false) vibrateNotif(type);
+    const card = document.createElement('div');
+    card.className = 'notif-card ' + type;
+    card.innerHTML =
+      '<div class="notif-icon' + (type === 'info' || type === 'transfer' ? ' ring' : '') + '">' + (opts.icon || '🔔') + '</div>' +
+      '<div class="notif-content">' +
+        '<div class="notif-title">' + (opts.title || 'নোটিফিকেশন') + (opts.badge ? '<span class="notif-badge ' + type + '">' + opts.badge + '</span>' : '') + '</div>' +
+        '<div class="notif-body">' + (opts.body || '') + '</div>' +
+        (opts.actions && opts.actions.length ? '<div class="notif-actions">' + opts.actions.map((a, i) => '<button data-notif-action="' + i + '" class="' + (a.cls || '') + '">' + a.label + '</button>').join('') + '</div>' : '') +
+      '</div>' +
+      '<button class="notif-close" data-notif-close="1">✕</button>' +
+      '<div class="notif-progress" style="animation-duration:' + duration + 'ms"></div>';
+    container.appendChild(card);
+    __notifHistory.unshift({ id: uid(), type, title: opts.title, body: opts.body, at: new Date().toISOString() });
+    if(__notifHistory.length > 50) __notifHistory = __notifHistory.slice(0, 50);
+    const closeIt = () => { card.style.transition = 'all .3s'; card.style.transform = 'translateX(420px)'; card.style.opacity = '0'; setTimeout(() => card.remove(), 320); };
+    card.querySelector('[data-notif-close]').addEventListener('click', (e) => { e.stopPropagation(); closeIt(); });
+    const timer = setTimeout(closeIt, duration);
+    if(opts.actions){
+      card.querySelectorAll('[data-notif-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => { e.stopPropagation(); const a = opts.actions[parseInt(btn.dataset.notifAction)]; clearTimeout(timer); closeIt(); if(a.onClick) a.onClick(); });
+      });
+    }
+    if(opts.onClick){ card.addEventListener('click', (e) => { if(e.target.closest('button')) return; clearTimeout(timer); closeIt(); opts.onClick(); }); }
+    while(container.children.length > 4) container.firstChild.remove();
+    return card;
+  }catch(e){}
+}
+function buildTxNotifBody(tx){
+  const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
+  let brName = BRANCHES[tx.branch]?.name || '-';
+  if(tx.type === 'branch_transfer') brName = (BRANCHES[tx.from]?.name || '') + ' ➜ ' + (BRANCHES[tx.to]?.name || '');
+  let html = '<b>' + esc(cfg.icon + ' ' + (cfg.title || tx.type)) + '</b><br>';
+  html += '<span class="notif-amt">৳ ' + fmt(tx.amount) + '</span> &nbsp;•&nbsp; ' + esc(brName) + '<br>';
+  if(tx.custName){ html += '👤 <b>' + esc(tx.custName) + '</b>'; if(tx.custAcc) html += ' <small>(' + esc(tx.custAcc) + ')</small>'; html += '<br>'; }
+  if(tx.note){ const n = String(tx.note).length > 80 ? String(tx.note).slice(0, 80) + '…' : tx.note; html += '📝 ' + esc(n) + '<br>'; }
+  html += '<span class="notif-meta">👤 ' + esc(tx.user || '-') + ' &nbsp;•&nbsp; 🕐 ' + esc(fmtDateTime(tx.createdAt)) + '</span>';
+  return html;
+}
+function decideNotifType(tx){
+  if(!tx || !tx.type) return 'info';
+  if(tx.type === 'branch_transfer') return 'transfer';
+  if(tx.type === 'loan_given' && tx.cashNotTaken) return 'warning';
+  if(tx.type === 'support' && (tx.dir === 'out' || tx.dir === 'online_support_out')) return 'warning';
+  if(tx.type === 'withdrawal' || tx.type === 'loan_given') return 'info';
+  if(tx.type === 'deposit' || tx.type === 'loan_received' || tx.type === 'loan_collection') return 'success';
+  if(tx.type === 'expense') return 'warning';
+  return 'info';
+}
+function decideNotifIcon(tx){ const cfg = TX_CFG[tx.type] || { icon: '🔔' }; return cfg.icon || '🔔'; }
+function notifyTransaction(tx, sourceLabel){
+  if(!tx) return;
+  const type = decideNotifType(tx);
+  showNotifToast({
+    type, icon: decideNotifIcon(tx), badge: sourceLabel || 'নতুন',
+    title: '💸 নতুন লেনদেন', body: buildTxNotifBody(tx),
+    duration: type === 'danger' ? 12000 : 9000,
+    actions: [
+      { label: '👁️ বিস্তারিত', cls: '', onClick: () => { openTxDetail(tx.id); } },
+      { label: '📋 সব লেনদেন', cls: 'primary', onClick: () => { openAllData(); } }
+    ]
+  });
+}
+async function requestNotifPermission(){
+  try{
+    if(!('Notification' in window)) return false;
+    if(Notification.permission === 'granted') return true;
+    if(Notification.permission === 'denied') return false;
+    const p = await Notification.requestPermission();
+    return p === 'granted';
+  }catch(e){ return false; }
+}
+function showNativeNotif(title, body, icon){
+  try{
+    if(!('Notification' in window) || Notification.permission !== 'granted') return;
+    if(document.visibilityState === 'visible') return;
+    const n = new Notification(title, { body, icon: icon || undefined, tag: 'cc_tx_' + Date.now(), silent: true });
+    setTimeout(() => { try{ n.close(); }catch(e){} }, 8000);
+    n.onclick = () => { try{ window.focus(); n.close(); }catch(e){} };
+  }catch(e){}
+}
+
+/* ═══ DB ENGINE ═══ */
 function performDailyRollover(force){
   const today = todayStr();
   if(!force && DB().__lastRolloverDate === today) return false;
@@ -871,10 +1206,7 @@ function applyTxToLive(tx, phase){
         const cashAmt = Number(tx.cashAmount) || (amt - onlineAmt);
         d.liveAccounts[bb].bank -= onlineAmt; d.liveAccounts[bb].bank += cashAmt;
         adjustNotes(d.liveVault[vb], nOut, -1); adjustNotes(d.liveVault[vb], nIn, +1);
-      } else {
-        d.liveAccounts[bb].bank += amt;
-        adjustNotes(d.liveVault[vb], nOut, -1); adjustNotes(d.liveVault[vb], nIn, +1);
-      }
+      } else { d.liveAccounts[bb].bank += amt; adjustNotes(d.liveVault[vb], nOut, -1); adjustNotes(d.liveVault[vb], nIn, +1); }
       break;
     case 'loan_collection':
       if(tx.collectionMode === 'cash'){ adjustNotes(d.liveVault[vb], nOut, -1); adjustNotes(d.liveVault[vb], nIn, +1); }
@@ -1002,10 +1334,8 @@ function recalcAllCustomerDues(save){
   });
   (DB().customers || []).forEach(c=>{
     const m = map[c.accountNo] || { paid:0, refund:0, count:0 };
-    c.supportPaid = Math.round(m.paid*100)/100;
-    c.supportRefund = Math.round(m.refund*100)/100;
-    c.supportDue = Math.round((c.supportPaid - c.supportRefund)*100)/100;
-    c.supportCount = m.count;
+    c.supportPaid = Math.round(m.paid*100)/100; c.supportRefund = Math.round(m.refund*100)/100;
+    c.supportDue = Math.round((c.supportPaid - c.supportRefund)*100)/100; c.supportCount = m.count;
   });
 }
 function updateCustomerDueInDB(accountNo, save){
@@ -1048,7 +1378,6 @@ function searchCustomers(q){
   return DB().customers.filter(c => (c.accountNo||'').toLowerCase().includes(q) || (c.name||'').toLowerCase().includes(q) || (c.mobile||'').toLowerCase().includes(q)).slice(0, 10);
 }
 
-let session = null, viewBranch = 'all', dashDate = todayStr(), isDateViewMode = false;
 function currentBranchFilter(){
   if(!session) return 'all';
   if(session.role === 'admin') return viewBranch || 'all';
@@ -1135,8 +1464,23 @@ function startClock(){
   }
   tick(); __clockTimer = setInterval(tick, 1000);
 }
+async function saveDB(){
+  if(__savePending){ __saveAgain = true; return; }
+  __savePending = true;
+  try{
+    if(!DB()){ __savePending = false; return; }
+    DB().__lastUpdate = new Date().toISOString();
+    DB().__version = APP_VERSION;
+    if(DB().branchCapital) DB().totalCapital = Object.values(DB().branchCapital).reduce((s,v)=> s + (Number(v)||0), 0);
+    saveLocalDB();
+    queueRemoteSave();
+  } finally {
+    __savePending = false;
+    if(__saveAgain){ __saveAgain = false; setTimeout(saveDB, 50); }
+  }
+}
 
-/* ═══ MODAL BASE ═══ */
+/* ═══ MODAL ═══ */
 function openModal({ title, bodyHTML, wide=false, xwide=false, onMount }){
   const wrap = document.createElement('div');
   wrap.className = 'modal-overlay';
@@ -1159,7 +1503,223 @@ function attachTxHistoryCustomerClick(scope){
   });
 }
 
-/* ═══ CUSTOMER DETAIL POPUP ═══ */
+/* ═══ WINDOWS PRINT SYSTEM (A4 Auto Page Setup) ═══ */
+function buildPrintHTML(title, bodyHTML){
+  const now = new Date();
+  const bf = currentBranchFilter();
+  const bl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  return `<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>${esc(title)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  @page{ size: A4 portrait; margin: 12mm 10mm; }
+  @media print{
+    body{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .no-print{ display: none !important; }
+    thead{ display: table-header-group; }
+    tr, td, th{ page-break-inside: avoid; }
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ font-family:'Noto Sans Bengali', sans-serif; color:#111; background:#fff; font-size:11.5px; line-height:1.5; }
+  .print-container{ max-width:21cm; margin:0 auto; padding:0; }
+  .print-header{ display:flex; align-items:center; gap:12px; padding-bottom:10px; border-bottom:2.5px solid #1e40af; margin-bottom:14px; }
+  .print-logo{ width:54px; height:54px; flex-shrink:0; }
+  .print-header-text{ flex:1; }
+  .print-header-text h1{ font-size:20px; font-weight:900; color:#1e40af; letter-spacing:-.3px; }
+  .print-header-text h2{ font-size:12px; color:#475569; font-weight:700; margin-top:2px; }
+  .print-meta{ text-align:right; font-size:10.5px; color:#475569; font-weight:700; line-height:1.7; }
+  .print-title{ font-size:15px; font-weight:900; color:#0f172a; margin-bottom:12px; padding:10px 14px; background:linear-gradient(90deg,#dbeafe,#eff6ff); border-left:4px solid #1e40af; border-radius:4px; }
+  .print-title .sub{ font-size:11.5px; font-weight:700; color:#475569; margin-top:4px; }
+  .info-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:12px; }
+  .info-cell{ padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc; }
+  .info-cell .lbl{ font-size:9.5px; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:.3px; }
+  .info-cell .val{ font-size:13px; color:#0f172a; font-weight:900; margin-top:2px; }
+  .info-cell.green{ background:#f0fdf4; border-color:#86efac; }
+  .info-cell.green .val{ color:#15803d; }
+  .info-cell.blue{ background:#eff6ff; border-color:#93c5fd; }
+  .info-cell.blue .val{ color:#1e40af; }
+  .info-cell.yellow{ background:#fefce8; border-color:#fde047; }
+  .info-cell.yellow .val{ color:#a16207; }
+  .info-cell.red{ background:#fef2f2; border-color:#fca5a5; }
+  .info-cell.red .val{ color:#b91c1c; }
+  table.tbl-print{ width:100%; border-collapse:collapse; font-size:10.5px; margin-bottom:10px; }
+  table.tbl-print th{ background:#1e40af; color:#fff; padding:8px 6px; text-align:left; font-weight:800; font-size:9.5px; text-transform:uppercase; letter-spacing:.3px; border:1px solid #1e40af; }
+  table.tbl-print td{ padding:6px 6px; border:1px solid #cbd5e1; color:#0f172a; font-weight:600; vertical-align:top; }
+  table.tbl-print tbody tr:nth-child(even) td{ background:#f8fafc; }
+  table.tbl-print td.amt{ font-weight:900; color:#15803d; text-align:right; white-space:nowrap; }
+  table.tbl-print td.small{ font-size:9.5px; color:#475569; }
+  .footer{ margin-top:24px; padding-top:14px; border-top:1.5px dashed #94a3b8; display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .footer .sig{ text-align:center; padding-top:42px; font-size:10.5px; font-weight:700; color:#334155; }
+  .footer .sig::before{ content:''; display:block; width:78%; margin:0 auto 4px; border-top:1px solid #64748b; }
+  .summary-line{ display:flex; justify-content:space-between; padding:9px 14px; background:#f1f5f9; border-radius:6px; margin-bottom:12px; font-weight:800; font-size:12px; }
+  .summary-line .k{ color:#475569; }
+  .summary-line .v{ color:#0f172a; }
+  .print-toolbar{ position:fixed; top:12px; right:12px; z-index:999; display:flex; gap:8px; }
+  .print-toolbar button{ padding:10px 18px; border-radius:10px; font-family:inherit; font-weight:800; font-size:13px; cursor:pointer; border:none; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+  .print-toolbar .btn-print{ background:linear-gradient(135deg,#3b82f6,#2563eb); color:#fff; }
+  .print-toolbar .btn-close{ background:#e2e8f0; color:#334155; }
+  @media print{ .print-toolbar{ display:none !important; } }
+  @media screen{ body{ background:#e5e7eb; padding:20px; } .print-container{ background:#fff; padding:12mm 10mm; box-shadow:0 4px 20px rgba(0,0,0,.15); border-radius:4px; } }
+  @media(max-width:700px){ .info-grid{ grid-template-columns:1fr 1fr; } table.tbl-print{ font-size:9.5px; } }
+</style>
+</head>
+<body>
+  <div class="print-toolbar no-print">
+    <button class="btn-print" onclick="window.print()">🖨️ প্রিন্ট করুন (Ctrl+P)</button>
+    <button class="btn-close" onclick="window.close()">✕ বন্ধ</button>
+  </div>
+  <div class="print-container">
+    <div class="print-header">
+      <svg class="print-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="47" fill="#000" stroke="#1e40af" stroke-width="3"/>
+        <g transform="translate(50,50)" fill="#1e40af"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g>
+      </svg>
+      <div class="print-header-text">
+        <h1>কম্পিউটার ক্যাম্পাস</h1>
+        <h2>এজেন্ট ব্যাংকিং সিস্টেম • v30</h2>
+      </div>
+      <div class="print-meta">
+        📅 ${toBn(now.toLocaleDateString('en-GB'))}<br>
+        🕐 ${toBn(now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}))}<br>
+        🏦 ${esc(bl)}
+      </div>
+    </div>
+    ${bodyHTML}
+    <div class="footer">
+      <div class="sig">গ্রাহকের স্বাক্ষর</div>
+      <div class="sig">অনুমোদনকারী</div>
+      <div class="sig">${esc(session?.name || 'ইউজার')}</div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('load', function(){ setTimeout(function(){ try{ window.print(); }catch(e){} }, 400); });
+  <\/script>
+</body>
+</html>`;
+}
+function openPrintWindow(title, bodyHTML){
+  const w = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+  if(!w){ toast('❌ Pop-up ব্লক — Allow করুন'); return; }
+  w.document.open(); w.document.write(buildPrintHTML(title, bodyHTML)); w.document.close();
+}
+function printSingleTransaction(tx){
+  if(!tx){ toast('❌ নেই'); return; }
+  const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
+  const notes = tx.notesOut || tx.notesIn || {};
+  const notesRows = Object.keys(notes).sort((a,b)=>b-a).map(d => `<tr><td>৳ ${toBn(d)} × ${toBn(notes[d])} টি</td><td class="amt">৳ ${fmt(d * notes[d])}</td></tr>`).join('');
+  const notesTotal = Object.keys(notes).reduce((s,d)=> s + d*notes[d], 0);
+  const body = `
+    <div class="print-title">${cfg.icon || ''} ${esc(cfg.title || tx.type)} — লেনদেন রশিদ<span class="sub">আইডি: ${esc(tx.id)}</span></div>
+    <div class="info-grid">
+      <div class="info-cell blue"><div class="lbl">তারিখ</div><div class="val">${toBn(tx.date || '-')}</div></div>
+      <div class="info-cell green"><div class="lbl">পরিমাণ</div><div class="val">৳ ${fmt(tx.amount)}</div></div>
+      <div class="info-cell"><div class="lbl">শাখা</div><div class="val">${esc(BRANCHES[tx.branch]?.name || '-')}</div></div>
+      <div class="info-cell"><div class="lbl">ইউজার</div><div class="val">${esc(tx.user || '-')}</div></div>
+      <div class="info-cell"><div class="lbl">তৈরি</div><div class="val" style="font-size:10.5px">${esc(fmtDateTime(tx.createdAt))}</div></div>
+      <div class="info-cell ${tx.accepted === false ? 'yellow' : 'green'}"><div class="lbl">স্ট্যাটাস</div><div class="val">${tx.accepted === false ? '⏳ অপেক্ষমাণ' : '✅ সফল'}</div></div>
+    </div>
+    ${tx.type === 'branch_transfer' ? `<div class="summary-line"><span class="k">📤 প্রেরক ➜ 📥 গ্রহণকারী</span><span class="v">${esc(BRANCHES[tx.from]?.name||'')} ➜ ${esc(BRANCHES[tx.to]?.name||'')}</span></div>` : ''}
+    ${tx.custName ? `<div class="info-grid"><div class="info-cell blue" style="grid-column:1/-1"><div class="lbl">👤 গ্রাহক</div><div class="val">${esc(tx.custName)} ${tx.custAcc ? ' — ' + esc(tx.custAcc) : ''} ${tx.custMobile ? ' • 📱 ' + esc(tx.custMobile) : ''}</div></div></div>` : ''}
+    ${notesRows ? `<div class="print-title" style="margin-top:10px">🗄️ নোট বিবরণ</div><table class="tbl-print"><thead><tr><th>নোট বিবরণ</th><th style="text-align:right">পরিমাণ</th></tr></thead><tbody>${notesRows}<tr style="background:#dbeafe"><td style="font-weight:900">মোট</td><td class="amt" style="font-weight:900">৳ ${fmt(notesTotal)}</td></tr></tbody></table>` : ''}
+    ${tx.note ? `<div class="info-cell yellow" style="margin-bottom:10px"><div class="lbl">📝 মন্তব্য</div><div class="val" style="font-weight:700;font-size:12px">${esc(tx.note)}</div></div>` : ''}
+    ${tx.cashNotTaken ? `<div class="info-cell red"><div class="lbl">💰 ক্যাশ নেয়নি</div><div class="val">৳ ${fmt(tx.cashNotTakenAmount||tx.amount)} — ${esc(tx.collectionStatus === 'collected' ? '✅ সংগৃহীত' : tx.collectionStatus === 'partial' ? '⏳ আংশিক' : '⏳ বাকি')}</div></div>` : ''}
+  `;
+  openPrintWindow(`${cfg.title || tx.type} — ৳ ${fmt(tx.amount)}`, body);
+}
+function printCustomerHistory(accountNo, custName){
+  if(!accountNo){ toast('❌ নেই'); return; }
+  const allTxs = getCustomerAllTxs(accountNo);
+  const cust = DB().customers.find(c => c.accountNo === accountNo);
+  const name = custName || cust?.name || '-';
+  const sTxs = allTxs.filter(t => t.type === 'support');
+  const sPaid = sTxs.filter(t => t.dir === 'out' || t.dir === 'online_support_out').reduce((s,t)=> s+Number(t.amount||0),0);
+  const sRefund = sTxs.filter(t => t.dir === 'in' || t.dir === 'online_support_in').reduce((s,t)=> s+Number(t.amount||0),0);
+  const sNet = sPaid - sRefund;
+  const rows = allTxs.map((t,i) => {
+    const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
+    return `<tr>
+      <td style="text-align:center;font-weight:700">${toBn(i+1)}</td>
+      <td style="white-space:nowrap;font-weight:700">${toBn(t.date)}</td>
+      <td><b>${cfg.icon||''} ${esc(cfg.title||t.type)}</b>${t.note ? '<br><span class="small" style="color:#475569">📝 ' + esc(t.note) + '</span>' : ''}${t.custAcc ? '<br><span class="small">' + esc(t.custAcc) + '</span>' : ''}</td>
+      <td style="font-size:10px">${esc(BRANCHES[t.branch]?.name||'-')}</td>
+      <td class="amt">৳ ${fmt(t.amount)}</td>
+      <td class="small">${esc(t.user||'-')}</td>
+    </tr>`;
+  }).join('');
+  const body = `
+    <div class="print-title">👤 গ্রাহক লেনদেন ইতিহাস — ${esc(name)}<span class="sub">অ্যাকাউন্ট: ${esc(accountNo)} • মোবাইল: ${esc(cust?.mobile||'-')} • শাখা: ${esc(BRANCHES[cust?.branch]?.name||'-')}</span></div>
+    <div class="info-grid">
+      <div class="info-cell blue"><div class="lbl">মোট লেনদেন</div><div class="val">${toBn(allTxs.length)} টি</div></div>
+      <div class="info-cell"><div class="lbl">সাপোর্ট প্রদান</div><div class="val" style="color:#1e40af">৳ ${fmt(sPaid)}</div></div>
+      <div class="info-cell green"><div class="lbl">সাপোর্ট ফেরত</div><div class="val" style="color:#15803d">৳ ${fmt(sRefund)}</div></div>
+    </div>
+    <div class="summary-line" style="background:${sNet>0?'#fef2f2':'#f0fdf4'};border:1px solid ${sNet>0?'#fca5a5':'#86efac'}">
+      <span class="k">📊 নেট সাপোর্ট ${sNet>0?'(বকেয়া)':'(পরিশোধিত)'}</span>
+      <span class="v" style="color:${sNet>0?'#b91c1c':'#15803d'};font-size:14px">৳ ${fmt(Math.abs(sNet))}</span>
+    </div>
+    <table class="tbl-print">
+      <thead><tr><th style="width:6%">#</th><th style="width:13%">তারিখ</th><th style="width:33%">ধরন / বিবরণ</th><th style="width:18%">শাখা</th><th style="width:16%;text-align:right">টাকা</th><th style="width:14%">ইউজার</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody>
+    </table>
+  `;
+  openPrintWindow(`গ্রাহক: ${name} — ${accountNo}`, body);
+}
+function printDashboardSnapshot(){
+  if(!session){ toast('❌ লগইন করুন'); return; }
+  const bf = currentBranchFilter();
+  const bl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
+  const st = computeStats(bf, dashDate);
+  const bal = getBalancesForDate(dashDate, bf);
+  const vault = getVaultForDate(dashDate, bf);
+  const totalCapital = Number(DB().totalCapital) || 0;
+  const pending = getAllPending();
+  const total = (bal.bank||0) + (bal.cash||0) + (bal.other||0);
+  const deficit = totalCapital - total;
+  const vaultRows = DENOMS.filter(d => (vault.totals[d]||0) > 0).map(d => `<tr><td>৳ ${toBn(d)}</td><td style="text-align:center">${toBn(vault.totals[d])} টি</td><td class="amt">৳ ${fmt(d * vault.totals[d])}</td></tr>`).join('');
+  const vaultTotal = DENOMS.reduce((s,d)=> s + d*(vault.totals[d]||0), 0);
+  const body = `
+    <div class="print-title">📊 দৈনিক Snapshot — ${toBn(dashDate)}<span class="sub">শাখা: ${esc(bl)} • ইউজার: ${esc(session.name)}</span></div>
+    <div class="info-grid">
+      <div class="info-cell blue"><div class="lbl">🏦 ব্যাংক</div><div class="val">৳ ${fmt(bal.bank)}</div></div>
+      <div class="info-cell green"><div class="lbl">💵 ক্যাশ</div><div class="val">৳ ${fmt(bal.cash)}</div></div>
+      <div class="info-cell"><div class="lbl">🏛️ অন্যান্য</div><div class="val">৳ ${fmt(bal.other)}</div></div>
+    </div>
+    <div class="print-title" style="margin-top:12px">💼 লেনদেন সারসংক্ষেপ</div>
+    <table class="tbl-print">
+      <thead><tr><th style="width:55%">ধরন</th><th style="width:15%;text-align:center">সংখ্যা</th><th style="width:30%;text-align:right">পরিমাণ</th></tr></thead>
+      <tbody>
+        <tr><td>💸 ঋণের টাকা বিতরণ</td><td style="text-align:center">${toBn(st.loan_given.cnt)}</td><td class="amt">৳ ${fmt(st.loan_given.amt)}</td></tr>
+        <tr><td>📥 ঋণের টাকা গ্রহণ</td><td style="text-align:center">${toBn(st.loan_received.cnt)}</td><td class="amt">৳ ${fmt(st.loan_received.amt)}</td></tr>
+        <tr><td>🏦 জমা (Deposits)</td><td style="text-align:center">${toBn(st.deposit.cnt)}</td><td class="amt">৳ ${fmt(st.deposit.amt)}</td></tr>
+        <tr><td>💵 উত্তোলন (Withdrawals)</td><td style="text-align:center">${toBn(st.withdrawal.cnt)}</td><td class="amt">৳ ${fmt(st.withdrawal.amt)}</td></tr>
+        <tr><td>🔁 শাখা-থেকে-শাখা</td><td style="text-align:center">${toBn(st.transfer.cnt)}</td><td class="amt">৳ ${fmt(st.transfer.in)} / ৳ ${fmt(st.transfer.out)}</td></tr>
+        <tr><td>🏛️ ব্যাংক ফান্ড</td><td style="text-align:center">${toBn(st.bank_transfer.cnt)}</td><td class="amt">+৳ ${fmt(st.bank_transfer.in)} / −৳ ${fmt(st.bank_transfer.out)}</td></tr>
+        <tr><td>🧾 ক্যাশ থেকে খরচ</td><td style="text-align:center">${toBn(st.expense.cnt)}</td><td class="amt">৳ ${fmt(st.expense.amt)}</td></tr>
+        <tr><td>🤝 সাপোর্ট</td><td style="text-align:center">${toBn(st.support.cnt)}</td><td class="amt">+৳ ${fmt(st.support.out)} / −৳ ${fmt(st.support.in)}</td></tr>
+        <tr><td>💱 মানি এক্সচেঞ্জ</td><td style="text-align:center">${toBn(st.money_exchange.cnt)}</td><td class="amt">৳ ${fmt(st.money_exchange.out)} / ৳ ${fmt(st.money_exchange.in)}</td></tr>
+      </tbody>
+    </table>
+    ${vaultRows ? `<div class="print-title" style="margin-top:12px">🗄️ ভল্ট ইনভেন্টরি</div><table class="tbl-print"><thead><tr><th>নোট</th><th style="text-align:center">সংখ্যা</th><th style="text-align:right">মান</th></tr></thead><tbody>${vaultRows}<tr style="background:#dbeafe"><td style="font-weight:900">মোট</td><td></td><td class="amt" style="font-weight:900">৳ ${fmt(vaultTotal)}</td></tr></tbody></table>` : ''}
+    <div class="print-title" style="margin-top:12px">💰 মূলধন ও ব্যালেন্স</div>
+    <div class="info-grid">
+      <div class="info-cell yellow"><div class="lbl">মূলধন</div><div class="val" style="color:#a16207">৳ ${fmt(totalCapital)}</div></div>
+      <div class="info-cell blue"><div class="lbl">সর্বমোট ব্যালেন্স</div><div class="val">৳ ${fmt(total)}</div></div>
+      <div class="info-cell ${deficit>0?'red':'green'}"><div class="lbl">${deficit>0?'ঘাটতি':'উদ্বৃত্ত'}</div><div class="val">৳ ${fmt(Math.abs(deficit))}</div></div>
+    </div>
+    <div class="print-title" style="margin-top:12px">⏳ অপেক্ষমাণ</div>
+    <div class="info-grid">
+      <div class="info-cell yellow"><div class="lbl">🔁 শাখা ট্রান্সফার</div><div class="val">${toBn(pending.transfers.length)} টি</div></div>
+      <div class="info-cell yellow"><div class="lbl">💰 ঋণ সংগ্রহ</div><div class="val">${toBn(pending.collections.length)} টি</div></div>
+      <div class="info-cell red"><div class="lbl">সর্বমোট</div><div class="val">৳ ${fmt(pending.totalAmount)}</div></div>
+    </div>
+  `;
+  openPrintWindow(`Dashboard Snapshot — ${dashDate}`, body);
+}
+
+/* ═══ CUSTOMER DETAIL ═══ */
 function openCustomerDetailPopup(accountNo, custName){
   const allTxs = getCustomerAllTxs(accountNo);
   const cust = DB().customers.find(c => c.accountNo === accountNo);
@@ -1191,13 +1751,120 @@ function openCustomerDetailPopup(accountNo, custName){
       '</div>' +
       '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">' +
         '<button class="btn green" id="cust_h_support" style="flex:1">🤝 নতুন সাপোর্ট</button>' +
-        '<button class="btn" id="cust_h_print" style="flex:1">🖨️ History Print</button>' +
+        '<button class="btn cyan" id="cust_h_print" style="flex:1">🖨️ History Print (A4)</button>' +
         '<button class="btn gray" id="cust_h_close" style="flex:1">বন্ধ</button>' +
       '</div>',
     onMount: (w, close) => {
       w.querySelector('#cust_h_close').addEventListener('click', close);
       w.querySelector('#cust_h_support').addEventListener('click', ()=>{ close(); openTxModal('support'); });
       w.querySelector('#cust_h_print').addEventListener('click', ()=>{ printCustomerHistory(accountNo, name); });
+    }
+  });
+}
+
+/* ═══ TX DETAIL POPUP ═══ */
+function openTxDetail(id){
+  const found = findTxAnywhere(id);
+  if(!found || !found.tx){ toast('❌ পাওয়া যায়নি'); return; }
+  const t = found.tx;
+  const cfg = TX_CFG[t.type] || { title: t.type, icon: '📌' };
+  const notes = t.notesOut || t.notesIn || {};
+  const notesHtml = Object.keys(notes).sort((a,b)=>b-a).map(d =>
+    '<div style="display:flex;justify-content:space-between;padding:8px 14px;border-radius:10px;background:rgba(59,130,246,.1);margin-bottom:6px;border:1px solid rgba(59,130,246,.25)">' +
+      '<span style="color:#93c5fd;font-weight:700">৳ ' + toBn(d) + ' × ' + toBn(notes[d]) + '</span>' +
+      '<span style="color:#fff;font-weight:800">= ৳ ' + fmt(d * notes[d]) + '</span>' +
+    '</div>'
+  ).join('');
+  openModal({
+    title: (cfg.icon || '📌') + ' ' + (cfg.title || t.type) + ' — বিস্তারিত', wide: true,
+    bodyHTML:
+      '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📅 তারিখ</div><div style="color:#fff;font-size:17px;font-weight:900;margin-top:4px">' + toBn(t.date) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">💰 পরিমাণ</div><div style="color:#4ade80;font-size:22px;font-weight:900;margin-top:4px">৳ ' + fmt(t.amount) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🏦 শাখা</div><div style="color:#fff;font-weight:800;margin-top:4px">' + esc(BRANCHES[t.branch]?.name || '-') + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">👤 ইউজার</div><div style="color:#fff;font-weight:800;margin-top:4px">' + esc(t.user || '-') + '</div></div>' +
+      '</div>' +
+      (t.type === 'branch_transfer' ? '<div style="margin-top:12px;font-size:13.5px;color:#e0eaff">📤 ' + esc(BRANCHES[t.from]?.name||'') + ' ➜ 📥 ' + esc(BRANCHES[t.to]?.name||'') + ' ' + (t.accepted ? '<span class="badge accepted">✅ গৃহীত</span>' : '<span class="badge pending">⏳ অপেক্ষমাণ</span>') + '</div>' : '') +
+      (t.custName ? '<div style="margin-top:12px;padding:12px;border-radius:10px;background:rgba(236,72,153,.08);border:1px solid rgba(236,72,153,.3);font-size:13px;color:#e0eaff">👤 গ্রাহক: <b>' + esc(t.custName) + '</b>' + (t.custAcc ? ' <small>(' + esc(t.custAcc) + ')</small>' : '') + (t.custMobile ? ' &nbsp;•&nbsp; 📱 ' + esc(t.custMobile) : '') + '</div>' : '') +
+      (t.note ? '<div style="margin-top:12px;padding:12px;border-radius:10px;background:rgba(0,0,0,.3);border:1px solid rgba(250,204,21,.35);font-size:13px;color:#fde047;line-height:1.75"><b style="color:#fff">📝 মন্তব্য:</b> ' + esc(t.note) + '</div>' : '') +
+      '<div style="margin-top:10px;font-size:12px;color:#a5b4d8">⏱️ তৈরি: <b style="color:#fff">' + esc(fmtDateTime(t.createdAt)) + '</b></div>' +
+      '</div>' +
+      (notesHtml ? '<div class="section-title" style="margin-top:16px"><span class="bar"></span> 🗄️ নোট বিবরণ</div><div style="padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(59,130,246,.25)">' + notesHtml + '</div>' : '') +
+      '<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">' +
+        '<button class="btn cyan" id="tdPrint" style="flex:1;min-width:140px">🖨️ A4 প্রিন্ট</button>' +
+        '<button class="btn gray" id="tdClose" style="flex:1;min-width:120px">বন্ধ</button>' +
+      '</div>',
+    onMount: (w, close) => {
+      w.querySelector('#tdClose').addEventListener('click', close);
+      w.querySelector('#tdPrint').addEventListener('click', () => { close(); setTimeout(() => printSingleTransaction(t), 100); });
+    }
+  });
+}
+
+/* ═══ PENDING DETAIL POPUPS ═══ */
+function openTransferPendingDetail(id){
+  const found = findTxAnywhere(id);
+  if(!found || !found.tx){ toast('❌ পাওয়া যায়নি'); return; }
+  const t = found.tx;
+  const notes = t.notesOut || t.notesIn || {};
+  const notesHtml = Object.keys(notes).sort((a,b)=>b-a).map(d =>
+    '<div style="display:flex;justify-content:space-between;padding:8px 14px;border-radius:10px;background:rgba(59,130,246,.1);margin-bottom:6px;border:1px solid rgba(59,130,246,.25)">' +
+      '<span style="color:#93c5fd;font-weight:700">৳ ' + toBn(d) + ' × ' + toBn(notes[d]) + '</span>' +
+      '<span style="color:#fff;font-weight:800">= ৳ ' + fmt(d * notes[d]) + '</span>' +
+    '</div>'
+  ).join('');
+  openModal({
+    title: '🔁 অপেক্ষমাণ ট্রান্সফার', wide: true,
+    bodyHTML: '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px">' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📅 তারিখ</div><div style="color:#fff;font-size:18px;font-weight:900;margin-top:4px">' + toBn(t.date) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">💰 পরিমাণ</div><div style="color:#4ade80;font-size:22px;font-weight:900;margin-top:4px">৳ ' + fmt(t.amount) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📤 প্রেরক</div><div style="color:#fff;font-weight:800;margin-top:4px">' + esc(BRANCHES[t.from]?.name||'-') + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📥 গ্রহণকারী</div><div style="color:#4ade80;font-weight:800;margin-top:4px">' + esc(BRANCHES[t.to]?.name||'-') + '</div></div>' +
+      '</div>' +
+      (t.note ? '<div style="margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.3);border:1px solid rgba(250,204,21,.35);font-size:13px;color:#fde047;line-height:1.75"><b style="color:#fff">📝 মন্তব্য:</b> ' + esc(t.note) + '</div>' : '') +
+      '<div style="margin-top:10px;font-size:12px;color:#a5b4d8">👤 ' + esc(t.user||'-') + ' &nbsp;•&nbsp; ⏱️ ' + esc(fmtDateTime(t.createdAt)) + '</div>' +
+    '</div>' +
+    (notesHtml ? '<div class="section-title" style="margin-top:16px"><span class="bar"></span> 🗄️ নোট বিবরণ</div><div style="padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(59,130,246,.25)">' + notesHtml + '</div>' : '') +
+    '<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">' +
+      '<button class="btn green" id="tp_accept" style="flex:1;min-width:180px">✅ গ্রহণ করুন</button>' +
+      '<button class="btn cyan" id="tp_print" style="flex:1;min-width:140px">🖨️ A4 প্রিন্ট</button>' +
+      '<button class="btn gray" id="tp_close" style="flex:1;min-width:100px">বন্ধ</button>' +
+    '</div>',
+    onMount: (w, close) => {
+      w.querySelector('#tp_close').addEventListener('click', close);
+      w.querySelector('#tp_print').addEventListener('click', () => printSingleTransaction(t));
+      w.querySelector('#tp_accept').addEventListener('click', async () => { close(); await receiveTransferDirect(t.id); });
+    }
+  });
+}
+function openCollectionPendingDetail(id){
+  const found = findTxAnywhere(id);
+  if(!found || !found.tx){ toast('❌ পাওয়া যায়নি'); return; }
+  const parent = found.tx;
+  const owed = Number(parent.cashNotTakenAmount) || Number(parent.amount) || 0;
+  const collected = Number(parent.collectedAmount) || 0;
+  const pending = Math.round((owed - collected)*100)/100;
+  openModal({
+    title: '⏳ অপেক্ষমাণ ঋণ সংগ্রহ', wide: true,
+    bodyHTML: '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px">' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">👤 গ্রাহক</div><div style="color:#4ade80;font-size:17px;font-weight:900;margin-top:4px">' + esc(parent.custName||'-') + '</div><div style="color:#a5b4d8;font-size:12px;margin-top:2px">' + esc(parent.custAcc||'') + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📅 তারিখ</div><div style="color:#fff;font-size:17px;font-weight:900;margin-top:4px">' + toBn(parent.date) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">💰 মোট</div><div style="color:#fff;font-weight:800;margin-top:4px">৳ ' + fmt(owed) + '</div></div>' +
+        '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">⏳ বাকি</div><div style="color:#facc15;font-size:22px;font-weight:900;margin-top:4px">৳ ' + fmt(pending) + '</div></div>' +
+      '</div>' +
+      (parent.note ? '<div style="margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(0,0,0,.3);border:1px solid rgba(250,204,21,.35);font-size:13px;color:#fde047;line-height:1.75"><b style="color:#fff">📝 মন্তব্য:</b> ' + esc(parent.note) + '</div>' : '') +
+    '</div>' +
+    '<div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">' +
+      '<button class="btn green" id="cp_cash" style="flex:1;min-width:160px;padding:14px 22px;font-size:15px">💵 ক্যাশ সংগ্রহ</button>' +
+      '<button class="btn" id="cp_online" style="flex:1;min-width:160px;padding:14px 22px;font-size:15px">🌐 অনলাইন সংগ্রহ</button>' +
+      '<button class="btn cyan" id="cp_print" style="min-width:140px">🖨️ A4</button>' +
+      '<button class="btn gray" id="cp_close" style="min-width:100px">বন্ধ</button>' +
+    '</div>',
+    onMount: (w, close) => {
+      w.querySelector('#cp_close').addEventListener('click', close);
+      w.querySelector('#cp_print').addEventListener('click', () => printSingleTransaction(parent));
+      w.querySelector('#cp_cash').addEventListener('click', () => { close(); setTimeout(() => openCollectionChildModal(id, 'cash'), 100); });
+      w.querySelector('#cp_online').addEventListener('click', () => { close(); setTimeout(() => openCollectionChildModal(id, 'online'), 100); });
     }
   });
 }
@@ -1212,11 +1879,18 @@ async function receiveTransferDirect(id){
   const nowISO = new Date().toISOString();
   updateTxAnywhere(id, { accepted: true, acceptedDate: todayStr(), acceptedAt: nowISO, acceptedBy: session.name, updatedAt: nowISO });
   recomputeLive(); await saveDB();
+  try{ await pushRemoteDB(true); }catch(e){}
   toast('✅ গ্রহণ — ৳ ' + fmt(t.amount));
+  showNotifToast({
+    type: 'success', icon: '✅', badge: 'গৃহীত',
+    title: '🔁 ট্রান্সফার গৃহীত',
+    body: '<b>' + esc(BRANCHES[t.from]?.name||'') + ' ➜ ' + esc(BRANCHES[t.to]?.name||'') + '</b><br><span class="notif-amt">৳ ' + fmt(t.amount) + '</span>',
+    duration: 7000
+  });
   renderTopbar(); renderDashboard(); renderSidebar();
 }
 
-/* ═══ RENDER FUNCTIONS ═══ */
+/* ═══ RENDER ═══ */
 function renderTopbar(){
   if(!session) return;
   const bf = currentBranchFilter();
@@ -1225,27 +1899,31 @@ function renderTopbar(){
   $('#topbar').innerHTML = '<div class="tb-left">' +
       '<button class="tb-menu-btn" id="btnMenu">☰</button>' +
       '<div class="brand"><div class="logo"><svg viewBox="0 0 100 100" style="width:38px;height:38px;"><circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="3"/><g transform="translate(50,50)" fill="#fff"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g></svg></div>' +
-      '<div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>এজেন্ট ব্যাংকিং • v28</p></div></div></div>' +
+      '<div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>এজেন্ট ব্যাংকিং • v30</p></div></div></div>' +
     '<div class="tb-right">' +
       '<span class="sync-status" id="syncStatusBtn">সিঙ্ক</span>' +
-'<span class="realtime-status offline" id="realtimeStatus"><span class="rt-dot"></span><span id="rtText">⚪ Offline</span></span>' +
-'<span class="presence-badge" id="presenceBadge" title="অনলাইন ইউজার">👥 <b id="presenceCount">০</b></span>' +
+      '<span class="realtime-status offline" id="realtimeStatus"><span class="rt-dot"></span><span id="rtText">⚪ Offline</span></span>' +
+      '<span class="presence-badge" id="presenceBadge" title="অনলাইন ইউজার">👥 <b id="presenceCount">০</b></span>' +
+      '<span class="net-status offline" id="netStatus"><span class="n-dot"></span><span id="netText">⚪ অফলাইন</span></span>' +
+      '<span class="queue-badge" id="queueBadge" title="অপেক্ষমাণ সিঙ্ক"><span class="sync-spinner"></span>⏳ <b id="queueCount">০</b></span>' +
       (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় শাখা</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') +
       '<input type="date" class="tb-date" id="dashDateInput" value="' + dashDate + '">' +
       '<span class="tb-time"><span class="dot"></span><span id="liveClock">--:--:-- --</span></span>' +
-      '<button class="btn sm cyan" id="tbPrintBtn" style="padding:8px 14px;font-size:13px">🖨️ Snapshot</button>' +
+      '<button class="btn sm cyan" id="tbQuickPrint" style="padding:8px 14px;font-size:13px" title="A4 Print (Ctrl+P)">🖨️ Print</button>' +
     '</div>';
   $('#dashDateInput').addEventListener('change', e=>{ dashDate = e.target.value || todayStr(); isDateViewMode = dashDate !== todayStr(); renderDashboard(); });
   document.getElementById('btnMenu').addEventListener('click', openSidebar);
   const bs = document.getElementById('tbBranchSel');
   if(bs) bs.addEventListener('change', e=>{ viewBranch = e.target.value; renderTopbar(); renderDashboard(); renderSidebar(); });
-  const pb = document.getElementById('tbPrintBtn');
-  if(pb) pb.addEventListener('click', printDashboardSnapshot);
+  const qp = document.getElementById('tbQuickPrint');
+  if(qp) qp.addEventListener('click', () => printDashboardSnapshot());
   const sb = document.getElementById('syncStatusBtn');
-  if(sb) sb.addEventListener('click', ()=>{ if(__isRemoteReady){ sb.textContent = 'Syncing...'; pushRemoteDB().then(()=>{ sb.textContent = 'সিঙ্ক'; }); } else { toast('ℹ️ Local-only mode'); } });
+  if(sb) sb.addEventListener('click', ()=>{ if(__isRemoteReady){ sb.textContent = 'Syncing...'; forceSyncNow().finally(()=>{ sb.textContent = 'সিঙ্ক'; }); } else { toast('ℹ️ Local-only mode'); } });
+  document.getElementById('queueBadge')?.addEventListener('click', () => forceSyncNow());
+  updateNetStatus(detectNetworkQuality());
+  updateQueueBadge();
   startClock();
 }
-
 function renderSidebar(){
   if(!session) return;
   const isAdmin = session.role === 'admin';
@@ -1259,14 +1937,16 @@ function renderSidebar(){
     '<button class="sb-btn primary" data-sb="all-data"><span class="sb-ico">📋</span><span class="sb-lbl">সব ডেটা<span class="sb-sub">সম্পূর্ণ লেনদেন তালিকা</span></span></button>' +
     '<button class="sb-btn warn" data-sb="due-list"><span class="sb-ico">⚠️</span><span class="sb-lbl">বকেয়া তালিকা<span class="sb-sub">গ্রাহক বকেয়া</span></span></button>' +
     '<button class="sb-btn" data-sb="all-pending" style="border-color:rgba(220,38,38,.5)"><span class="sb-ico">⏳</span><span class="sb-lbl" style="color:#ef4444">অপেক্ষমাণ<span class="sb-sub">গ্রহণ ও সংগ্রহ বাকি</span></span>' + (totalPendingCount > 0 ? '<span class="sb-badge">' + toBn(totalPendingCount) + '</span>' : '') + '</button>' +
-    '<div class="sb-section">🖨️ Snapshot</div>' +
-    '<button class="sb-btn primary" data-sb="print-dashboard"><span class="sb-ico">🖨️</span><span class="sb-lbl">ড্যাশবোর্ড Snapshot<span class="sb-sub">আজকের পূর্ণ ছবি</span></span></button>' +
+    '<div class="sb-section">🖨️ Print (A4)</div>' +
+    '<button class="sb-btn primary" data-sb="print-dashboard"><span class="sb-ico">🖨️</span><span class="sb-lbl">ড্যাশবোর্ড Print<span class="sb-sub">আজকের পূর্ণ রিপোর্ট</span></span></button>' +
     (isAdmin ? '<div class="sb-section">⚙️ ম্যানেজমেন্ট</div>' +
       '<button class="sb-btn" data-sb="branch-mgmt"><span class="sb-ico">🏢</span><span class="sb-lbl">শাখা ম্যানেজমেন্ট<span class="sb-sub">মূলধন ও ভল্ট</span></span></button>' +
       '<button class="sb-btn" data-sb="user-mgr"><span class="sb-ico">👥</span><span class="sb-lbl">ইউজার ম্যানেজমেন্ট<span class="sb-sub">ইউজার ও পাসওয়ার্ড</span></span></button>' +
       '<button class="sb-btn" data-sb="backup"><span class="sb-ico">💾</span><span class="sb-lbl">ব্যাকআপ / রিস্টোর<span class="sb-sub">JSON ডাউনলোড</span></span></button>' +
       '<button class="sb-btn" data-sb="db-browser"><span class="sb-ico">🗄️</span><span class="sb-lbl">Database Browser<span class="sb-sub">সব table দেখুন</span></span></button>' +
       '<button class="sb-btn" data-sb="year-archive"><span class="sb-ico">📚</span><span class="sb-lbl">বছর আর্কাইভ<span class="sb-sub">পুরনো ডেটা</span></span></button>' : '') +
+    '<div class="sb-section">🔔 নোটিফিকেশন</div>' +
+    '<button class="sb-btn" data-sb="notif-settings"><span class="sb-ico">🔔</span><span class="sb-lbl">নোটিফিকেশন সেটিংস<span class="sb-sub">Sound, Vibration</span></span></button>' +
     '<div class="sb-section">🖥️ সেশন</div>' +
     '<button class="sb-btn danger" data-sb="logout"><span class="sb-ico">🚪</span><span class="sb-lbl">লগআউট<span class="sb-sub">সেশন শেষ</span></span></button>';
   box.querySelectorAll('[data-sb]').forEach(btn=>{
@@ -1284,6 +1964,7 @@ function renderSidebar(){
           case 'user-mgr': openUserManager(); break;
           case 'backup': openBackupModal(); break;
           case 'year-archive': openYearArchive(); break;
+          case 'notif-settings': openNotifSettings(); break;
           case 'logout': logout(); break;
         }
       }, 250);
@@ -1300,7 +1981,6 @@ function renderDateBanner(){
   box.innerHTML = '<div class="date-mode-banner"><span>📅</span><span>আপনি <b>' + toBn(dashDate) + '</b> তারিখের ডাটা দেখছেন।</span><button class="close-mode" id="btnExitDateMode">🔄 আজকে ফিরুন</button></div>';
   document.getElementById('btnExitDateMode').addEventListener('click', ()=>{ isDateViewMode = false; dashDate = todayStr(); renderTopbar(); renderDashboard(); });
 }
-
 function renderDashboard(){
   if(!session) return;
   performDailyRollover(false);
@@ -1308,15 +1988,9 @@ function renderDashboard(){
   recomputeLive();
   const bf = currentBranchFilter();
   const st = computeStats(bf, dashDate);
-  renderDateBanner();
-  renderStats(bf, st);
-  renderPendingTransfersCard();
-  renderVault(bf);
-  renderBalances(bf, st);
-    // renderPendingCollections();   // ⏳ অপেক্ষমাণ ঋণ সংগ্রহ সেকশন সরানো হয়েছে
-  renderDueSection();
+  renderDateBanner(); renderStats(bf, st); renderPendingTransfersCard();
+  renderVault(bf); renderBalances(bf, st); renderDueSection();
 }
-
 function renderVault(bf){
   if(!BRANCHES[bf] && bf !== 'all') bf = session?.branch || 'kalaroa';
   const sl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
@@ -1333,43 +2007,31 @@ function renderVault(bf){
       '<div class="vault-total"><span>মোট নোট: <b style="color:#fff">' + toBn(totalNotes) + '</b> টি</span><span>মোট মান: <b style="color:#fff;font-size:19px">৳ ' + fmt(totalAmt) + '</b></span></div>' +
     '</div>';
 }
-
 function renderStats(bf, st){
   const cards = [];
-  const isAdmin = session.role === 'admin';
   const isToday = dashDate === todayStr();
   const hb = isToday ? '<span class="auto-badge" style="margin-left:8px">⚡ লাইভ</span>' : '<span class="badge hist" style="margin-left:8px">📅 ' + toBn(dashDate) + '</span>';
-
   const pendingLG = getPendingCountByType('loan_given');
   const apT = getPendingTransfers();
   const rPending = (bf === 'all') ? apT : apT.filter(t => t.to === bf);
   const rc = rPending.length;
   const ra = rPending.reduce((s,t)=> s + (Number(t.amount)||0), 0);
   const pb = (c) => c > 0 ? '<div style="margin-top:10px;padding:8px 12px;border-radius:10px;background:rgba(220,38,38,.18);border:1.5px solid rgba(220,38,38,.55);font-size:13.5px;color:#ef4444;font-weight:900;display:flex;align-items:center;gap:6px"><span style="font-size:15px">⏳</span><span>' + toBn(c) + ' টি অপেক্ষমাণ</span></div>' : '';
-
   cards.push('<div class="card" data-tx="loan_received"><div class="card-top"><span class="ico">📥</span><h3>ঋণের টাকা গ্রহণ</h3></div><div class="big-amt">৳ ' + fmt(st.loan_received.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.loan_received.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="loan_given"><div class="card-top"><span class="ico">💸</span><h3>ঋণের টাকা বিতরণ</h3></div><div class="big-amt">৳ ' + fmt(st.loan_given.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.loan_given.cnt) + '</b> টি</div>' + pb(pendingLG) + '<div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="deposit"><div class="card-top"><span class="ico">🏦</span><h3>জমা (Deposits)</h3></div><div class="big-amt">৳ ' + fmt(st.deposit.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.deposit.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="withdrawal"><div class="card-top"><span class="ico">💵</span><h3>উত্তোলন (Withdrawals)</h3></div><div class="big-amt">৳ ' + fmt(st.withdrawal.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.withdrawal.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
-  cards.push('<div class="card" data-tx="branch_transfer"><div class="card-top"><span class="ico">🔁</span><h3>শাখা-থেকে-শাখা</h3></div>' +
-    '<div class="big-amt sm"><span class="lbl">গ্রহণ:</span><span>+৳ ' + fmt(st.transfer.in) + '</span></div>' +
-    '<div class="big-amt sm"><span class="lbl">প্রদান:</span><span>−৳ ' + fmt(st.transfer.out) + '</span></div>' +
-    '<div class="card-sub">মোট: <b>' + toBn(st.transfer.cnt) + '</b> টি</div>' +
-    (rc > 0 ? '<div style="margin-top:10px;padding:9px 13px;border-radius:10px;background:rgba(220,38,38,.18);border:1.5px solid rgba(220,38,38,.55);font-size:13.5px;color:#ef4444;font-weight:900">⏳ ' + toBn(rc) + ' টি গ্রহণ বাকি — ৳ ' + fmt(ra) + '</div>' : '') +
-    '<div class="card-tap">▸</div></div>');
+  cards.push('<div class="card" data-tx="branch_transfer"><div class="card-top"><span class="ico">🔁</span><h3>শাখা-থেকে-শাখা</h3></div><div class="big-amt sm"><span class="lbl">গ্রহণ:</span><span>+৳ ' + fmt(st.transfer.in) + '</span></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>−৳ ' + fmt(st.transfer.out) + '</span></div><div class="card-sub">মোট: <b>' + toBn(st.transfer.cnt) + '</b> টি</div>' + (rc > 0 ? '<div style="margin-top:10px;padding:9px 13px;border-radius:10px;background:rgba(220,38,38,.18);border:1.5px solid rgba(220,38,38,.55);font-size:13.5px;color:#ef4444;font-weight:900">⏳ ' + toBn(rc) + ' টি গ্রহণ বাকি — ৳ ' + fmt(ra) + '</div>' : '') + '<div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="bank_transfer"><div class="card-top"><span class="ico">🏛️</span><h3>ব্যাংক ফান্ড ট্রান্সফার</h3></div><div class="big-amt sm"><span class="lbl">আসা:</span><span>+৳ ' + fmt(st.bank_transfer.in) + '</span></div><div class="big-amt sm"><span class="lbl">পাঠানো:</span><span>−৳ ' + fmt(st.bank_transfer.out) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(st.bank_transfer.in - st.bank_transfer.out) + '</b></div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="expense"><div class="card-top"><span class="ico">🧾</span><h3>ক্যাশ থেকে খরচ</h3></div><div class="big-amt">৳ ' + fmt(st.expense.amt) + '</div><div class="card-sub">মোট: <b>' + toBn(st.expense.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
   const oIn = (st.other.in||0) + (st.other.onlineIn||0), oOut = (st.other.out||0) + (st.other.onlineOut||0);
   cards.push('<div class="card" data-tx="other_bank"><div class="card-top"><span class="ico">🏦</span><h3>অন্য ব্যাঙ্কে লেনদেন</h3></div><div class="big-amt sm"><span class="lbl">আসা:</span><span>+৳ ' + fmt(oIn) + '</span></div><div class="big-amt sm"><span class="lbl">পাঠানো:</span><span>−৳ ' + fmt(oOut) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(oIn-oOut) + '</b></div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="support"><div class="card-top"><span class="ico">🤝</span><h3>সাপোর্ট (সহায়তা)</h3></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>+৳ ' + fmt(st.support.out) + '</span></div><div class="big-amt sm"><span class="lbl">ফেরত:</span><span>−৳ ' + fmt(st.support.in) + '</span></div><div class="card-sub">মোট: <b>৳ ' + fmt(st.support.out-st.support.in) + '</b></div><div class="card-tap">▸</div></div>');
   cards.push('<div class="card" data-tx="money_exchange"><div class="card-top"><span class="ico">💱</span><h3>মানি এক্সচেঞ্জ</h3></div><div class="big-amt sm"><span class="lbl">প্রদান:</span><span>৳ ' + fmt(st.money_exchange.out) + '</span></div><div class="big-amt sm"><span class="lbl">গ্রহণ:</span><span>৳ ' + fmt(st.money_exchange.in) + '</span></div><div class="card-sub">মোট: <b>' + toBn(st.money_exchange.cnt) + '</b> টি</div><div class="card-tap">▸</div></div>');
-
   const cc = DB().customers.length;
   const dc = DB().customers.filter(c=>(c.supportDue||0)>0).length;
-  cards.push('<div class="card" data-tx="customer"><div class="card-top"><span class="ico cust-ico-big">👥</span><h3>গ্রাহক তালিকা</h3></div><div><span style="font-size:48px;line-height:1.1;font-weight:900;background:linear-gradient(135deg,#60a5fa,#4ade80);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-1px;">' + toBn(cc) + '</span><span style="font-size:20px;font-weight:700;color:#4ade80;">জন</span></div>' + (dc > 0 ? '<div class="card-sub" style="color:#fde047">⚠️ <b style="color:#facc15">' + toBn(dc) + '</b> জনের বকেয়া</div>' : '<div class="card-sub">📋 দেখতে ক্লিক করুন</div>') + '<div class="card-tap">▸</div></div>');
-
+  cards.push('<div class="card" data-tx="customer"><div class="card-top"><span class="ico">👥</span><h3>গ্রাহক তালিকা</h3></div><div><span style="font-size:48px;line-height:1.1;font-weight:900;background:linear-gradient(135deg,#60a5fa,#4ade80);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-1px;">' + toBn(cc) + '</span><span style="font-size:20px;font-weight:700;color:#4ade80;">জন</span></div>' + (dc > 0 ? '<div class="card-sub" style="color:#fde047">⚠️ <b style="color:#facc15">' + toBn(dc) + '</b> জনের বকেয়া</div>' : '<div class="card-sub">📋 দেখতে ক্লিক করুন</div>') + '<div class="card-tap">▸</div></div>');
   $('#statsSection').innerHTML = '<div class="section-title"><span class="bar"></span> 📊 ড্যাশবোর্ড — ' + toBn(dashDate) + ' ' + hb + '</div><div class="grid" id="statsGrid">' + cards.join('') + '</div>';
-
   const grid = document.getElementById('statsGrid');
   if(grid){
     grid.querySelectorAll('.card').forEach(el => {
@@ -1385,18 +2047,11 @@ function renderStats(bf, st){
 }
 function handleCardClick(type){
   try{
-    if(type === 'loan_given'){
-      const p = getPendingCountByType('loan_given');
-      if(p > 0){ openAllPendingModal(); return; }
-    }
-    if(type === 'branch_transfer'){
-      const p = getPendingCountByType('branch_transfer');
-      if(p > 0){ openAllPendingModal(); return; }
-    }
+    if(type === 'loan_given'){ const p = getPendingCountByType('loan_given'); if(p > 0){ openAllPendingModal(); return; } }
+    if(type === 'branch_transfer'){ const p = getPendingCountByType('branch_transfer'); if(p > 0){ openAllPendingModal(); return; } }
     openTxModal(type);
   }catch(err){ console.error('handleCardClick error:', err); toast('❌ Error: ' + err.message); }
 }
-
 function renderPendingTransfersCard(){
   const box = document.getElementById('pendingTransfersSection');
   if(!box) return;
@@ -1417,7 +2072,6 @@ function renderPendingTransfersCard(){
     '</div></div>';
   document.getElementById('pendingAllCard').addEventListener('click', openAllPendingModal);
 }
-
 function renderBalances(bf, st){
   const isAdmin = session.role === 'admin';
   const bal = getBalancesForDate(dashDate, bf);
@@ -1437,25 +2091,6 @@ function renderBalances(bf, st){
       '<div class="bal-card ' + (df > 0 ? 'deficit' : 'surplus') + '"><div class="t">📉 ঘাটতি</div><div class="v">৳ ' + fmt(df) + '</div></div>' +
     '</div>' : '');
 }
-
-function renderPendingCollections(){
-  const box = document.getElementById('pendingCollectionsSection');
-  if(!box) return;
-  if(!session){ box.innerHTML = ''; return; }
-  const pending = getPendingCollections();
-  const bf = currentBranchFilter();
-  const sc = bf === 'all' ? pending : pending.filter(t => t.branch === bf);
-  if(!sc.length){ box.innerHTML = ''; return; }
-  const total = sc.reduce((s,t)=> s + t._pending, 0);
-  box.innerHTML = '<div class="section-title"><span class="bar"></span> ⏳ অপেক্ষমাণ ঋণ সংগ্রহ<span class="badge due" style="margin-left:auto">' + toBn(sc.length) + ' জন • ৳ ' + fmt(total) + '</span></div>' +
-    '<div id="pendingCollCard" class="pending-coll-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">' +
-    '<div style="flex:1"><div style="font-size:17px;font-weight:800;color:#facc15;margin-bottom:8px">💰 গ্রাহক ক্যাশ নেয়নি</div>' +
-    '<div style="font-size:14px;color:#e0eaff"><b>' + toBn(sc.length) + '</b> জনের <b style="color:#facc15">৳ ' + fmt(total) + '</b> বাকি।</div></div>' +
-    '<button class="btn yellow" style="pointer-events:none">📋 সংগ্রহ →</button>' +
-    '</div></div>';
-  document.getElementById('pendingCollCard').addEventListener('click', openPendingCollectionsModal);
-}
-
 function renderDueSection(){
   const box = document.getElementById('dueSection');
   if(!box) return;
@@ -1487,32 +2122,44 @@ function openAllPendingModal(){
   if(bf !== 'all'){ transfers = transfers.filter(t => t.to === bf); collections = collections.filter(t => t.branch === bf); }
   const trAmt = transfers.reduce((s,t)=> s + (Number(t.amount)||0), 0);
   const coAmt = collections.reduce((s,t)=> s + t._pending, 0);
-
-  const trRows = transfers.map(t => '<tr>' +
+  const trRows = transfers.map(t => '<tr class="clickable-row" data-tx-id="' + esc(t.id) + '" data-tx-kind="transfer" style="cursor:pointer">' +
     '<td>' + toBn(t.date) + '</td>' +
     '<td>' + esc(BRANCHES[t.from]?.name||'') + ' ➜ <b style="color:#4ade80">' + esc(BRANCHES[t.to]?.name||'') + '</b></td>' +
-    '<td>' + noteListInline(t.notesOut || t.notesIn) +
-      (t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:4px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '') +
-    '</td>' +
+    '<td>' + noteListInline(t.notesOut || t.notesIn) + (t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:4px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '') + '</td>' +
     '<td class="amt">৳ ' + fmt(t.amount) + '</td>' +
     '<td>' + esc(t.user||'-') + '</td>' +
     '<td><button class="mini accept" data-acc="' + esc(t.id) + '">✅ গ্রহণ</button></td>' +
   '</tr>').join('');
-
-
-  const coRows = collections.map(c => '<tr><td>' + toBn(c.date) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.custName||'-') + '</b><br><small>' + esc(c.custAcc||'') + '</small></td><td class="amt" style="color:#facc15">৳ ' + fmt(c._pending) + '</td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td style="white-space:nowrap"><button class="mini cash-btn" data-cash="' + esc(c.id) + '">💵</button> <button class="mini online-btn" data-online="' + esc(c.id) + '">🌐</button></td></tr>').join('');
+  const coRows = collections.map(c => '<tr class="clickable-row" data-tx-id="' + esc(c.id) + '" data-tx-kind="collection" style="cursor:pointer">' +
+    '<td>' + toBn(c.date) + '</td>' +
+    '<td>👤 <b style="color:#4ade80">' + esc(c.custName||'-') + '</b><br><small>' + esc(c.custAcc||'') + '</small></td>' +
+    '<td class="amt" style="color:#facc15">৳ ' + fmt(c._pending) + '</td>' +
+    '<td>' + esc(BRANCHES[c.branch]?.name||'') + (c.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:4px">📝 ' + esc(c.note) + '</div>' : '') + '</td>' +
+    '<td style="white-space:nowrap">' +
+      '<button class="mini cash-btn" data-cash="' + esc(c.id) + '">💵</button> ' +
+      '<button class="mini online-btn" data-online="' + esc(c.id) + '">🌐</button>' +
+    '</td>' +
+  '</tr>').join('');
   openModal({ title: '⏳ সব অপেক্ষমাণ', wide: true,
     bodyHTML: '<div class="accept-head"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">' +
         '<div><div style="color:#93c5fd;font-size:12px;font-weight:700">🔁 শাখা ট্রান্সফার</div><div style="font-size:20px;font-weight:900;color:#fff">' + toBn(transfers.length) + ' টি</div><div style="font-size:13px;color:#60a5fa">৳ ' + fmt(trAmt) + '</div></div>' +
         '<div><div style="color:#facc15;font-size:12px;font-weight:700">💰 ঋণ সংগ্রহ</div><div style="font-size:20px;font-weight:900;color:#fff">' + toBn(collections.length) + ' টি</div><div style="font-size:13px;color:#facc15">৳ ' + fmt(coAmt) + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📊 সর্বমোট</div><div style="font-size:20px;font-weight:900;color:#fff">' + toBn(p.totalCount) + ' টি</div><div style="font-size:13px;color:#4ade80">৳ ' + fmt(p.totalAmount) + '</div></div>' +
       '</div></div>' +
-      (transfers.length ? '<div class="section-title" style="margin-top:10px"><span class="bar"></span> 🔁 শাখা ট্রান্সফার</div><div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>From ➜ To</th><th>নোট</th><th>টাকা</th><th>ইউজার</th><th>অ্যাকশন</th></tr></thead><tbody>' + trRows + '</tbody></table></div>' : '') +
-      (collections.length ? '<div class="section-title" style="margin-top:22px"><span class="bar"></span> 💰 ঋণ সংগ্রহ</div><div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>গ্রাহক</th><th>অপেক্ষমাণ</th><th>শাখা</th><th>অ্যাকশন</th></tr></thead><tbody>' + coRows + '</tbody></table></div>' : ''),
+      (transfers.length ? '<div class="section-title" style="margin-top:10px"><span class="bar"></span> 🔁 শাখা ট্রান্সফার</div><div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>From ➜ To</th><th>নোট/মন্তব্য</th><th>টাকা</th><th>ইউজার</th><th>অ্যাকশন</th></tr></thead><tbody>' + trRows + '</tbody></table></div>' : '') +
+      (collections.length ? '<div class="section-title" style="margin-top:22px"><span class="bar"></span> 💰 ঋণ সংগ্রহ</div><div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>গ্রাহক</th><th>অপেক্ষমাণ</th><th>শাখা/মন্তব্য</th><th>অ্যাকশন</th></tr></thead><tbody>' + coRows + '</tbody></table></div>' : ''),
     onMount: (w, close) => {
-      w.querySelectorAll('[data-acc]').forEach(b => b.addEventListener('click', async ()=>{ await receiveTransferDirect(b.dataset.acc); close(); }));
+      w.querySelectorAll('[data-acc]').forEach(b => b.addEventListener('click', async (e)=>{ e.stopPropagation(); await receiveTransferDirect(b.dataset.acc); close(); }));
       w.querySelectorAll('[data-cash]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); close(); setTimeout(()=> openCollectionChildModal(b.dataset.cash, 'cash'), 100); }));
       w.querySelectorAll('[data-online]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); close(); setTimeout(()=> openCollectionChildModal(b.dataset.online, 'online'), 100); }));
+      w.querySelectorAll('tr[data-tx-id]').forEach(tr => {
+        tr.addEventListener('click', (e) => {
+          if(e.target.closest('button')) return;
+          const id = tr.dataset.txId, kind = tr.dataset.txKind;
+          close();
+          setTimeout(() => { if(kind === 'transfer') openTransferPendingDetail(id); else if(kind === 'collection') openCollectionPendingDetail(id); }, 100);
+        });
+      });
     }
   });
 }
@@ -1528,15 +2175,14 @@ function dirOptions(type, cur){
 }
 function notesRowHTML(prefix, values){
   values = values || {};
-  return '<div class="notes-row">' + DENOMS.map(d=>'<div class="note-item"><label>৳ ' + toBn(d) + '</label><input type="text" inputmode="numeric" autocomplete="off" id="' + prefix + '_' + d + '" data-denom="' + d + '" value="' + (values[d] ? values[d] : '') + '" placeholder="0"></div>').join('') + '</div>';
+  return '<div class="notes-row">' + DENOMS.map(d=>'<div class="note-item"><label>৳ ' + toBn(d) + '</label><input type="text" inputmode="numeric" autocomplete="off" id="' + prefix + '_' + d + '" data-denom="' + d + '" value="' + (values[d] ? values[d] : '') + '" placeholder="0" name="nf_' + prefix + '_' + d + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '"></div>').join('') + '</div>';
 }
-
 function openTxModal(type, editId){
   if(!session) return;
   const cfg = TX_CFG[type]; if(!cfg) return;
   if(type === 'customer'){ openCustomerList(); return; }
   if(type === 'money_exchange'){ openMoneyExchange(); return; }
-  if(type === 'loan_collection'){ openPendingCollectionsModal(); return; }
+  if(type === 'loan_collection'){ openAllPendingModal(); return; }
   if(type === 'branch_transfer'){ openBranchTransferForm(editId); return; }
   const editing = editId ? getAllTxs().find(t => t.id === editId) : null;
   const isAdmin = session.role === 'admin';
@@ -1550,7 +2196,6 @@ function openTxModal(type, editId){
   const isBankOnly = !!cfg.bankOnly;
   const isST = type === 'support';
   const initialDir = editing ? editing.dir : (cfg.primary);
-
   const body = '<div class="form-row">' +
       '<div class="field"><label>তারিখ</label><input type="date" id="f_date" value="' + (editing ? editing.date : dashDate) + '"></div>' +
       (showBank ? '<div class="field"><label>ব্যাংক</label><select id="f_bank">' + bankOpts(editing ? editing.bank : 'al_arafah_kalaroa') + '</select></div>' : '') +
@@ -1559,32 +2204,32 @@ function openTxModal(type, editId){
     '</div>' +
     (type === 'loan_given' ? '<div class="online-tick-box"><label class="online-tick-label" for="f_onlineTransferTick"><input type="checkbox" id="f_onlineTransferTick" ' + (editing?.onlineTransfer?'checked':'') + '><div class="online-tick-text"><div class="title">✅ অনলাইন ফান্ড ট্রান্সফার</div><div class="sub">টিক দিলে ব্যাংকের নাম ও অনলাইন পরিমাণ দিন।</div></div></label>' +
       '<div id="onlineTransferDetails" style="display:' + (editing?.onlineTransfer?'block':'none') + ';margin-top:12px;padding:16px;border-radius:14px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.4)">' +
-      '<div class="field" style="margin-bottom:12px"><label style="color:#86efac !important">🏦 ব্যাংক</label><input type="text" id="f_onlineBankName" value="' + (editing?.onlineBankName||'') + '"></div>' +
+      '<div class="field" style="margin-bottom:12px"><label style="color:#86efac !important">🏦 ব্যাংক</label><input type="text" id="f_onlineBankName" value="' + (editing?.onlineBankName||'') + '" autocomplete="off"></div>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">' + Object.entries(BANKS).map(([k,v]) => '<button type="button" class="btn gray" data-bank-quick="' + esc(v.name) + '" style="padding:7px 12px;font-size:12.5px">' + esc(v.name) + '</button>').join('') + '</div>' +
-      '<div class="field"><label style="color:#86efac !important">💰 অনলাইন পরিমাণ</label><input type="text" inputmode="decimal" id="f_onlineAmount" value="' + (editing?.onlineAmount||'') + '"></div>' +
+      '<div class="field"><label style="color:#86efac !important">💰 অনলাইন পরিমাণ</label><input type="text" inputmode="decimal" id="f_onlineAmount" value="' + (editing?.onlineAmount||'') + '" autocomplete="off"></div>' +
       '</div></div>' +
       '<label class="online-tick-label" for="f_cashNotTakenTick" style="margin-top:14px;border-color:rgba(250,204,21,.55)"><input type="checkbox" id="f_cashNotTakenTick" ' + (editing?.cashNotTaken?'checked':'') + ' style="accent-color:#facc15"><div class="online-tick-text"><div class="title" style="color:#facc15">💰 গ্রাহক ক্যাশ নেয়নি</div><div class="sub">ব্যাংক বাড়বে কিন্তু ভল্ট কমবে না।</div></div></label>' +
-      '<div id="cashNotTakenInfo" style="display:none;margin-top:12px;padding:16px;border-radius:14px;background:rgba(250,204,21,.1);border:1.5px solid rgba(250,204,21,.5)"><div class="field"><label style="color:#facc15 !important">💰 পরিমাণ</label><input type="text" inputmode="decimal" id="f_cashNotTakenAmount" value="' + (editing?.cashNotTakenAmount||'') + '" style="color:#facc15"></div></div>' : '') +
+      '<div id="cashNotTakenInfo" style="display:none;margin-top:12px;padding:16px;border-radius:14px;background:rgba(250,204,21,.1);border:1.5px solid rgba(250,204,21,.5)"><div class="field"><label style="color:#facc15 !important">💰 পরিমাণ</label><input type="text" inputmode="decimal" id="f_cashNotTakenAmount" value="' + (editing?.cashNotTakenAmount||'') + '" style="color:#facc15" autocomplete="off"></div></div>' : '') +
     (isBankOnly ? '<div class="bank-only-box"><div class="title">🏛️ ব্যাংক ফান্ড ট্রান্সফার</div>' +
-      '<div class="field" style="margin-top:8px"><label>💰 পরিমাণ</label><input type="text" inputmode="decimal" id="bt_amount" value="' + (editing?.amount||'') + '" style="color:#a78bfa"></div>' +
-      '<div class="field"><label>📝 বিবরণ</label><input type="text" id="bt_note" value="' + (editing?.note||'') + '"></div>' +
+      '<div class="field" style="margin-top:8px"><label>💰 পরিমাণ</label><input type="text" inputmode="decimal" id="bt_amount" value="' + (editing?.amount||'') + '" style="color:#a78bfa" autocomplete="off"></div>' +
+      '<div class="field"><label>📝 বিবরণ</label><input type="text" id="bt_note" value="' + (editing?.note||'') + '" autocomplete="off"></div>' +
     '</div>' : '') +
     (showBT ? '<div class="cust-branch-toggle"><div class="toggle-title">🏦 গ্রাহকের শাখা</div>' +
       '<div class="branch-toggle-row"><button type="button" class="branch-toggle-btn ' + (activeBranchForForm==='kalaroa'?'active':'') + '" data-bbranch="kalaroa">কলারোয়া</button><button type="button" class="branch-toggle-btn ' + (activeBranchForForm==='jhaudanga'?'active':'') + '" data-bbranch="jhaudanga">ঝাউডাঙ্গা</button></div>' +
       '<input type="hidden" id="f_custBranch_hidden" value="' + activeBranchForForm + '">' +
     '</div>' : '') +
     (showCust ? '<div class="cust-box' + (type === 'loan_given' ? ' mandatory-box' : '') + '"><div class="head"><h4>🔍 গ্রাহক</h4></div>' +
-      '<div class="field"><input type="text" id="f_search" placeholder="নাম/অ্যাকাউন্ট/মোবাইল..." value="' + (editing?.custAcc||'') + '"><div class="suggest" id="f_suggest"></div></div>' +
+      '<div class="field"><input type="text" id="f_search" placeholder="নাম/অ্যাকাউন্ট/মোবাইল..." value="' + (editing?.custAcc||'') + '" autocomplete="off" name="s_' + Date.now() + '"><div class="suggest" id="f_suggest"></div></div>' +
       '<div class="form-row">' +
-        '<div class="field"><label>অ্যাকাউন্ট</label><input type="text" id="f_acc" value="' + (editing?.custAcc||'') + '"></div>' +
-        '<div class="field"><label>নাম</label><input type="text" id="f_name" value="' + (editing?.custName||'') + '"></div>' +
-        '<div class="field"><label>মোবাইল</label><input type="text" id="f_mobile" value="' + (editing?.custMobile||'') + '"></div>' +
-        '<div class="field"><label>ঠিকানা</label><input type="text" id="f_addr" value="' + (editing?.custAddr||'') + '"></div>' +
+        '<div class="field"><label>অ্যাকাউন্ট</label><input type="text" id="f_acc" value="' + (editing?.custAcc||'') + '" autocomplete="off" name="a_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '"></div>' +
+        '<div class="field"><label>নাম</label><input type="text" id="f_name" value="' + (editing?.custName||'') + '" autocomplete="off" name="n_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '"></div>' +
+        '<div class="field"><label>মোবাইল</label><input type="text" id="f_mobile" value="' + (editing?.custMobile||'') + '" autocomplete="off" name="m_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '"></div>' +
+        '<div class="field"><label>ঠিকানা</label><input type="text" id="f_addr" value="' + (editing?.custAddr||'') + '" autocomplete="off" name="ad_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '"></div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"><button class="btn gray" type="button" id="f_editCust" style="padding:10px 16px">✏️ সেভ</button><button class="btn pink" type="button" id="f_checkDue" style="padding:10px 16px">⚠️ বকেয়া</button></div>' +
     '</div>' : '') +
-    (showOnline ? '<div class="online-box" id="onlineBox"><h4>💳 অনলাইন</h4><div class="form-row"><div class="field"><label>পরিমাণ</label><input type="text" inputmode="decimal" id="online_amount" value="' + (editing?.onlineAmount||'') + '"></div><div class="field"><label>রেফারেন্স</label><input type="text" id="online_ref" value="' + (editing?.onlineRef||'') + '"></div></div></div>' : '') +
-    (showOS ? '<div class="online-box" id="onlineSupportBox"><h4>🌐 অনলাইন সাপোর্ট</h4><div class="form-row"><div class="field"><label>পরিমাণ</label><input type="text" inputmode="decimal" id="support_amount" value="' + (editing?.onlineAmount||editing?.amount||'') + '"></div></div><div class="field"><label>📝 মন্তব্য</label><input type="text" id="support_note" value="' + (editing?.note||'') + '"></div></div>' : '') +
+    (showOnline ? '<div class="online-box" id="onlineBox"><h4>💳 অনলাইন</h4><div class="form-row"><div class="field"><label>পরিমাণ</label><input type="text" inputmode="decimal" id="online_amount" value="' + (editing?.onlineAmount||'') + '" autocomplete="off"></div><div class="field"><label>রেফারেন্স</label><input type="text" id="online_ref" value="' + (editing?.onlineRef||'') + '" autocomplete="off"></div></div></div>' : '') +
+    (showOS ? '<div class="online-box" id="onlineSupportBox"><h4>🌐 অনলাইন সাপোর্ট</h4><div class="form-row"><div class="field"><label>পরিমাণ</label><input type="text" inputmode="decimal" id="support_amount" value="' + (editing?.onlineAmount||editing?.amount||'') + '" autocomplete="off"></div></div><div class="field"><label>📝 মন্তব্য</label><input type="text" id="support_note" value="' + (editing?.note||'') + '" autocomplete="off"></div></div>' : '') +
     (!isBankOnly ? '<div class="notes-cols" id="notesCols">' +
       '<div class="notes-col out" id="outCol"><h4>💸 প্রদান</h4>' + notesRowHTML('out', editing?.notesOut||null) + '<div class="sum-line"><span>মোট</span><b id="sumOut">৳ 0.00</b></div></div>' +
       '<div class="notes-col in" id="inCol"><h4>📥 গ্রহণ</h4>' + notesRowHTML('in', editing?.notesIn||null) + '<div class="sum-line"><span>মোট</span><b id="sumIn">৳ 0.00</b></div></div>' +
@@ -1592,12 +2237,11 @@ function openTxModal(type, editId){
     '<div id="noteAvailabilityWarning" style="margin-top:10px;display:none"></div>' +
     '<div class="total-preview"><div class="l">নেট</div><div class="v" id="netAmt">৳ 0.00</div></div>' +
     '<div style="margin-top:14px;padding:14px 16px;border-radius:16px;background:linear-gradient(145deg,#080c1a,#050810);border:1px solid rgba(59,130,246,.22);font-size:13px;color:#a5b4d8;line-height:1.9"><div style="font-size:12px;color:#93c5fd;font-weight:700;margin-bottom:6px;text-transform:uppercase">🧾 বিবরণী</div><div id="noteDetailContent">—</div></div>' : '') +
-    '<div class="field" style="margin-top:14px"><label>📝 মন্তব্য</label><input type="text" id="f_note" value="' + (editing?.note||'') + '"></div>' +
+    '<div class="field" style="margin-top:14px"><label>📝 মন্তব্য</label><input type="text" id="f_note" value="' + (editing?.note||'') + '" autocomplete="off"></div>' +
     '<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap"><button class="btn green" id="f_save" style="flex:1;min-width:160px">💾 সংরক্ষণ</button><button class="btn gray" id="f_close" style="flex:1;min-width:120px">বাতিল</button></div>' +
     '<div id="modalHistoryArea"></div>';
   openModal({ title: (cfg.icon||'') + ' ' + cfg.title, bodyHTML: body, wide: true, onMount: (w, close) => setupTxForm(w, type, editing, close, activeBranchForForm) });
 }
-
 function openBranchTransferForm(editId){
   const editing = editId ? getAllTxs().find(t => t.id === editId) : null;
   const isAdmin = session.role === 'admin';
@@ -1609,13 +2253,12 @@ function openBranchTransferForm(editId){
     '<div class="notes-cols" id="notesCols"><div class="notes-col out" id="outCol"><h4>💸 পাঠানো নোট</h4>' + notesRowHTML('out', editing?.notesOut||null) + '<div class="sum-line"><span>মোট</span><b id="sumOut">৳ 0.00</b></div></div><div class="notes-col in" id="inCol"><h4>📥 গ্রহণযোগ্য</h4>' + notesRowHTML('in', editing?.notesIn||null) + '<div class="sum-line"><span>মোট</span><b id="sumIn">৳ 0.00</b></div></div></div>' +
     '<div id="noteAvailabilityWarning" style="margin-top:10px;display:none"></div>' +
     '<div class="total-preview"><div class="l">নেট পরিমাণ</div><div class="v" id="netAmt">৳ 0.00</div></div>' +
-    '<div class="field" style="margin-top:14px"><label>📝 মন্তব্য</label><input type="text" id="f_note" value="' + (editing?.note||'') + '"></div>' +
+    '<div class="field" style="margin-top:14px"><label>📝 মন্তব্য</label><input type="text" id="f_note" value="' + (editing?.note||'') + '" autocomplete="off"></div>' +
     '<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap"><button class="btn green" id="f_save" style="flex:1;min-width:160px">📤 পাঠান</button><button class="btn gray" id="f_close" style="flex:1;min-width:120px">বাতিল</button></div>' +
     '<div id="pendingArea" style="margin-top:20px"></div>' +
     '<div id="modalHistoryArea"></div>';
   openModal({ title: '🔁 শাখা-থেকে-শাখা', bodyHTML: body, wide: true, onMount: (w, close) => setupTransferForm(w, editing, close) });
 }
-
 function setupTransferForm(wrap, editing, close){
   const so = wrap.querySelector('#sumOut'), si = wrap.querySelector('#sumIn'), ne = wrap.querySelector('#netAmt');
   wrap.querySelectorAll('.note-item input').forEach(inp => attachAmountInput(inp, { decimal: false }));
@@ -1642,7 +2285,15 @@ function setupTransferForm(wrap, editing, close){
   const area = wrap.querySelector('#modalHistoryArea');
   const allTx = getAllBranchTransfers().slice(0, 15);
   area.innerHTML = '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সম্প্রতি (' + toBn(allTx.length) + ')</div>' +
-    (allTx.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>সময়</th><th>From ➜ To</th><th>টাকা</th><th>স্ট্যাটাস</th><th>ইউজার</th></tr></thead><tbody>' + allTx.map(t=>'<tr><td style="font-size:12px">' + esc(fmtDateTime(t.createdAt)) + '</td><td>' + esc(BRANCHES[t.from]?.name||'') + ' ➜ <b style="color:#4ade80">' + esc(BRANCHES[t.to]?.name||'') + '</b></td><td class="amt">৳ ' + fmt(t.amount) + '</td><td>' + (t.accepted ? '<span class="badge accepted">✅</span>' : '<span class="badge pending">⏳</span>') + '</td><td>' + esc(t.user||'-') + '</td></tr>').join('') + '</tbody></table></div>' : '<div class="empty">📭 নেই</div>') + '</div>';
+    (allTx.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>সময়</th><th>From ➜ To</th><th>বিবরণ</th><th>টাকা</th><th>স্ট্যাটাস</th><th>ইউজার</th></tr></thead><tbody>' +
+      allTx.map(t => '<tr>' +
+        '<td style="font-size:12px">' + esc(fmtDateTime(t.createdAt)) + '</td>' +
+        '<td>' + esc(BRANCHES[t.from]?.name||'') + ' ➜ <b style="color:#4ade80">' + esc(BRANCHES[t.to]?.name||'') + '</b></td>' +
+        '<td style="font-size:11.5px;color:#a5b4d8;max-width:220px;line-height:1.6">' + noteListInline(t.notesOut || t.notesIn) + (t.note ? '<div style="margin-top:4px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '') + '</td>' +
+        '<td class="amt">৳ ' + fmt(t.amount) + '</td>' +
+        '<td>' + (t.accepted ? '<span class="badge accepted">✅</span>' : '<span class="badge pending">⏳</span>') + '</td>' +
+        '<td>' + esc(t.user||'-') + '</td>' +
+      '</tr>').join('') + '</tbody></table></div>' : '<div class="empty">📭 নেই</div>') + '</div>';
   function renderPending(){
     const box = wrap.querySelector('#pendingArea'); if(!box) return;
     const bf = currentBranchFilter();
@@ -1675,12 +2326,12 @@ function setupTransferForm(wrap, editing, close){
       if(!editing){ DB().txs.push(tx); }
       else { const i = DB().txs.findIndex(x => x.id === editing.id); if(i >= 0) DB().txs[i] = tx; }
       recomputeLive(); await saveDB();
+      try{ if(!editing) await pushRemoteDB(true, [tx]); }catch(e){}
       close(); renderDashboard(); renderTopbar(); renderSidebar();
       toast('✅ পাঠানো — ৳ ' + fmt(amt));
     }catch(e){ alert('❌ ' + e.message); sBtn.disabled = false; sBtn.innerHTML = orig; }
   });
 }
-
 function setupTxForm(wrap, type, editing, close, activeBranchForForm){
   const cfg = TX_CFG[type];
   const so = wrap.querySelector('#sumOut'), si = wrap.querySelector('#sumIn'), ne = wrap.querySelector('#netAmt');
@@ -1763,11 +2414,22 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     let list = getAllTxs().filter(t => t.type === type).sort((a,b)=> (b.createdAt||'').localeCompare(a.createdAt||''));
     const disp = list.slice(0, 15);
     area.innerHTML = '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সম্প্রতি (' + toBn(list.length) + ')</div>' +
-      (disp.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>সময়</th><th>গ্রাহক</th><th>শাখা</th><th>টাকা</th><th>ইউজার</th></tr></thead><tbody>' + disp.map(t=>{
-        const cn = t.custName || '-', ca = t.custAcc || '', cl = !!ca;
-        return '<tr class="' + (cl?'clickable-row':'') + '" ' + (cl ? 'data-cust-acc="' + esc(ca) + '" data-cust-name="' + esc(cn) + '"' : '') + '><td style="font-size:12px">' + esc(fmtDateTime(t.createdAt)) + '</td><td>' + (cl ? '👤 <b style="color:#4ade80">' + esc(cn) + '</b><br><small>' + esc(ca) + '</small>' : '—') + '</td><td style="font-size:12.5px">' + esc(BRANCHES[t.branch]?.name||'-') + '</td><td class="amt">৳ ' + fmt(t.amount) + '</td><td>' + esc(t.user||'-') + '</td></tr>';
-      }).join('') + '</tbody></table></div>' : '<div class="empty">📭 নেই</div>') + '</div>';
+      (disp.length ? '<div class="table-wrap"><table class="tbl"><thead><tr><th>সময়</th><th>গ্রাহক</th><th>শাখা</th><th>বিবরণ</th><th>টাকা</th><th>ইউজার</th><th>প্রিন্ট</th></tr></thead><tbody>' +
+        disp.map(t => {
+          const cn = t.custName || '-', ca = t.custAcc || '', cl = !!ca;
+          const extra = (t.type === 'branch_transfer' ? (BRANCHES[t.from]?.name||'') + ' ➜ ' + (BRANCHES[t.to]?.name||'') : esc(BRANCHES[t.branch]?.name||'-'));
+          return '<tr class="' + (cl?'clickable-row':'') + '" ' + (cl ? 'data-cust-acc="' + esc(ca) + '" data-cust-name="' + esc(cn) + '"' : '') + '>' +
+            '<td style="font-size:12px">' + esc(fmtDateTime(t.createdAt)) + '</td>' +
+            '<td>' + (cl ? '👤 <b style="color:#4ade80">' + esc(cn) + '</b><br><small>' + esc(ca) + '</small>' : '—') + '</td>' +
+            '<td style="font-size:12.5px">' + extra + '</td>' +
+            '<td style="font-size:11.5px;color:#a5b4d8;max-width:200px;line-height:1.6">' + noteListInline(t.notesOut || t.notesIn) + (t.note ? '<div style="margin-top:4px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '') + '</td>' +
+            '<td class="amt">৳ ' + fmt(t.amount) + '</td>' +
+            '<td>' + esc(t.user||'-') + '</td>' +
+            '<td><button class="mini print-btn" data-print-tx="' + t.id + '">🖨️</button></td>' +
+          '</tr>';
+        }).join('') + '</tbody></table></div>' : '<div class="empty">📭 নেই</div>') + '</div>';
     attachTxHistoryCustomerClick(area);
+    area.querySelectorAll('[data-print-tx]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); const t = getAllTxs().find(x=>x.id === b.dataset.printTx); if(t) printSingleTransaction(t); }));
   }
   const sEl = wrap.querySelector('#f_search'), sg = wrap.querySelector('#f_suggest');
   if(sEl && sg){
@@ -1867,8 +2529,9 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       else { const i = DB().txs.findIndex(x => x.id === editing.id); if(i >= 0) DB().txs[i] = tx; }
       if(cfg.cust && (tx.custAcc || tx.custName)){ const c = upsertCustomer({ accountNo: tx.custAcc, name: tx.custName, mobile: tx.custMobile, address: tx.custAddr, branch: cB }); if(c) tx.custAcc = c.accountNo; }
       if(type === 'support' && tx.custAcc) updateCustomerDueInDB(tx.custAcc, false);
-      recomputeLive(); await saveDB(); close();
-      toast('✅ সংরক্ষিত — ৳ ' + fmt(tA));
+      recomputeLive(); await saveDB();
+      try{ if(!editing) await pushRemoteDB(true, [tx]); }catch(e){}
+      close(); toast('✅ সংরক্ষিত — ৳ ' + fmt(tA));
       renderDashboard(); renderTopbar(); renderSidebar();
     }catch(e){ console.error(e); alert('❌ ' + e.message); sBtn.disabled = false; sBtn.innerHTML = orig; }
   });
@@ -1886,8 +2549,8 @@ function openMoneyExchange(){
         '<div class="field"><label>🏦 ব্যাংক</label><select id="me_bank"><option value="general">— সাধারণ —</option>' + bo + '</select></div>' +
         '<div class="field"><label>ধরন</label><select id="me_dir"><option value="in_physical">📥 ফিজিক্যাল আনা</option><option value="in_online">💳 অনলাইন আনা</option><option value="out_physical">📤 ফিজিক্যাল পাঠানো</option><option value="out_online">📤 অনলাইন পাঠানো</option><option value="note_change">🔁 নোট পরিবর্তন</option></select></div>' +
       '</div>' +
-      '<div class="field"><label>📝 বিবরণী</label><input type="text" id="me_desc"></div>' +
-      '<div class="online-box" id="me_online_box" style="display:none"><h4>💳 অনলাইন</h4><div class="form-row"><div class="field"><label>পরিমাণ</label><input type="text" inputmode="decimal" id="me_online_amount"></div><div class="field"><label>রেফারেন্স</label><input type="text" id="me_online_ref"></div></div></div>' +
+      '<div class="field"><label>📝 বিবরণী</label><input type="text" id="me_desc" autocomplete="off"></div>' +
+      '<div class="online-box" id="me_online_box" style="display:none"><h4>💳 অনলাইন</h4><div class="form-row"><div class="field"><label>পরিমাণ</label><input type="text" inputmode="decimal" id="me_online_amount" autocomplete="off"></div><div class="field"><label>রেফারেন্স</label><input type="text" id="me_online_ref" autocomplete="off"></div></div></div>' +
       '<div class="bank-hint">💡 প্রদান = আমি দিলাম | গ্রহণ = আমি নিলাম</div>' +
       '<div class="notes-cols" id="me_notes_cols">' +
         '<div class="notes-col out"><h4>💸 প্রদান</h4>' + notesRowHTML('me_out', null) + '<div class="sum-line"><span>মোট</span><b id="me_sumOut">৳ 0.00</b></div></div>' +
@@ -1918,8 +2581,9 @@ function openMoneyExchange(){
           else { if(os === 0 && is === 0){ alert('নোট দিন'); b.disabled = false; b.innerHTML = og; return; } a = Math.abs(os - is); }
           const dV = w.querySelector('#me_date').value || dashDate;
           const tx = { id: uid(), type: 'money_exchange', date: dV, branch: br, custBranch: br, bank: bk, dir: dv, amount: Math.round(a*100)/100, onlineAmount: io ? Math.round(oa*100)/100 : null, onlineRef: io ? orf : null, notesOutSum: Math.round(os*100)/100, notesInSum: Math.round(is*100)/100, notesOut: on, notesIn: inN, note: w.querySelector('#me_desc').value.trim() || 'মানি এক্সচেঞ্জ', user: session.name, userUsername: session.username, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), year: dV.slice(0,4), accepted: true, acceptedDate: dV };
-          DB().txs.push(tx);
-          recomputeLive(); await saveDB(); close(); renderDashboard(); renderSidebar();
+          DB().txs.push(tx); recomputeLive(); await saveDB();
+          try{ await pushRemoteDB(true, [tx]); }catch(e){}
+          close(); renderDashboard(); renderSidebar();
           toast('✅ মানি এক্সচেঞ্জ');
         }catch(e){ alert('❌ ' + e.message); }
         finally { b.disabled = false; b.innerHTML = og; }
@@ -1928,36 +2592,7 @@ function openMoneyExchange(){
   });
 }
 
-/* ═══ PENDING COLLECTIONS ═══ */
-function openPendingCollectionsModal(){
-  const pending = getPendingCollections();
-  const bf = currentBranchFilter();
-  const sc = bf === 'all' ? pending : pending.filter(t => t.branch === bf);
-  if(!sc.length){ toast('✅ নেই'); return; }
-  const total = sc.reduce((s,t)=> s + t._pending, 0);
- 
-   const rows = sc.map((t, i) => '<tr class="clickable-row" data-cust-acc="' + esc(t.custAcc||'') + '" data-cust-name="' + esc(t.custName||'') + '">' +
-    '<td>' + toBn(i+1) + '</td>' +
-    '<td>👤 <b style="color:#4ade80">' + esc(t.custName||'-') + '</b><br><small>' + esc(t.custAcc||'') + '</small></td>' +
-    '<td>' + toBn(t.date) + '</td>' +
-    '<td class="amt" style="color:#facc15">৳ ' + fmt(t._pending) + '</td>' +
-    '<td style="white-space:nowrap">' +
-      (t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-bottom:4px">📝 ' + esc(t.note) + '</div>' : '') +
-      '<button class="mini cash-btn" data-cash="' + esc(t.id) + '">💵</button> ' +
-      '<button class="mini online-btn" data-online="' + esc(t.id) + '">🌐</button>' +
-    '</td>' +
-  '</tr>').join('');
- 
-  openModal({ title: '⏳ অপেক্ষমাণ ঋণ সংগ্রহ', wide: true,
-    bodyHTML: '<div class="accept-head">মোট <b>' + toBn(sc.length) + '</b> জন • <b>৳ ' + fmt(total) + '</b></div><div class="bank-hint">💡 গ্রাহকের নামে ক্লিক করলে তার সব লেনদেন দেখবেন।</div><div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>গ্রাহক</th><th>তারিখ</th><th>অপেক্ষমাণ</th><th>অ্যাকশন</th></tr></thead><tbody>' + rows + '</tbody></table></div>',
-    onMount: (w, close) => {
-      w.querySelectorAll('[data-cash]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); close(); setTimeout(()=> openCollectionChildModal(b.dataset.cash, 'cash'), 100); }));
-      w.querySelectorAll('[data-online]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); close(); setTimeout(()=> openCollectionChildModal(b.dataset.online, 'online'), 100); }));
-      attachTxHistoryCustomerClick(w);
-    }
-  });
-}
-
+/* ═══ COLLECTION CHILD MODAL ═══ */
 function openCollectionChildModal(parentId, mode){
   const found = findTxAnywhere(parentId); if(!found || !found.tx){ toast('❌ নেই'); return; }
   const parent = found.tx;
@@ -1967,10 +2602,10 @@ function openCollectionChildModal(parentId, mode){
   if(pending <= 0.01){ toast('✅ সম্পূর্ণ'); return; }
   const isC = mode === 'cash';
   openModal({ title: isC ? '💵 ক্যাশ সংগ্রহ' : '🌐 অনলাইন', wide: true,
-    bodyHTML: '<div class="accept-head" style="border-color:' + (isC?'rgba(34,197,94,.5)':'rgba(59,130,246,.5)') + '"><div>' + (isC ? '💵 ক্যাশ' : '🌐 অনলাইন') + '<br>👤 <b>' + esc(parent.custName||'-') + '</b><br>মূল ৳ ' + fmt(owed) + ' • বাকি <b style="color:#facc15">৳ ' + fmt(pending) + '</b></div></div>' +
-      '<div class="form-row"><div class="field"><label>তারিখ</label><input type="date" id="cc_date" value="' + todayStr() + '"></div><div class="field"><label>শাখা</label>' + (session.role === 'admin' ? '<select id="cc_branch"><option value="kalaroa" ' + (parent.branch==='kalaroa'?'selected':'') + '>কলারোয়া</option><option value="jhaudanga" ' + (parent.branch==='jhaudanga'?'selected':'') + '>ঝাউডাঙ্গা</option></select>' : '<input type="hidden" id="cc_branch" value="' + parent.branch + '"><input type="text" value="' + BRANCHES[parent.branch].name + '" disabled>') + '</div><div class="field"><label>💰 পরিমাণ</label><input type="text" inputmode="decimal" id="cc_amount" value="' + pending.toFixed(2) + '"></div></div>' +
-      (!isC ? '<div class="form-row"><div class="field"><label>ব্যাংক</label><select id="cc_bank">' + bankOpts('al_arafah_kalaroa') + '</select></div><div class="field"><label>প্রাপক</label><input type="text" id="cc_partner"></div></div>' : '<div class="notes-col out"><h4>💸 প্রদান</h4>' + notesRowHTML('cc_out', null) + '<div class="sum-line"><span>মোট</span><b id="cc_sumOut">৳ 0.00</b></div></div>') +
-      '<div class="field"><label>📝 মন্তব্য</label><input type="text" id="cc_note" value="' + (isC ? 'ক্যাশ সংগ্রহ' : 'অনলাইন') + '"></div>' +
+    bodyHTML: '<div class="accept-head" style="border-color:' + (isC?'rgba(34,197,94,.5)':'rgba(59,130,246,.5)') + '"><div>' + (isC ? '💵 ক্যাশ' : '🌐 অনলাইন') + '<br>👤 <b>' + esc(parent.custName||'-') + '</b><br>মূল ৳ ' + fmt(owed) + ' • বাকি <b style="color:#facc15">৳ ' + fmt(pending) + '</b>' + (parent.note ? '<div style="margin-top:8px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.3);border:1px solid rgba(250,204,21,.3);font-size:12.5px;color:#fde047;line-height:1.6">📝 মূল মন্তব্য: <b style="color:#fff">' + esc(parent.note) + '</b></div>' : '') + '</div></div>' +
+      '<div class="form-row"><div class="field"><label>তারিখ</label><input type="date" id="cc_date" value="' + todayStr() + '"></div><div class="field"><label>শাখা</label>' + (session.role === 'admin' ? '<select id="cc_branch"><option value="kalaroa" ' + (parent.branch==='kalaroa'?'selected':'') + '>কলারোয়া</option><option value="jhaudanga" ' + (parent.branch==='jhaudanga'?'selected':'') + '>ঝাউডাঙ্গা</option></select>' : '<input type="hidden" id="cc_branch" value="' + parent.branch + '"><input type="text" value="' + BRANCHES[parent.branch].name + '" disabled>') + '</div><div class="field"><label>💰 পরিমাণ</label><input type="text" inputmode="decimal" id="cc_amount" value="' + pending.toFixed(2) + '" autocomplete="off"></div></div>' +
+      (!isC ? '<div class="form-row"><div class="field"><label>ব্যাংক</label><select id="cc_bank">' + bankOpts('al_arafah_kalaroa') + '</select></div><div class="field"><label>প্রাপক</label><input type="text" id="cc_partner" autocomplete="off"></div></div>' : '<div class="notes-col out"><h4>💸 প্রদান</h4>' + notesRowHTML('cc_out', null) + '<div class="sum-line"><span>মোট</span><b id="cc_sumOut">৳ 0.00</b></div></div>') +
+      '<div class="field"><label>📝 মন্তব্য</label><input type="text" id="cc_note" value="' + (isC ? 'ক্যাশ সংগ্রহ' : 'অনলাইন') + '" autocomplete="off"></div>' +
       '<div style="display:flex;gap:10px;margin-top:18px"><button class="btn ' + (isC?'green':'') + '" id="cc_save" style="flex:1">✅ সংগ্রহ</button><button class="btn gray" id="cc_cancel" style="flex:1">বাতিল</button></div>',
     onMount: (w, close) => {
       const so = w.querySelector('#cc_sumOut');
@@ -1993,8 +2628,10 @@ function openCollectionChildModal(parentId, mode){
           const nc = Math.round(((Number(parent.collectedAmount) || 0) + amt)*100)/100;
           const ns = nc >= owed - 0.01 ? 'collected' : 'partial';
           updateTxAnywhere(parent.id, { collectedAmount: nc, collectionStatus: ns, updatedAt: new Date().toISOString() });
-          recomputeLive(); await saveDB(); close();
-          renderDashboard(); renderSidebar(); toast('✅ সংগ্রহ ৳ ' + fmt(amt));
+          recomputeLive(); await saveDB();
+          try{ await pushRemoteDB(true, [child]); }catch(e){}
+          close(); renderDashboard(); renderSidebar();
+          toast('✅ সংগ্রহ ৳ ' + fmt(amt));
         }catch(e){ alert('❌ ' + e.message); b.disabled = false; b.innerHTML = og; }
       });
     }
@@ -2007,15 +2644,15 @@ function openCustomerList(){
   openModal({ title: '👥 গ্রাহক তালিকা', wide: true,
     bodyHTML: '<div class="cust-box"><div class="head"><h4>➕ নতুন গ্রাহক</h4></div>' +
         '<div class="form-row">' +
-          '<div class="field"><label>অ্যাকাউন্ট</label><input type="text" id="nc_acc"></div>' +
-          '<div class="field"><label>নাম *</label><input type="text" id="nc_name"></div>' +
-          '<div class="field"><label>মোবাইল</label><input type="text" id="nc_mobile"></div>' +
-          '<div class="field"><label>ঠিকানা</label><input type="text" id="nc_addr"></div>' +
+          '<div class="field"><label>অ্যাকাউন্ট</label><input type="text" id="nc_acc" autocomplete="off"></div>' +
+          '<div class="field"><label>নাম *</label><input type="text" id="nc_name" autocomplete="off"></div>' +
+          '<div class="field"><label>মোবাইল</label><input type="text" id="nc_mobile" autocomplete="off"></div>' +
+          '<div class="field"><label>ঠিকানা</label><input type="text" id="nc_addr" autocomplete="off"></div>' +
           (isAdmin ? '<div class="field"><label>শাখা</label><select id="nc_branch"><option value="kalaroa">কলারোয়া</option><option value="jhaudanga">ঝাউডাঙ্গা</option></select></div>' : '') +
         '</div>' +
         '<button class="btn green" id="nc_save" style="margin-top:10px">💾 সংরক্ষণ</button>' +
       '</div>' +
-      '<div class="form-row" style="margin-top:12px"><div class="field"><input type="text" id="cust_search" placeholder="🔍 খুঁজুন..."></div></div>' +
+      '<div class="form-row" style="margin-top:12px"><div class="field"><input type="text" id="cust_search" placeholder="🔍 খুঁজুন..." autocomplete="off"></div></div>' +
       '<div id="cust_list"></div>',
     onMount: (w, close) => {
       const lb = w.querySelector('#cust_list');
@@ -2026,8 +2663,9 @@ function openCustomerList(){
         if(filter) list = list.filter(c => (c.accountNo||'').toLowerCase().includes(filter) || (c.name||'').toLowerCase().includes(filter) || (c.mobile||'').toLowerCase().includes(filter));
         list.sort((a,b)=> (b.supportDue||0) - (a.supportDue||0));
         if(!list.length){ lb.innerHTML = '<div class="empty">📭 নেই</div>'; return; }
-        lb.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>অ্যাকাউন্ট</th><th>নাম</th><th>শাখা</th><th>বকেয়া</th><th>অ্যাকশন</th></tr></thead><tbody>' + list.map((c,i)=>'<tr class="cust-row ' + (c.supportDue>0?'has-due':'') + ' clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td>' + esc(c.accountNo) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.name) + '</b></td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td>' + (c.supportDue>0 ? '<span class="badge due">৳ ' + fmt(c.supportDue) + '</span>' : '✅') + '</td><td><button class="mini show" data-hist="' + esc(c.accountNo) + '">📄</button>' + (isAdmin?'<button class="mini danger" data-cdel="' + c.id + '">🗑️</button>':'') + '</td></tr>').join('') + '</tbody></table></div>';
+        lb.innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>অ্যাকাউন্ট</th><th>নাম</th><th>শাখা</th><th>বকেয়া</th><th>অ্যাকশন</th></tr></thead><tbody>' + list.map((c,i)=>'<tr class="cust-row ' + (c.supportDue>0?'has-due':'') + ' clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td>' + esc(c.accountNo) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.name) + '</b></td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td>' + (c.supportDue>0 ? '<span class="badge due">৳ ' + fmt(c.supportDue) + '</span>' : '✅') + '</td><td><button class="mini show" data-hist="' + esc(c.accountNo) + '">📄</button><button class="mini print-btn" data-print-cust="' + esc(c.accountNo) + '" data-print-name="' + esc(c.name) + '">🖨️</button>' + (isAdmin?'<button class="mini danger" data-cdel="' + c.id + '">🗑️</button>':'') + '</td></tr>').join('') + '</tbody></table></div>';
         lb.querySelectorAll('[data-hist]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); close(); openCustomerDetailPopup(b.dataset.hist); }));
+        lb.querySelectorAll('[data-print-cust]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); printCustomerHistory(b.dataset.printCust, b.dataset.printName); }));
         lb.querySelectorAll('[data-cdel]').forEach(b => b.addEventListener('click', async (e)=>{ e.stopPropagation(); if(confirm('ডিলিট?')){ DB().customers = DB().customers.filter(x=>x.id !== b.dataset.cdel); await saveDB(); render(); } }));
         attachTxHistoryCustomerClick(lb);
       }
@@ -2043,7 +2681,6 @@ function openCustomerList(){
     }
   });
 }
-
 function openDueListModal(){
   const bf = currentBranchFilter();
   const sc = bf === 'all' ? (DB().customers||[]) : (DB().customers||[]).filter(c => c.branch === bf);
@@ -2051,11 +2688,13 @@ function openDueListModal(){
   const due = sc.filter(c => c.supportDue > 0).sort((a,b)=> b.supportDue - a.supportDue);
   const total = due.reduce((s,c)=> s + c.supportDue, 0);
   openModal({ title: '⚠️ বকেয়া তালিকা', wide: true,
-    bodyHTML: '<div class="accept-head">' + toBn(due.length) + ' জন • মোট <b style="color:#f87171">৳ ' + fmt(total) + '</b></div>' + (due.length?'<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>গ্রাহক</th><th>অ্যাকাউন্ট</th><th>শাখা</th><th>বকেয়া</th></tr></thead><tbody>' + due.map((c,i)=>'<tr class="clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.name) + '</b></td><td>' + esc(c.accountNo) + '</td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td><span class="badge due">৳ ' + fmt(c.supportDue) + '</span></td></tr>').join('') + '</tbody></table></div>':'<div class="empty">🎉 নেই</div>'),
-    onMount: (w) => { attachTxHistoryCustomerClick(w); }
+    bodyHTML: '<div class="accept-head">' + toBn(due.length) + ' জন • মোট <b style="color:#f87171">৳ ' + fmt(total) + '</b></div>' + (due.length?'<div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>গ্রাহক</th><th>অ্যাকাউন্ট</th><th>শাখা</th><th>বকেয়া</th><th>প্রিন্ট</th></tr></thead><tbody>' + due.map((c,i)=>'<tr class="clickable-row" data-cust-acc="' + esc(c.accountNo) + '" data-cust-name="' + esc(c.name) + '"><td>' + toBn(i+1) + '</td><td>👤 <b style="color:#4ade80">' + esc(c.name) + '</b></td><td>' + esc(c.accountNo) + '</td><td>' + esc(BRANCHES[c.branch]?.name||'') + '</td><td><span class="badge due">৳ ' + fmt(c.supportDue) + '</span></td><td><button class="mini print-btn" data-print-cust="' + esc(c.accountNo) + '" data-print-name="' + esc(c.name) + '">🖨️</button></td></tr>').join('') + '</tbody></table></div>':'<div class="empty">🎉 নেই</div>'),
+    onMount: (w) => {
+      attachTxHistoryCustomerClick(w);
+      w.querySelectorAll('[data-print-cust]').forEach(b => b.addEventListener('click', (e)=>{ e.stopPropagation(); printCustomerHistory(b.dataset.printCust, b.dataset.printName); }));
+    }
   });
 }
-
 function txListHTML(list, opts){
   opts = opts || {};
   if(!list.length) return '<div class="empty">📭 নেই</div>';
@@ -2064,20 +2703,22 @@ function txListHTML(list, opts){
     let extra = '';
     if(t.type === 'branch_transfer') extra = (BRANCHES[t.from]?.name||'') + ' ➜ ' + (BRANCHES[t.to]?.name||'');
     if(t.type === 'loan_given' && t.cashNotTaken) extra = '💰 ক্যাশ নেয়নি';
+    if(t.type === 'loan_given' && t.collectionStatus === 'partial') extra = '⏳ আংশিক সংগ্রহ';
+    if(t.type === 'loan_given' && t.collectionStatus === 'pending') extra = '⏳ সংগ্রহ বাকি';
     const sb = t.type === 'branch_transfer' ? (t.accepted ? '<span class="badge accepted">✅</span>' : '<span class="badge pending">⏳</span>') : '';
-    const ab = opts.admin ? '<button class="mini" data-edit="' + t.id + '">✏️</button><button class="mini danger" data-del="' + t.id + '">🗑️</button><button class="mini" data-print="' + t.id + '">🖨️</button>' : '<button class="mini" data-print="' + t.id + '">🖨️</button>';
+    const ab = opts.admin ? '<button class="mini" data-edit="' + t.id + '">✏️</button><button class="mini danger" data-del="' + t.id + '">🗑️</button><button class="mini print-btn" data-print="' + t.id + '">🖨️</button>' : '<button class="mini print-btn" data-print="' + t.id + '">🖨️</button>';
     const cn = t.custName || '', ca = t.custAcc || '', cl = !!ca;
+    const noteHtml = t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:5px;line-height:1.6">📝 ' + esc(t.note) + '</div>' : '';
     return '<tr class="' + (cl?'clickable-row':'') + '" ' + (cl ? 'data-cust-acc="' + esc(ca) + '" data-cust-name="' + esc(cn) + '"' : '') + '>' +
       '<td>' + toBn(t.date) + '</td><td>' + (cfg.icon||'') + ' ' + esc(cfg.title||t.type) + '</td>' +
       '<td>' + (cl ? '👤 <b style="color:#4ade80">' + esc(cn) + '</b><br><small>' + esc(ca) + '</small>' : '—') + '</td>' +
-      '<td>' + extra + sb + '</td><td class="amt">৳ ' + fmt(t.amount) + '</td><td>' + esc(t.user||'-') + '</td>' +
+      '<td>' + extra + sb + noteHtml + '</td><td class="amt">৳ ' + fmt(t.amount) + '</td><td>' + esc(t.user||'-') + '</td>' +
       '<td style="font-size:12px">' + esc(fmtDateTime(t.createdAt)) + '</td>' +
       '<td>' + ab + '</td>' +
     '</tr>';
   }).join('');
   return '<div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>ধরন</th><th>গ্রাহক</th><th>বিবরণ</th><th>টাকা</th><th>ইউজার</th><th>সময়</th><th>অ্যাকশন</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
-
 function openAllData(){
   const bf = currentBranchFilter();
   const isAdmin = session.role === 'admin';
@@ -2110,16 +2751,15 @@ function openAllData(){
     }
   });
 }
-
 async function deleteTx(id){
-  const t = DB().txs.find(x=>x.id === id);
   if(!DB().deletedTxIds) DB().deletedTxIds = {};
   DB().deletedTxIds[id] = new Date().toISOString();
   DB().txs = DB().txs.filter(x=>x.id !== id);
-  recomputeLive(); await saveDB(); renderDashboard(); renderSidebar();
+  recomputeLive(); await saveDB();
+  try{ await pushRemoteDB(true); }catch(e){}
+  renderDashboard(); renderSidebar();
   toast('🗑️ ডিলিট');
 }
-
 function openYearArchive(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
   const years = new Set();
@@ -2136,7 +2776,6 @@ function openYearArchive(){
     }
   });
 }
-
 function openBackupModal(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
   openModal({ title: '💾 ব্যাকআপ', wide: true,
@@ -2163,14 +2802,13 @@ function openBackupModal(){
     }
   });
 }
-
 function openUserManager(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
   openModal({ title: '👥 ইউজার', wide: true,
     bodyHTML: '<div class="form-row">' +
-        '<div class="field"><label>নাম</label><input type="text" id="u_name"></div>' +
-        '<div class="field"><label>আইডি</label><input type="text" id="u_user"></div>' +
-        '<div class="field"><label>পাসওয়ার্ড</label><input type="text" id="u_pass"></div>' +
+        '<div class="field"><label>নাম</label><input type="text" id="u_name" autocomplete="off"></div>' +
+        '<div class="field"><label>আইডি</label><input type="text" id="u_user" autocomplete="off"></div>' +
+        '<div class="field"><label>পাসওয়ার্ড</label><input type="text" id="u_pass" autocomplete="off"></div>' +
         '<div class="field"><label>শাখা</label><select id="u_branch"><option value="kalaroa">কলারোয়া</option><option value="jhaudanga">ঝাউডাঙ্গা</option><option value="all">সব</option></select></div>' +
         '<div class="field"><label>রোল</label><select id="u_role"><option value="user">ইউজার</option><option value="admin">অ্যাডমিন</option></select></div>' +
       '</div>' +
@@ -2195,7 +2833,6 @@ function openUserManager(){
     }
   });
 }
-
 function openBranchManagement(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
   openModal({ title: '🏢 শাখা ম্যানেজমেন্ট', wide: true,
@@ -2207,9 +2844,9 @@ function openBranchManagement(){
         const bc = Number(DB().branchCapital?.[br]) || 0;
         const bt = (a.bank||0)+(a.other||0)+DENOMS.reduce((s,d)=>s+(v[d]||0)*d,0);
         w.querySelector('#bmBody').innerHTML = '<div class="branch-summary-box"><b>' + esc(BRANCHES[br].name) + '</b><br>🏦 Base: <b>৳ ' + fmt(bt) + '</b>' + (bc > 0 ? ' &nbsp;•&nbsp; <span style="padding:4px 12px;border-radius:8px;background:linear-gradient(135deg,rgba(250,204,21,.15),rgba(245,158,11,.05));border:1px solid rgba(250,204,21,.5);color:#facc15;font-weight:800;display:inline-block">💰 ৳ ' + fmt(bc) + '</span>' : '') + '</div>' +
-          '<div class="form-row" style="grid-template-columns:1fr"><div class="field"><label style="color:#facc15 !important">💰 মূলধন (Capital)</label><input type="text" inputmode="decimal" id="bm_capital" value="' + (bc ? bc.toLocaleString('en-US', {maximumFractionDigits:2}) : '') + '" placeholder="0" style="color:#facc15;font-weight:900;font-size:18px;border-color:rgba(250,204,21,.5)"><div style="font-size:11.5px;color:#a5b4d8;margin-top:5px;font-weight:600">💡 কমা সহ paste করলেও কাজ করবে</div></div></div>' +
-          '<div class="form-row"><div class="field"><label>🏦 ব্যাংক</label><input type="text" inputmode="decimal" id="bm_bank" value="' + (a.bank ? Number(a.bank).toLocaleString('en-US') : '') + '"></div><div class="field"><label>🏛️ অন্যান্য</label><input type="text" inputmode="decimal" id="bm_other" value="' + (a.other ? Number(a.other).toLocaleString('en-US') : '') + '"></div></div>' +
-          '<div class="notes-col" style="margin-top:12px"><h4 style="font-size:16px;margin-bottom:12px;color:#93c5fd">🗄️ ভল্টে থাকা নোট</h4><div class="notes-row">' + DENOMS.map(d => '<div class="note-item"><label>৳ ' + toBn(d) + '</label><input type="text" inputmode="numeric" id="bm_note_' + d + '" data-denom="' + d + '" value="' + (v[d]||'') + '"></div>').join('') + '</div></div>' +
+          '<div class="form-row" style="grid-template-columns:1fr"><div class="field"><label style="color:#facc15 !important">💰 মূলধন (Capital)</label><input type="text" inputmode="decimal" id="bm_capital" value="' + (bc ? bc.toLocaleString('en-US', {maximumFractionDigits:2}) : '') + '" placeholder="0" style="color:#facc15;font-weight:900;font-size:18px;border-color:rgba(250,204,21,.5)" autocomplete="off"><div style="font-size:11.5px;color:#a5b4d8;margin-top:5px;font-weight:600">💡 কমা সহ paste করলেও কাজ করবে</div></div></div>' +
+          '<div class="form-row"><div class="field"><label>🏦 ব্যাংক</label><input type="text" inputmode="decimal" id="bm_bank" value="' + (a.bank ? Number(a.bank).toLocaleString('en-US') : '') + '" autocomplete="off"></div><div class="field"><label>🏛️ অন্যান্য</label><input type="text" inputmode="decimal" id="bm_other" value="' + (a.other ? Number(a.other).toLocaleString('en-US') : '') + '" autocomplete="off"></div></div>' +
+          '<div class="notes-col" style="margin-top:12px"><h4 style="font-size:16px;margin-bottom:12px;color:#93c5fd">🗄️ ভল্টে থাকা নোট</h4><div class="notes-row">' + DENOMS.map(d => '<div class="note-item"><label>৳ ' + toBn(d) + '</label><input type="text" inputmode="numeric" id="bm_note_' + d + '" data-denom="' + d + '" value="' + (v[d]||'') + '" autocomplete="off"></div>').join('') + '</div></div>' +
           '<div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap"><button class="btn green" id="bm_save" style="flex:1;min-width:200px">💾 সেভ</button><button class="btn red" id="bm_reset" style="flex:1;min-width:140px">🔄 রিসেট</button></div>';
         attachAmountInput(w.querySelector('#bm_capital'), { decimal: true });
         attachAmountInput(w.querySelector('#bm_bank'), { decimal: true });
@@ -2226,7 +2863,9 @@ function openBranchManagement(){
           if(!DB().branchCapital) DB().branchCapital = {};
           DB().branchCapital[br] = cap;
           DB().totalCapital = Object.values(DB().branchCapital).reduce((s,v) => s + (Number(v)||0), 0);
-          recomputeLive(); await saveDB(); renderDashboard();
+          recomputeLive(); await saveDB();
+          try{ await pushRemoteDB(true); }catch(e){}
+          renderDashboard();
           toast('✅ সেভ — Capital ৳ ' + fmt(cap));
         });
         w.querySelector('#bm_reset').addEventListener('click', async ()=>{
@@ -2236,7 +2875,9 @@ function openBranchManagement(){
           if(!DB().branchCapital) DB().branchCapital = {};
           DB().branchCapital[br] = 0;
           DB().totalCapital = Object.values(DB().branchCapital).reduce((s,v) => s + (Number(v)||0), 0);
-          recomputeLive(); await saveDB(); renderDashboard(); render(br);
+          recomputeLive(); await saveDB();
+          try{ await pushRemoteDB(true); }catch(e){}
+          renderDashboard(); render(br);
           toast('🔄 Reset');
         });
       }
@@ -2246,117 +2887,69 @@ function openBranchManagement(){
   });
 }
 
-/* ═══ PRINT ═══ */
-function buildSnapshotWrapper(targetEl, title, subtitle){
-  const now = new Date();
-  const bf = currentBranchFilter();
-  const bl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
-  const w = document.createElement('div');
-  w.className = 'snapshot-capture-area';
-  w.style.cssText = 'position:fixed;left:-99999px;top:0;width:1200px;background:#04060d;padding:24px;font-family:"Noto Sans Bengali",sans-serif;color:#f0f4ff;';
-  w.innerHTML = '<div class="snapshot-header">' +
-      '<div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px;">' +
-        '<svg viewBox="0 0 100 100" style="width:54px;height:54px;"><circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="3"/><g transform="translate(50,50)" fill="#fff"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g></svg>' +
-        '<div style="text-align:left"><h1 style="font-size:24px;font-weight:900;background:linear-gradient(90deg,#60a5fa,#4ade80);-webkit-background-clip:text;background-clip:text;color:transparent;margin:0">কম্পিউটার ক্যাম্পাস</h1><div style="font-size:12px;color:#a5b4d8;font-weight:700;margin-top:2px">এজেন্ট ব্যাংকিং সিস্টেম • v28</div></div>' +
+/* ═══ NOTIFICATION SETTINGS ═══ */
+function openNotifSettings(){
+  openModal({
+    title: '🔔 নোটিফিকেশন সেটিংস', wide: false,
+    bodyHTML:
+      '<div class="cust-box" style="margin-bottom:14px">' +
+        '<div class="head"><h4>⚙️ প্রেফারেন্স</h4></div>' +
+        '<label class="online-tick-label" for="ns_sound" style="margin-bottom:10px">' +
+          '<input type="checkbox" id="ns_sound" ' + (__soundEnabled?'checked':'') + '>' +
+          '<div class="online-tick-text"><div class="title">🔊 সাউন্ড</div><div class="sub">নতুন লেনদেনে সাউন্ড বাজবে</div></div>' +
+        '</label>' +
+        '<label class="online-tick-label" for="ns_vib">' +
+          '<input type="checkbox" id="ns_vib" ' + (__vibrationEnabled?'checked':'') + ' style="accent-color:#ec4899">' +
+          '<div class="online-tick-text"><div class="title">📳 ভাইব্রেশন</div><div class="sub">মোবাইলে কম্পন হবে</div></div>' +
+        '</label>' +
       '</div>' +
-      '<div style="font-size:16px;font-weight:800;color:#fff;margin-top:12px">' + title + '</div>' +
-      (subtitle ? '<div style="font-size:13.5px;color:#93c5fd;font-weight:700;margin-top:6px">' + subtitle + '</div>' : '') +
-      '<div class="meta"><span>📅 <b>' + toBn(now.toLocaleDateString('en-GB')) + '</b></span><span>🕐 <b>' + toBn(now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true})) + '</b></span><span>🏦 <b>' + esc(bl) + '</b></span><span>👤 <b>' + esc(session?.name || '-') + '</b></span></div>' +
-    '</div><div class="snapshot-body"></div><div class="snapshot-footer">© Computer Campus Agent Banking</div>';
-  w.querySelector('.snapshot-body').appendChild(targetEl.cloneNode(true));
-  w.querySelectorAll('button, input, select, textarea').forEach(el => el.remove());
-  return w;
-}
-async function captureElementAsImage(targetEl, filename, title, subtitle){
-  const loading = document.getElementById('printLoading');
-  const msg = document.getElementById('printLoadingMsg');
-  if(loading){ loading.classList.add('active'); msg.textContent = 'প্রস্তুত হচ্ছে...'; }
-  try{
-    const wrapper = buildSnapshotWrapper(targetEl, title, subtitle);
-    document.body.appendChild(wrapper);
-    if(msg) msg.textContent = 'ছবি আঁকা হচ্ছে...';
-    await new Promise(r => setTimeout(r, 250));
-    const canvas = await html2canvas(wrapper, { backgroundColor: '#04060d', scale: 2, useCORS: true, logging: false, windowWidth: 1250, width: wrapper.offsetWidth });
-    document.body.removeChild(wrapper);
-    if(msg) msg.textContent = 'ডাউনলোড হচ্ছে...';
-    canvas.toBlob((blob) => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = filename;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-      toast('📸 Snapshot: ' + filename);
-    }, 'image/png');
-  }catch(e){ console.error(e); toast('❌ ' + e.message); }
-  finally { if(loading) loading.classList.remove('active'); }
-}
-function printDashboardSnapshot(){
-  if(!session){ toast('❌ লগইন করুন'); return; }
-  const main = document.querySelector('main'); if(!main) return;
-  const bf = currentBranchFilter();
-  const bl = bf === 'all' ? 'উভয় শাখা' : (BRANCHES[bf]?.name || bf);
-  captureElementAsImage(main, 'snapshot_' + dashDate + '_' + Date.now() + '.png', '📊 দৈনিক Snapshot — ' + toBn(dashDate), 'শাখা: ' + bl);
-}
-function printSingleTransaction(tx){
-  if(!tx){ toast('❌ নেই'); return; }
-  const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
-  const box = document.createElement('div');
-  box.style.cssText = 'padding:20px;background:#04060d;border-radius:16px;color:#f0f4ff;';
-  box.innerHTML = '<div style="padding:16px;border-radius:14px;background:linear-gradient(145deg,rgba(59,130,246,.1),rgba(34,197,94,.05));border:1px solid rgba(59,130,246,.4);margin-bottom:16px"><div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:6px">' + (cfg.icon||'') + ' ' + esc(cfg.title||tx.type) + '</div><div style="font-size:13px;color:#a5b4d8">আইডি: <b style="color:#fff">' + esc(tx.id) + '</b></div></div>' +
-    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">' +
-      '<div style="padding:12px;border-radius:12px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2)"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">তারিখ</div><div style="font-size:15px;font-weight:800;color:#fff;margin-top:4px">' + toBn(tx.date||'-') + '</div></div>' +
-      '<div style="padding:12px;border-radius:12px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2)"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">টাকা</div><div style="font-size:20px;font-weight:900;color:#4ade80;margin-top:4px">৳ ' + fmt(tx.amount) + '</div></div>' +
-      '<div style="padding:12px;border-radius:12px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2)"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">শাখা</div><div style="font-size:15px;font-weight:800;color:#fff;margin-top:4px">' + esc(BRANCHES[tx.branch]?.name||'-') + '</div></div>' +
-      '<div style="padding:12px;border-radius:12px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2)"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">ইউজার</div><div style="font-size:15px;font-weight:800;color:#fff;margin-top:4px">' + esc(tx.user||'-') + '</div></div>' +
-      (tx.custName ? '<div style="grid-column:1/-1;padding:14px;border-radius:12px;background:linear-gradient(145deg,rgba(236,72,153,.1),rgba(168,85,247,.05));border:1px solid rgba(236,72,153,.4)"><div style="font-size:11.5px;color:#f9a8d4;font-weight:700">👤 গ্রাহক</div><div style="font-size:17px;font-weight:900;color:#fff;margin-top:6px">' + esc(tx.custName) + '</div><div style="font-size:13px;color:#a5b4d8;margin-top:2px">অ্যাকাউন্ট: <b>' + esc(tx.custAcc||'-') + '</b> • মোবাইল: <b>' + esc(tx.custMobile||'-') + '</b></div></div>' : '') +
-      (tx.note ? '<div style="grid-column:1/-1;padding:12px;border-radius:12px;background:rgba(0,0,0,.3);border:1px solid rgba(59,130,246,.2)"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">📝 মন্তব্য</div><div style="font-size:14px;color:#e0eaff;margin-top:6px;line-height:1.7">' + esc(tx.note) + '</div></div>' : '') +
-      '<div style="grid-column:1/-1;padding:12px;border-radius:12px;background:rgba(0,0,0,.3);border:1px solid rgba(59,130,246,.2);font-size:12px;color:#a5b4d8">তৈরি: <b style="color:#fff">' + esc(fmtDateTime(tx.createdAt)) + '</b></div>' +
-    '</div>';
-  captureElementAsImage(box, 'tx_' + tx.type + '_' + tx.date + '_' + (tx.id||'').slice(0,6) + '.png', (cfg.icon||'') + ' লেনদেন: ' + (cfg.title||tx.type), '৳ ' + fmt(tx.amount) + ' • ' + (BRANCHES[tx.branch]?.name||''));
-}
-function printCustomerHistory(accountNo, custName){
-  if(!accountNo){ toast('❌ নেই'); return; }
-  const allTxs = getCustomerAllTxs(accountNo);
-  const cust = DB().customers.find(c => c.accountNo === accountNo);
-  const name = custName || cust?.name || '-';
-  const sTxs = allTxs.filter(t => t.type === 'support');
-  const sPaid = sTxs.filter(t => t.dir === 'out' || t.dir === 'online_support_out').reduce((s,t)=> s+Number(t.amount||0),0);
-  const sRefund = sTxs.filter(t => t.dir === 'in' || t.dir === 'online_support_in').reduce((s,t)=> s+Number(t.amount||0),0);
-  const sNet = sPaid - sRefund;
-  const box = document.createElement('div');
-  box.style.cssText = 'padding:20px;background:#04060d;border-radius:16px;color:#f0f4ff;';
-  box.innerHTML = '<div style="padding:16px;border-radius:14px;background:linear-gradient(145deg,rgba(236,72,153,.1),rgba(168,85,247,.05));border:1px solid rgba(236,72,153,.4);margin-bottom:16px">' +
-      '<div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:6px">👤 ' + esc(name) + '</div>' +
-      '<div style="font-size:13.5px;color:#e0eaff">অ্যাকাউন্ট: <b>' + esc(accountNo) + '</b> • মোবাইল: <b>' + esc(cust?.mobile||'-') + '</b></div>' +
-      '<div style="font-size:13.5px;color:#e0eaff;margin-top:4px">শাখা: <b>' + esc(BRANCHES[cust?.branch]?.name||'-') + '</b></div>' +
-    '</div>' +
-    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">' +
-      '<div style="padding:12px;border-radius:12px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);text-align:center"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">মোট</div><div style="font-size:20px;font-weight:900;color:#fff;margin-top:4px">' + toBn(allTxs.length) + '</div></div>' +
-      '<div style="padding:12px;border-radius:12px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);text-align:center"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">প্রদান</div><div style="font-size:14px;font-weight:900;color:#93c5fd;margin-top:4px">৳ ' + fmt(sPaid) + '</div></div>' +
-      '<div style="padding:12px;border-radius:12px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);text-align:center"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">ফেরত</div><div style="font-size:14px;font-weight:900;color:#4ade80;margin-top:4px">৳ ' + fmt(sRefund) + '</div></div>' +
-      '<div style="padding:12px;border-radius:12px;background:rgba(' + (sNet>0?'220,38,38':'34,197,94') + ',.08);border:1px solid rgba(' + (sNet>0?'220,38,38':'34,197,94') + ',.3);text-align:center"><div style="font-size:11.5px;color:#a5b4d8;font-weight:700">নেট</div><div style="font-size:18px;font-weight:900;color:' + (sNet>0?'#f87171':'#4ade80') + ';margin-top:4px">৳ ' + fmt(Math.abs(sNet)) + '</div></div>' +
-    '</div>' +
-    '<div style="border-radius:14px;border:1px solid rgba(59,130,246,.22);overflow:hidden"><table style="width:100%;border-collapse:collapse;font-size:13.5px">' +
-      '<thead><tr style="background:linear-gradient(180deg,rgba(59,130,246,.2),rgba(59,130,246,.08))">' +
-        '<th style="padding:12px;text-align:left;color:#93c5fd;font-weight:700;font-size:12px">#</th>' +
-        '<th style="padding:12px;text-align:left;color:#93c5fd;font-weight:700;font-size:12px">তারিখ</th>' +
-        '<th style="padding:12px;text-align:left;color:#93c5fd;font-weight:700;font-size:12px">ধরন</th>' +
-        '<th style="padding:12px;text-align:left;color:#93c5fd;font-weight:700;font-size:12px">শাখা</th>' +
-        '<th style="padding:12px;text-align:right;color:#93c5fd;font-weight:700;font-size:12px">টাকা</th>' +
-        '<th style="padding:12px;text-align:left;color:#93c5fd;font-weight:700;font-size:12px">বিবরণ</th>' +
-      '</tr></thead><tbody>' +
-      (allTxs.length ? allTxs.map((t,i) => { const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' }; return '<tr style="border-top:1px solid rgba(59,130,246,.12);' + (i%2?'background:rgba(8,12,26,.5);':'') + '"><td style="padding:10px;color:#a5b4d8;font-size:12px">' + toBn(i+1) + '</td><td style="padding:10px;font-weight:700">' + toBn(t.date) + '</td><td style="padding:10px;font-weight:700;color:#93c5fd">' + (cfg.icon||'') + ' ' + esc(cfg.title||t.type) + '</td><td style="padding:10px;font-size:12.5px">' + esc(BRANCHES[t.branch]?.name||'-') + '</td><td style="padding:10px;text-align:right;font-weight:900;color:#4ade80">৳ ' + fmt(t.amount) + '</td><td style="padding:10px;font-size:12.5px;color:#c9d5f0">' + esc(t.note||'-') + '</td></tr>'; }).join('') : '<tr><td colspan="6" style="padding:24px;text-align:center;color:#7a8ab8">📭 নেই</td></tr>') +
-      '</tbody></table></div>';
-  captureElementAsImage(box, 'customer_' + accountNo + '_' + todayStr() + '.png', '👤 গ্রাহক লেনদেন — ' + name, 'অ্যাকাউন্ট: ' + accountNo + ' • মোট ' + allTxs.length + ' টি');
+      '<div class="cust-box" style="margin-bottom:14px">' +
+        '<div class="head"><h4>🔬 পরীক্ষা করুন</h4></div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+          '<button class="btn green sm" id="ns_t_success">✅ সফল</button>' +
+          '<button class="btn yellow sm" id="ns_t_warning">⚠️ সতর্কতা</button>' +
+          '<button class="btn red sm" id="ns_t_danger">🚨 বিপদ</button>' +
+          '<button class="btn sm" id="ns_t_info">ℹ️ তথ্য</button>' +
+          '<button class="btn cyan sm" id="ns_t_transfer">🔁 ট্রান্সফার</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="cust-box">' +
+        '<div class="head"><h4>🌐 ব্রাউজার নোটিফিকেশন</h4></div>' +
+        '<div style="font-size:12.5px;color:#a5b4d8;line-height:1.8;margin-bottom:10px">Tab minimize থাকলে OS-লেভেল notification পাবেন।</div>' +
+        '<button class="btn block" id="ns_req_perm">🔔 পারমিশন চান</button>' +
+        '<div id="ns_perm_status" style="margin-top:10px;font-size:12.5px;text-align:center;color:#a5b4d8"></div>' +
+      '</div>',
+    onMount: (w) => {
+      const sCb = w.querySelector('#ns_sound'), vCb = w.querySelector('#ns_vib');
+      sCb.addEventListener('change', () => { __soundEnabled = sCb.checked; saveNotifPrefs(); });
+      vCb.addEventListener('change', () => { __vibrationEnabled = vCb.checked; saveNotifPrefs(); });
+      const test = (type) => { showNotifToast({ type, icon: ({success:'✅', warning:'⚠️', danger:'🚨', info:'ℹ️', transfer:'🔁'})[type], badge: 'পরীক্ষা', title: '🔔 নোটিফিকেশন পরীক্ষা', body: '<b>এটি একটি টেস্ট নোটিফিকেশন।</b><br><span class="notif-amt">৳ 1,234.00</span>', duration: 6000 }); };
+      w.querySelector('#ns_t_success').addEventListener('click', () => test('success'));
+      w.querySelector('#ns_t_warning').addEventListener('click', () => test('warning'));
+      w.querySelector('#ns_t_danger').addEventListener('click', () => test('danger'));
+      w.querySelector('#ns_t_info').addEventListener('click', () => test('info'));
+      w.querySelector('#ns_t_transfer').addEventListener('click', () => test('transfer'));
+      const permSt = w.querySelector('#ns_perm_status');
+      const updPerm = () => {
+        if(!('Notification' in window)){ permSt.textContent = '❌ সাপোর্ট নেই'; return; }
+        const p = Notification.permission;
+        permSt.innerHTML = p === 'granted' ? '✅ অনুমোদিত' : p === 'denied' ? '🚫 ব্লক' : '⏳ অনুমতি নেই';
+        permSt.style.color = p === 'granted' ? '#4ade80' : p === 'denied' ? '#f87171' : '#facc15';
+      };
+      updPerm();
+      w.querySelector('#ns_req_perm').addEventListener('click', async () => { const ok = await requestNotifPermission(); updPerm(); if(ok) showNativeNotif('✅ সফল', 'ব্রাউজার নোটিফিকেশন চালু হয়েছে', null); });
+    }
+  });
 }
 
 /* ═══ DB BROWSER ═══ */
 const DB_TABLES = {
-  users: { label:'👥 Users', icon:'👥' }, customers: { label:'🧑 Customers', icon:'🧑' },
-  txs: { label:'💸 Transactions', icon:'💸' },
-  txEditLog: { label:'📝 Edit Log', icon:'📝' }, branchCapital: { label:'💵 Branch Capital', icon:'💵' },
-  baseVault: { label:'🗄️ Base Vault', icon:'🗄️' }, baseAccounts: { label:'🏦 Base Accounts', icon:'🏦' },
-  liveVault: { label:'⚡ Live Vault', icon:'⚡' }, liveAccounts: { label:'💵 Live Accounts', icon:'💵' },
-  yearlyArchive: { label:'📚 Yearly Archive', icon:'📚' }, deletedTxIds: { label:'🗑️ Deleted TX IDs', icon:'🗑️' },
-  dailyClose: { label:'📅 Daily Close', icon:'📅' }
+  users:{label:'👥 Users',icon:'👥'}, customers:{label:'🧑 Customers',icon:'🧑'}, txs:{label:'💸 Transactions',icon:'💸'},
+  txEditLog:{label:'📝 Edit Log',icon:'📝'}, branchCapital:{label:'💵 Branch Capital',icon:'💵'},
+  baseVault:{label:'🗄️ Base Vault',icon:'🗄️'}, baseAccounts:{label:'🏦 Base Accounts',icon:'🏦'},
+  liveVault:{label:'⚡ Live Vault',icon:'⚡'}, liveAccounts:{label:'💵 Live Accounts',icon:'💵'},
+  yearlyArchive:{label:'📚 Yearly Archive',icon:'📚'}, deletedTxIds:{label:'🗑️ Deleted TX IDs',icon:'🗑️'},
+  dailyClose:{label:'📅 Daily Close',icon:'📅'}
 };
 function getTableData(n){ const d = DB(); if(!d) return null; return d[n]; }
 function getTableCount(n){ const d = getTableData(n); if(d == null) return 0; if(Array.isArray(d)) return d.length; if(typeof d === 'object') return Object.keys(d).length; return 1; }
@@ -2366,7 +2959,7 @@ function openDatabaseBrowser(){
   const tabsHTML = Object.entries(DB_TABLES).map(([k,v]) => '<button class="db-tab-btn" data-dbtab="' + k + '">' + v.icon + ' ' + v.label + ' <span class="cnt">' + toBn(getTableCount(k)) + '</span></button>').join('');
   openModal({ title: '🗄️ Database Browser', xwide: true,
     bodyHTML: '<div class="db-tabs" id="dbTabs">' + tabsHTML + '</div>' +
-      '<div class="db-toolbar"><input type="text" class="db-search" id="dbSearch" placeholder="🔍 Search..."><span class="db-info" id="dbInfo">—</span><button class="btn sm green" id="dbAddBtn">➕ Add Row</button><button class="btn sm gray" id="dbRefreshBtn">🔄 Refresh</button></div>' +
+      '<div class="db-toolbar"><input type="text" class="db-search" id="dbSearch" placeholder="🔍 Search..." autocomplete="off"><span class="db-info" id="dbInfo">—</span><button class="btn sm green" id="dbAddBtn">➕ Add Row</button><button class="btn sm gray" id="dbRefreshBtn">🔄 Refresh</button></div>' +
       '<div id="dbContent"></div>',
     onMount: (w) => {
       const tabsEl = w.querySelector('#dbTabs'), contentEl = w.querySelector('#dbContent'), infoEl = w.querySelector('#dbInfo');
@@ -2422,7 +3015,7 @@ function renderObjectTable(obj, contentEl, infoEl, search, tableName, onRefresh)
 function openRowViewModal(row, tn){ openModal({ title: '👁️ View — ' + esc(tn), wide: true, bodyHTML: '<div class="db-json">' + esc(JSON.stringify(row, null, 2)) + '</div>' }); }
 function openJsonViewModal(key, val){ openModal({ title: '👁️ ' + esc(key), wide: true, bodyHTML: '<div class="db-json">' + esc(typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)) + '</div>' }); }
 function openRowEditModal(row, index, tn, onRefresh){
-  const fh = Object.keys(row || {}).map(k => { const v = row[k]; const isO = v && typeof v === 'object'; const sv = isO ? JSON.stringify(v, null, 2) : (v == null ? '' : String(v)); return '<div class="db-edit-field"><label>' + esc(k) + ' ' + (isO?'(JSON)':'') + '</label>' + (isO ? '<textarea data-field="' + esc(k) + '" data-type="json">' + esc(sv) + '</textarea>' : '<input type="text" data-field="' + esc(k) + '" data-type="text" value="' + esc(sv) + '">') + '</div>'; }).join('');
+  const fh = Object.keys(row || {}).map(k => { const v = row[k]; const isO = v && typeof v === 'object'; const sv = isO ? JSON.stringify(v, null, 2) : (v == null ? '' : String(v)); return '<div class="db-edit-field"><label>' + esc(k) + ' ' + (isO?'(JSON)':'') + '</label>' + (isO ? '<textarea data-field="' + esc(k) + '" data-type="json">' + esc(sv) + '</textarea>' : '<input type="text" data-field="' + esc(k) + '" data-type="text" value="' + esc(sv) + '" autocomplete="off">') + '</div>'; }).join('');
   openModal({ title: '✏️ Edit Row — ' + esc(tn), wide: true, bodyHTML: '<div style="max-height:520px;overflow-y:auto;padding-right:6px">' + fh + '</div><div style="display:flex;gap:10px;margin-top:16px"><button class="btn green" id="dbRowSave" style="flex:1">💾 Save</button><button class="btn gray" id="dbRowCancel" style="flex:1">Cancel</button></div>',
     onMount: (w, close) => {
       w.querySelector('#dbRowCancel').addEventListener('click', close);
@@ -2431,8 +3024,7 @@ function openRowEditModal(row, index, tn, onRefresh){
         w.querySelectorAll('[data-field]').forEach(el => { const k = el.dataset.field, t = el.dataset.type, raw = el.value; if(t === 'json'){ try{ upd[k] = JSON.parse(raw); }catch(e){ err = true; alert('❌ JSON error: '+e.message); } } else { if(raw === '') upd[k] = ''; else if(/^-?\d+(\.\d+)?$/.test(raw)) upd[k] = Number(raw); else if(raw === 'true') upd[k] = true; else if(raw === 'false') upd[k] = false; else upd[k] = raw; } });
         if(err) return;
         const arr = DB()[tn]; if(Array.isArray(arr) && arr[index]) arr[index] = { ...arr[index], ...upd };
-        await saveDB(); close(); toast('✅ Updated');
-        if(onRefresh) onRefresh(); renderDashboard();
+        await saveDB(); close(); toast('✅ Updated'); if(onRefresh) onRefresh(); renderDashboard();
       });
     }
   });
@@ -2445,9 +3037,7 @@ function openJsonEditModal(key, val, tn, onRefresh){
       w.querySelector('#dbJsonSave').addEventListener('click', async () => {
         const raw = w.querySelector('#dbJsonVal').value;
         let parsed; try{ parsed = isO ? JSON.parse(raw) : raw; }catch(e){ alert('❌ JSON error'); return; }
-        DB()[tn][key] = parsed;
-        await saveDB(); close(); toast('✅ Updated');
-        if(onRefresh) onRefresh();
+        DB()[tn][key] = parsed; await saveDB(); close(); toast('✅ Updated'); if(onRefresh) onRefresh();
       });
     }
   });
@@ -2457,8 +3047,7 @@ async function deleteRow(row, index, tn, onRefresh){
   const arr = DB()[tn]; if(!Array.isArray(arr)) return;
   const rm = arr.splice(index, 1)[0];
   if(tn === 'txs' && rm && rm.id){ if(!DB().deletedTxIds) DB().deletedTxIds = {}; DB().deletedTxIds[rm.id] = new Date().toISOString(); }
-  await saveDB(); toast('🗑️ Deleted');
-  if(onRefresh) onRefresh(); renderDashboard();
+  await saveDB(); toast('🗑️ Deleted'); if(onRefresh) onRefresh(); renderDashboard();
 }
 function openAddRowModal(tn, onRefresh){
   openModal({ title: '➕ Add Row — ' + esc(tn), wide: true, bodyHTML: '<div class="db-edit-field"><label>JSON</label><textarea id="dbAddJson" style="min-height:280px">{\n  "id": "new_' + Date.now() + '",\n  "date": "' + todayStr() + '"\n}</textarea></div><div style="display:flex;gap:10px;margin-top:16px"><button class="btn green" id="dbAddSave" style="flex:1">💾 Add</button><button class="btn gray" id="dbAddCancel" style="flex:1">Cancel</button></div>',
@@ -2469,9 +3058,7 @@ function openAddRowModal(tn, onRefresh){
         let p; try{ p = JSON.parse(raw); }catch(e){ alert('❌ JSON error'); return; }
         if(!Array.isArray(DB()[tn])){ alert('❌ Not array'); return; }
         if(!p.id) p.id = uid();
-        DB()[tn].push(p);
-        await saveDB(); close(); toast('✅ Added');
-        if(onRefresh) onRefresh();
+        DB()[tn].push(p); await saveDB(); close(); toast('✅ Added'); if(onRefresh) onRefresh();
       });
     }
   });
@@ -2489,8 +3076,7 @@ async function doLogin(){
     let user = DB().users.find(x => x.username === u && verifyPassword(p, x.password));
     if(!user && u === 'admin' && verifyPassword(p, DEFAULT_ADMIN_HASH)){ forceFixAdmin(); user = DB().users.find(x => x.username === 'admin'); }
     if(!user){ e.textContent = '❌ ভুল'; $('#loginPass').value = ''; b.disabled = false; b.innerHTML = '🔐 লগইন করুন'; return; }
-    session = user;
-    sessionStorage.setItem(SKEY, user.id);
+    session = user; sessionStorage.setItem(SKEY, user.id);
     viewBranch = user.role === 'admin' ? 'all' : user.branch;
     dashDate = todayStr();
     startApp();
@@ -2498,15 +3084,8 @@ async function doLogin(){
 }
 async function logout(){
   try{ if(DB()) await saveDB(); }catch(e){}
-  try{
-    if(__realtimeChannel && __supabaseClient){
-      await __realtimeChannel.untrack();
-      __supabaseClient.removeChannel(__realtimeChannel);
-      __realtimeChannel = null;
-    }
-  }catch(e){}
-  updateRealtimeIndicator('offline');
-  updatePresenceUI([]);
+  try{ if(__realtimeChannel && __supabaseClient){ await __realtimeChannel.untrack(); __supabaseClient.removeChannel(__realtimeChannel); __realtimeChannel = null; } }catch(e){}
+  updateRealtimeIndicator('offline'); updatePresenceUI([]);
   sessionStorage.removeItem(SKEY);
   session = null; viewBranch = 'all'; dashDate = todayStr(); isDateViewMode = false;
   $('#app').classList.add('hidden');
@@ -2525,20 +3104,30 @@ function startApp(){
   dashDate = todayStr(); isDateViewMode = false;
   renderTopbar(); renderDashboard(); renderSidebar();
   startClock(); saveDB();
-  // ⚡ Realtime-এ নিজের presence ট্র্যাক
   setTimeout(() => {
     try{
       if(__realtimeChannel && __realtimeChannel.state === 'joined'){
-        __realtimeChannel.track({
-          user: session.name,
-          username: session.username,
-          branch: session.branch || 'all',
-          role: session.role,
-          joined_at: new Date().toISOString()
-        }).catch(()=>{});
+        __realtimeChannel.track({ user: session.name, username: session.username, branch: session.branch || 'all', role: session.role, joined_at: new Date().toISOString() }).catch(()=>{});
       }
     }catch(e){}
   }, 800);
+}
+
+/* ═══ AUTOFILL DISABLE ═══ */
+function disableAutofill(scope){
+  scope = scope || document;
+  scope.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="date"]), textarea').forEach(el => {
+    el.setAttribute('autocomplete', 'off');
+    el.setAttribute('autocorrect', 'off');
+    el.setAttribute('autocapitalize', 'off');
+    el.setAttribute('spellcheck', 'false');
+    if(!el.dataset.noAutofillApplied){
+      el.dataset.noAutofillApplied = '1';
+      el.setAttribute('readonly', 'readonly');
+      const handler = function(){ this.removeAttribute('readonly'); this.removeEventListener('focus', handler); };
+      el.addEventListener('focus', handler);
+    }
+  });
 }
 
 /* ═══ INIT ═══ */
@@ -2546,29 +3135,54 @@ document.getElementById('sidebarOverlay')?.addEventListener('click', closeSideba
 document.getElementById('sidebarClose')?.addEventListener('click', closeSidebar);
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSidebar(); });
 setupEnterNavigation();
+
+const _origOpenModal = openModal;
+window.openModal = function(opts){
+  const result = _origOpenModal(opts);
+  setTimeout(() => { if(result && result.wrap) disableAutofill(result.wrap); }, 50);
+  return result;
+};
+const __autofillObserver = new MutationObserver((mutations) => {
+  mutations.forEach(m => {
+    m.addedNodes.forEach(node => {
+      if(node.nodeType === 1){
+        if(node.tagName === 'INPUT' || node.tagName === 'TEXTAREA') disableAutofill(node.parentElement || document);
+        else if(node.querySelectorAll) disableAutofill(node);
+      }
+    });
+  });
+});
 window.addEventListener('beforeunload', () => {
-  try{
-    if(__realtimeChannel && __supabaseClient){
-      __realtimeChannel.untrack().catch(()=>{});
-    }
-  }catch(e){}
+  try{ if(__realtimeChannel && __supabaseClient){ __realtimeChannel.untrack().catch(()=>{}); } }catch(e){}
 });
 
 (async function init(){
-  console.log('🚀 Computer Campus v28');
+  console.log('🚀 Computer Campus v30');
   try{ window.db = loadLocalDB() || defaultDB(); }catch(e){ window.db = defaultDB(); }
-  normalizeDB();
-  forceFixAdmin();
-  recalcAllCustomerDues(false);
-  recomputeLive();
+  normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); loadNotifPrefs();
   const lb = $('#loginBtn'); if(lb) lb.addEventListener('click', doLogin);
   const lu = $('#loginUser'), lp = $('#loginPass');
   if(lu) lu.addEventListener('keydown', e => { if(e.key === 'Enter') lp.focus(); });
   if(lp) lp.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
   const sid = sessionStorage.getItem(SKEY);
   if(sid){ const u = DB().users.find(x => x.id === sid); if(u){ session = u; viewBranch = u.role === 'admin' ? 'all' : u.branch; startApp(); } }
+  attachNetworkListeners();
+  updateNetStatus(detectNetworkQuality());
+  updateQueueBadge();
+  setupBroadcastChannel();
+  const unlockAudio = () => {
+    try{ if(!__audioCtx){ const AC = window.AudioContext || window.webkitAudioContext; if(AC) __audioCtx = new AC(); } if(__audioCtx && __audioCtx.state === 'suspended') __audioCtx.resume(); }catch(e){}
+    document.removeEventListener('click', unlockAudio); document.removeEventListener('touchstart', unlockAudio); document.removeEventListener('keydown', unlockAudio);
+  };
+  document.addEventListener('click', unlockAudio, { once: true });
+  document.addEventListener('touchstart', unlockAudio, { once: true });
+  document.addEventListener('keydown', unlockAudio, { once: true });
   initSupabase();
-  console.log('✅ v28 initialized. Login: admin / 8182');
+  setTimeout(() => { if(navigator.onLine && queueSize() > 0) forceSyncNow(); }, 2000);
+  disableAutofill(document);
+  __autofillObserver.observe(document.body, { childList: true, subtree: true });
+  requestNotifPermission();
+  console.log('✅ v30 initialized. Login: admin / 8182');
 })();
 </script>
 </body>
