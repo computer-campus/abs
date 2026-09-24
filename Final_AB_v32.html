@@ -61,7 +61,9 @@ body{font-family:'Noto Sans Bengali',sans-serif;color:var(--txt);background:#040
 .sb-user{padding:14px 16px;border-radius:14px;background:linear-gradient(145deg,rgba(59,130,246,.1),rgba(34,197,94,.04));border:1px solid var(--line-3);margin-bottom:6px}
 .sb-user .name{font-size:15px;font-weight:800;color:#fff}
 .sb-user .role{font-size:12px;color:var(--green-2);font-weight:700;margin-top:4px}
-.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;background:rgba(4,6,13,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--line-2)}
+.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;background:rgba(4,6,13,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--line-2);transform:translateY(0);transition:transform .35s cubic-bezier(.2,1,.3,1),box-shadow .35s}
+.topbar.hidden-scroll{transform:translateY(-110%);box-shadow:0 0 0 rgba(0,0,0,0)}
+.topbar.scrolled{box-shadow:0 8px 30px rgba(0,0,0,.6)}
 .topbar .tb-left{display:flex;align-items:center;gap:12px;min-width:0}
 .topbar .tb-menu-btn{width:44px;height:44px;border-radius:13px;border:1px solid var(--line-3);background:linear-gradient(145deg,rgba(59,130,246,.18),rgba(34,197,94,.08));color:#fff;cursor:pointer;display:grid;place-items:center;font-size:20px;flex-shrink:0}
 .brand{display:flex;align-items:center;gap:11px;min-width:0}
@@ -1676,6 +1678,68 @@ function toast(msg){
   setTimeout(()=>{ el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(20px)'; setTimeout(()=>el.remove(), 320); }, 2500);
 }
 let __clockTimer = null;
+/* ═══ TOPBAR AUTO HIDE/SHOW ON SCROLL ═══ */
+let __lastScrollY = 0;
+let __scrollThreshold = 60; // কমপক্ষে এত pixel scroll হলে কাজ করবে
+let __scrollTicking = false;
+
+function attachTopbarScroll(){
+  // পূর্বের listener সরাই (double handler এড়াতে)
+  if(window.__topbarScrollHandler){
+    window.removeEventListener('scroll', window.__topbarScrollHandler);
+    window.removeEventListener('touchmove', window.__topbarScrollHandler);
+  }
+
+  __lastScrollY = window.scrollY || window.pageYOffset || 0;
+
+  const handler = function(){
+    if(__scrollTicking) return;
+    __scrollTicking = true;
+    requestAnimationFrame(() => {
+      const topbar = document.getElementById('topbar');
+      if(!topbar){
+        __scrollTicking = false;
+        return;
+      }
+      // যদি কোনো modal খোলা থাকে — topbar hide করব না
+      const modalOpen = document.getElementById('modalRoot')?.children?.length > 0;
+      if(modalOpen){
+        topbar.classList.remove('hidden-scroll');
+        __scrollTicking = false;
+        return;
+      }
+
+      const currentY = window.scrollY || window.pageYOffset || 0;
+      const diff = currentY - __lastScrollY;
+
+      // ⚡ scroll position অনুযায়ী
+      if(currentY <= 20){
+        // উপরে একেবারে — সবসময় দেখাই
+        topbar.classList.remove('hidden-scroll');
+        topbar.classList.remove('scrolled');
+      }
+      else if(diff > 8 && currentY > __scrollThreshold){
+        // নিচে scroll — লুকাই
+        topbar.classList.add('hidden-scroll');
+      }
+      else if(diff < -8){
+        // উপরে scroll — দেখাই
+        topbar.classList.remove('hidden-scroll');
+        topbar.classList.add('scrolled');
+      }
+      else if(currentY > __scrollThreshold){
+        topbar.classList.add('scrolled');
+      }
+
+      __lastScrollY = currentY;
+      __scrollTicking = false;
+    });
+  };
+
+  window.__topbarScrollHandler = handler;
+  window.addEventListener('scroll', handler, { passive: true });
+  window.addEventListener('touchmove', handler, { passive: true });
+}
 function startClock(){
   if(__clockTimer) clearInterval(__clockTimer);
   function tick(){
@@ -1739,10 +1803,23 @@ function buildPrintHTML(title, bodyHTML){
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   @page{ size: A4 portrait; margin: 12mm 10mm; }
+  @page{ size: A4 portrait; margin: 8mm 8mm 8mm 8mm; }
   @media print{ body{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } .no-print{ display: none !important; } thead{ display: table-header-group; } tr, td, th{ page-break-inside: avoid; } }
   *{ margin:0; padding:0; box-sizing:border-box; }
   body{ font-family:'Noto Sans Bengali', sans-serif; color:#111; background:#fff; font-size:11.5px; line-height:1.5; }
-  .print-container{ max-width:21cm; margin:0 auto; padding:0; }
+  .print-container{ max-width:21cm; margin:0 auto; padding:0; page-break-inside:auto; }
+@media print{
+  .print-container{ max-width:none; margin:0; padding:0; }
+  body{ margin:0; padding:0; }
+  .print-header{ page-break-after:avoid; }
+  .print-title{ page-break-after:avoid; }
+  .footer{ page-break-inside:avoid; }
+  .info-grid{ page-break-inside:avoid; }
+  .summary-line{ page-break-inside:avoid; }
+  table.tbl-print tr{ page-break-inside:avoid; }
+  table.tbl-print thead{ display:table-header-group; }
+  table.tbl-print tfoot{ display:table-footer-group; }
+}
   .print-header{ display:flex; align-items:center; gap:12px; padding-bottom:10px; border-bottom:2.5px solid #1e40af; margin-bottom:14px; }
   .print-logo{ width:54px; height:54px; flex-shrink:0; }
   .print-header-text{ flex:1; }
@@ -1765,8 +1842,8 @@ function buildPrintHTML(title, bodyHTML){
   table.tbl-print tbody tr:nth-child(even) td{ background:#f8fafc; }
   table.tbl-print td.amt{ font-weight:900; color:#15803d; text-align:right; white-space:nowrap; }
   table.tbl-print td.small{ font-size:9.5px; color:#475569; }
-  .footer{ margin-top:24px; padding-top:14px; border-top:1.5px dashed #94a3b8; display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-  .footer .sig{ text-align:center; padding-top:42px; font-size:10.5px; font-weight:700; color:#334155; }
+  .footer{ margin-top:12px; padding-top:8px; border-top:1.5px dashed #94a3b8; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; page-break-inside:avoid; }
+  .footer .sig{ text-align:center; padding-top:30px; font-size:10.5px; font-weight:700; color:#334155; }
   .footer .sig::before{ content:''; display:block; width:78%; margin:0 auto 4px; border-top:1px solid #64748b; }
   .summary-line{ display:flex; justify-content:space-between; padding:9px 14px; background:#f1f5f9; border-radius:6px; margin-bottom:12px; font-weight:800; font-size:12px; }
   .summary-line .k{ color:#475569; } .summary-line .v{ color:#0f172a; }
@@ -1813,52 +1890,70 @@ function printSingleTransaction(tx){
   if(!tx){ toast('❌ নেই'); return; }
   const cfg = TX_CFG[tx.type] || { title: tx.type, icon: '📌' };
 
-  // টাকার বিবরণী (Notes)
   const nOut = tx.notesOut || {};
   const nIn = tx.notesIn || {};
+
   const outRows = Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).map(d =>
-    `<tr><td>📤 ৳ ${toBn(d)} × ${toBn(nOut[d])} টি</td><td class="amt">৳ ${fmt(d * nOut[d])}</td></tr>`
+    `<tr><td>💸 ৳ ${toBn(d)} × ${toBn(nOut[d])} টি</td><td class="amt" style="color:#a16207">৳ ${fmt(d * nOut[d])}</td></tr>`
   ).join('');
   const inRows = Object.keys(nIn).filter(k => nIn[k] > 0).sort((a,b)=>b-a).map(d =>
-    `<tr><td>📥 ৳ ${toBn(d)} × ${toBn(nIn[d])} টি</td><td class="amt">৳ ${fmt(d * nIn[d])}</td></tr>`
+    `<tr><td>📥 ৳ ${toBn(d)} × ${toBn(nIn[d])} টি</td><td class="amt" style="color:#15803d">৳ ${fmt(d * nIn[d])}</td></tr>`
   ).join('');
   const outTotal = Object.keys(nOut).reduce((s,d)=> s + d*nOut[d], 0);
   const inTotal = Object.keys(nIn).reduce((s,d)=> s + d*nIn[d], 0);
 
-  const notesSection = (outRows || inRows) ? `
-    <div class="print-title" style="margin-top:10px">🗄️ টাকার বিবরণী (নোট)</div>
-    <table class="tbl-print">
-      <thead><tr><th>নোট বিবরণ</th><th style="text-align:right">পরিমাণ</th></tr></thead>
-      <tbody>
-        ${outRows}
-        ${inRows}
-        ${outTotal ? `<tr style="background:#fef3c7"><td style="font-weight:900">📤 প্রদান মোট</td><td class="amt" style="font-weight:900;color:#a16207">৳ ${fmt(outTotal)}</td></tr>` : ''}
-        ${inTotal ? `<tr style="background:#dcfce7"><td style="font-weight:900">📥 গ্রহণ মোট</td><td class="amt" style="font-weight:900;color:#15803d">৳ ${fmt(inTotal)}</td></tr>` : ''}
-      </tbody>
-    </table>` : '';
+  let notesSection = '';
+  if(outRows || inRows){
+    notesSection = '<div class="print-title" style="margin-top:6px;margin-bottom:6px;padding:6px 10px;font-size:13px">🗄️ টাকার বিবরণী (নোট)</div>';
+
+    if(outRows){
+      notesSection += `
+        <div style="font-size:10.5px;font-weight:900;color:#a16207;padding:4px 8px;background:#fef3c7;border-left:3px solid #f59e0b;border-radius:3px;margin-bottom:3px">📤 প্রদান</div>
+        <table class="tbl-print" style="margin-bottom:5px">
+          <thead><tr><th style="padding:5px 6px;font-size:9.5px">নোট</th><th style="padding:5px 6px;font-size:9.5px;text-align:right;width:35%">পরিমাণ</th></tr></thead>
+          <tbody>
+            ${outRows.replace(/<td>/g, '<td style="padding:4px 6px;font-size:10px">').replace(/<td class="amt"/g, '<td class="amt" style="padding:4px 6px;font-size:10px"')}
+            <tr style="background:#fef3c7"><td style="font-weight:900;color:#a16207;padding:5px 6px;font-size:10.5px">📤 প্রদান মোট</td><td class="amt" style="font-weight:900;color:#a16207;padding:5px 6px;font-size:11px">৳ ${fmt(outTotal)}</td></tr>
+          </tbody>
+        </table>`;
+    }
+
+    if(inRows){
+      notesSection += `
+        <div style="font-size:10.5px;font-weight:900;color:#15803d;padding:4px 8px;background:#dcfce7;border-left:3px solid #22c55e;border-radius:3px;margin-bottom:3px;margin-top:5px">📥 গ্রহণ</div>
+        <table class="tbl-print" style="margin-bottom:5px">
+          <thead><tr><th style="padding:5px 6px;font-size:9.5px">নোট</th><th style="padding:5px 6px;font-size:9.5px;text-align:right;width:35%">পরিমাণ</th></tr></thead>
+          <tbody>
+            ${inRows.replace(/<td>/g, '<td style="padding:4px 6px;font-size:10px">').replace(/<td class="amt"/g, '<td class="amt" style="padding:4px 6px;font-size:10px"')}
+            <tr style="background:#dcfce7"><td style="font-weight:900;color:#15803d;padding:5px 6px;font-size:10.5px">📥 গ্রহণ মোট</td><td class="amt" style="font-weight:900;color:#15803d;padding:5px 6px;font-size:11px">৳ ${fmt(inTotal)}</td></tr>
+          </tbody>
+        </table>`;
+    }
+  }
 
   const outletName = BRANCHES[tx.branch]?.name || 'উভয় আউটলেট';
 
   const body = `
-    <div class="print-title">${cfg.icon || ''} ${esc(cfg.title || tx.type)} — লেনদেন রশিদ<span class="sub">আইডি: ${esc(tx.id)}</span></div>
-    <div class="info-grid">
-      <div class="info-cell blue"><div class="lbl">তারিখ</div><div class="val">${toBn(tx.date || '-')}</div></div>
-      <div class="info-cell green"><div class="lbl">পরিমাণ</div><div class="val">৳ ${fmt(tx.amount)}</div></div>
-      <div class="info-cell"><div class="lbl">আউটলেট</div><div class="val">${esc(outletName)}</div></div>
-      <div class="info-cell"><div class="lbl">ইউজার</div><div class="val">${esc(tx.user || '-')}</div></div>
-      <div class="info-cell"><div class="lbl">তৈরি</div><div class="val" style="font-size:10.5px">${esc(fmtDateTime(tx.createdAt))}</div></div>
-      <div class="info-cell ${tx.accepted === false ? 'yellow' : 'green'}"><div class="lbl">স্ট্যাটাস</div><div class="val">${tx.accepted === false ? '⏳ অপেক্ষমাণ' : '✅ সফল'}</div></div>
+    <div class="print-title" style="margin-bottom:8px;padding:8px 12px;font-size:14px">${cfg.icon || ''} ${esc(cfg.title || tx.type)} — লেনদেন রশিদ</div>
+    <div class="info-grid" style="gap:5px;margin-bottom:6px">
+      <div class="info-cell blue" style="padding:6px 8px"><div class="lbl" style="font-size:9px">তারিখ</div><div class="val" style="font-size:12px;margin-top:1px">${toBn(tx.date || '-')}</div></div>
+      <div class="info-cell green" style="padding:6px 8px"><div class="lbl" style="font-size:9px">পরিমাণ</div><div class="val" style="font-size:12px;margin-top:1px">৳ ${fmt(tx.amount)}</div></div>
+      <div class="info-cell" style="padding:6px 8px"><div class="lbl" style="font-size:9px">আউটলেট</div><div class="val" style="font-size:11px;margin-top:1px">${esc(outletName)}</div></div>
+      <div class="info-cell" style="padding:6px 8px"><div class="lbl" style="font-size:9px">ইউজার</div><div class="val" style="font-size:12px;margin-top:1px">${esc(tx.user || '-')}</div></div>
+      <div class="info-cell" style="padding:6px 8px"><div class="lbl" style="font-size:9px">তৈরি</div><div class="val" style="font-size:10px;margin-top:1px">${esc(fmtDateTime(tx.createdAt))}</div></div>
+      <div class="info-cell ${tx.accepted === false ? 'yellow' : 'green'}" style="padding:6px 8px"><div class="lbl" style="font-size:9px">স্ট্যাটাস</div><div class="val" style="font-size:11.5px;margin-top:1px">${tx.accepted === false ? '⏳ অপেক্ষমাণ' : '✅ সফল'}</div></div>
     </div>
-    ${tx.type === 'branch_transfer' ? `<div class="summary-line"><span class="k">📤 প্রেরক ➜ 📥 গ্রহণকারী</span><span class="v">${esc(BRANCHES[tx.from]?.name||'')} ➜ ${esc(BRANCHES[tx.to]?.name||'')}</span></div>` : ''}
-    ${tx.custName ? `<div class="info-grid"><div class="info-cell blue" style="grid-column:1/-1"><div class="lbl">👤 গ্রাহক</div><div class="val">${esc(tx.custName)} ${tx.custAcc ? ' — ' + esc(tx.custAcc) : ''} ${tx.custMobile ? ' • 📱 ' + esc(tx.custMobile) : ''}</div></div></div>` : ''}
+    ${tx.type === 'branch_transfer' ? `<div class="summary-line" style="padding:6px 10px;margin-bottom:6px;font-size:11.5px"><span class="k">📤 প্রেরক ➜ 📥 গ্রহণকারী</span><span class="v">${esc(BRANCHES[tx.from]?.name||'')} ➜ ${esc(BRANCHES[tx.to]?.name||'')}</span></div>` : ''}
+    ${tx.custName ? `<div class="info-grid" style="margin-bottom:6px"><div class="info-cell blue" style="grid-column:1/-1;padding:6px 10px"><div class="lbl" style="font-size:9px">👤 গ্রাহক</div><div class="val" style="font-size:12px;margin-top:1px">${esc(tx.custName)} ${tx.custAcc ? ' — ' + esc(tx.custAcc) : ''} ${tx.custMobile ? ' • 📱 ' + esc(tx.custMobile) : ''}</div></div></div>` : ''}
     ${notesSection}
-    ${tx.note ? `<div class="info-cell yellow" style="margin-top:10px;margin-bottom:10px"><div class="lbl">📝 মন্তব্য</div><div class="val" style="font-weight:700;font-size:12px">${esc(tx.note)}</div></div>` : ''}
-    <div style="margin-top:18px;padding:10px 14px;border:1.5px dashed #64748b;border-radius:6px;background:#f8fafc;text-align:center">
-      <div style="font-size:10.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
-      <div style="font-size:14px;color:#1e40af;font-weight:900;margin-top:2px">${esc(outletName)}</div>
+    ${tx.note ? `<div class="info-cell yellow" style="margin-top:6px;padding:6px 10px"><div class="lbl" style="font-size:9px">📝 মন্তব্য</div><div class="val" style="font-weight:700;font-size:11.5px;margin-top:1px">${esc(tx.note)}</div></div>` : ''}
+    <div style="margin-top:8px;padding:6px 10px;border:1.5px dashed #64748b;border-radius:5px;background:#f8fafc;text-align:center">
+      <div style="font-size:9.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
+      <div style="font-size:12.5px;color:#1e40af;font-weight:900;margin-top:1px">${esc(outletName)}</div>
     </div>`;
   openPrintWindow(`${cfg.title || tx.type} — ৳ ${fmt(tx.amount)}`, body);
 }
+
 function printCustomerHistory(accountNo, custName){
   if(!accountNo){ toast('❌ নেই'); return; }
   const allTxs = getCustomerAllTxs(accountNo);
@@ -1869,51 +1964,51 @@ function printCustomerHistory(accountNo, custName){
   const sRefund = sTxs.filter(t => t.dir === 'in' || t.dir === 'online_support_in').reduce((s,t)=> s+Number(t.amount||0),0);
   const sNet = sPaid - sRefund;
 
-  // ⚡ প্রতিটি লেনদেনের জন্য Notes + Note সহ rows তৈরি
   const rows = allTxs.map((t,i) => {
     const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
-    // টাকার বিবরণী
-    let notesParts = [];
     const nOut = t.notesOut || {};
     const nIn = t.notesIn || {};
-    Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).forEach(d => {
-      notesParts.push('📤 ৳' + toBn(d) + '×' + toBn(nOut[d]));
-    });
-    Object.keys(nIn).filter(k => nIn[k] > 0).sort((a,b)=>b-a).forEach(d => {
-      notesParts.push('📥 ৳' + toBn(d) + '×' + toBn(nIn[d]));
-    });
-    const notesLine = notesParts.length ? notesParts.join(' • ') : '';
-    // মন্তব্য
-    const noteLine = t.note ? '📝 ' + esc(t.note) : '';
-    // দ্বিতীয় লাইন কম্বাইন
-    let detailLine = '';
-    if(notesLine) detailLine += '<div style="font-size:9.5px;color:#1e40af;font-weight:700;margin-top:3px">' + notesLine + '</div>';
-    if(noteLine) detailLine += '<div style="font-size:9.5px;color:#a16207;font-weight:700;margin-top:2px;font-style:italic">' + noteLine + '</div>';
+    const outParts = Object.keys(nOut).filter(k => nOut[k] > 0).sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(nOut[d]));
+    const inParts = Object.keys(nIn).filter(k => nIn[k] > 0).sort((a,b)=>b-a).map(d => '৳' + toBn(d) + '×' + toBn(nIn[d]));
+    let notesHtml = '';
+    if(outParts.length) notesHtml += '<div style="font-size:9.5px;color:#a16207;margin-top:2px"><b>📤</b> ' + outParts.join(' • ') + '</div>';
+    if(inParts.length) notesHtml += '<div style="font-size:9.5px;color:#15803d;margin-top:2px"><b>📥</b> ' + inParts.join(' • ') + '</div>';
+    const noteHtml = t.note ? '<div style="font-size:9.5px;color:#475569;margin-top:2px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '';
+    const detailHtml = (notesHtml || noteHtml) ? (notesHtml + noteHtml) : '<span style="color:#94a3b8">—</span>';
 
     return `<tr>
-      <td style="text-align:center;font-weight:700;vertical-align:top">${toBn(i+1)}</td>
-      <td style="white-space:nowrap;font-weight:700;vertical-align:top">${toBn(t.date)}</td>
-      <td style="vertical-align:top"><b>${cfg.icon||''} ${esc(cfg.title||t.type)}</b>${detailLine}</td>
-      <td style="font-size:10px;vertical-align:top">${esc(BRANCHES[t.branch]?.name||'-')}</td>
-      <td class="amt" style="vertical-align:top">৳ ${fmt(t.amount)}</td>
-      <td class="small" style="vertical-align:top">${esc(t.user||'-')}</td>
+      <td style="text-align:center;font-weight:700;vertical-align:top;padding:5px 4px;font-size:10px">${toBn(i+1)}</td>
+      <td style="white-space:nowrap;font-weight:700;vertical-align:top;padding:5px 4px;font-size:10px">${toBn(t.date)}</td>
+      <td style="vertical-align:top;padding:5px 4px;font-size:10px"><b>${cfg.icon||''} ${esc(cfg.title||t.type)}</b>${detailHtml}</td>
+      <td style="font-size:9.5px;vertical-align:top;padding:5px 4px">${esc(BRANCHES[t.branch]?.name||'-')}</td>
+      <td class="amt" style="vertical-align:top;padding:5px 4px;font-size:10.5px">৳ ${fmt(t.amount)}</td>
+      <td class="small" style="vertical-align:top;padding:5px 4px;font-size:9.5px">${esc(t.user||'-')}</td>
     </tr>`;
   }).join('');
 
-  // Footer-এ outlet নাম
   const outletName = BRANCHES[cust?.branch]?.name || (session?.branch && BRANCHES[session.branch]?.name) || 'উভয় আউটলেট';
 
-  const body = `<div class="print-title">👤 গ্রাহক লেনদেন ইতিহাস — ${esc(name)}<span class="sub">অ্যাকাউন্ট: ${esc(accountNo)} • মোবাইল: ${esc(cust?.mobile||'-')} • আউটলেট: ${esc(BRANCHES[cust?.branch]?.name||'-')}</span></div>
-    <div class="info-grid">
-      <div class="info-cell blue"><div class="lbl">মোট লেনদেন</div><div class="val">${toBn(allTxs.length)} টি</div></div>
-      <div class="info-cell"><div class="lbl">সাপোর্ট প্রদান</div><div class="val" style="color:#1e40af">৳ ${fmt(sPaid)}</div></div>
-      <div class="info-cell green"><div class="lbl">সাপোর্ট ফেরত</div><div class="val" style="color:#15803d">৳ ${fmt(sRefund)}</div></div>
+  const body = `<div class="print-title" style="padding:8px 12px;margin-bottom:8px;font-size:14px">👤 গ্রাহক লেনদেন ইতিহাস — ${esc(name)}<span class="sub" style="font-size:11px;margin-top:2px">অ্যাকাউন্ট: ${esc(accountNo)} • মোবাইল: ${esc(cust?.mobile||'-')} • আউটলেট: ${esc(BRANCHES[cust?.branch]?.name||'-')}</span></div>
+    <div class="info-grid" style="gap:5px;margin-bottom:6px">
+      <div class="info-cell blue" style="padding:6px 8px"><div class="lbl" style="font-size:9px">মোট লেনদেন</div><div class="val" style="font-size:12px;margin-top:1px">${toBn(allTxs.length)} টি</div></div>
+      <div class="info-cell" style="padding:6px 8px"><div class="lbl" style="font-size:9px">সাপোর্ট প্রদান</div><div class="val" style="font-size:12px;margin-top:1px;color:#1e40af">৳ ${fmt(sPaid)}</div></div>
+      <div class="info-cell green" style="padding:6px 8px"><div class="lbl" style="font-size:9px">সাপোর্ট ফেরত</div><div class="val" style="font-size:12px;margin-top:1px;color:#15803d">৳ ${fmt(sRefund)}</div></div>
     </div>
-    <div class="summary-line" style="background:${sNet>0?'#fef2f2':'#f0fdf4'};border:1px solid ${sNet>0?'#fca5a5':'#86efac'}"><span class="k">📊 নেট সাপোর্ট ${sNet>0?'(বকেয়া)':'(পরিশোধিত)'}</span><span class="v" style="color:${sNet>0?'#b91c1c':'#15803d'};font-size:14px">৳ ${fmt(Math.abs(sNet))}</span></div>
-    <table class="tbl-print"><thead><tr><th style="width:6%">#</th><th style="width:13%">তারিখ</th><th style="width:33%">ধরন / বিবরণ / মন্তব্য</th><th style="width:18%">আউটলেট</th><th style="width:16%;text-align:right">টাকা</th><th style="width:14%">ইউজার</th></tr></thead><tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody></table>
-    <div style="margin-top:18px;padding:10px 14px;border:1.5px dashed #64748b;border-radius:6px;background:#f8fafc;text-align:center">
-      <div style="font-size:10.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
-      <div style="font-size:14px;color:#1e40af;font-weight:900;margin-top:2px">${esc(outletName)}</div>
+    <div class="summary-line" style="padding:6px 10px;margin-bottom:6px;font-size:11.5px;background:${sNet>0?'#fef2f2':'#f0fdf4'};border:1px solid ${sNet>0?'#fca5a5':'#86efac'}"><span class="k">📊 নেট সাপোর্ট ${sNet>0?'(বকেয়া)':'(পরিশোধিত)'}</span><span class="v" style="color:${sNet>0?'#b91c1c':'#15803d'};font-size:12px">৳ ${fmt(Math.abs(sNet))}</span></div>
+    <table class="tbl-print">
+      <thead><tr>
+        <th style="width:5%;padding:5px 4px;font-size:9.5px">#</th>
+        <th style="width:12%;padding:5px 4px;font-size:9.5px">তারিখ</th>
+        <th style="width:38%;padding:5px 4px;font-size:9.5px">ধরন / বিবরণ / মন্তব্য</th>
+        <th style="width:17%;padding:5px 4px;font-size:9.5px">আউটলেট</th>
+        <th style="width:14%;padding:5px 4px;font-size:9.5px;text-align:right">টাকা</th>
+        <th style="width:14%;padding:5px 4px;font-size:9.5px">ইউজার</th>
+      </tr></thead>
+      <tbody>${rows || '<tr><td colspan="6" style="text-align:center;padding:20px;color:#94a3b8">📭 কোনো লেনদেন নেই</td></tr>'}</tbody>
+    </table>
+    <div style="margin-top:8px;padding:6px 10px;border:1.5px dashed #64748b;border-radius:5px;background:#f8fafc;text-align:center">
+      <div style="font-size:9.5px;color:#475569;font-weight:700">🏦 আউটলেট</div>
+      <div style="font-size:12.5px;color:#1e40af;font-weight:900;margin-top:1px">${esc(outletName)}</div>
     </div>`;
   openPrintWindow(`গ্রাহক: ${name} — ${accountNo}`, body);
 }
@@ -3571,6 +3666,16 @@ async function doLogin(){
 async function logout(){
   try{ if(DB()) await saveDB(); }catch(e){}
   try{ if(__realtimeChannel && __supabaseClient){ await __realtimeChannel.untrack(); __supabaseClient.removeChannel(__realtimeChannel); __realtimeChannel = null; } }catch(e){}
+  // ⚡ Scroll listener সরাই
+  try{
+    if(window.__topbarScrollHandler){
+      window.removeEventListener('scroll', window.__topbarScrollHandler);
+      window.removeEventListener('touchmove', window.__topbarScrollHandler);
+      window.__topbarScrollHandler = null;
+    }
+  }catch(e){}
+  const tb = document.getElementById('topbar');
+  if(tb){ tb.classList.remove('hidden-scroll','scrolled'); }
   updateRealtimeIndicator('offline'); updatePresenceUI([]);
   sessionStorage.removeItem(SKEY);
   session = null; viewBranch = 'all'; dashDate = todayStr(); isDateViewMode = false;
@@ -3589,9 +3694,22 @@ function startApp(){
   recomputeLive();
   dashDate = todayStr(); isDateViewMode = false;
   renderTopbar(); renderDashboard(); renderSidebar();
-  startClock(); saveDB();
+  startClock();
+  // ⚡ Scroll listener চালু
+  setTimeout(() => { try{ attachTopbarScroll(); }catch(e){} }, 300);
+  saveDB();
   setTimeout(() => {
-    try{ if(__realtimeChannel && __realtimeChannel.state === 'joined'){ __realtimeChannel.track({ user: session.name, username: session.username, branch: session.branch || 'all', role: session.role, joined_at: new Date().toISOString() }).catch(()=>{}); } }catch(e){}
+    try{
+      if(__realtimeChannel && __realtimeChannel.state === 'joined'){
+        __realtimeChannel.track({
+          user: session.name,
+          username: session.username,
+          branch: session.branch || 'all',
+          role: session.role,
+          joined_at: new Date().toISOString()
+        }).catch(()=>{});
+      }
+    }catch(e){}
   }, 800);
 }
 
