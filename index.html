@@ -854,16 +854,33 @@ function handleRealtimeUpdate(payload){
     const remoteTs = Date.parse(remote.__lastUpdate || 0) || 0;
     const localTs = Date.parse((DB() && DB().__lastUpdate) || 0) || 0;
     if(remoteTs <= localTs) return;
+
     console.log('[Realtime] ⚡ applying remote update');
     __isApplyingRemote = true;
+
+    // ⚡ Remote-এর device info পড়ি
+    const updateInfo = remote.__lastUpdateInfo || remote.__lastDevice || {};
+
     const oldTxIds = new Set((DB()?.txs || []).map(t => t.id));
     const newTxs = (remote.txs || []).filter(t => !oldTxIds.has(t.id));
     const prevWasDateView = isDateViewMode, prevDashDate = dashDate, prevViewBranch = viewBranch;
+
     window.db = remote;
     normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); saveLocalDB();
+
     dashDate = prevWasDateView ? prevDashDate : todayStr();
     viewBranch = (session && session.role === 'admin') ? prevViewBranch : viewBranch;
+
     if(session){ renderTopbar(); renderDashboard(); renderSidebar(); }
+
+    // ⚡ Full Update Info তৈরি
+    const deviceName = updateInfo.device || 'Unknown Device';
+    const location = updateInfo.location || 'Unknown Location';
+    const userName = updateInfo.user || 'Unknown User';
+    const userBranch = updateInfo.branch || 'Unknown';
+    const userRole = updateInfo.role || 'user';
+    const atTime = updateInfo.at ? fmtDateTime(updateInfo.at) : 'এইমাত্র';
+
     if(newTxs.length > 0){
       newTxs.sort((a,b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
       newTxs.forEach((tx, idx) => {
@@ -872,10 +889,71 @@ function handleRealtimeUpdate(payload){
           showNativeNotif('💸 নতুন লেনদেন — ৳ ' + fmt(tx.amount), (TX_CFG[tx.type]?.title || tx.type) + ' • ' + (BRANCHES[tx.branch]?.name || '') + (tx.custName ? ' • ' + tx.custName : ''), null);
         }, idx * 600);
       });
-    } else { showRTToast('🔄 অন্য ডিভাইস থেকে আপডেট এসেছে', false); }
+    } else {
+      // ⚡ Full detailed message show করি
+      showDetailedRTToast({
+        device: deviceName,
+        location: location,
+        user: userName,
+        branch: userBranch,
+        role: userRole,
+        time: atTime
+      });
+    }
     __isApplyingRemote = false;
   }catch(e){ console.error('[Realtime] handler error:', e); __isApplyingRemote = false; }
 }
+
+/* ═══ DETAILED RT TOAST (Device + Location + User) ═══ */
+function showDetailedRTToast(info){
+  try{
+    // পুরনো toast সরাই
+    const old = document.getElementById('rtDetailToast');
+    if(old) old.remove();
+
+    const el = document.createElement('div');
+    el.id = 'rtDetailToast';
+    el.className = 'rt-toast';
+    el.style.cssText = 'position:fixed;top:78px;right:18px;z-index:9999;padding:16px 20px;border-radius:18px;background:linear-gradient(135deg,rgba(34,197,94,.96),rgba(59,130,246,.94));color:#fff;font-weight:700;font-size:13.5px;box-shadow:0 16px 50px rgba(0,0,0,.9);display:flex;flex-direction:column;gap:10px;max-width:420px;border:1.5px solid rgba(255,255,255,.3);animation:slideInRT .35s;';
+
+    const roleBadge = info.role === 'admin' ? '👑 Admin' : '👤 User';
+
+    el.innerHTML =
+      '<div style="display:flex;align-items:center;gap:12px">' +
+        '<div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:22px;flex-shrink:0">🔄</div>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:14.5px;font-weight:900;line-height:1.4">অন্য ডিভাইস থেকে আপডেট এসেছে</div>' +
+          '<div style="font-size:11.5px;opacity:.9;margin-top:2px">' + esc(info.time) + '</div>' +
+        '</div>' +
+        '<button id="rtDetailClose" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;flex-shrink:0">✕</button>' +
+      '</div>' +
+      '<div style="padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.2);display:grid;gap:8px;font-size:12.5px">' +
+        '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">👤</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ইউজার</div><div style="font-weight:900;font-size:13px">' + esc(info.user) + ' <span style="font-size:11px;opacity:.85">(' + roleBadge + ')</span></div></div></div>' +
+        '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">🏦</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">আউটলেট</div><div style="font-weight:800;font-size:12.5px">' + esc(info.branch) + '</div></div></div>' +
+        '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📱</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ডিভাইস</div><div style="font-weight:800;font-size:12.5px">' + esc(info.device) + '</div></div></div>' +
+        '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📍</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">লোকেশন</div><div style="font-weight:800;font-size:12.5px">' + esc(info.location) + '</div></div></div>' +
+      '</div>';
+
+    document.body.appendChild(el);
+
+    // Close button
+    el.querySelector('#rtDetailClose').addEventListener('click', () => {
+      el.style.opacity = '0'; el.style.transform = 'translateX(30px)';
+      setTimeout(() => el.remove(), 350);
+    });
+
+    // Auto dismiss 8 second পরে
+    setTimeout(() => {
+      if(el.parentNode){
+        el.style.transition = '.4s';
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(30px)';
+        setTimeout(() => el.remove(), 420);
+      }
+    }, 8000);
+  }catch(e){ console.error('[RT Toast]', e); }
+}
+
 function updateRealtimeIndicator(state){
   __realtimeStatus = state;
   const el = document.getElementById('realtimeStatus');
@@ -897,6 +975,105 @@ function updatePresenceUI(users){
   bdg.title = 'অনলাইন: ' + (names || 'শুধু আপনি');
   bdg.style.animation = uniq.size > 1 ? 'pulseGreen 2s ease-in-out infinite' : '';
 }
+
+/* ═══ DEVICE NAME & LOCATION DETECT ═══ */
+function getDeviceName(){
+  try{
+    const ua = navigator.userAgent;
+    let device = 'Unknown';
+    let browser = 'Browser';
+    let os = 'OS';
+
+    // Operating System
+    if(/Windows/i.test(ua)) os = 'Windows';
+    else if(/Macintosh|Mac OS X/i.test(ua)) os = 'Mac';
+    else if(/Android/i.test(ua)) os = 'Android';
+    else if(/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+    else if(/Linux/i.test(ua)) os = 'Linux';
+
+    // Browser
+    if(/Edg/i.test(ua)) browser = 'Edge';
+    else if(/OPR|Opera/i.test(ua)) browser = 'Opera';
+    else if(/Chrome/i.test(ua)) browser = 'Chrome';
+    else if(/Safari/i.test(ua)) browser = 'Safari';
+    else if(/Firefox/i.test(ua)) browser = 'Firefox';
+
+    // Device Type
+    if(/Mobile|Android.*Mobile|iPhone/i.test(ua)) device = '📱 Mobile';
+    else if(/Tablet|iPad/i.test(ua)) device = '📱 Tablet';
+    else device = '💻 Desktop';
+
+    return device + ' • ' + browser + ' on ' + os;
+  }catch(e){ return 'Unknown Device'; }
+}
+
+/* ═══ IP-BASED LOCATION (Auto-fetch from API) ═══ */
+let __myLocationCache = null;
+async function getMyLocation(){
+  // Cache — প্রথমবার fetch হলে পরেরবার একই থাকবে
+  try{
+    const cached = safeLS_get('cc_my_location');
+    if(cached){
+      const c = JSON.parse(cached);
+      if(c && c.ts && (Date.now() - c.ts < 3600000)){ // ১ ঘণ্টা valid
+        __myLocationCache = c.loc;
+        return c.loc;
+      }
+    }
+  }catch(e){}
+
+  if(__myLocationCache) return __myLocationCache;
+
+  // ⚡ Fallback location (offline হলে)
+  const fallbackLoc = 'Kalaroa, Satkhira, BD';
+
+  try{
+    const res = await withTimeout(
+      fetch('https://ipapi.co/json/').then(r => r.json()),
+      4000,
+      null
+    );
+    if(res && res.city){
+      const loc = res.city + (res.region ? ', ' + res.region : '') + (res.country_code ? ', ' + res.country_code : '');
+      __myLocationCache = loc;
+      safeLS_set('cc_my_location', JSON.stringify({ loc, ts: Date.now() }));
+      return loc;
+    }
+  }catch(e){}
+
+  // Second try with different API
+  try{
+    const res2 = await withTimeout(
+      fetch('https://ipinfo.io/json?token=').then(r => r.json()),
+      4000,
+      null
+    );
+    if(res2 && res2.city){
+      const loc = res2.city + (res2.region ? ', ' + res2.region : '') + (res2.country ? ', ' + res2.country : '');
+      __myLocationCache = loc;
+      safeLS_set('cc_my_location', JSON.stringify({ loc, ts: Date.now() }));
+      return loc;
+    }
+  }catch(e){}
+
+  __myLocationCache = fallbackLoc;
+  return fallbackLoc;
+}
+
+/* ═══ BUILD DEVICE INFO STRING (একটি লাইনে) ═══ */
+async function buildDeviceInfo(){
+  const deviceName = getDeviceName();
+  const loc = await getMyLocation();
+  return {
+    device: deviceName,
+    location: loc,
+    user: session?.name || 'Unknown',
+    username: session?.username || '',
+    branch: session?.role === 'admin' ? 'Admin' : (BRANCHES[session?.branch]?.name || 'Unknown'),
+    role: session?.role || 'user'
+  };
+}
+
 function showRTToast(msg, isErr){
   try{
     const el = document.createElement('div');
@@ -988,7 +1165,50 @@ async function pushRemoteDB(force, newTxs){
   if(__isApplyingRemote) return;
   if(!navigator.onLine && !force){ queueAdd('push_offline'); return; }
   try{
-    const payload = { id: window.SUPABASE_ROW_ID, data: DB(), updated_at: new Date().toISOString() };
+    // ⚡ Device info collected
+    let deviceInfo = null;
+    try{ deviceInfo = await buildDeviceInfo(); }catch(e){}
+
+    const dbCopy = JSON.parse(JSON.stringify(DB()));
+    // ⚡ Device info সাথে যুক্ত করি (meta হিসেবে)
+    dbCopy.__lastDevice = deviceInfo || {
+      device: getDeviceName(),
+      location: 'Unknown',
+      user: session?.name || 'Unknown',
+      username: session?.username || '',
+      branch: session?.role === 'admin' ? 'Admin' : (BRANCHES[session?.branch]?.name || 'Unknown'),
+      role: session?.role || 'user'
+    };
+    // ⚡ নতুন transaction গুলো trace
+    if(newTxs && newTxs.length){
+      dbCopy.__lastUpdateInfo = {
+        device: dbCopy.__lastDevice.device,
+        location: dbCopy.__lastDevice.location,
+        user: dbCopy.__lastDevice.user,
+        username: dbCopy.__lastDevice.username,
+        branch: dbCopy.__lastDevice.branch,
+        role: dbCopy.__lastDevice.role,
+        txCount: newTxs.length,
+        txTypes: newTxs.map(t => t.type),
+        txIds: newTxs.map(t => t.id),
+        at: new Date().toISOString()
+      };
+    } else {
+      dbCopy.__lastUpdateInfo = {
+        device: dbCopy.__lastDevice.device,
+        location: dbCopy.__lastDevice.location,
+        user: dbCopy.__lastDevice.user,
+        username: dbCopy.__lastDevice.username,
+        branch: dbCopy.__lastDevice.branch,
+        role: dbCopy.__lastDevice.role,
+        txCount: 0,
+        txTypes: [],
+        txIds: [],
+        at: new Date().toISOString()
+      };
+    }
+
+    const payload = { id: window.SUPABASE_ROW_ID, data: dbCopy, updated_at: new Date().toISOString() };
     const timeoutMs = (__connEffectiveType === '3g' || __connEffectiveType === '2g') ? 25000 : SUPABASE_TIMEOUT_MS;
     const res = await withTimeout(__supabaseClient.from(window.SUPABASE_TABLE).upsert(payload, { onConflict: 'id' }), timeoutMs, { error: { message: 'timeout' } });
     if(res && res.error) throw new Error(res.error.message || 'push error');
@@ -1003,6 +1223,7 @@ async function pushRemoteDB(force, newTxs){
     throw e;
   }
 }
+
 function attachNetworkListeners(){
   window.addEventListener('online', () => {
     __isOnline = true; __retryCount = 0;
@@ -1724,7 +1945,7 @@ function openCustomerDetailPopup(accountNo, custName){
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">↩️ ফেরত</div><div style="font-size:16px;font-weight:800;color:#4ade80" id="cust_stat_refund">৳ ' + fmt(sRefund) + '</div></div>' +
         '<div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📉 নেট</div><div style="font-size:18px;font-weight:900;color:' + (sNet>0?'#f87171':'#4ade80') + '" id="cust_stat_net">৳ ' + fmt(Math.abs(sNet)) + '</div></div>' +
       '</div></div>' +
-      (isAdmin ? '<div class="bank-hint" style="margin-top:12px;font-size:12.5px">💡 <b>✏️</b> = এডিট &nbsp;•&nbsp; <b>🗑️</b> = ডিলিট &nbsp;•&nbsp; <b>🖨️</b> = প্রিন্ট</div>' : '') +
+      '<div class="bank-hint" style="margin-top:12px;font-size:12.5px">💡 <b>✏️</b> = এডিট / আপডেট &nbsp;•&nbsp; <b>🖨️</b> = প্রিন্ট' + (isAdmin ? ' &nbsp;•&nbsp; <b>🗑️</b> = ডিলিট (শুধু Admin)' : '') + '</div>' +
       '<div class="modal-history"><div class="modal-history-title"><span class="bar"></span> 📋 সব লেনদেন (<span id="cust_tx_count">' + toBn(allTxs.length) + '</span> টি)</div>' +
       '<div id="cust_tx_list"></div>' +
       '</div>' +
@@ -1734,11 +1955,12 @@ function openCustomerDetailPopup(accountNo, custName){
         '<button class="btn gray" id="cust_h_close" style="flex:1">বন্ধ</button>' +
       '</div>',
     onMount: (w, close) => {
-      // ⚡ টেবিল রেন্ডার (পুনরাবৃত্তি করার জন্য ফাংশন)
       const listEl = w.querySelector('#cust_tx_list');
+
       function renderList(){
         const txs = getCustomerAllTxs(accountNo);
         if(!txs.length){ listEl.innerHTML = '<div class="empty">📭 নেই</div>'; return; }
+
         const rowsHtml = txs.map((t,i) => {
           const cfg = TX_CFG[t.type] || { title:t.type, icon:'📌' };
           const nOut = t.notesOut || {};
@@ -1751,11 +1973,11 @@ function openCustomerDetailPopup(accountNo, custName){
           const noteHtml = t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:4px;font-style:italic">📝 ' + esc(t.note) + '</div>' : '';
           const detailHtml = (notesHtml || noteHtml) ? (notesHtml + noteHtml) : '<span style="color:#7a8ab8">—</span>';
 
-          // ⚡ Action বাটন
-          let actionsHtml = '<button class="mini print-btn" data-action="print" data-txid="' + t.id + '">🖨️</button>';
+          // ⚡ Action বাটন — সবার জন্য Print + Edit, শুধু Admin-এর জন্য Delete
+          let actionsHtml = '<button class="mini print-btn" data-action="print" data-txid="' + t.id + '" title="প্রিন্ট">🖨️</button>';
+          actionsHtml += ' <button class="mini" data-action="edit" data-txid="' + t.id + '" title="এডিট / আপডেট" style="background:linear-gradient(135deg,#facc15,#f59e0b);color:#000;border-color:transparent">✏️</button>';
           if(isAdmin){
-            actionsHtml += ' <button class="mini" data-action="edit" data-txid="' + t.id + '">✏️</button>';
-            actionsHtml += ' <button class="mini danger" data-action="del" data-txid="' + t.id + '">🗑️</button>';
+            actionsHtml += ' <button class="mini danger" data-action="del" data-txid="' + t.id + '" title="ডিলিট (শুধু Admin)">🗑️</button>';
           }
 
           return '<tr>' +
@@ -1780,27 +2002,38 @@ function openCustomerDetailPopup(accountNo, custName){
             e.stopPropagation();
             const action = btn.dataset.action;
             const txId = btn.dataset.txid;
+
             if(action === 'print'){
               const t = findTxAnywhere(txId)?.tx;
               if(t) printSingleTransaction(t);
+
             } else if(action === 'edit'){
+              // ✅ সবাই Edit করতে পারবে
+              const t = getAllTxs().find(x => x.id === txId);
+              if(!t){ toast('❌ লেনদেন পাওয়া যায়নি'); return; }
               close();
-              setTimeout(() => openTxModal(getAllTxs().find(x => x.id === txId)?.type, txId), 150);
+              setTimeout(() => openTxModal(t.type, txId), 150);
+
             } else if(action === 'del'){
+              // 🔒 শুধু Admin Delete করতে পারবে
+              if(!isAdmin){
+                toast('🔒 শুধু অ্যাডমিন ডিলিট করতে পারবে');
+                return;
+              }
               if(!confirm('🗑️ এই লেনদেন ডিলিট করবেন?\n\nএটি ফিরিয়ে আনা যাবে না।')) return;
+
               if(!DB().deletedTxIds) DB().deletedTxIds = {};
               DB().deletedTxIds[txId] = new Date().toISOString();
               DB().txs = DB().txs.filter(x => x.id !== txId);
-              // Yearly archive থেকেও মুছি
               Object.keys(DB().yearlyArchive || {}).forEach(y => {
                 DB().yearlyArchive[y] = (DB().yearlyArchive[y] || []).filter(x => x.id !== txId);
               });
-              // Parent-এর collection update (loan_given হলে)
+
               recomputeLive();
               await saveDB();
               try{ await pushRemoteDB(true); }catch(e){}
               toast('🗑️ লেনদেন ডিলিট হয়েছে');
-              // Stats + list refresh
+
               const newTxs = getCustomerAllTxs(accountNo);
               w.querySelector('#cust_tx_count').textContent = toBn(newTxs.length);
               w.querySelector('#cust_stat_total').textContent = toBn(newTxs.length) + ' টি';
@@ -1820,6 +2053,7 @@ function openCustomerDetailPopup(accountNo, custName){
           });
         });
       }
+
       renderList();
       w.querySelector('#cust_h_close').addEventListener('click', close);
       w.querySelector('#cust_h_support').addEventListener('click', ()=>{ close(); openTxModal('support'); });
