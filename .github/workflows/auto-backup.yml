@@ -5,22 +5,30 @@ on:
     - cron: '0 */6 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   backup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Download Supabase data
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           mkdir -p backups
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/agent_bank?id=eq.cc_agent_bank_main&select=data" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          curl -X GET "${SUPABASE_URL}/rest/v1/agent_bank?id=eq.cc_agent_bank_main&select=data" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
             -o backups/database-backup.json
 
-      - name: Format JSON (pretty print)
+      - name: Format JSON
         run: |
           cat backups/database-backup.json | python3 -m json.tool > backups/temp.json 2>/dev/null || cp backups/database-backup.json backups/temp.json
           mv backups/temp.json backups/database-backup.json
@@ -30,5 +38,5 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add backups/database-backup.json
-          git commit -m "🔄 Auto backup $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git commit -m "Auto backup $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
           git push
