@@ -112,14 +112,14 @@
             "txEditLog": [],
             "dailyClose": {},
             "__lastDevice": {
-                "role": "admin",
-                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
-                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
-                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
-                "location": "Khulna, Khulna Division, BD",
-                "username": "admin"
+                "role": "user",
+                "user": "Jahangir Kabir",
+                "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                "location": "Dhaka, Dhaka Division, BD",
+                "username": "jahangir"
             },
-            "__lastUpdate": "2026-09-25T11:52:38.889Z",
+            "__lastUpdate": "2026-09-25T16:42:46.570Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 2393989.66,
@@ -154,16 +154,16 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-09-25T11:52:39.965Z",
-                "role": "admin",
-                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "at": "2026-09-25T16:42:47.551Z",
+                "role": "user",
+                "user": "Jahangir Kabir",
                 "txIds": [],
-                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
-                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
                 "txCount": 0,
                 "txTypes": [],
-                "location": "Khulna, Khulna Division, BD",
-                "username": "admin"
+                "location": "Dhaka, Dhaka Division, BD",
+                "username": "jahangir"
             },
             "__lastRolloverDate": "2026-09-25"
         }
