@@ -7,8 +7,8 @@
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংক">
-<meta name="application-name" content="কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংক">
+<meta name="apple-mobile-web-app-title" content="সিসি ব্যাংক">
+<meta name="application-name" content="সিসি ব্যাংক">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='%23fff'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='%23fff'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
@@ -540,7 +540,6 @@ const todayStr = () => { const d = new Date(); return d.getFullYear()+'-'+String
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const toBn = s => String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
 
-/* ✅ নতুন: Sorry + Empty check helper */
 function sorryNoNote(){
   alert('🙏 দুঃখিত!\n\nসব ঘর খালি আছে।\n\nসংরক্ষণ করতে হলে কমপক্ষে একটি ঘরে পরিমাণ লিখুন।');
 }
@@ -1618,8 +1617,6 @@ function noteDetailHTML(notes){
   return keys.map(k => '<span style="display:inline-block;padding:4px 10px;margin:3px 5px 3px 0;border-radius:8px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.4);color:#93c5fd;font-size:12.5px;font-weight:600">৳'+toBn(k)+' × '+toBn(notes[k])+' = ৳'+fmt(Number(k)*Number(notes[k]))+'</span>').join('');
 }
 function noteListInline(notes){ const keys = Object.keys(notes||{}).filter(k=>notes[k]>0).sort((a,b)=>b-a); if(!keys.length) return ''; return keys.map(k=>'<span>৳'+toBn(k)+'×'+toBn(notes[k])+'</span>').join(' '); }
-
-/* ✅ পরিবর্তিত: placeholder="0" সরানো হয়েছে */
 function notesRowHTML(prefix, values){
   values = values || {};
   return '<div class="notes-row">' + DENOMS.map(d => {
@@ -2043,13 +2040,11 @@ function renderTopbar(){
   const bf = currentBranchFilter();
   const bl = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || bf);
   const isAdmin = session.role === 'admin';
-  $('#topbar').innerHTML = '<div class="tb-left"><button class="tb-menu-btn" id="btnMenu">☰</button><div class="brand"><div class="logo"><svg viewBox="0 0 100 100" style="width:38px;height:38px;"><circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="3"/><g transform="translate(50,50)" fill="#fff"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g></svg></div><div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>কলারোয়া আউটলেট • ঝাউডাঙ্গা আউটলেট</p></div></div></div><div class="tb-right"><span class="sync-status" id="syncStatusBtn">সিঙ্ক</span><span class="realtime-status offline" id="realtimeStatus"><span class="rt-dot"></span><span id="rtText">⚪ অফলাইন</span></span><span class="presence-badge" id="presenceBadge" title="অনলাইন ইউজার">👥 <b id="presenceCount">০</b></span><span class="net-status offline" id="netStatus"><span class="n-dot"></span><span id="netText">⚪ অফলাইন</span></span><span class="queue-badge" id="queueBadge" title="অপেক্ষমাণ সিঙ্ক"><span class="sync-spinner"></span>⏳ <b id="queueCount">০</b></span>' + (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় আউটলেট</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া আউটলেট</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা আউটলেট</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') + '<input type="date" class="tb-date" id="dashDateInput" value="' + dashDate + '"><span class="tb-time"><span class="dot"></span><span id="liveClock">--:--:-- --</span></span></div>';
+  $('#topbar').innerHTML = '<div class="tb-left"><button class="tb-menu-btn" id="btnMenu">☰</button><div class="brand"><div class="logo"><svg viewBox="0 0 100 100" style="width:38px;height:38px;"><circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="3"/><g transform="translate(50,50)" fill="#fff"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g></svg></div><div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>কলারোয়া আউটলেট • ঝাউডাঙ্গা আউটলেট</p></div></div></div><div class="tb-right"><span class="presence-badge" id="presenceBadge" title="অনলাইন ইউজার">👥 <b id="presenceCount">০</b></span><span class="net-status offline" id="netStatus"><span class="n-dot"></span><span id="netText">⚪ অফলাইন</span></span><span class="queue-badge" id="queueBadge" title="অপেক্ষমাণ সিঙ্ক"><span class="sync-spinner"></span>⏳ <b id="queueCount">০</b></span>' + (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় আউটলেট</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া আউটলেট</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা আউটলেট</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') + '<input type="date" class="tb-date" id="dashDateInput" value="' + dashDate + '"><span class="tb-time"><span class="dot"></span><span id="liveClock">--:--:-- --</span></span></div>';
   $('#dashDateInput').addEventListener('change', e=>{ dashDate = e.target.value || todayStr(); isDateViewMode = dashDate !== todayStr(); renderDashboard(); });
   document.getElementById('btnMenu').addEventListener('click', openSidebar);
   const bs = document.getElementById('tbBranchSel');
   if(bs) bs.addEventListener('change', e=>{ viewBranch = e.target.value; renderTopbar(); renderDashboard(); renderSidebar(); });
-  const sb = document.getElementById('syncStatusBtn');
-  if(sb) sb.addEventListener('click', ()=>{ if(__isRemoteReady){ sb.textContent = 'সিঙ্ক হচ্ছে...'; forceSyncNow().finally(()=>{ sb.textContent = 'সিঙ্ক'; }); } else { toast('ℹ️ লোকাল-অনলি মোড'); } });
   document.getElementById('queueBadge')?.addEventListener('click', () => forceSyncNow());
   updateNetStatus(detectNetworkQuality()); updateQueueBadge(); startClock();
 }
@@ -2321,7 +2316,6 @@ function setupTransferForm(wrap, editing, close){
       if(from === to){ alert('একই আউটলেট নয়'); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
       const on = readNotes(wrap, 'out'), inN = readNotes(wrap, 'in');
       const os = noteSum(on), is = noteSum(inN);
-      /* ✅ নতুন: empty check with sorry message */
       if(Object.keys(on).length === 0 && Object.keys(inN).length === 0){ sorryNoNote(); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
       if(os <= 0 && is <= 0){ sorryNoNote(); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
       const vault = DB().liveVault?.[from] || {};
@@ -2473,7 +2467,6 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       const osL = isOS(), onL = isOn();
       const cNT = isLG && !!cTick?.checked;
 
-      /* ✅ নতুন: সব ঘর খালি থাকলে sorry message */
       const _anyNote = Object.keys(on).length > 0 || Object.keys(inN).length > 0;
       const _anySpecial = 
         (isBO && parseNum(wrap.querySelector('#bt_amount')?.value) > 0) ||
@@ -2583,7 +2576,6 @@ function openMoneyExchange(){
           const io = isOD();
           const on = io ? {} : readNotes(w, 'me_out'), inN = io ? {} : readNotes(w, 'me_in');
           const os = noteSum(on), is = noteSum(inN);
-          /* ✅ নতুন: empty check with sorry message */
           if(io){
             const oa0 = parseNum(w.querySelector('#me_online_amount').value);
             if(oa0 <= 0){ sorryNoNote(); b.disabled = false; b.innerHTML = og; return; }
@@ -2631,7 +2623,6 @@ function openCollectionChildModal(parentId, mode){
         try{
           const date = w.querySelector('#cc_date').value, br = w.querySelector('#cc_branch').value;
           const amt = Math.round(parseNum(w.querySelector('#cc_amount').value)*100)/100;
-          /* ✅ নতুন: empty check with sorry message */
           if(isC){
             const _on = readNotes(w, 'cc_out');
             if(Object.keys(_on).length === 0){ sorryNoNote(); b.disabled = false; b.innerHTML = og; return; }
@@ -2899,7 +2890,6 @@ function openBranchManagement(){
           const bnk = parseNum(w.querySelector('#bm_bank').value);
           const oth = parseNum(w.querySelector('#bm_other').value);
           const vv = {}; DENOMS.forEach(d => { vv[d] = parseInt(String(w.querySelector('#bm_note_'+d).value).replace(/[^0-9]/g,''), 10) || 0; });
-          /* ✅ নতুন: সম্পূর্ণ খালি থাকলে sorry message */
           const _hasAny = cap > 0 || bnk > 0 || oth > 0 || Object.values(vv).some(x => x > 0);
           if(!_hasAny){ sorryNoNote(); return; }
           const csh = DENOMS.reduce((s,d)=> s + vv[d]*d, 0);
