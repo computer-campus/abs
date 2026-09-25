@@ -82,34 +82,7 @@
                     "1000": 16
                 }
             },
-            "customers": [
-                {
-                    "id": "uvm19dkyz9a",
-                    "name": "AAAAA",
-                    "branch": "kalaroa",
-                    "mobile": "",
-                    "address": "",
-                    "accountNo": "8888888888",
-                    "createdAt": "2026-09-25T03:13:26.014Z",
-                    "supportDue": 0,
-                    "supportPaid": 0,
-                    "supportCount": 0,
-                    "supportRefund": 0
-                },
-                {
-                    "id": "b2mc4pv24s3",
-                    "name": "XXXXXXXXX",
-                    "branch": "kalaroa",
-                    "mobile": "",
-                    "address": "",
-                    "accountNo": "555555555",
-                    "createdAt": "2026-09-25T03:15:53.139Z",
-                    "supportDue": 0,
-                    "supportPaid": 0,
-                    "supportCount": 0,
-                    "supportRefund": 0
-                }
-            ],
+            "customers": [],
             "liveVault": {
                 "kalaroa": {
                     "1": 0,
@@ -1754,18 +1727,115 @@
                         "onlineTransfer": false,
                         "cashNotTakenAmount": null
                     }
+                },
+                {
+                    "at": "2026-09-25T04:25:29.372Z",
+                    "id": "oxcw6rejn6j",
+                    "role": "user",
+                    "txId": "o0dbkhwjn6i",
+                    "user": "Jahangir Kabir",
+                    "action": "create",
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Khulna, Khulna Division, BD",
+                    "username": "jahangir",
+                    "txSnapshot": {
+                        "id": "o0dbkhwjn6i",
+                        "dir": null,
+                        "bank": null,
+                        "date": "2026-09-25",
+                        "note": "",
+                        "type": "deposit",
+                        "user": "Jahangir Kabir",
+                        "year": "2026",
+                        "amount": 20000,
+                        "branch": "kalaroa",
+                        "custAcc": "",
+                        "notesIn": {
+                            "1000": 20
+                        },
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "",
+                        "notesOut": {},
+                        "createdAt": "2026-09-25T04:25:29.370Z",
+                        "updatedAt": "2026-09-25T04:25:29.370Z",
+                        "cashAmount": null,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-25",
+                        "cashNotTaken": false,
+                        "onlineAmount": null,
+                        "userUsername": "jahangir",
+                        "onlineBankName": null,
+                        "onlineTransfer": false,
+                        "cashNotTakenAmount": null
+                    }
+                },
+                {
+                    "at": "2026-09-25T04:28:11.735Z",
+                    "id": "2pa1j8mn4gn",
+                    "role": "admin",
+                    "txId": "o0dbkhwjn6i",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Khulna, Khulna Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "o0dbkhwjn6i",
+                        "dir": null,
+                        "bank": null,
+                        "date": "2026-09-25",
+                        "note": "",
+                        "type": "deposit",
+                        "user": "Jahangir Kabir",
+                        "year": "2026",
+                        "amount": 20000,
+                        "branch": "kalaroa",
+                        "custAcc": "",
+                        "notesIn": {
+                            "1000": 20
+                        },
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "",
+                        "notesOut": {},
+                        "createdAt": "2026-09-25T04:25:29.370Z",
+                        "updatedAt": "2026-09-25T04:25:29.370Z",
+                        "cashAmount": null,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-25",
+                        "cashNotTaken": false,
+                        "onlineAmount": null,
+                        "userUsername": "jahangir",
+                        "onlineBankName": null,
+                        "onlineTransfer": false,
+                        "cashNotTakenAmount": null
+                    }
                 }
             ],
             "dailyClose": {},
             "__lastDevice": {
                 "role": "user",
-                "user": "\u0985\u099c\u09be\u09a8\u09be",
-                "branch": "\u0985\u099c\u09be\u09a8\u09be",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
-                "location": "Dhaka, Dhaka Division, BD",
-                "username": ""
+                "user": "Jahangir Kabir",
+                "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                "location": "Khulna, Khulna Division, BD",
+                "username": "jahangir"
             },
-            "__lastUpdate": "2026-09-25T03:44:22.262Z",
+            "__lastUpdate": "2026-09-25T05:50:27.570Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 2393989.66,
@@ -1791,6 +1861,7 @@
                 "hk7da0rthhp": "2026-09-25T03:16:28.309Z",
                 "jinmrtt768i": "2026-09-24T22:03:49.352Z",
                 "nfihb7q7ml5": "2026-09-24T21:46:19.188Z",
+                "o0dbkhwjn6i": "2026-09-25T04:28:11.734Z",
                 "of03yf88hyl": "2026-09-24T21:46:07.237Z",
                 "oug9bnf7av6": "2026-09-24T22:03:47.749Z",
                 "tpoxt4r83j8": "2026-09-24T22:03:44.142Z",
@@ -1818,16 +1889,16 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-09-25T03:44:23.287Z",
+                "at": "2026-09-25T05:50:28.696Z",
                 "role": "user",
-                "user": "\u0985\u099c\u09be\u09a8\u09be",
+                "user": "Jahangir Kabir",
                 "txIds": [],
-                "branch": "\u0985\u099c\u09be\u09a8\u09be",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
                 "txCount": 0,
                 "txTypes": [],
-                "location": "Dhaka, Dhaka Division, BD",
-                "username": ""
+                "location": "Khulna, Khulna Division, BD",
+                "username": "jahangir"
             },
             "__lastRolloverDate": "2026-09-25"
         }
