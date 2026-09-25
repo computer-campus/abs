@@ -7,8 +7,8 @@
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="সিসি ব্যাংক">
-<meta name="application-name" content="সিসি ব্যাংক">
+<meta name="apple-mobile-web-app-title" content="কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংক">
+<meta name="application-name" content="কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংক">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='%23fff'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='%23fff'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
@@ -332,296 +332,100 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
   .notif-card{padding:14px 15px;gap:11px}
   .notif-icon{width:42px;height:42px;font-size:20px;border-radius:12px}
 }
-
-/* ============ ফর্ম অ্যানিমেশন ============ */
-@keyframes inputFocusPulse{
-  0%{ box-shadow:0 0 0 0 rgba(59,130,246,.4) }
-  70%{ box-shadow:0 0 0 8px rgba(59,130,246,0) }
-  100%{ box-shadow:0 0 0 0 rgba(59,130,246,0) }
-}
-@keyframes notePopIn{
-  0%{ opacity:0; transform:scale(.85) translateY(6px) }
-  60%{ transform:scale(1.04) translateY(-2px) }
-  100%{ opacity:1; transform:scale(1) translateY(0) }
-}
-@keyframes noteValueBounce{
-  0%{ transform:scale(1) }
-  40%{ transform:scale(1.18) }
-  100%{ transform:scale(1) }
-}
-@keyframes fieldSlideIn{
-  0%{ opacity:0; transform:translateY(12px) }
-  100%{ opacity:1; transform:translateY(0) }
-}
-@keyframes cardSlideUp{
-  0%{ opacity:0; transform:translateY(20px) }
-  100%{ opacity:1; transform:translateY(0) }
-}
-@keyframes branchToggleBounce{
-  0%{ transform:scale(1) }
-  50%{ transform:scale(1.05) }
-  100%{ transform:scale(1) }
-}
-@keyframes sumLineGlow{
-  0%,100%{ box-shadow:inset 0 0 0 rgba(34,197,94,0) }
-  50%{ box-shadow:inset 0 0 20px rgba(34,197,94,.15) }
-}
-@keyframes checkTickPulse{
-  0%{ transform:scale(.8); box-shadow:0 0 0 0 rgba(34,197,94,.5) }
-  50%{ transform:scale(1.15); box-shadow:0 0 0 10px rgba(34,197,94,0) }
-  100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(34,197,94,0) }
-}
-@keyframes btnRipple{
-  0%{ transform:scale(0); opacity:.6 }
-  100%{ transform:scale(2.5); opacity:0 }
-}
-@keyframes fieldLabelFloat{
-  0%{ transform:translateX(0) }
-  50%{ transform:translateX(3px) }
-  100%{ transform:translateX(0) }
-}
-@keyframes onlineTickSlide{
-  0%{ opacity:0; max-height:0; transform:translateY(-10px) }
-  100%{ opacity:1; max-height:400px; transform:translateY(0) }
-}
-@keyframes modalBodyStagger{
-  0%{ opacity:0; transform:translateY(10px) }
-  100%{ opacity:1; transform:translateY(0) }
-}
-@keyframes warnShake{
-  0%,100%{ transform:translateX(0) }
-  20%{ transform:translateX(-5px) }
-  40%{ transform:translateX(5px) }
-  60%{ transform:translateX(-3px) }
-  80%{ transform:translateX(3px) }
-}
-@keyframes btnShine{
-  0%{ left:-100% }
-  100%{ left:100% }
-}
-
-/* ফিল্ড অ্যানিমেশন */
-.modal-body .field,
-.modal-body .form-row > .field{
-  animation:fieldSlideIn .35s cubic-bezier(.2,1,.3,1) backwards;
-}
-.modal-body .form-row > .field:nth-child(1){ animation-delay:.02s }
-.modal-body .form-row > .field:nth-child(2){ animation-delay:.06s }
-.modal-body .form-row > .field:nth-child(3){ animation-delay:.10s }
-.modal-body .form-row > .field:nth-child(4){ animation-delay:.14s }
-.modal-body .form-row > .field:nth-child(5){ animation-delay:.18s }
-.modal-body .form-row > .field:nth-child(6){ animation-delay:.22s }
-
-.field input,.field select{
-  transition:border-color .25s, box-shadow .25s, background .25s, transform .15s;
-}
-.field input:focus,.field select:focus{
-  animation:inputFocusPulse 1.2s ease-out;
-  transform:translateY(-1px);
-  background:#060a16;
-}
-.field label{
-  transition:color .25s, transform .25s, letter-spacing .25s;
-}
-.field:focus-within label{
-  color:var(--blue-2);
-  letter-spacing:.8px;
-}
-
-/* নোট ইনপুট অ্যানিমেশন */
-.note-item{
-  animation:notePopIn .4s cubic-bezier(.2,1,.3,1) backwards;
-  transition:transform .2s;
-}
-.notes-row .note-item:nth-child(1){ animation-delay:.02s }
-.notes-row .note-item:nth-child(2){ animation-delay:.05s }
-.notes-row .note-item:nth-child(3){ animation-delay:.08s }
-.notes-row .note-item:nth-child(4){ animation-delay:.11s }
-.notes-row .note-item:nth-child(5){ animation-delay:.14s }
-.notes-row .note-item:nth-child(6){ animation-delay:.17s }
-.notes-row .note-item:nth-child(7){ animation-delay:.20s }
-.notes-row .note-item:nth-child(8){ animation-delay:.23s }
-.notes-row .note-item:nth-child(9){ animation-delay:.26s }
-.notes-row .note-item:nth-child(10){ animation-delay:.29s }
-
-.note-item:hover{ transform:translateY(-2px); }
-.note-item:hover label{ color:var(--yellow-2); }
-.notes-col.in .note-item:hover label{ color:var(--green-2); }
-
-.note-item input{
-  transition:border-color .2s, box-shadow .2s, background .2s, transform .15s, color .2s;
-}
-.note-item input:focus{
-  transform:scale(1.05);
-  animation:inputFocusPulse 1s ease-out;
-  background:#040816;
-}
-.notes-col.out .note-item input:focus{
-  border-color:var(--yellow);
-  box-shadow:0 0 0 4px rgba(250,204,21,.15), 0 0 20px rgba(250,204,21,.25);
-}
-.notes-col.in .note-item input:focus{
-  border-color:var(--green);
-  box-shadow:0 0 0 4px rgba(34,197,94,.15), 0 0 20px rgba(34,197,94,.25);
-}
-.note-item input.has-value{
-  animation:noteValueBounce .35s cubic-bezier(.2,1.6,.4,1);
-}
-
-.notes-col,.cust-box,.online-tick-box,.cust-branch-toggle,.bank-only-box,.online-box.active{
-  animation:cardSlideUp .4s cubic-bezier(.2,1,.3,1) backwards;
-}
-.notes-col.out{ animation-delay:.05s }
-.notes-col.in{ animation-delay:.12s }
-
-.branch-toggle-btn{
-  transition:all .25s cubic-bezier(.2,1,.3,1);
-}
-.branch-toggle-btn.active{
-  animation:branchToggleBounce .35s cubic-bezier(.2,1.6,.4,1);
-  box-shadow:0 6px 20px rgba(59,130,246,.4);
-}
-
-.sum-line{
-  transition:all .3s;
-  border-radius:6px;
-  padding-left:6px;
-  padding-right:6px;
-}
-.sum-line:hover{
-  animation:sumLineGlow 1.6s ease-in-out infinite;
-}
-
-.total-preview .v{
-  transition:color .3s, transform .3s;
-}
-.total-preview.pulse .v{
-  animation:noteValueBounce .4s cubic-bezier(.2,1.6,.4,1);
-  color:var(--green-2);
-}
-
-.online-tick-label input[type="checkbox"]:checked{
-  animation:checkTickPulse .5s cubic-bezier(.2,1.4,.4,1);
-}
-.online-tick-label{
-  transition:all .25s;
-}
-.online-tick-label:hover{
-  background:rgba(59,130,246,.08);
-  border-color:var(--line-3);
-  transform:translateX(2px);
-}
-.online-tick-label:hover .title{
-  animation:fieldLabelFloat 1.5s ease-in-out infinite;
-}
-
-#onlineTransferDetails,#cashNotTakenInfo{
-  animation:onlineTickSlide .35s cubic-bezier(.2,1,.3,1);
-}
-
-.btn{
-  position:relative;
-  overflow:hidden;
-  transition:all .25s cubic-bezier(.2,1,.3,1);
-}
-.btn:active{
-  transform:translateY(0) scale(.98);
-}
-.btn::before{
-  content:'';
-  position:absolute;
-  top:50%;left:50%;
-  width:0;height:0;
-  border-radius:50%;
-  background:rgba(255,255,255,.3);
-  transform:translate(-50%,-50%);
-  pointer-events:none;
-}
-.btn:active::before{
-  animation:btnRipple .6s ease-out;
-  width:20px;height:20px;
-}
-
-.btn.green{
-  position:relative;
-  overflow:hidden;
-}
-.btn.green::after{
-  content:'';
-  position:absolute;
-  top:0;left:-100%;
-  width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
-  transition:none;
-}
-.btn.green:hover::after{
-  animation:btnShine .8s ease-out;
-}
-
-.modal-body > *{
-  animation:modalBodyStagger .35s cubic-bezier(.2,1,.3,1) backwards;
-}
-.modal-body > *:nth-child(1){ animation-delay:.02s }
-.modal-body > *:nth-child(2){ animation-delay:.06s }
-.modal-body > *:nth-child(3){ animation-delay:.10s }
-.modal-body > *:nth-child(4){ animation-delay:.14s }
-.modal-body > *:nth-child(5){ animation-delay:.18s }
-.modal-body > *:nth-child(6){ animation-delay:.22s }
-.modal-body > *:nth-child(7){ animation-delay:.26s }
-.modal-body > *:nth-child(8){ animation-delay:.30s }
-
-#noteAvailabilityWarning.shake{
-  animation:warnShake .5s cubic-bezier(.2,1.6,.4,1);
-}
-
-.modal-history{
-  animation:cardSlideUp .5s cubic-bezier(.2,1,.3,1) backwards;
-  animation-delay:.15s;
-}
-
-input[type="date"]{
-  transition:all .25s;
-}
-input[type="date"]:focus{
-  animation:inputFocusPulse 1s ease-out;
-}
-input[type="date"]::-webkit-calendar-picker-indicator{
-  filter:invert(.6) sepia(1) saturate(3) hue-rotate(180deg);
-  cursor:pointer;
-  transition:transform .2s;
-}
-input[type="date"]:hover::-webkit-calendar-picker-indicator{
-  transform:scale(1.15);
-}
-
-.sug-item{
-  animation:fieldSlideIn .25s cubic-bezier(.2,1,.3,1) backwards;
-  transition:all .2s;
-}
-.sug-item:nth-child(1){ animation-delay:.02s }
-.sug-item:nth-child(2){ animation-delay:.05s }
-.sug-item:nth-child(3){ animation-delay:.08s }
-.sug-item:nth-child(4){ animation-delay:.11s }
-.sug-item:nth-child(5){ animation-delay:.14s }
-.sug-item:hover{
-  transform:translateX(4px);
-  border-left:3px solid var(--green);
-}
-
-.form-row:hover > .field > label{
-  color:var(--blue-2);
-}
-
+@keyframes inputFocusPulse{0%{box-shadow:0 0 0 0 rgba(59,130,246,.4)}70%{box-shadow:0 0 0 8px rgba(59,130,246,0)}100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}}
+@keyframes notePopIn{0%{opacity:0;transform:scale(.85) translateY(6px)}60%{transform:scale(1.04) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes noteValueBounce{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes fieldSlideIn{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes cardSlideUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes branchToggleBounce{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes sumLineGlow{0%,100%{box-shadow:inset 0 0 0 rgba(34,197,94,0)}50%{box-shadow:inset 0 0 20px rgba(34,197,94,.15)}}
+@keyframes checkTickPulse{0%{transform:scale(.8);box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{transform:scale(1.15);box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+@keyframes btnRipple{0%{transform:scale(0);opacity:.6}100%{transform:scale(2.5);opacity:0}}
+@keyframes fieldLabelFloat{0%{transform:translateX(0)}50%{transform:translateX(3px)}100%{transform:translateX(0)}}
+@keyframes onlineTickSlide{0%{opacity:0;max-height:0;transform:translateY(-10px)}100%{opacity:1;max-height:400px;transform:translateY(0)}}
+@keyframes modalBodyStagger{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes warnShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@keyframes btnShine{0%{left:-100%}100%{left:100%}}
+.modal-body .field,.modal-body .form-row > .field{animation:fieldSlideIn .35s cubic-bezier(.2,1,.3,1) backwards}
+.modal-body .form-row > .field:nth-child(1){animation-delay:.02s}
+.modal-body .form-row > .field:nth-child(2){animation-delay:.06s}
+.modal-body .form-row > .field:nth-child(3){animation-delay:.10s}
+.modal-body .form-row > .field:nth-child(4){animation-delay:.14s}
+.modal-body .form-row > .field:nth-child(5){animation-delay:.18s}
+.modal-body .form-row > .field:nth-child(6){animation-delay:.22s}
+.field input,.field select{transition:border-color .25s,box-shadow .25s,background .25s,transform .15s}
+.field input:focus,.field select:focus{animation:inputFocusPulse 1.2s ease-out;transform:translateY(-1px);background:#060a16}
+.field label{transition:color .25s,transform .25s,letter-spacing .25s}
+.field:focus-within label{color:var(--blue-2);letter-spacing:.8px}
+.note-item{animation:notePopIn .4s cubic-bezier(.2,1,.3,1) backwards;transition:transform .2s}
+.notes-row .note-item:nth-child(1){animation-delay:.02s}
+.notes-row .note-item:nth-child(2){animation-delay:.05s}
+.notes-row .note-item:nth-child(3){animation-delay:.08s}
+.notes-row .note-item:nth-child(4){animation-delay:.11s}
+.notes-row .note-item:nth-child(5){animation-delay:.14s}
+.notes-row .note-item:nth-child(6){animation-delay:.17s}
+.notes-row .note-item:nth-child(7){animation-delay:.20s}
+.notes-row .note-item:nth-child(8){animation-delay:.23s}
+.notes-row .note-item:nth-child(9){animation-delay:.26s}
+.notes-row .note-item:nth-child(10){animation-delay:.29s}
+.note-item:hover{transform:translateY(-2px)}
+.note-item:hover label{color:var(--yellow-2)}
+.notes-col.in .note-item:hover label{color:var(--green-2)}
+.note-item input{transition:border-color .2s,box-shadow .2s,background .2s,transform .15s,color .2s}
+.note-item input:focus{transform:scale(1.05);animation:inputFocusPulse 1s ease-out;background:#040816}
+.notes-col.out .note-item input:focus{border-color:var(--yellow);box-shadow:0 0 0 4px rgba(250,204,21,.15),0 0 20px rgba(250,204,21,.25)}
+.notes-col.in .note-item input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,.15),0 0 20px rgba(34,197,94,.25)}
+.note-item input.has-value{animation:noteValueBounce .35s cubic-bezier(.2,1.6,.4,1)}
+.notes-col,.cust-box,.online-tick-box,.cust-branch-toggle,.bank-only-box,.online-box.active{animation:cardSlideUp .4s cubic-bezier(.2,1,.3,1) backwards}
+.notes-col.out{animation-delay:.05s}
+.notes-col.in{animation-delay:.12s}
+.branch-toggle-btn{transition:all .25s cubic-bezier(.2,1,.3,1)}
+.branch-toggle-btn.active{animation:branchToggleBounce .35s cubic-bezier(.2,1.6,.4,1);box-shadow:0 6px 20px rgba(59,130,246,.4)}
+.sum-line{transition:all .3s;border-radius:6px;padding-left:6px;padding-right:6px}
+.sum-line:hover{animation:sumLineGlow 1.6s ease-in-out infinite}
+.total-preview .v{transition:color .3s,transform .3s}
+.total-preview.pulse .v{animation:noteValueBounce .4s cubic-bezier(.2,1.6,.4,1);color:var(--green-2)}
+.online-tick-label input[type="checkbox"]:checked{animation:checkTickPulse .5s cubic-bezier(.2,1.4,.4,1)}
+.online-tick-label{transition:all .25s}
+.online-tick-label:hover{background:rgba(59,130,246,.08);border-color:var(--line-3);transform:translateX(2px)}
+.online-tick-label:hover .title{animation:fieldLabelFloat 1.5s ease-in-out infinite}
+#onlineTransferDetails,#cashNotTakenInfo{animation:onlineTickSlide .35s cubic-bezier(.2,1,.3,1)}
+.btn{position:relative;overflow:hidden;transition:all .25s cubic-bezier(.2,1,.3,1)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.3);transform:translate(-50%,-50%);pointer-events:none}
+.btn:active::before{animation:btnRipple .6s ease-out;width:20px;height:20px}
+.btn.green{position:relative;overflow:hidden}
+.btn.green::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transition:none}
+.btn.green:hover::after{animation:btnShine .8s ease-out}
+.modal-body > *{animation:modalBodyStagger .35s cubic-bezier(.2,1,.3,1) backwards}
+.modal-body > *:nth-child(1){animation-delay:.02s}
+.modal-body > *:nth-child(2){animation-delay:.06s}
+.modal-body > *:nth-child(3){animation-delay:.10s}
+.modal-body > *:nth-child(4){animation-delay:.14s}
+.modal-body > *:nth-child(5){animation-delay:.18s}
+.modal-body > *:nth-child(6){animation-delay:.22s}
+.modal-body > *:nth-child(7){animation-delay:.26s}
+.modal-body > *:nth-child(8){animation-delay:.30s}
+#noteAvailabilityWarning.shake{animation:warnShake .5s cubic-bezier(.2,1.6,.4,1)}
+.modal-history{animation:cardSlideUp .5s cubic-bezier(.2,1,.3,1) backwards;animation-delay:.15s}
+input[type="date"]{transition:all .25s}
+input[type="date"]:focus{animation:inputFocusPulse 1s ease-out}
+input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.6) sepia(1) saturate(3) hue-rotate(180deg);cursor:pointer;transition:transform .2s}
+input[type="date"]:hover::-webkit-calendar-picker-indicator{transform:scale(1.15)}
+.sug-item{animation:fieldSlideIn .25s cubic-bezier(.2,1,.3,1) backwards;transition:all .2s}
+.sug-item:nth-child(1){animation-delay:.02s}
+.sug-item:nth-child(2){animation-delay:.05s}
+.sug-item:nth-child(3){animation-delay:.08s}
+.sug-item:nth-child(4){animation-delay:.11s}
+.sug-item:nth-child(5){animation-delay:.14s}
+.sug-item:hover{transform:translateX(4px);border-left:3px solid var(--green)}
+.form-row:hover > .field > label{color:var(--blue-2)}
 @media(max-width:640px){
-  .note-item{ animation-duration:.3s }
-  .modal-body > *{ animation-duration:.25s }
-  .btn:hover{ transform:none }
+  .note-item{animation-duration:.3s}
+  .modal-body > *{animation-duration:.25s}
+  .btn:hover{transform:none}
 }
-
-@media (prefers-reduced-motion: reduce){
-  *{ animation-duration:.01ms!important; transition-duration:.01ms!important; }
-}
-
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 ::selection{background:var(--blue);color:#fff}
 </style>
 </head>
@@ -703,6 +507,7 @@ const SKEY = 'cc_agent_bank_session';
 const LOCAL_DB_KEY = 'cc_agent_bank_local';
 const NET_QUEUE_KEY = 'cc_net_queue';
 const NOTIF_PREF_KEY = 'cc_notif_prefs';
+const GEO_CACHE_KEY = 'cc_geo_cache';
 const SUPABASE_TIMEOUT_MS = 12000;
 const LS_TX_LIMIT = 500;
 const PASS_SALT = 'cc_agent_bank_salt_';
@@ -734,6 +539,17 @@ const fmt = n => { const v = Math.round((Number(n)||0)*100)/100; const safe = Ob
 const todayStr = () => { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const toBn = s => String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+
+/* ✅ নতুন: Sorry + Empty check helper */
+function sorryNoNote(){
+  alert('🙏 দুঃখিত!\n\nসব ঘর খালি আছে।\n\nসংরক্ষণ করতে হলে কমপক্ষে একটি ঘরে পরিমাণ লিখুন।');
+}
+function hasAnyAmountOrNote(opts){
+  opts = opts || {};
+  if(opts.amount != null && parseNum(opts.amount) > 0) return true;
+  if(opts.notes && Object.keys(opts.notes).length > 0) return true;
+  return false;
+}
 
 function hashPassword(p){
   try{ if(typeof CryptoJS !== 'undefined') return CryptoJS.SHA256(PASS_SALT + String(p)).toString(); }catch(e){}
@@ -807,8 +623,6 @@ function attachAmountInput(inputEl, opts){
     } else { inputEl.value = raw ? Number(raw).toLocaleString('en-US') : ''; }
   });
   inputEl.addEventListener('focus', ()=>{ setTimeout(()=> inputEl.select(), 50); });
-  
-    // ✅ value থাকলে bounce animation
   inputEl.addEventListener('input', function(){
     if(this.value && this.value !== ''){
       this.classList.remove('has-value');
@@ -816,7 +630,7 @@ function attachAmountInput(inputEl, opts){
       this.classList.add('has-value');
       setTimeout(()=> this.classList.remove('has-value'), 400);
     }
-  }); 
+  });
 }
 function setupEnterNavigation(){
   document.addEventListener('keydown', (e)=>{
@@ -869,6 +683,39 @@ function safeLS_set(key, value){
   }
 }
 function safeLS_get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+
+/* ============ IP লোকেশন ============ */
+function loadGeoCache(){
+  try{ const raw = safeLS_get(GEO_CACHE_KEY); if(!raw) return null; const o = JSON.parse(raw); if(!o || !o.at) return null; if(Date.now() - o.at > 3600000) return null; return o.data; }catch(e){ return null; }
+}
+function saveGeoCache(data){ try{ safeLS_set(GEO_CACHE_KEY, JSON.stringify({ at: Date.now(), data })); }catch(e){} }
+async function fetchGeoLocation(){
+  const cached = loadGeoCache(); if(cached) return cached;
+  const fallback = { city:'Kalaroa', region:'Satkhira', country:'BD', label:'Kalaroa, Satkhira, BD' };
+  if(!navigator.onLine){ saveGeoCache(fallback); return fallback; }
+  try{
+    let r = await withTimeout(fetch('https://ipapi.co/json/', { cache:'no-store' }), 6000, null);
+    if(r && r.ok){
+      const j = await r.json();
+      if(j && (j.city || j.region || j.country_code)){
+        const d = { city: j.city || '', region: j.region || '', country: j.country_code || '', label: [j.city, j.region, j.country_code].filter(Boolean).join(', ') || fallback.label };
+        saveGeoCache(d); return d;
+      }
+    }
+  }catch(e){}
+  try{
+    let r = await withTimeout(fetch('https://ipinfo.io/json', { cache:'no-store' }), 6000, null);
+    if(r && r.ok){
+      const j = await r.json();
+      if(j){
+        const d = { city: j.city || '', region: j.region || '', country: j.country || '', label: [j.city, j.region, j.country].filter(Boolean).join(', ') || fallback.label };
+        saveGeoCache(d); return d;
+      }
+    }
+  }catch(e){}
+  saveGeoCache(fallback);
+  return fallback;
+}
 
 /* ============ DB স্টেট ============ */
 window.db = null;
@@ -988,6 +835,7 @@ function addTxLog(txId, action, changes, txSnapshot){
       txSnapshot: txSnapshot ? JSON.parse(JSON.stringify(txSnapshot)) : null,
       user: session?.name || 'অজানা', username: session?.username || '',
       role: session?.role || 'user', branch: outletName, device: deviceName,
+      location: (window.__geoCache && window.__geoCache.label) || '',
       at: new Date().toISOString()
     };
     DB().txEditLog.push(log);
@@ -1036,12 +884,17 @@ function getDeviceName(){
   }catch(e){ return 'অজানা ডিভাইস'; }
 }
 async function buildDeviceInfo(){
+  let loc = (window.__geoCache && window.__geoCache.label) || '';
+  if(!loc){
+    try{ const g = await fetchGeoLocation(); window.__geoCache = g; loc = g.label; }catch(e){ loc = 'Kalaroa, Satkhira, BD'; }
+  }
   return {
     device: getDeviceName(),
     user: session?.name || 'অজানা',
     username: session?.username || '',
     branch: session?.role === 'admin' ? 'অ্যাডমিন' : (BRANCHES[session?.branch]?.name || 'অজানা'),
-    role: session?.role || 'user'
+    role: session?.role || 'user',
+    location: loc
   };
 }
 
@@ -1186,7 +1039,10 @@ function setupRealtime(){
           __realtimeReconnectAttempts = 0;
           updateRealtimeIndicator('online');
           try{ await pullRemoteDB(); }catch(e){}
-          try{ await __realtimeChannel.track({ user: (session?.name) || 'অতিথি', username: (session?.username) || '', branch: (session?.branch) || 'all', role: (session?.role) || '', joined_at: new Date().toISOString() }); }catch(e){}
+          try{
+            const geo = await fetchGeoLocation(); window.__geoCache = geo;
+            await __realtimeChannel.track({ user: (session?.name) || 'অতিথি', username: (session?.username) || '', branch: (session?.branch) || 'all', role: (session?.role) || '', location: geo.label, joined_at: new Date().toISOString() });
+          }catch(e){}
         } else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT'){
           updateRealtimeIndicator('error');
           __realtimeReconnectAttempts++;
@@ -1232,6 +1088,7 @@ function handleRealtimeUpdate(payload){
         user: updateInfo.user || 'অজানা ইউজার',
         branch: updateInfo.branch || 'অজানা',
         role: updateInfo.role || 'user',
+        location: updateInfo.location || 'Kalaroa, Satkhira, BD',
         time: updateInfo.at ? fmtDateTime(updateInfo.at) : 'এইমাত্র'
       });
     }
@@ -1273,12 +1130,12 @@ function showDetailedRTToast(info){
     const old = document.getElementById('rtDetailToast'); if(old) old.remove();
     const el = document.createElement('div');
     el.id = 'rtDetailToast'; el.className = 'rt-toast';
-    el.style.cssText = 'position:fixed;top:78px;right:18px;z-index:9999;padding:16px 20px;border-radius:18px;background:linear-gradient(135deg,rgba(34,197,94,.96),rgba(59,130,246,.94));color:#fff;font-weight:700;font-size:13.5px;box-shadow:0 16px 50px rgba(0,0,0,.9);display:flex;flex-direction:column;gap:10px;max-width:420px;border:1.5px solid rgba(255,255,255,.3);animation:slideInRT .35s;';
+    el.style.cssText = 'position:fixed;top:78px;right:18px;z-index:9999;padding:16px 20px;border-radius:18px;background:linear-gradient(135deg,rgba(34,197,94,.96),rgba(59,130,246,.94));color:#fff;font-weight:700;font-size:13.5px;box-shadow:0 16px 50px rgba(0,0,0,.9);display:flex;flex-direction:column;gap:10px;max-width:440px;border:1.5px solid rgba(255,255,255,.3);animation:slideInRT .35s;';
     const roleBadge = info.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার';
-    el.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:22px;flex-shrink:0">🔄</div><div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:900;line-height:1.4">অন্য ডিভাইস থেকে আপডেট এসেছে</div><div style="font-size:11.5px;opacity:.9;margin-top:2px">'+esc(info.time)+'</div></div><button id="rtDetailClose" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;flex-shrink:0">✕</button></div><div style="padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.2);display:grid;gap:8px;font-size:12.5px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">👤</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ইউজার</div><div style="font-weight:900;font-size:13px">'+esc(info.user)+' <span style="font-size:11px;opacity:.85">('+roleBadge+')</span></div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">🏦</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">আউটলেট</div><div style="font-weight:800;font-size:12.5px">'+esc(info.branch)+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📱</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ডিভাইস</div><div style="font-weight:800;font-size:12.5px">'+esc(info.device)+'</div></div></div></div>';
+    el.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:22px;flex-shrink:0">🔄</div><div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:900;line-height:1.4">অন্য ডিভাইস থেকে আপডেট এসেছে</div><div style="font-size:11.5px;opacity:.9;margin-top:2px">'+esc(info.time)+'</div></div><button id="rtDetailClose" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;flex-shrink:0">✕</button></div><div style="padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.2);display:grid;gap:8px;font-size:12.5px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">👤</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ইউজার</div><div style="font-weight:900;font-size:13px">'+esc(info.user)+' <span style="font-size:11px;opacity:.85">('+roleBadge+')</span></div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">🏦</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">আউটলেট</div><div style="font-weight:800;font-size:12.5px">'+esc(info.branch)+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📍</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">লোকেশন</div><div style="font-weight:800;font-size:12.5px">'+esc(info.location || 'Kalaroa, Satkhira, BD')+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📱</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ডিভাইস</div><div style="font-weight:800;font-size:12.5px">'+esc(info.device)+'</div></div></div></div>';
     document.body.appendChild(el);
     el.querySelector('#rtDetailClose').addEventListener('click', () => { el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; setTimeout(() => el.remove(), 350); });
-    setTimeout(() => { if(el.parentNode){ el.style.transition = '.4s'; el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; setTimeout(() => el.remove(), 420); } }, 8000);
+    setTimeout(() => { if(el.parentNode){ el.style.transition = '.4s'; el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; setTimeout(() => el.remove(), 420); } }, 9000);
   }catch(e){}
 }
 
@@ -1434,11 +1291,11 @@ async function pushRemoteDB(force, newTxs){
     let deviceInfo = null;
     try{ deviceInfo = await buildDeviceInfo(); }catch(e){}
     const dbCopy = JSON.parse(JSON.stringify(DB()));
-    dbCopy.__lastDevice = deviceInfo || { device: getDeviceName(), user: session?.name || 'অজানা', username: session?.username || '', branch: session?.role === 'admin' ? 'অ্যাডমিন' : (BRANCHES[session?.branch]?.name || 'অজানা'), role: session?.role || 'user' };
+    dbCopy.__lastDevice = deviceInfo || { device: getDeviceName(), user: session?.name || 'অজানা', username: session?.username || '', branch: session?.role === 'admin' ? 'অ্যাডমিন' : (BRANCHES[session?.branch]?.name || 'অজানা'), role: session?.role || 'user', location: (window.__geoCache && window.__geoCache.label) || 'Kalaroa, Satkhira, BD' };
     if(newTxs && newTxs.length){
-      dbCopy.__lastUpdateInfo = { device: dbCopy.__lastDevice.device, user: dbCopy.__lastDevice.user, username: dbCopy.__lastDevice.username, branch: dbCopy.__lastDevice.branch, role: dbCopy.__lastDevice.role, txCount: newTxs.length, txTypes: newTxs.map(t => t.type), txIds: newTxs.map(t => t.id), at: new Date().toISOString() };
+      dbCopy.__lastUpdateInfo = { device: dbCopy.__lastDevice.device, user: dbCopy.__lastDevice.user, username: dbCopy.__lastDevice.username, branch: dbCopy.__lastDevice.branch, role: dbCopy.__lastDevice.role, location: dbCopy.__lastDevice.location, txCount: newTxs.length, txTypes: newTxs.map(t => t.type), txIds: newTxs.map(t => t.id), at: new Date().toISOString() };
     } else {
-      dbCopy.__lastUpdateInfo = { device: dbCopy.__lastDevice.device, user: dbCopy.__lastDevice.user, username: dbCopy.__lastDevice.username, branch: dbCopy.__lastDevice.branch, role: dbCopy.__lastDevice.role, txCount: 0, txTypes: [], txIds: [], at: new Date().toISOString() };
+      dbCopy.__lastUpdateInfo = { device: dbCopy.__lastDevice.device, user: dbCopy.__lastDevice.user, username: dbCopy.__lastDevice.username, branch: dbCopy.__lastDevice.branch, role: dbCopy.__lastDevice.role, location: dbCopy.__lastDevice.location, txCount: 0, txTypes: [], txIds: [], at: new Date().toISOString() };
     }
     const payload = { id: window.SUPABASE_ROW_ID, data: dbCopy, updated_at: new Date().toISOString() };
     const timeoutMs = (__connEffectiveType === '3g' || __connEffectiveType === '2g') ? 25000 : SUPABASE_TIMEOUT_MS;
@@ -1743,12 +1600,12 @@ function currentBranchFilter(){
   return BRANCHES[session.branch] ? session.branch : 'kalaroa';
 }
 
-/* ============ নোট হেল্পার (✅ সবসময় active, খালি = null) ============ */
+/* ============ নোট হেল্পার ============ */
 function readNotes(scope, prefix){
   const o = {};
   scope.querySelectorAll('[id^="'+prefix+'_"]').forEach(inp=>{
     const raw = String(inp.value || '').trim();
-    if(raw === '') return; /* খালি → বাদ (null হিসেবে সেভ হবে) */
+    if(raw === '') return;
     const v = parseInt(raw.replace(/[^0-9]/g,''), 10);
     if(!isNaN(v) && v > 0) o[inp.dataset.denom] = v;
   });
@@ -1761,12 +1618,14 @@ function noteDetailHTML(notes){
   return keys.map(k => '<span style="display:inline-block;padding:4px 10px;margin:3px 5px 3px 0;border-radius:8px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.4);color:#93c5fd;font-size:12.5px;font-weight:600">৳'+toBn(k)+' × '+toBn(notes[k])+' = ৳'+fmt(Number(k)*Number(notes[k]))+'</span>').join('');
 }
 function noteListInline(notes){ const keys = Object.keys(notes||{}).filter(k=>notes[k]>0).sort((a,b)=>b-a); if(!keys.length) return ''; return keys.map(k=>'<span>৳'+toBn(k)+'×'+toBn(notes[k])+'</span>').join(' '); }
+
+/* ✅ পরিবর্তিত: placeholder="0" সরানো হয়েছে */
 function notesRowHTML(prefix, values){
   values = values || {};
   return '<div class="notes-row">' + DENOMS.map(d => {
     const hasValue = values[d] !== undefined && values[d] !== null && Number(values[d]) > 0;
     const val = hasValue ? values[d] : '';
-    return '<div class="note-item"><label>৳ ' + toBn(d) + '</label><input type="text" inputmode="numeric" autocomplete="off" id="' + prefix + '_' + d + '" data-denom="' + d + '" value="' + val + '" placeholder="0" name="nf_' + prefix + '_' + d + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '"></div>';
+    return '<div class="note-item"><label>৳ ' + toBn(d) + '</label><input type="text" inputmode="numeric" autocomplete="off" id="' + prefix + '_' + d + '" data-denom="' + d + '" value="' + val + '" name="nf_' + prefix + '_' + d + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,6) + '"></div>';
   }).join('') + '</div>';
 }
 
@@ -1982,7 +1841,7 @@ function openAuditLogModal(){
         changeSummary = keys.map(k => '<span style="font-size:11px;color:#93c5fd">' + esc(k) + '</span>').join(' • ');
         if(Object.keys(log.changes).length > 3) changeSummary += ' • +' + (Object.keys(log.changes).length - 3);
       }
-      return '<div style="padding:10px 12px;border-radius:10px;background:linear-gradient(145deg,#0f1428,#07091a);border:1px solid ' + a.color.replace(')', ',.35)').replace('rgb','rgba') + ';margin-bottom:8px;cursor:pointer" data-log-txid="' + esc(log.txId) + '"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:900;color:' + a.color + ';background:' + a.color.replace(')', ',.15)').replace('rgb','rgba') + ';border:1px solid ' + a.color + '">' + a.label + '</div><div style="margin-top:6px;font-size:12.5px;color:#fff;font-weight:800">👤 ' + esc(log.user) + ' <span style="color:#7a8ab8;font-weight:600;font-size:11px">(' + (log.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ')</span></div><div style="margin-top:3px;font-size:11.5px;color:#a5b4d8">🏦 ' + esc(log.branch) + ' • 📱 ' + esc(log.device) + '</div><div style="margin-top:5px;font-size:12px;color:#fde047"><b>' + txLabel + '</b> • <b style="color:#4ade80">' + txAmt + '</b>' + (changeSummary ? ' <span style="color:#7a8ab8">|</span> ' + changeSummary : '') + '</div></div><div style="text-align:right;font-size:11px;color:#93c5fd;font-weight:700;white-space:nowrap">' + esc(fmtDateTime(log.at)) + '</div></div></div>';
+      return '<div style="padding:10px 12px;border-radius:10px;background:linear-gradient(145deg,#0f1428,#07091a);border:1px solid ' + a.color.replace(')', ',.35)').replace('rgb','rgba') + ';margin-bottom:8px;cursor:pointer" data-log-txid="' + esc(log.txId) + '"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:900;color:' + a.color + ';background:' + a.color.replace(')', ',.15)').replace('rgb','rgba') + ';border:1px solid ' + a.color + '">' + a.label + '</div><div style="margin-top:6px;font-size:12.5px;color:#fff;font-weight:800">👤 ' + esc(log.user) + ' <span style="color:#7a8ab8;font-weight:600;font-size:11px">(' + (log.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ')</span></div><div style="margin-top:3px;font-size:11.5px;color:#a5b4d8">🏦 ' + esc(log.branch) + ' • 📱 ' + esc(log.device) + (log.location ? ' • 📍 ' + esc(log.location) : '') + '</div><div style="margin-top:5px;font-size:12px;color:#fde047"><b>' + txLabel + '</b> • <b style="color:#4ade80">' + txAmt + '</b>' + (changeSummary ? ' <span style="color:#7a8ab8">|</span> ' + changeSummary : '') + '</div></div><div style="text-align:right;font-size:11px;color:#93c5fd;font-weight:700;white-space:nowrap">' + esc(fmtDateTime(log.at)) + '</div></div></div>';
     }).join('') + '</div>';
   }
   const users = [...new Set(logs.map(l => l.username).filter(Boolean))];
@@ -2021,7 +1880,7 @@ function buildHistoryHTML(txId, compact){
     if(log.changes && Object.keys(log.changes).length){
       changesHtml = '<div style="margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.3);border:1px solid rgba(59,130,246,.2)"><div style="font-size:10.5px;color:#93c5fd;font-weight:800;margin-bottom:4px">📋 পরিবর্তন:</div>' + Object.keys(log.changes).map(k => { const c = log.changes[k]; if(c && typeof c === 'object' && 'from' in c && 'to' in c){ return '<div style="font-size:11.5px;padding:4px 0;border-bottom:1px dashed rgba(255,255,255,.08)"><b style="color:#facc15">' + esc(fieldNames[k] || k) + ':</b> <span style="color:#f87171;text-decoration:line-through">' + formatVal(k, c.from) + '</span> <span style="color:#7a8ab8">➜</span> <span style="color:#4ade80;font-weight:700">' + formatVal(k, c.to) + '</span></div>'; } return '<div style="font-size:11.5px;padding:3px 0;color:#a5b4d8">• ' + esc(fieldNames[k] || k) + ': ' + formatVal(k, c) + '</div>'; }).join('') + '</div>';
     }
-    return '<div style="padding:' + (compact ? '10px 12px' : '12px 14px') + ';border-radius:10px;background:linear-gradient(145deg,#0f1428,#07091a);border:1px solid ' + a.color.replace(')', ',.4)').replace('rgb','rgba') + ';margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:900;color:' + a.color + ';background:' + a.bg + ';border:1px solid ' + a.color + '">' + a.label + '</div><div style="margin-top:8px;font-size:13px;color:#fff;font-weight:800">👤 ' + esc(log.user) + ' <span style="color:#7a8ab8;font-weight:600;font-size:11px">(' + (log.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ')</span></div><div style="margin-top:4px;font-size:11.5px;color:#a5b4d8">🏦 ' + esc(log.branch) + ' &nbsp;•&nbsp; 📱 ' + esc(log.device) + '</div></div><div style="text-align:right;font-size:11.5px;color:#93c5fd;font-weight:700;white-space:nowrap">' + esc(fmtDateTime(log.at)) + '</div></div>' + changesHtml + '</div>';
+    return '<div style="padding:' + (compact ? '10px 12px' : '12px 14px') + ';border-radius:10px;background:linear-gradient(145deg,#0f1428,#07091a);border:1px solid ' + a.color.replace(')', ',.4)').replace('rgb','rgba') + ';margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:900;color:' + a.color + ';background:' + a.bg + ';border:1px solid ' + a.color + '">' + a.label + '</div><div style="margin-top:8px;font-size:13px;color:#fff;font-weight:800">👤 ' + esc(log.user) + ' <span style="color:#7a8ab8;font-weight:600;font-size:11px">(' + (log.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ')</span></div><div style="margin-top:4px;font-size:11.5px;color:#a5b4d8">🏦 ' + esc(log.branch) + ' &nbsp;•&nbsp; 📱 ' + esc(log.device) + (log.location ? ' &nbsp;•&nbsp; 📍 ' + esc(log.location) : '') + '</div></div><div style="text-align:right;font-size:11.5px;color:#93c5fd;font-weight:700;white-space:nowrap">' + esc(fmtDateTime(log.at)) + '</div></div>' + changesHtml + '</div>';
   }).join('');
 }
 function openTxHistoryModal(txId){
@@ -2423,7 +2282,8 @@ function setupTransferForm(wrap, editing, close){
     const os = noteSum(on), is = noteSum(inN);
     if(so) so.textContent = '৳ ' + fmt(os);
     if(si) si.textContent = '৳ ' + fmt(is);
-    if(ne) ne.textContent = '৳ ' + fmt(Math.max(os, is));     const tp = wrap.querySelector('.total-preview');
+    if(ne) ne.textContent = '৳ ' + fmt(Math.max(os, is));
+    const tp = wrap.querySelector('.total-preview');
     if(tp && (os > 0 || is > 0)){ tp.classList.remove('pulse'); void tp.offsetWidth; tp.classList.add('pulse'); setTimeout(()=> tp.classList.remove('pulse'), 450); }
     const wb = wrap.querySelector('#noteAvailabilityWarning');
     if(wb){
@@ -2461,7 +2321,9 @@ function setupTransferForm(wrap, editing, close){
       if(from === to){ alert('একই আউটলেট নয়'); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
       const on = readNotes(wrap, 'out'), inN = readNotes(wrap, 'in');
       const os = noteSum(on), is = noteSum(inN);
-      if(os <= 0 && is <= 0){ alert('নোট দিন'); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
+      /* ✅ নতুন: empty check with sorry message */
+      if(Object.keys(on).length === 0 && Object.keys(inN).length === 0){ sorryNoNote(); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
+      if(os <= 0 && is <= 0){ sorryNoNote(); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
       const vault = DB().liveVault?.[from] || {};
       const miss = [];
       Object.keys(on).forEach(d => { const n = Number(on[d]) || 0, h = Number(vault[d]) || 0; if(n > h) miss.push({ d, n, h }); });
@@ -2534,7 +2396,8 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     if(si) si.textContent = '৳ ' + fmt(is);
     if(isOS()){ const v = parseNum(wrap.querySelector('#support_amount')?.value); if(ne) ne.textContent = '৳ ' + fmt(v); }
     else if(isOn()){ const v = parseNum(wrap.querySelector('#online_amount')?.value); if(ne) ne.textContent = '৳ ' + fmt(v); }
-    else { if(ne) ne.textContent = '৳ ' + fmt(Math.abs(os - is)); }    const tp = wrap.querySelector('.total-preview');
+    else { if(ne) ne.textContent = '৳ ' + fmt(Math.abs(os - is)); }
+    const tp = wrap.querySelector('.total-preview');
     if(tp && (os > 0 || is > 0)){ tp.classList.remove('pulse'); void tp.offsetWidth; tp.classList.add('pulse'); setTimeout(()=> tp.classList.remove('pulse'), 450); }
     let html = '';
     if(Object.keys(on).length) html += '<div style="margin-bottom:6px"><b style="color:#fff">📤</b> ' + noteDetailHTML(on) + '</div>';
@@ -2551,7 +2414,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
     const on = readNotes(wrap, 'out');
     const iss = [];
     Object.keys(on).forEach(d => { const n = Number(on[d]) || 0, h = Number(vault[d]) || 0; if(n > h) iss.push({ d, n, h }); });
-    if(iss.length > 0){ wb.innerHTML = '<div style="padding:10px 14px;border-radius:10px;background:rgba(220,38,38,.15);border:1.5px solid rgba(220,38,38,.5);font-size:13px;color:#f87171;font-weight:700">⚠️ কম: ' + iss.map(it => '৳' + it.d + '×' + it.n + '(আছে ' + it.h + ')').join(' • ') + '</div>';       if(iss.length > 0){ wb.innerHTML = '<div style="padding:10px 14px;border-radius:10px;background:rgba(220,38,38,.15);border:1.5px solid rgba(220,38,38,.5);font-size:13px;color:#f87171;font-weight:700">⚠️ কম: ' + iss.map(it => '৳' + it.d + '×' + it.n + '(আছে ' + it.h + ')').join(' • ') + '</div>'; wb.style.display = 'block'; wb.classList.remove('shake'); void wb.offsetWidth; wb.classList.add('shake'); }wb.style.display = 'block'; }
+    if(iss.length > 0){ wb.innerHTML = '<div style="padding:10px 14px;border-radius:10px;background:rgba(220,38,38,.15);border:1.5px solid rgba(220,38,38,.5);font-size:13px;color:#f87171;font-weight:700">⚠️ কম: ' + iss.map(it => '৳' + it.d + '×' + it.n + '(আছে ' + it.h + ')').join(' • ') + '</div>'; wb.style.display = 'block'; wb.classList.remove('shake'); void wb.offsetWidth; wb.classList.add('shake'); }
     else { wb.innerHTML = ''; wb.style.display = 'none'; }
   }
   wrap.querySelectorAll('.note-item input').forEach(i => i.addEventListener('input', recalc));
@@ -2609,6 +2472,17 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       const dir = wrap.querySelector('#f_dir')?.value || null;
       const osL = isOS(), onL = isOn();
       const cNT = isLG && !!cTick?.checked;
+
+      /* ✅ নতুন: সব ঘর খালি থাকলে sorry message */
+      const _anyNote = Object.keys(on).length > 0 || Object.keys(inN).length > 0;
+      const _anySpecial = 
+        (isBO && parseNum(wrap.querySelector('#bt_amount')?.value) > 0) ||
+        (cNT && parseNum(cAmt?.value) > 0) ||
+        (isLG && wrap.querySelector('#f_onlineTransferTick')?.checked && parseNum(wrap.querySelector('#f_onlineAmount')?.value) > 0) ||
+        (osL && parseNum(wrap.querySelector('#support_amount')?.value) > 0) ||
+        (onL && parseNum(wrap.querySelector('#online_amount')?.value) > 0);
+      if(!_anyNote && !_anySpecial){ sorryNoNote(); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
+
       let cNTA = 0;
       if(cNT){ cNTA = parseNum(cAmt?.value); if(cNTA <= 0){ alert('পরিমাণ দিন'); sBtn.disabled = false; sBtn.innerHTML = orig; return; } if(!wrap.querySelector('#f_name')?.value.trim() || !wrap.querySelector('#f_acc')?.value.trim()){ alert('নাম ও অ্যাকাউন্ট দিন'); sBtn.disabled = false; sBtn.innerHTML = orig; return; } }
       let osA = 0, onA = 0;
@@ -2709,6 +2583,14 @@ function openMoneyExchange(){
           const io = isOD();
           const on = io ? {} : readNotes(w, 'me_out'), inN = io ? {} : readNotes(w, 'me_in');
           const os = noteSum(on), is = noteSum(inN);
+          /* ✅ নতুন: empty check with sorry message */
+          if(io){
+            const oa0 = parseNum(w.querySelector('#me_online_amount').value);
+            if(oa0 <= 0){ sorryNoNote(); b.disabled = false; b.innerHTML = og; return; }
+          } else {
+            if(Object.keys(on).length === 0 && Object.keys(inN).length === 0){ sorryNoNote(); b.disabled = false; b.innerHTML = og; return; }
+            if(os === 0 && is === 0){ sorryNoNote(); b.disabled = false; b.innerHTML = og; return; }
+          }
           let a = 0, oa = 0, orf = '';
           if(io){ oa = parseNum(w.querySelector('#me_online_amount').value); orf = w.querySelector('#me_online_ref').value.trim(); if(oa <= 0){ alert('পরিমাণ দিন'); b.disabled = false; b.innerHTML = og; return; } a = oa; }
           else { if(os === 0 && is === 0){ alert('নোট দিন'); b.disabled = false; b.innerHTML = og; return; } a = Math.abs(os - is); }
@@ -2749,7 +2631,12 @@ function openCollectionChildModal(parentId, mode){
         try{
           const date = w.querySelector('#cc_date').value, br = w.querySelector('#cc_branch').value;
           const amt = Math.round(parseNum(w.querySelector('#cc_amount').value)*100)/100;
-          if(amt <= 0 || amt > pending + 0.01){ alert('সঠিক পরিমাণ'); b.disabled = false; b.innerHTML = og; return; }
+          /* ✅ নতুন: empty check with sorry message */
+          if(isC){
+            const _on = readNotes(w, 'cc_out');
+            if(Object.keys(_on).length === 0){ sorryNoNote(); b.disabled = false; b.innerHTML = og; return; }
+          }
+          if(amt <= 0 || amt > pending + 0.01){ sorryNoNote(); b.disabled = false; b.innerHTML = og; return; }
           let on = {}, inN = {}, bk = null, pn = '';
           if(isC){ on = readNotes(w, 'cc_out'); if(Math.abs(noteSum(on) - amt) > 0.01){ alert('নোট যোগফল = ' + fmt(amt)); b.disabled = false; b.innerHTML = og; return; } }
           else { bk = w.querySelector('#cc_bank').value; pn = w.querySelector('#cc_partner').value.trim(); if(!pn){ alert('প্রাপক দিন'); b.disabled = false; b.innerHTML = og; return; } }
@@ -3012,6 +2899,9 @@ function openBranchManagement(){
           const bnk = parseNum(w.querySelector('#bm_bank').value);
           const oth = parseNum(w.querySelector('#bm_other').value);
           const vv = {}; DENOMS.forEach(d => { vv[d] = parseInt(String(w.querySelector('#bm_note_'+d).value).replace(/[^0-9]/g,''), 10) || 0; });
+          /* ✅ নতুন: সম্পূর্ণ খালি থাকলে sorry message */
+          const _hasAny = cap > 0 || bnk > 0 || oth > 0 || Object.values(vv).some(x => x > 0);
+          if(!_hasAny){ sorryNoNote(); return; }
           const csh = DENOMS.reduce((s,d)=> s + vv[d]*d, 0);
           DB().baseAccounts[br] = { bank: bnk, cash: csh, other: oth };
           DB().baseVault[br] = vv;
@@ -3045,12 +2935,12 @@ function openBranchManagement(){
 /* ============ নোটিফিকেশন সেটিংস ============ */
 function openNotifSettings(){
   openModal({ title: '🔔 নোটিফিকেশন সেটিংস', wide: false,
-    bodyHTML: '<div class="cust-box" style="margin-bottom:14px"><div class="head"><h4>⚙️ প্রেফারেন্স</h4></div><label class="online-tick-label" for="ns_sound" style="margin-bottom:10px"><input type="checkbox" id="ns_sound" ' + (__soundEnabled?'checked':'') + '><div class="online-tick-text"><div class="title">🔊 সাউন্ড</div><div class="sub">নতুন লেনদেনে সাউন্ড</div></div></label><label class="online-tick-label" for="ns_vib"><input type="checkbox" id="ns_vib" ' + (__vibrationEnabled?'checked':'') + ' style="accent-color:#ec4899"><div class="online-tick-text"><div class="title">📳 ভাইব্রেশন</div><div class="sub">মোবাইলে কম্পন</div></div></label></div><div class="cust-box" style="margin-bottom:14px"><div class="head"><h4>🔬 পরীক্ষা</h4></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn green sm" id="ns_t_success">✅ সফল</button><button class="btn yellow sm" id="ns_t_warning">⚠️ সতর্কতা</button><button class="btn red sm" id="ns_t_danger">🚨 বিপদ</button><button class="btn sm" id="ns_t_info">ℹ️ তথ্য</button><button class="btn cyan sm" id="ns_t_transfer">🔁 ট্রান্সফার</button></div></div><div class="cust-box"><div class="head"><h4>🌐 ব্রাউজার নোটিফিকেশন</h4></div><div style="font-size:12.5px;color:#a5b4d8;line-height:1.8;margin-bottom:10px">Tab minimize থাকলে OS-লেভেল notification পাবেন।</div><button class="btn block" id="ns_req_perm">🔔 পারমিশন চান</button><div id="ns_perm_status" style="margin-top:10px;font-size:12.5px;text-align:center;color:#a5b4d8"></div></div>',
+    bodyHTML: '<div class="cust-box" style="margin-bottom:14px"><div class="head"><h4>⚙️ প্রেফারেন্স</h4></div><label class="online-tick-label" for="ns_sound" style="margin-bottom:10px"><input type="checkbox" id="ns_sound" ' + (__soundEnabled?'checked':'') + '><div class="online-tick-text"><div class="title">🔊 সাউন্ড</div><div class="sub">নতুন লেনদেনে সাউন্ড</div></div></label><label class="online-tick-label" for="ns_vib"><input type="checkbox" id="ns_vib" ' + (__vibrationEnabled?'checked':'') + ' style="accent-color:#ec4899"><div class="online-tick-text"><div class="title">📳 ভাইব্রেশন</div><div class="sub">মোবাইলে কম্পন</div></div></label></div><div class="cust-box" style="margin-bottom:14px"><div class="head"><h4>🔬 পরীক্ষা</h4></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn green sm" id="ns_t_success">✅ সফল</button><button class="btn yellow sm" id="ns_t_warning">⚠️ সতর্কতা</button><button class="btn red sm" id="ns_t_danger">🚨 বিপদ</button><button class="btn sm" id="ns_t_info">ℹ️ তথ্য</button><button class="btn cyan sm" id="ns_t_transfer">🔁 ট্রান্সফার</button></div></div><div class="cust-box"><div class="head"><h4>🌐 ব্রাউজার নোটিফিকেশন</h4></div><div style="font-size:12.5px;color:#a5b4d8;line-height:1.8;margin-bottom:10px">Tab minimize থাকলে OS-লেভেল notification পাবেন।</div><button class="btn block" id="ns_req_perm">🔔 পারমিশন চান</button><div id="ns_perm_status" style="margin-top:10px;font-size:12.5px;text-align:center;color:#a5b4d8"></div></div><div class="cust-box" style="margin-top:14px"><div class="head"><h4>📍 লোকেশন</h4></div><div style="font-size:12.5px;color:#a5b4d8;line-height:1.8;margin-bottom:10px">নোটিফিকেশনে IP-ভিত্তিক লোকেশন দেখানো হবে (১ ঘণ্টা cache)।</div><div id="ns_geo_status" style="font-size:13px;color:#93c5fd;font-weight:700">লোড হচ্ছে...</div><button class="btn gray block sm" id="ns_geo_refresh" style="margin-top:8px">🔄 রিফ্রেশ</button></div>',
     onMount: (w) => {
       const sCb = w.querySelector('#ns_sound'), vCb = w.querySelector('#ns_vib');
       sCb.addEventListener('change', () => { __soundEnabled = sCb.checked; saveNotifPrefs(); });
       vCb.addEventListener('change', () => { __vibrationEnabled = vCb.checked; saveNotifPrefs(); });
-      const test = (type) => { showNotifToast({ type, icon: ({success:'✅', warning:'⚠️', danger:'🚨', info:'ℹ️', transfer:'🔁'})[type], badge: 'পরীক্ষা', title: '🔔 নোটিফিকেশন পরীক্ষা', body: '<b>টেস্ট নোটিফিকেশন</b><br><span class="notif-amt">৳ 1,234.00</span>', duration: 6000 }); };
+      const test = (type) => { showNotifToast({ type, icon: ({success:'✅', warning:'⚠️', danger:'🚨', info:'ℹ️', transfer:'🔁'})[type], badge: 'পরীক্ষা', title: '🔔 নোটিফিকেশন পরীক্ষা', body: '<b>টেস্ট নোটিফিকেশন</b><br><span class="notif-amt">৳ 1,234.00</span>' + (window.__geoCache ? '<br>📍 ' + esc(window.__geoCache.label) : ''), duration: 6000 }); };
       w.querySelector('#ns_t_success').addEventListener('click', () => test('success'));
       w.querySelector('#ns_t_warning').addEventListener('click', () => test('warning'));
       w.querySelector('#ns_t_danger').addEventListener('click', () => test('danger'));
@@ -3060,6 +2950,16 @@ function openNotifSettings(){
       const updPerm = () => { if(!('Notification' in window)){ permSt.textContent = '❌ সাপোর্ট নেই'; return; } const p = Notification.permission; permSt.innerHTML = p === 'granted' ? '✅ অনুমোদিত' : p === 'denied' ? '🚫 ব্লক' : '⏳ অনুমতি নেই'; permSt.style.color = p === 'granted' ? '#4ade80' : p === 'denied' ? '#f87171' : '#facc15'; };
       updPerm();
       w.querySelector('#ns_req_perm').addEventListener('click', async () => { const ok = await requestNotifPermission(); updPerm(); if(ok) showNativeNotif('✅ সফল', 'নোটিফিকেশন চালু', null); });
+      const geoSt = w.querySelector('#ns_geo_status');
+      const updGeo = () => { geoSt.textContent = '📍 ' + ((window.__geoCache && window.__geoCache.label) || 'লোড হয়নি'); };
+      updGeo();
+      w.querySelector('#ns_geo_refresh').addEventListener('click', async () => {
+        geoSt.textContent = '🔄 লোড হচ্ছে...';
+        try{ localStorage.removeItem(GEO_CACHE_KEY); }catch(e){}
+        const g = await fetchGeoLocation(); window.__geoCache = g;
+        geoSt.textContent = '📍 ' + g.label;
+        toast('✅ লোকেশন আপডেট — ' + g.label);
+      });
     }
   });
 }
@@ -3195,6 +3095,7 @@ async function doLogin(){
     try{ sessionStorage.setItem(SKEY, user.id); }catch(ex){ try{ localStorage.setItem(SKEY + '_fb', user.id); }catch(e2){} }
     viewBranch = user.role === 'admin' ? 'all' : (BRANCHES[user.branch] ? user.branch : 'kalaroa');
     dashDate = todayStr();
+    try{ fetchGeoLocation().then(g => { window.__geoCache = g; }).catch(()=>{}); }catch(ex){}
     try{ setTimeout(() => { showNotifToast({ type: 'success', icon: '👋', badge: 'স্বাগতম', title: '✅ লগইন সফল', body: '<b>' + esc(user.name) + '</b><br>' + (user.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার'), duration: 4000 }); }, 300); }catch(ex){}
     startApp();
   }catch(err){ e.textContent = '❌ ' + (err.message || 'Error'); b.disabled = false; b.innerHTML = '🔐 লগইন করুন'; }
@@ -3226,7 +3127,7 @@ function startApp(){
   setTimeout(() => { try{ attachTopbarScroll(); }catch(e){} }, 300);
   saveDB();
   setTimeout(() => {
-    try{ if(__realtimeChannel && __realtimeChannel.state === 'joined'){ __realtimeChannel.track({ user: session.name, username: session.username, branch: session.branch || 'all', role: session.role, joined_at: new Date().toISOString() }).catch(()=>{}); } }catch(e){}
+    try{ if(__realtimeChannel && __realtimeChannel.state === 'joined'){ __realtimeChannel.track({ user: session.name, username: session.username, branch: session.branch || 'all', role: session.role, location: (window.__geoCache && window.__geoCache.label) || '', joined_at: new Date().toISOString() }).catch(()=>{}); } }catch(e){}
   }, 800);
 }
 function attachTopbarScroll(){
@@ -3301,6 +3202,7 @@ window.addEventListener('beforeunload', () => { try{ if(__realtimeChannel && __s
   window.__hasSyncedOnce = false;
   try{ window.db = loadLocalDB() || defaultDB(); }catch(e){ window.db = defaultDB(); }
   normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive(); loadNotifPrefs();
+  try{ const c = loadGeoCache(); if(c) window.__geoCache = c; else fetchGeoLocation().then(g => { window.__geoCache = g; }).catch(()=>{}); }catch(e){}
   const lb = $('#loginBtn');
   if(lb){
     lb.addEventListener('click', doLogin);
