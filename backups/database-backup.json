@@ -1,7 +1,48 @@
 [
     {
         "data": {
-            "txs": [],
+            "txs": [
+                {
+                    "id": "p1hmz0ly6kb",
+                    "dir": null,
+                    "bank": null,
+                    "date": "2026-09-26",
+                    "note": "",
+                    "type": "loan_received",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "year": "2026",
+                    "amount": 1887,
+                    "branch": "kalaroa",
+                    "custAcc": "",
+                    "notesIn": {},
+                    "accepted": true,
+                    "custAddr": "",
+                    "custName": "",
+                    "notesOut": {
+                        "2": 1,
+                        "5": 1,
+                        "10": 1,
+                        "20": 1,
+                        "50": 1,
+                        "100": 1,
+                        "200": 1,
+                        "500": 1,
+                        "1000": 1
+                    },
+                    "createdAt": "2026-09-25T20:28:34.619Z",
+                    "updatedAt": "2026-09-25T20:28:34.619Z",
+                    "cashAmount": null,
+                    "custBranch": "kalaroa",
+                    "custMobile": "",
+                    "acceptedDate": "2026-09-26",
+                    "cashNotTaken": false,
+                    "onlineAmount": null,
+                    "userUsername": "admin",
+                    "onlineBankName": null,
+                    "onlineTransfer": false,
+                    "cashNotTakenAmount": null
+                }
+            ],
             "users": [
                 {
                     "id": "admin1",
@@ -60,7 +101,7 @@
                 "kalaroa": {
                     "1": 0,
                     "2": 3,
-                    "5": 0,
+                    "5": 1,
                     "10": 9,
                     "20": 157,
                     "50": 51,
@@ -86,15 +127,15 @@
             "liveVault": {
                 "kalaroa": {
                     "1": 0,
-                    "2": 3,
+                    "2": 2,
                     "5": 0,
-                    "10": 9,
-                    "20": 157,
-                    "50": 51,
-                    "100": 280,
-                    "200": 153,
-                    "500": 1303,
-                    "1000": 798
+                    "10": 8,
+                    "20": 156,
+                    "50": 50,
+                    "100": 279,
+                    "200": 152,
+                    "500": 1302,
+                    "1000": 797
                 },
                 "jhaudanga": {
                     "1": 0,
@@ -109,21 +150,77 @@
                     "1000": 16
                 }
             },
-            "txEditLog": [],
+            "txEditLog": [
+                {
+                    "at": "2026-09-25T20:28:34.620Z",
+                    "id": "besxbaxy6kc",
+                    "role": "admin",
+                    "txId": "p1hmz0ly6kb",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "create",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "p1hmz0ly6kb",
+                        "dir": null,
+                        "bank": null,
+                        "date": "2026-09-26",
+                        "note": "",
+                        "type": "loan_received",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 1887,
+                        "branch": "kalaroa",
+                        "custAcc": "",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "",
+                        "notesOut": {
+                            "2": 1,
+                            "5": 1,
+                            "10": 1,
+                            "20": 1,
+                            "50": 1,
+                            "100": 1,
+                            "200": 1,
+                            "500": 1,
+                            "1000": 1
+                        },
+                        "createdAt": "2026-09-25T20:28:34.619Z",
+                        "updatedAt": "2026-09-25T20:28:34.619Z",
+                        "cashAmount": null,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-26",
+                        "cashNotTaken": false,
+                        "onlineAmount": null,
+                        "userUsername": "admin",
+                        "onlineBankName": null,
+                        "onlineTransfer": false,
+                        "cashNotTakenAmount": null
+                    }
+                }
+            ],
             "dailyClose": {},
             "__lastDevice": {
                 "role": "user",
-                "user": "Jahangir Kabir",
+                "user": "Ashik",
                 "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
-                "location": "Dhaka, Dhaka Division, BD",
-                "username": "jahangir"
+                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                "location": "Khulna, Khulna Division, BD",
+                "username": "ashik"
             },
-            "__lastUpdate": "2026-09-25T16:42:46.570Z",
+            "__lastUpdate": "2026-09-25T22:01:37.757Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 2393989.66,
-                    "cash": 1513886,
+                    "cash": 1513891,
                     "other": 20457.63
                 },
                 "jhaudanga": {
@@ -133,11 +230,11 @@
                 }
             },
             "deletedTxIds": {},
-            "lastBaseDate": "2026-09-25",
+            "lastBaseDate": "2026-09-26",
             "liveAccounts": {
                 "kalaroa": {
-                    "bank": 2393989.66,
-                    "cash": 1513886,
+                    "bank": 2392102.66,
+                    "cash": 1512004,
                     "other": 20457.63
                 },
                 "jhaudanga": {
@@ -154,18 +251,18 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-09-25T16:42:47.551Z",
+                "at": "2026-09-25T22:01:40.259Z",
                 "role": "user",
-                "user": "Jahangir Kabir",
+                "user": "Ashik",
                 "txIds": [],
                 "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
                 "txCount": 0,
                 "txTypes": [],
-                "location": "Dhaka, Dhaka Division, BD",
-                "username": "jahangir"
+                "location": "Khulna, Khulna Division, BD",
+                "username": "ashik"
             },
-            "__lastRolloverDate": "2026-09-25"
+            "__lastRolloverDate": "2026-09-26"
         }
     }
 ]
