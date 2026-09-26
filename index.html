@@ -7,8 +7,8 @@
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংক সিস্টেম">
-<meta name="application-name" content="কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংক সিস্টেম">
+<meta name="apple-mobile-web-app-title" content="কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংকিং">
+<meta name="application-name" content="কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংকিং">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='%23fff'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3Cg transform='translate(50,50)' fill='%23fff'%3E%3Cpath d='M -22 -12 L 0 -28 L 22 -12 Z'/%3E%3Crect x='-18' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-8' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='4' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='14' y='-8' width='4' height='22' rx='1'/%3E%3Crect x='-22' y='14' width='44' height='4' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
@@ -29,7 +29,6 @@ body{font-family:'Noto Sans Bengali',sans-serif;color:var(--txt);background:#040
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes popIn{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes pulseGreen{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 12px rgba(34,197,94,0)}}
-@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}50%{box-shadow:0 0 0 8px rgba(220,38,38,0)}}
 @keyframes pulsePink{0%,100%{box-shadow:0 0 0 0 rgba(236,72,153,.5)}50%{box-shadow:0 0 0 10px rgba(236,72,153,0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
@@ -37,6 +36,17 @@ body{font-family:'Noto Sans Bengali',sans-serif;color:var(--txt);background:#040
 @keyframes notifProgress{from{width:100%}to{width:0%}}
 @keyframes bellRing{0%,100%{transform:rotate(0)}20%{transform:rotate(20deg)}40%{transform:rotate(-18deg)}60%{transform:rotate(12deg)}80%{transform:rotate(-6deg)}}
 @keyframes slideInRT{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes inputFocusPulse{0%{box-shadow:0 0 0 0 rgba(59,130,246,.4)}70%{box-shadow:0 0 0 8px rgba(59,130,246,0)}100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}}
+@keyframes notePopIn{0%{opacity:0;transform:scale(.85) translateY(6px)}60%{transform:scale(1.04) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes noteValueBounce{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes fieldSlideIn{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes cardSlideUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes branchToggleBounce{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes sumLineGlow{0%,100%{box-shadow:inset 0 0 0 rgba(34,197,94,0)}50%{box-shadow:inset 0 0 20px rgba(34,197,94,.15)}}
+@keyframes checkTickPulse{0%{transform:scale(.8);box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{transform:scale(1.15);box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+@keyframes btnRipple{0%{transform:scale(0);opacity:.6}100%{transform:scale(2.5);opacity:0}}
+@keyframes warnShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@keyframes btnShine{0%{left:-100%}100%{left:100%}}
 .rgb{background:linear-gradient(90deg,var(--blue),var(--yellow),var(--green),var(--blue));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
 .sidebar-overlay{position:fixed;inset:0;z-index:400;background:rgba(2,4,10,.6);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .3s}
 .sidebar-overlay.active{opacity:1;pointer-events:auto}
@@ -60,25 +70,30 @@ body{font-family:'Noto Sans Bengali',sans-serif;color:var(--txt);background:#040
 .sb-user{padding:14px 16px;border-radius:14px;background:linear-gradient(145deg,rgba(59,130,246,.1),rgba(34,197,94,.04));border:1px solid var(--line-3);margin-bottom:6px}
 .sb-user .name{font-size:15px;font-weight:800;color:#fff}
 .sb-user .role{font-size:12px;color:var(--green-2);font-weight:700;margin-top:4px}
-.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;background:rgba(4,6,13,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--line-2);transform:translateY(0);transition:transform .35s cubic-bezier(.2,1,.3,1),box-shadow .35s}
+.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;padding:10px 14px;background:rgba(4,6,13,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--line-2);transform:translateY(0);transition:transform .35s cubic-bezier(.2,1,.3,1),box-shadow .35s;overflow-x:auto;overflow-y:visible}
+.topbar::-webkit-scrollbar{height:4px}
+.topbar::-webkit-scrollbar-thumb{background:rgba(59,130,246,.4);border-radius:4px}
 .topbar.hidden-scroll{transform:translateY(-110%)}
 .topbar.scrolled{box-shadow:0 8px 30px rgba(0,0,0,.6)}
-.topbar .tb-left{display:flex;align-items:center;gap:12px;min-width:0}
-.topbar .tb-menu-btn{width:44px;height:44px;border-radius:13px;border:1px solid var(--line-3);background:linear-gradient(145deg,rgba(59,130,246,.18),rgba(34,197,94,.08));color:#fff;cursor:pointer;display:grid;place-items:center;font-size:20px;flex-shrink:0}
-.brand{display:flex;align-items:center;gap:11px;min-width:0}
-.brand .logo{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,rgba(59,130,246,.18),rgba(34,197,94,.1));border:1px solid var(--line-3);flex-shrink:0}
-.brand h1{font-size:17px;font-weight:800}
-.brand p{font-size:11.5px;color:#a5b4d8;margin-top:1px;font-weight:600}
-.topbar .tb-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.tb-branch{font-size:13px;font-weight:700;padding:9px 14px;border-radius:11px;background:linear-gradient(145deg,rgba(59,130,246,.12),rgba(34,197,94,.06));border:1px solid var(--line-3);white-space:nowrap;color:#fff;display:flex;align-items:center;gap:6px}
+.topbar .tb-left{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:0}
+.topbar .tb-right{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;justify-content:flex-end;flex-shrink:0;margin-left:auto}
+.topbar .tb-menu-btn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line-3);background:linear-gradient(145deg,rgba(59,130,246,.18),rgba(34,197,94,.08));color:#fff;cursor:pointer;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.brand .logo{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(145deg,rgba(59,130,246,.18),rgba(34,197,94,.1));border:1px solid var(--line-3);flex-shrink:0}
+.brand .logo svg{width:34px;height:34px}
+.brand h1{font-size:15px;font-weight:800;line-height:1.2}
+.brand p{font-size:10.5px;color:#a5b4d8;margin-top:2px;font-weight:600;line-height:1.2}
+.tb-branch{font-size:12px;font-weight:700;padding:7px 12px;border-radius:11px;background:linear-gradient(145deg,rgba(59,130,246,.12),rgba(34,197,94,.06));border:1px solid var(--line-3);white-space:nowrap;color:#fff;display:flex;align-items:center;gap:6px}
 .tb-branch b{color:var(--green-2);font-weight:800}
-.tb-date{padding:8px 12px;border-radius:11px;background:#080c1a;border:1px solid var(--line-2);color:var(--txt);font-family:inherit;font-size:13px;outline:none}
-.tb-select{padding:9px 14px;border-radius:11px;background:#080c1a;border:1px solid var(--line-3);color:var(--green-2);font-family:inherit;font-size:13px;font-weight:800;outline:none;cursor:pointer}
-.tb-time{font-size:13.5px;font-weight:800;padding:9px 14px;border-radius:11px;background:linear-gradient(145deg,rgba(59,130,246,.15),rgba(34,197,94,.08));border:1px solid var(--line-3);color:var(--green-2);display:flex;align-items:center;gap:6px}
-.tb-time .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green-2);animation:pulseGreen 1.8s ease-in-out infinite}
-.presence-badge{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.4);color:#f9a8d4;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+.tb-date{padding:7px 10px;border-radius:11px;background:#080c1a;border:1px solid var(--line-2);color:var(--txt);font-family:inherit;font-size:12px;outline:none;white-space:nowrap;color-scheme:dark}
+.tb-date::-webkit-calendar-picker-indicator{filter:invert(.6) sepia(1) saturate(3) hue-rotate(180deg);cursor:pointer}
+.tb-select{padding:8px 28px 8px 12px;border-radius:11px;background:#080c1a;border:1px solid var(--line-3);color:var(--green-2);font-family:inherit;font-size:12.5px;font-weight:800;outline:none;cursor:pointer;white-space:nowrap;min-width:160px;max-width:220px;text-overflow:ellipsis;color-scheme:dark}
+.tb-select option{background:#0f1428;color:#f0f4ff;font-weight:700;padding:8px}
+.tb-time{font-size:12px;font-weight:800;padding:7px 12px;border-radius:11px;background:linear-gradient(145deg,rgba(59,130,246,.15),rgba(34,197,94,.08));border:1px solid var(--line-3);color:var(--green-2);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.tb-time .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green-2);animation:pulseGreen 1.8s ease-in-out infinite}
+.presence-badge{font-size:10.5px;padding:5px 10px;border-radius:18px;background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.4);color:#f9a8d4;font-weight:700;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
 .presence-badge b{color:#fff;font-weight:900}
-.queue-badge{font-size:11.5px;padding:6px 12px;border-radius:18px;background:rgba(236,72,153,.15);border:1px solid rgba(236,72,153,.5);color:#f9a8d4;font-weight:800;display:none;align-items:center;gap:5px;cursor:pointer}
+.queue-badge{font-size:10.5px;padding:5px 10px;border-radius:18px;background:rgba(236,72,153,.15);border:1px solid rgba(236,72,153,.5);color:#f9a8d4;font-weight:800;display:none;align-items:center;gap:5px;cursor:pointer;white-space:nowrap}
 .queue-badge.show{display:inline-flex;animation:pulsePink 2s ease-in-out infinite}
 .queue-badge b{color:#fff;font-weight:900}
 .net-banner{position:fixed;top:0;left:0;right:0;z-index:9998;padding:10px 18px;background:linear-gradient(135deg,rgba(220,38,38,.95),rgba(153,27,27,.92));color:#fff;font-weight:800;font-size:13px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.6);transform:translateY(-100%);transition:transform .35s;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
@@ -92,11 +107,19 @@ body{font-family:'Noto Sans Bengali',sans-serif;color:var(--txt);background:#040
 .login-box h1{text-align:center;font-size:24px;font-weight:800;color:#fff;margin-bottom:8px}
 .login-box h2{text-align:center;font-size:13.5px;color:#a5b4d8;font-weight:500;margin-bottom:26px}
 .field{position:relative;z-index:1;margin-bottom:16px}
-.field label{display:block;font-size:13.5px;color:#b8c8ee;margin-bottom:7px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.field input,.field select{width:100%;padding:14px 16px;border-radius:12px;background:#050810;border:1px solid var(--line-2);color:var(--txt);font-family:inherit;font-size:15.5px;font-weight:500;outline:none}
-.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.2)}
-.btn{border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;padding:13px 22px;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--blue),#2563eb);transition:all .2s;box-shadow:0 4px 16px rgba(59,130,246,.35)}
+.field label{display:block;font-size:13.5px;color:#b8c8ee;margin-bottom:7px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;transition:color .25s,letter-spacing .25s}
+.field:focus-within label{color:var(--blue-2);letter-spacing:.8px}
+.field input,.field select,.field textarea{width:100%;padding:14px 16px;border-radius:12px;background:#050810;border:1px solid var(--line-2);color:var(--txt);font-family:inherit;font-size:15.5px;font-weight:500;outline:none;transition:border-color .25s,box-shadow .25s,background .25s,transform .15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.2);animation:inputFocusPulse 1.2s ease-out;transform:translateY(-1px);background:#060a16}
+.field select{color-scheme:dark;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--blue-3) 50%),linear-gradient(135deg,var(--blue-3) 50%,transparent 50%);background-position:calc(100% - 20px) calc(50% - 2px),calc(100% - 15px) calc(50% - 2px);background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:42px;appearance:none;-webkit-appearance:none}
+.field select option{background:#0f1428;color:#f0f4ff;font-weight:600;padding:10px}
+.field select:focus option{background:#0f1428}
+input[type="date"]{color-scheme:dark}
+input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.6) sepia(1) saturate(3) hue-rotate(180deg);cursor:pointer;transition:transform .2s}
+input[type="date"]:hover::-webkit-calendar-picker-indicator{transform:scale(1.15)}
+.btn{border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;padding:13px 22px;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--blue),#2563eb);transition:all .2s;box-shadow:0 4px 16px rgba(59,130,246,.35);position:relative;overflow:hidden}
 .btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn:active{transform:translateY(0) scale(.98)}
 .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
 .btn.block{width:100%}
 .btn.pink{background:linear-gradient(135deg,var(--blue),var(--green))}
@@ -108,47 +131,52 @@ body{font-family:'Noto Sans Bengali',sans-serif;color:var(--txt);background:#040
 .btn.purple{background:linear-gradient(135deg,#a78bfa,#7c3aed)}
 .btn.sm{padding:8px 14px;font-size:13px}
 main{max-width:1500px;margin:0 auto;padding:26px 20px 80px;display:flex;flex-direction:column;gap:26px;align-items:center;animation:fadeInUp .5s}
-.section{width:100%}
-.section-title{display:flex;align-items:center;gap:11px;margin-bottom:16px;font-size:16.5px;font-weight:800;color:#fff;flex-wrap:wrap}
-.section-title span.bar{width:4px;height:26px;border-radius:4px;background:linear-gradient(180deg,var(--blue),var(--yellow),var(--green))}
+.section{width:100%;display:flex;flex-direction:column;align-items:center}
+.section-title{display:flex;align-items:center;justify-content:center;gap:11px;margin-bottom:16px;font-size:22px;font-weight:900;color:#fff;flex-wrap:wrap;text-align:center;width:100%}
+.section-title span.bar{display:none}
+.section-title .auto-badge,.section-title .badge{margin-left:10px;font-size:16px;padding:8px 16px}
 .grid{display:grid;gap:16px;width:100%;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.card{position:relative;cursor:pointer;overflow:hidden;border-radius:22px;padding:20px;background:linear-gradient(155deg,#0f1428,#07091a);border:1px solid var(--line-2);transition:all .35s;animation:fadeInUp .4s backwards}
+.card{position:relative;cursor:pointer;overflow:hidden;border-radius:22px;padding:20px 18px;background:linear-gradient(155deg,#0f1428,#07091a);border:1px solid var(--line-2);transition:all .35s;animation:fadeInUp .4s backwards;text-align:left}
 .card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--blue),var(--yellow),var(--green))}
 .card:hover{transform:translateY(-6px) scale(1.01);border-color:var(--line-3);box-shadow:0 24px 60px rgba(0,0,0,.9)}
-.card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.card-top .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:linear-gradient(145deg,rgba(59,130,246,.2),rgba(34,197,94,.08));border:1px solid var(--line-3)}
-.card-top h3{font-size:15px;font-weight:700;color:#fff}
-.big-amt{font-size:30px;line-height:1.25;font-weight:800;color:#fff}
-.big-amt.sm{font-size:20px;display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.big-amt.sm .lbl{color:#a5b4d8;font-size:13px;font-weight:600;min-width:62px}
-.card-sub{margin-top:10px;font-size:13.5px;color:#a5b4d8;line-height:1.6}
-.card-sub b{color:var(--green-2);font-weight:700}
-.card-tap{position:absolute;right:16px;bottom:14px;font-size:12px;color:var(--dim);opacity:.7}
-.vault-box{width:100%;border-radius:22px;padding:20px;background:linear-gradient(155deg,#0f1428,#07091a);border:1px solid var(--line-2)}
-.vault-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
-.vault-item{flex:1 1 84px;min-width:78px;text-align:center;padding:13px 6px;border-radius:14px;background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(34,197,94,.04));border:1px solid var(--line-2)}
-.vault-item .d{font-size:13.5px;color:#a5b4d8;font-weight:700}
-.vault-item .c{font-size:22px;font-weight:800;margin-top:4px;color:var(--green-2)}
-.vault-total{margin-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding-top:14px;border-top:1px dashed var(--line-2)}
-.vault-total span{font-size:14.5px;color:#a5b4d8;font-weight:600}
-.vault-total b{color:var(--green-2)}
-.balance-panel{width:100%;border-radius:22px;background:linear-gradient(155deg,#0f1428,#07091a);border:1px solid var(--line-2);padding:18px}
-.balance-row-top{display:grid;gap:12px;grid-template-columns:repeat(4,1fr)}
-.balance-cell{padding:16px 14px;border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(0,0,0,.15));border:1px solid var(--line-2);text-align:center}
-.balance-cell .bc-ico{font-size:22px;margin-bottom:6px;display:block}
-.balance-cell .bc-lbl{font-size:12.5px;color:#a5b4d8;font-weight:700;text-transform:uppercase;margin-bottom:8px}
-.balance-cell .bc-lbl.big-label{font-size:15px!important;font-weight:800!important;color:var(--blue-2)!important;text-transform:none!important}
-.balance-cell .bc-val{font-size:19px;font-weight:800;color:#fff}
+.card-top{display:flex;align-items:center;justify-content:flex-start;text-align:left;width:100%;gap:12px;margin-bottom:14px}
+.card-top .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:linear-gradient(145deg,rgba(59,130,246,.2),rgba(34,197,94,.08));border:1px solid var(--line-3);flex-shrink:0}
+.card-top h3{font-size:16px;font-weight:800;color:#fff;text-align:left;line-height:1.4}
+.big-amt{font-size:42px;line-height:1.2;font-weight:900;color:#fff;text-align:left;width:100%;letter-spacing:-.5px}
+.big-amt.sm{font-size:26px;display:flex;align-items:center;gap:10px;margin-bottom:10px;justify-content:flex-start;flex-wrap:wrap;text-align:left}
+.big-amt.sm .lbl{color:#a5b4d8;font-size:20px;font-weight:700;min-width:90px}
+.card-sub{margin-top:12px;font-size:18px;color:#a5b4d8;line-height:1.7;font-weight:700;text-align:left;width:100%}
+.card-sub b{color:var(--green-2);font-weight:900;font-size:20px}
+.card > div:not(.card-top):not(.card-tap){font-size:18px}
+.card > div > span{font-size:18px}
+.card-tap{display:none}
+.vault-box{width:100%;border-radius:22px;padding:20px;background:linear-gradient(155deg,#0f1428,#07091a);border:1px solid var(--line-2);text-align:center;display:flex;flex-direction:column;align-items:center}
+.vault-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;width:100%}
+.vault-item{flex:1 1 100px;min-width:100px;text-align:center;padding:16px 10px;border-radius:14px;background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(34,197,94,.04));border:1px solid var(--line-2)}
+.vault-item .d{font-size:14px;color:#a5b4d8;font-weight:800;text-align:center}
+.vault-item .c{font-size:22px;font-weight:900;margin-top:6px;color:var(--green-2);text-align:center}
+.vault-item .c span{font-size:14px}
+.vault-item > div:last-child{font-size:14px}
+.vault-total{margin-top:18px;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:24px;padding-top:18px;border-top:1px dashed var(--line-2);width:100%;text-align:center}
+.vault-total span{font-size:18px;color:#a5b4d8;font-weight:700}
+.vault-total b{color:var(--green-2);font-size:18px;font-weight:900}
+.balance-panel{width:100%;border-radius:22px;background:linear-gradient(155deg,#0f1428,#07091a);border:1px solid var(--line-2);padding:22px;text-align:center}
+.balance-row-top{display:grid;gap:16px;grid-template-columns:repeat(4,1fr)}
+.balance-cell{padding:22px 16px;border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.03),rgba(0,0,0,.15));border:1px solid var(--line-2);text-align:center}
+.balance-cell .bc-ico{font-size:32px;margin-bottom:10px;display:block;text-align:center}
+.balance-cell .bc-lbl,.balance-cell .bc-lbl.big-label{font-size:17px;color:#a5b4d8;font-weight:800;text-transform:uppercase;margin-bottom:10px;text-align:center}
+.balance-cell .bc-lbl.big-label{color:var(--blue-2)!important;text-transform:none!important}
+.balance-cell .bc-val{font-size:26px;font-weight:900;color:#fff;text-align:center}
 .balance-cell.blue .bc-val{color:var(--blue-2)}
 .balance-cell.green .bc-val{color:var(--green-2)}
 .balance-cell.purple .bc-val{color:#a78bfa}
 .balance-cell.yellow .bc-val{color:var(--yellow-2)}
 .bal-grid{display:grid;gap:16px;width:100%;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:16px}
-.bal-card{border-radius:22px;padding:22px;background:linear-gradient(155deg,#0f1428,#07091a);border:1px solid var(--line-2)}
-.bal-card .t{font-size:13.5px;color:#a5b4d8;font-weight:700;margin-bottom:10px;text-transform:uppercase}
-.bal-card .v{font-size:30px;font-weight:800;color:#fff}
+.bal-card{border-radius:22px;padding:26px 22px;background:linear-gradient(155deg,#0f1428,#07091a);border:1px solid var(--line-2);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.bal-card .t{font-size:18px;color:#a5b4d8;font-weight:800;margin-bottom:12px;text-transform:uppercase;text-align:center;width:100%}
+.bal-card .v{font-size:32px;font-weight:900;color:#fff;line-height:1.2;text-align:center;width:100%}
 .bal-card.main{background:linear-gradient(135deg,#131a35,#0a0f1e 60%,#0f1428);border-color:var(--blue)}
-.bal-card.main .v{font-size:46px;background:linear-gradient(135deg,var(--blue-2),var(--green-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.bal-card.main .v{color:var(--blue-2)}
 .bal-card.capital{border-color:rgba(250,204,21,.45)}
 .bal-card.capital .v{color:var(--yellow-2)}
 .bal-card.deficit{border-color:rgba(220,38,38,.45)}
@@ -170,30 +198,37 @@ main{max-width:1500px;margin:0 auto;padding:26px 20px 80px;display:flex;flex-dir
 .cust-box .head h4{font-size:13px;color:var(--blue-3);font-weight:700;text-transform:uppercase}
 .suggest{margin-top:8px;border-radius:12px;overflow:hidden;border:1px solid var(--line-2);background:#06091a;max-height:240px;overflow-y:auto}
 .suggest:empty{display:none}
-.sug-item{padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--line);font-size:14px;color:#e8eeff;line-height:1.7}
-.sug-item:hover{background:linear-gradient(90deg,rgba(59,130,246,.15),rgba(34,197,94,.08))}
+.sug-item{padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--line);font-size:14px;color:#e8eeff;line-height:1.7;transition:all .2s;animation:fieldSlideIn .25s backwards}
+.sug-item:hover{background:linear-gradient(90deg,rgba(59,130,246,.15),rgba(34,197,94,.08));transform:translateX(4px);border-left:3px solid var(--green)}
 .sug-item b{color:var(--green-2);font-size:14.5px}
 .sug-item small{color:#a5b4d8;font-size:12.5px}
 .notes-cols{display:grid;gap:14px;grid-template-columns:1fr 1fr;margin-top:8px}
-@media(max-width:700px){.notes-cols{grid-template-columns:1fr}}
-.notes-col{padding:16px;border-radius:16px;border:1px solid var(--line-2);background:linear-gradient(145deg,#0a0f1e,#050810)}
-.notes-col.out{border-color:rgba(250,204,21,.3)}
-.notes-col.in{border-color:rgba(34,197,94,.3)}
+.notes-col{padding:16px;border-radius:16px;border:1px solid var(--line-2);background:linear-gradient(145deg,#0a0f1e,#050810);animation:cardSlideUp .4s backwards}
+.notes-col.out{border-color:rgba(250,204,21,.3);animation-delay:.05s}
+.notes-col.in{border-color:rgba(34,197,94,.3);animation-delay:.12s}
 .notes-col h4{font-size:20px;margin-bottom:14px;font-weight:800;color:#fff}
 .notes-col.out h4{color:var(--yellow-2)}
 .notes-col.in h4{color:var(--green-2)}
 .notes-row{display:flex;flex-wrap:wrap;gap:7px;justify-content:space-between}
-.note-item{flex:1 1 54px;min-width:52px;text-align:center}
-.note-item label{display:block;font-size:13.5px;color:#b8c8ee;margin-bottom:6px;font-weight:700}
-.note-item input{width:100%;padding:11px 5px;text-align:center;border-radius:9px;background:#03060d;border:1px solid var(--line-2);color:#fff;font-family:inherit;font-size:15px;font-weight:800;outline:none}
-.note-item input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+.note-item{flex:1 1 54px;min-width:52px;text-align:center;animation:notePopIn .4s backwards;transition:transform .2s}
+.note-item:hover{transform:translateY(-2px)}
+.note-item label{display:block;font-size:13.5px;color:#b8c8ee;margin-bottom:6px;font-weight:700;transition:color .25s}
+.note-item:hover label{color:var(--yellow-2)}
+.notes-col.in .note-item:hover label{color:var(--green-2)}
+.note-item input{width:100%;padding:11px 5px;text-align:center;border-radius:9px;background:#03060d;border:1px solid var(--line-2);color:#fff;font-family:inherit;font-size:15px;font-weight:800;outline:none;transition:border-color .2s,box-shadow .2s,background .2s,transform .15s,color .2s}
+.note-item input:focus{transform:scale(1.05);animation:inputFocusPulse 1s ease-out;background:#040816}
 .notes-col.out .note-item input{color:var(--yellow-2)}
+.notes-col.out .note-item input:focus{border-color:var(--yellow);box-shadow:0 0 0 4px rgba(250,204,21,.15),0 0 20px rgba(250,204,21,.25)}
 .notes-col.in .note-item input{color:var(--green-2)}
-.sum-line{margin-top:12px;font-size:14px;color:#a5b4d8;display:flex;justify-content:space-between;padding-top:10px;border-top:1px dashed var(--line-2)}
+.notes-col.in .note-item input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,.15),0 0 20px rgba(34,197,94,.25)}
+.note-item input.has-value{animation:noteValueBounce .35s cubic-bezier(.2,1.6,.4,1)}
+.sum-line{margin-top:12px;font-size:14px;color:#a5b4d8;display:flex;justify-content:space-between;padding:10px 6px 0;border-top:1px dashed var(--line-2);transition:all .3s;border-radius:6px}
+.sum-line:hover{animation:sumLineGlow 1.6s ease-in-out infinite}
 .sum-line b{font-size:17px;color:#fff}
 .total-preview{margin-top:18px;padding:18px;border-radius:16px;text-align:center;background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(34,197,94,.06));border:1px solid var(--line-3)}
 .total-preview .l{font-size:12.5px;color:var(--blue-3);font-weight:700;text-transform:uppercase}
-.total-preview .v{font-size:32px;margin-top:6px;color:#fff;font-weight:800}
+.total-preview .v{font-size:32px;margin-top:6px;color:#fff;font-weight:800;transition:color .3s,transform .3s}
+.total-preview.pulse .v{animation:noteValueBounce .4s cubic-bezier(.2,1.6,.4,1);color:var(--green-2)}
 .pending-box{margin-top:16px;padding:16px;border-radius:16px;background:linear-gradient(145deg,rgba(250,204,21,.08),rgba(250,204,21,.02));border:1px solid rgba(250,204,21,.35)}
 .pending-box h4{font-size:13.5px;color:var(--yellow);font-weight:800;margin-bottom:12px}
 .pending-empty{color:#a5b4d8;text-align:center;padding:14px;font-size:13.5px}
@@ -203,13 +238,13 @@ main{max-width:1500px;margin:0 auto;padding:26px 20px 80px;display:flex;flex-dir
 .pending-item .info small{color:var(--muted);display:block;margin-top:3px}
 .accept-head{padding:16px;border-radius:16px;margin-bottom:16px;background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(34,197,94,.04));border:1px solid var(--line-3);font-size:14px;line-height:1.9;color:#e0eaff}
 .online-box{margin-top:16px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(59,130,246,.08),rgba(34,197,94,.04));border:1.5px solid var(--blue);display:none}
-.online-box.active{display:block}
+.online-box.active{display:block;animation:cardSlideUp .4s backwards}
 .online-box h4{font-size:14px;font-weight:800;margin-bottom:12px;color:var(--blue-3)}
-.cust-branch-toggle{padding:16px 18px;border-radius:16px;margin-top:8px;margin-bottom:16px;background:linear-gradient(145deg,rgba(59,130,246,.06),rgba(34,197,94,.03));border:1px solid var(--line-2)}
+.cust-branch-toggle{padding:16px 18px;border-radius:16px;margin-top:8px;margin-bottom:16px;background:linear-gradient(145deg,rgba(59,130,246,.06),rgba(34,197,94,.03));border:1px solid var(--line-2);animation:cardSlideUp .4s backwards}
 .cust-branch-toggle .toggle-title{font-size:13px;font-weight:800;color:#fff;margin-bottom:12px;text-transform:uppercase}
 .branch-toggle-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.branch-toggle-btn{padding:13px 20px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;border:1px solid var(--line-2);background:linear-gradient(145deg,#0f1428,#080c1a);color:var(--muted)}
-.branch-toggle-btn.active{background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;border-color:transparent}
+.branch-toggle-btn{padding:13px 20px;border-radius:12px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;border:1px solid var(--line-2);background:linear-gradient(145deg,#0f1428,#080c1a);color:var(--muted);transition:all .25s cubic-bezier(.2,1,.3,1)}
+.branch-toggle-btn.active{background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;border-color:transparent;animation:branchToggleBounce .35s cubic-bezier(.2,1.6,.4,1);box-shadow:0 6px 20px rgba(59,130,246,.4)}
 .table-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--line-2)}
 table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
 table.tbl th{background:linear-gradient(180deg,rgba(59,130,246,.18),rgba(59,130,246,.06));padding:14px;text-align:left;font-weight:700;color:var(--blue-3);font-size:13px;border-bottom:1px solid var(--line-3);text-transform:uppercase}
@@ -222,9 +257,10 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 .badge.pending{background:rgba(250,204,21,.15);border-color:rgba(250,204,21,.5);color:var(--yellow-2)}
 .badge.accepted{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--green-2)}
 .badge.due{background:rgba(220,38,38,.18);border-color:rgba(220,38,38,.5);color:#f87171}
-.mini{border:none;cursor:pointer;background:rgba(59,130,246,.15);color:var(--blue-3);padding:7px 12px;border-radius:8px;font-size:13px;border:1px solid var(--line-3);font-weight:700}
+.mini{border:none;cursor:pointer;background:rgba(59,130,246,.15);color:var(--blue-3);padding:7px 12px;border-radius:8px;font-size:13px;border:1px solid var(--line-3);font-weight:700;transition:all .2s}
 .mini:hover{background:var(--blue);color:#fff}
 .mini.danger{background:rgba(220,38,38,.15);color:#f87171;border-color:rgba(220,38,38,.4)}
+.mini.danger:hover{background:var(--red);color:#fff}
 .mini.accept{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border-color:transparent}
 .mini.cash-btn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-color:transparent}
 .mini.online-btn{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border-color:transparent}
@@ -240,7 +276,9 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 .date-mode-banner .close-mode{margin-left:auto;background:rgba(250,204,21,.2);color:var(--yellow-2);border:1px solid rgba(250,204,21,.5);padding:8px 15px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
 .auto-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.5);color:var(--green-2);font-size:12.5px;font-weight:700}
 .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.2);border-top-color:var(--blue-3);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:8px}
-.pending-transfers-card{cursor:pointer;padding:22px;border-radius:22px;background:linear-gradient(155deg,rgba(59,130,246,.14),rgba(34,197,94,.05));border:1.5px solid rgba(59,130,246,.5)}
+.pending-transfers-card{cursor:pointer;padding:26px;border-radius:22px;background:linear-gradient(155deg,rgba(59,130,246,.14),rgba(34,197,94,.05));border:1.5px solid rgba(59,130,246,.5);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%}
+.pending-transfers-card div{font-size:18px}
+.pending-transfers-card .btn{font-size:18px;padding:16px 32px}
 .sync-indicator{position:fixed;bottom:14px;right:14px;z-index:900;font-size:11px;color:var(--muted);background:rgba(4,6,13,.9);padding:6px 12px;border-radius:20px;border:1px solid var(--line-2);font-weight:600;pointer-events:none}
 .sync-indicator.active{color:var(--green-2);border-color:rgba(34,197,94,.5)}
 .branch-tab{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
@@ -248,9 +286,11 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 .branch-tab-btn.active{background:linear-gradient(135deg,var(--blue),#06b6d4);color:#fff;border-color:transparent}
 .branch-summary-box{padding:14px 16px;border-radius:12px;background:linear-gradient(145deg,rgba(6,182,212,.06),rgba(59,130,246,.03));border:1px dashed rgba(6,182,212,.4);margin-bottom:14px;font-size:13px;color:#d0daf5;line-height:1.85}
 .branch-summary-box b{color:#fff;font-weight:800}
-.online-tick-box{padding:16px 18px;border-radius:16px;margin-top:8px;margin-bottom:16px;background:linear-gradient(145deg,rgba(34,197,94,.08),rgba(59,130,246,.04));border:1px solid rgba(34,197,94,.4)}
-.online-tick-label{display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line-2)}
+.online-tick-box{padding:16px 18px;border-radius:16px;margin-top:8px;margin-bottom:16px;background:linear-gradient(145deg,rgba(34,197,94,.08),rgba(59,130,246,.04));border:1px solid rgba(34,197,94,.4);animation:cardSlideUp .4s backwards}
+.online-tick-label{display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid var(--line-2);transition:all .25s}
+.online-tick-label:hover{background:rgba(59,130,246,.08);border-color:var(--line-3);transform:translateX(2px)}
 .online-tick-label input[type="checkbox"]{width:22px;height:22px;cursor:pointer;accent-color:#22c55e;flex-shrink:0}
+.online-tick-label input[type="checkbox"]:checked{animation:checkTickPulse .5s cubic-bezier(.2,1.4,.4,1)}
 .online-tick-text .title{font-size:14px;font-weight:800;color:#fff}
 .online-tick-text .sub{font-size:12.5px;color:#a5b4d8;margin-top:3px;line-height:1.6}
 .bank-only-box{padding:16px 18px;border-radius:16px;margin-top:8px;margin-bottom:16px;background:linear-gradient(145deg,rgba(139,92,246,.08),rgba(59,130,246,.04));border:1px solid rgba(139,92,246,.4)}
@@ -267,7 +307,7 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 .db-edit-field label{display:block;font-size:12px;color:#a5b4d8;font-weight:700;margin-bottom:4px;text-transform:uppercase}
 .db-edit-field input,.db-edit-field textarea{width:100%;padding:10px 12px;border-radius:8px;background:#050810;border:1px solid var(--line-2);color:#fff;font-family:inherit;font-size:13.5px;outline:none}
 .db-edit-field textarea{min-height:80px;resize:vertical;font-family:'Courier New',monospace;font-size:12.5px}
-.modal-history{margin-top:24px;padding-top:18px;border-top:2px dashed var(--line-3)}
+.modal-history{margin-top:24px;padding-top:18px;border-top:2px dashed var(--line-3);animation:cardSlideUp .5s backwards;animation-delay:.15s}
 .modal-history-title{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:15px;font-weight:800;color:#fff;flex-wrap:wrap}
 .modal-history-title span.bar{width:4px;height:22px;border-radius:4px;background:linear-gradient(180deg,#ec4899,#a855f7)}
 .notif-container{position:fixed;top:78px;right:18px;z-index:99999;display:flex;flex-direction:column;gap:12px;max-width:420px;width:calc(100% - 36px);pointer-events:none}
@@ -303,9 +343,43 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 .notif-actions button.primary{background:linear-gradient(135deg,#22c55e,#16a34a);border-color:transparent;color:#fff}
 .rt-toast{position:fixed;top:78px;right:18px;z-index:9999;padding:13px 18px;border-radius:14px;background:linear-gradient(135deg,rgba(34,197,94,.95),rgba(59,130,246,.9));color:#fff;font-weight:800;font-size:13.5px;box-shadow:0 12px 40px rgba(0,0,0,.85);animation:slideInRT .35s;display:flex;align-items:center;gap:10px;max-width:340px}
 .rt-toast.err{background:linear-gradient(135deg,rgba(220,38,38,.95),rgba(153,27,27,.9))}
+#noteAvailabilityWarning.shake{animation:warnShake .5s cubic-bezier(.2,1.6,.4,1)}
+.btn.green::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent)}
+.btn.green:hover::after{animation:btnShine .8s ease-out}
+::selection{background:var(--blue);color:#fff}
+@media(max-width:900px){
+  .topbar{padding:8px 10px;gap:6px}
+  .topbar .tb-right{gap:6px}
+  .presence-badge,.queue-badge{font-size:9.5px;padding:4px 8px}
+  .tb-branch{font-size:11px;padding:6px 10px}
+  .tb-select{font-size:11.5px;padding:7px 24px 7px 10px;min-width:140px}
+  .tb-date{font-size:11px;padding:6px 8px}
+  .tb-time{font-size:11px;padding:6px 10px}
+  .brand h1{font-size:13px}
+  .brand p{font-size:9.5px}
+  .brand .logo{width:34px;height:34px}
+  .brand .logo svg{width:30px;height:30px}
+  .topbar .tb-menu-btn{width:36px;height:36px;font-size:16px}
+  .balance-row-top{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){.notes-cols{grid-template-columns:1fr}}
 @media(max-width:640px){
-  .brand h1{font-size:15px}.brand p{font-size:10.5px}
-  .topbar{padding:10px 12px}
+  .topbar{padding:8px 8px;gap:4px}
+  .topbar .tb-left{gap:6px}
+  .topbar .tb-right{gap:4px}
+  .presence-badge,.queue-badge{font-size:9px;padding:3px 7px}
+  .presence-badge b,.queue-badge b{font-size:10px}
+  .tb-branch{font-size:10px;padding:5px 8px}
+  .tb-branch b{font-size:10.5px}
+  .tb-select{font-size:10.5px;padding:6px 22px 6px 8px;min-width:120px}
+  .tb-date{font-size:10.5px;padding:6px 8px;max-width:120px}
+  .tb-time{font-size:10.5px;padding:5px 8px}
+  .tb-time .dot{width:5px;height:5px}
+  .brand h1{font-size:12px}
+  .brand p{font-size:9px}
+  .brand .logo{width:30px;height:30px}
+  .brand .logo svg{width:26px;height:26px}
+  .topbar .tb-menu-btn{width:32px;height:32px;font-size:14px}
   main{padding:18px 12px 60px;gap:20px}
   .modal-body{padding:16px}
   .balance-row-top{grid-template-columns:1fr!important}
@@ -314,108 +388,30 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
   table.tbl th,table.tbl td{font-size:12.5px;padding:10px}
   .btn{font-size:14px;padding:12px 18px}
   .mini{font-size:12.5px;padding:6px 10px}
-  .presence-badge,.queue-badge{font-size:10.5px;padding:5px 9px}
   .notif-container{top:70px;right:10px;left:10px;width:auto;max-width:none}
   .notif-card{padding:14px 15px;gap:11px}
   .notif-icon{width:42px;height:42px;font-size:20px;border-radius:12px}
-}
-@keyframes inputFocusPulse{0%{box-shadow:0 0 0 0 rgba(59,130,246,.4)}70%{box-shadow:0 0 0 8px rgba(59,130,246,0)}100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}}
-@keyframes notePopIn{0%{opacity:0;transform:scale(.85) translateY(6px)}60%{transform:scale(1.04) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
-@keyframes noteValueBounce{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
-@keyframes fieldSlideIn{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes cardSlideUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes branchToggleBounce{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
-@keyframes sumLineGlow{0%,100%{box-shadow:inset 0 0 0 rgba(34,197,94,0)}50%{box-shadow:inset 0 0 20px rgba(34,197,94,.15)}}
-@keyframes checkTickPulse{0%{transform:scale(.8);box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{transform:scale(1.15);box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(34,197,94,0)}}
-@keyframes btnRipple{0%{transform:scale(0);opacity:.6}100%{transform:scale(2.5);opacity:0}}
-@keyframes fieldLabelFloat{0%{transform:translateX(0)}50%{transform:translateX(3px)}100%{transform:translateX(0)}}
-@keyframes onlineTickSlide{0%{opacity:0;max-height:0;transform:translateY(-10px)}100%{opacity:1;max-height:400px;transform:translateY(0)}}
-@keyframes modalBodyStagger{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
-@keyframes warnShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
-@keyframes btnShine{0%{left:-100%}100%{left:100%}}
-.modal-body .field,.modal-body .form-row > .field{animation:fieldSlideIn .35s cubic-bezier(.2,1,.3,1) backwards}
-.modal-body .form-row > .field:nth-child(1){animation-delay:.02s}
-.modal-body .form-row > .field:nth-child(2){animation-delay:.06s}
-.modal-body .form-row > .field:nth-child(3){animation-delay:.10s}
-.modal-body .form-row > .field:nth-child(4){animation-delay:.14s}
-.modal-body .form-row > .field:nth-child(5){animation-delay:.18s}
-.modal-body .form-row > .field:nth-child(6){animation-delay:.22s}
-.field input,.field select{transition:border-color .25s,box-shadow .25s,background .25s,transform .15s}
-.field input:focus,.field select:focus{animation:inputFocusPulse 1.2s ease-out;transform:translateY(-1px);background:#060a16}
-.field label{transition:color .25s,transform .25s,letter-spacing .25s}
-.field:focus-within label{color:var(--blue-2);letter-spacing:.8px}
-.note-item{animation:notePopIn .4s cubic-bezier(.2,1,.3,1) backwards;transition:transform .2s}
-.notes-row .note-item:nth-child(1){animation-delay:.02s}
-.notes-row .note-item:nth-child(2){animation-delay:.05s}
-.notes-row .note-item:nth-child(3){animation-delay:.08s}
-.notes-row .note-item:nth-child(4){animation-delay:.11s}
-.notes-row .note-item:nth-child(5){animation-delay:.14s}
-.notes-row .note-item:nth-child(6){animation-delay:.17s}
-.notes-row .note-item:nth-child(7){animation-delay:.20s}
-.notes-row .note-item:nth-child(8){animation-delay:.23s}
-.notes-row .note-item:nth-child(9){animation-delay:.26s}
-.notes-row .note-item:nth-child(10){animation-delay:.29s}
-.note-item:hover{transform:translateY(-2px)}
-.note-item:hover label{color:var(--yellow-2)}
-.notes-col.in .note-item:hover label{color:var(--green-2)}
-.note-item input{transition:border-color .2s,box-shadow .2s,background .2s,transform .15s,color .2s}
-.note-item input:focus{transform:scale(1.05);animation:inputFocusPulse 1s ease-out;background:#040816}
-.notes-col.out .note-item input:focus{border-color:var(--yellow);box-shadow:0 0 0 4px rgba(250,204,21,.15),0 0 20px rgba(250,204,21,.25)}
-.notes-col.in .note-item input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,.15),0 0 20px rgba(34,197,94,.25)}
-.note-item input.has-value{animation:noteValueBounce .35s cubic-bezier(.2,1.6,.4,1)}
-.notes-col,.cust-box,.online-tick-box,.cust-branch-toggle,.bank-only-box,.online-box.active{animation:cardSlideUp .4s cubic-bezier(.2,1,.3,1) backwards}
-.notes-col.out{animation-delay:.05s}
-.notes-col.in{animation-delay:.12s}
-.branch-toggle-btn{transition:all .25s cubic-bezier(.2,1,.3,1)}
-.branch-toggle-btn.active{animation:branchToggleBounce .35s cubic-bezier(.2,1.6,.4,1);box-shadow:0 6px 20px rgba(59,130,246,.4)}
-.sum-line{transition:all .3s;border-radius:6px;padding-left:6px;padding-right:6px}
-.sum-line:hover{animation:sumLineGlow 1.6s ease-in-out infinite}
-.total-preview .v{transition:color .3s,transform .3s}
-.total-preview.pulse .v{animation:noteValueBounce .4s cubic-bezier(.2,1.6,.4,1);color:var(--green-2)}
-.online-tick-label input[type="checkbox"]:checked{animation:checkTickPulse .5s cubic-bezier(.2,1.4,.4,1)}
-.online-tick-label{transition:all .25s}
-.online-tick-label:hover{background:rgba(59,130,246,.08);border-color:var(--line-3);transform:translateX(2px)}
-.online-tick-label:hover .title{animation:fieldLabelFloat 1.5s ease-in-out infinite}
-#onlineTransferDetails,#cashNotTakenInfo{animation:onlineTickSlide .35s cubic-bezier(.2,1,.3,1)}
-.btn{position:relative;overflow:hidden;transition:all .25s cubic-bezier(.2,1,.3,1)}
-.btn:active{transform:translateY(0) scale(.98)}
-.btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,.3);transform:translate(-50%,-50%);pointer-events:none}
-.btn:active::before{animation:btnRipple .6s ease-out;width:20px;height:20px}
-.btn.green{position:relative;overflow:hidden}
-.btn.green::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);transition:none}
-.btn.green:hover::after{animation:btnShine .8s ease-out}
-.modal-body > *{animation:modalBodyStagger .35s cubic-bezier(.2,1,.3,1) backwards}
-.modal-body > *:nth-child(1){animation-delay:.02s}
-.modal-body > *:nth-child(2){animation-delay:.06s}
-.modal-body > *:nth-child(3){animation-delay:.10s}
-.modal-body > *:nth-child(4){animation-delay:.14s}
-.modal-body > *:nth-child(5){animation-delay:.18s}
-.modal-body > *:nth-child(6){animation-delay:.22s}
-.modal-body > *:nth-child(7){animation-delay:.26s}
-.modal-body > *:nth-child(8){animation-delay:.30s}
-#noteAvailabilityWarning.shake{animation:warnShake .5s cubic-bezier(.2,1.6,.4,1)}
-.modal-history{animation:cardSlideUp .5s cubic-bezier(.2,1,.3,1) backwards;animation-delay:.15s}
-input[type="date"]{transition:all .25s}
-input[type="date"]:focus{animation:inputFocusPulse 1s ease-out}
-input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.6) sepia(1) saturate(3) hue-rotate(180deg);cursor:pointer;transition:transform .2s}
-input[type="date"]:hover::-webkit-calendar-picker-indicator{transform:scale(1.15)}
-.sug-item{animation:fieldSlideIn .25s cubic-bezier(.2,1,.3,1) backwards;transition:all .2s}
-.sug-item:nth-child(1){animation-delay:.02s}
-.sug-item:nth-child(2){animation-delay:.05s}
-.sug-item:nth-child(3){animation-delay:.08s}
-.sug-item:nth-child(4){animation-delay:.11s}
-.sug-item:nth-child(5){animation-delay:.14s}
-.sug-item:hover{transform:translateX(4px);border-left:3px solid var(--green)}
-.form-row:hover > .field > label{color:var(--blue-2)}
-@media(max-width:640px){
-  .note-item{animation-duration:.3s}
-  .modal-body > *{animation-duration:.25s}
-  .btn:hover{transform:none}
+  .section-title{font-size:20px}
+  .card .card-top .ico{width:48px;height:48px;font-size:24px}
+  .card .card-top h3{font-size:19px}
+  .big-amt{font-size:34px}
+  .big-amt.sm{font-size:22px}
+  .big-amt.sm .lbl{font-size:17px;min-width:78px}
+  .card-sub{font-size:16px}
+  .card-sub b{font-size:18px}
+  .vault-item .d{font-size:16px}
+  .vault-item .c{font-size:22px}
+  .vault-total span,.vault-total b{font-size:16px}
+  .balance-cell .bc-ico{font-size:26px}
+  .balance-cell .bc-lbl,.balance-cell .bc-lbl.big-label{font-size:15px}
+  .balance-cell .bc-val{font-size:22px}
+  .bal-card .t{font-size:16px}
+  .bal-card .v{font-size:26px}
 }
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-::selection{background:var(--blue);color:#fff}
 </style>
 </head>
+
 <body>
 
 <div id="loginScreen" class="login-wrap">
@@ -489,7 +485,6 @@ const BANKS = {
   other_bank: { name:'অন্যান্য ব্যাংক' }
 };
 const DENOMS = [1000,500,200,100,50,20,10,5,2,1];
-const APP_VERSION = window.APP_VERSION;
 const SKEY = 'cc_agent_bank_session';
 const LOCAL_DB_KEY = 'cc_agent_bank_local';
 const NET_QUEUE_KEY = 'cc_net_queue';
@@ -500,7 +495,10 @@ const LS_TX_LIMIT = 500;
 const PASS_SALT = 'cc_agent_bank_salt_';
 const ARCHIVE_YEARS_AFTER = 2;
 const MASTER_KEY = 'cc_agent_bank_master_x9k7m2p4q8';
-const AUTO_PUSH_DELAY_MS = 500; /* ✅ ০.৫ সেকেন্ডে Supabase-এ auto-send */
+const AUTO_PUSH_DELAY_MS = 500;
+const BACKUP_INTERVAL_MS = 5 * 60 * 1000;
+const MAX_BACKUPS = 100;
+const ACTIVITY_LOG_LIMIT = 500;
 
 const _AK_BYTES = [56, 49, 56, 50];
 function _akDecode(){ try{ return String.fromCharCode.apply(null, _AK_BYTES); }catch(e){ return ''; } }
@@ -712,7 +710,8 @@ function defaultDB(){
     branchCapital[b] = 0;
   });
   return {
-    __version: APP_VERSION, users: defaultUsers(), customers: [], txs: [], txEditLog: [],
+    __version: window.APP_VERSION, users: defaultUsers(), customers: [], txs: [], txEditLog: [],
+    activityLog: [],
     totalCapital: 0, branchCapital,
     baseVault, baseAccounts, liveVault, liveAccounts,
     dailyClose: {}, yearlyArchive: {}, deletedTxIds: {},
@@ -736,6 +735,7 @@ function normalizeDB(){
   });
   if(!Array.isArray(d.customers)) d.customers = [];
   if(!Array.isArray(d.txs)) d.txs = [];
+  if(!Array.isArray(d.activityLog)) d.activityLog = [];
   if(!Array.isArray(d.users) || !d.users.length) d.users = defaultUsers();
   if(!d.lastBaseDate) d.lastBaseDate = todayStr();
   if(!d.__lastRolloverDate) d.__lastRolloverDate = d.lastBaseDate;
@@ -777,6 +777,7 @@ function saveLocalDB(){
       users: db.users || [], customers: db.customers || [],
       txs: (db.txs || []).slice(-LS_TX_LIMIT),
       txEditLog: (db.txEditLog || []).slice(-500),
+      activityLog: (db.activityLog || []).slice(-ACTIVITY_LOG_LIMIT),
       totalCapital: db.totalCapital || 0, branchCapital: db.branchCapital || {},
       baseVault: db.baseVault, baseAccounts: db.baseAccounts,
       liveVault: db.liveVault, liveAccounts: db.liveAccounts,
@@ -790,6 +791,42 @@ function saveLocalDB(){
 function loadLocalDB(){ try{ const raw = safeLS_get(LOCAL_DB_KEY); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }
 
 /* ============ অডিট ট্রেইল ============ */
+function addActivityLog(entry){
+  try{
+    if(!DB().activityLog) DB().activityLog = [];
+    const deviceName = getDeviceName();
+    let outletName = 'অজানা';
+    if(session){
+      if(session.role === 'admin'){
+        const bf = (typeof currentBranchFilter === 'function') ? currentBranchFilter() : 'all';
+        outletName = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || 'অ্যাডমিন');
+      } else { outletName = BRANCHES[session.branch]?.name || session.branch || 'অজানা'; }
+    }
+    const log = {
+      id: uid(),
+      type: entry.type || 'unknown',
+      title: entry.title || '',
+      detail: entry.detail || '',
+      amount: entry.amount || null,
+      targetId: entry.targetId || null,
+      user: session?.name || 'অজানা',
+      username: session?.username || '',
+      role: session?.role || 'user',
+      branch: outletName,
+      device: deviceName,
+      location: (window.__geoCache && window.__geoCache.label) || '',
+      at: new Date().toISOString()
+    };
+    DB().activityLog.push(log);
+    if(DB().activityLog.length > ACTIVITY_LOG_LIMIT) DB().activityLog = DB().activityLog.slice(-ACTIVITY_LOG_LIMIT);
+    return log;
+  }catch(e){ return null; }
+}
+function getAllActivityLogs(){
+  const logs = [...(DB().activityLog || [])];
+  logs.sort((a,b) => (b.at || '').localeCompare(a.at || ''));
+  return logs;
+}
 function addTxLog(txId, action, changes, txSnapshot){
   try{
     if(!DB().txEditLog) DB().txEditLog = [];
@@ -812,6 +849,18 @@ function addTxLog(txId, action, changes, txSnapshot){
     };
     DB().txEditLog.push(log);
     if(DB().txEditLog.length > 2000) DB().txEditLog = DB().txEditLog.slice(-2000);
+    try{
+      if(typeof broadcastActivity === 'function'){
+        const txType = txSnapshot?.type || '';
+        const txTitle = (TX_CFG[txType]?.title) || txType || '';
+        const txAmount = Number(txSnapshot?.amount) || 0;
+        if(action === 'create') broadcastActivity({ type: 'txn_create', txTitle, amount: txAmount, txId });
+        else if(action === 'update') broadcastActivity({ type: 'txn_update', txTitle, amount: txAmount, txId });
+        else if(action === 'delete') broadcastActivity({ type: 'txn_delete', txTitle, amount: txAmount, txId });
+        else if(action === 'accept') broadcastActivity({ type: 'txn_accept', txTitle, amount: txAmount, txId });
+        else if(action === 'collect') broadcastActivity({ type: 'txn_collect', txTitle, amount: txAmount, txId });
+      }
+    }catch(e){}
     return log;
   }catch(e){ return null; }
 }
@@ -875,6 +924,7 @@ let __supabaseClient = null;
 let __remoteSaveTimer = null;
 let __isRemoteReady = false;
 let __realtimeChannel = null;
+let __activityChannel = null;
 let __realtimeStatus = 'offline';
 let __isApplyingRemote = false;
 let __realtimeReconnectAttempts = 0;
@@ -894,9 +944,19 @@ let __notifHistory = [];
 let __lastScrollY = 0;
 let __scrollThreshold = 60;
 let __scrollTicking = false;
-let __autoPushInterval = null; /* ✅ ০.৫s force push interval */
+let __autoPushInterval = null;
+let __autoBackupInterval = null;
 let __lastAutoPushTs = '';
+let __activityCount = 0;
 let session = null, viewBranch = 'all', dashDate = todayStr(), isDateViewMode = false;
+
+window.__bumpActivity = function(){
+  __activityCount++;
+  const el = document.getElementById('activityCount');
+  if(el) el.textContent = toBn(__activityCount);
+  const bdg = document.getElementById('activityBadge');
+  if(bdg){ bdg.style.transform = 'scale(1.18)'; setTimeout(() => { bdg.style.transform = ''; }, 300); }
+};
 
 /* ============ সাউন্ড/ভাইব্রেশন ============ */
 function loadNotifPrefs(){ try{ const p = safeLS_get(NOTIF_PREF_KEY); if(p){ const o = JSON.parse(p); __soundEnabled = o.sound !== false; __vibrationEnabled = o.vibration !== false; } }catch(e){} }
@@ -943,6 +1003,207 @@ function getNetworkType(){
   }catch(e){ return 'unknown'; }
 }
 
+/* ============ Activity Broadcast System ============ */
+function setupActivityChannel(){
+  try{
+    if(!__isRemoteReady || !__supabaseClient) return;
+    if(__activityChannel){ try{ __supabaseClient.removeChannel(__activityChannel); }catch(e){} __activityChannel = null; }
+    __activityChannel = __supabaseClient
+      .channel('cc_activity_broadcast', { config: { broadcast: { self: false } } })
+      .on('broadcast', { event: 'activity' }, (payload) => {
+        try{
+          const data = payload && payload.payload;
+          if(!data || !data.type) return;
+          if(data.senderId && session && data.senderId === session.id) return;
+          handleRemoteActivity(data);
+        }catch(e){}
+      })
+      .subscribe((status) => {
+        if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED'){
+          setTimeout(() => { if(navigator.onLine) setupActivityChannel(); }, 5000);
+        }
+      });
+  }catch(e){}
+}
+function broadcastActivity(data){
+  try{
+    if(!__activityChannel) return;
+    const payload = {
+      ...data,
+      senderId: session?.id || 'anon',
+      senderName: session?.name || 'অজানা',
+      senderUsername: session?.username || '',
+      senderRole: session?.role || 'user',
+      senderBranch: session?.role === 'admin' ? 'অ্যাডমিন' : (BRANCHES[session?.branch]?.name || 'অজানা'),
+      device: getDeviceName(),
+      location: (window.__geoCache && window.__geoCache.label) || 'Kalaroa, Satkhira, BD',
+      at: new Date().toISOString()
+    };
+    __activityChannel.send({ type: 'broadcast', event: 'activity', payload });
+  }catch(e){}
+}
+function handleRemoteActivity(data){
+  try{
+    const info = {
+      user: data.senderName || 'অজানা',
+      username: data.senderUsername || '',
+      role: data.senderRole || 'user',
+      branch: data.senderBranch || 'অজানা',
+      device: data.device || 'অজানা ডিভাইস',
+      location: data.location || 'Kalaroa, Satkhira, BD',
+      time: fmtDateTime(data.at) || 'এইমাত্র'
+    };
+    if(data.type === 'login'){ showActivityToast('🔓', 'ইউজার লগইন করেছেন', info, 'success', '#22c55e', '#16a34a'); playNotifSound('info'); vibrateNotif('info'); }
+    else if(data.type === 'logout'){ showActivityToast('🔒', 'ইউজার লগআউট করেছেন', info, 'warning', '#f59e0b', '#d97706'); playNotifSound('warning'); vibrateNotif('warning'); }
+    else if(data.type === 'txn_create'){ showActivityToast('💸', 'নতুন লেনদেন — ' + (data.txTitle || ''), info, 'success', '#3b82f6', '#2563eb', '৳ ' + fmt(data.amount || 0)); playNotifSound('success'); vibrateNotif('success'); }
+    else if(data.type === 'txn_update'){ showActivityToast('✏️', 'লেনদেন আপডেট — ' + (data.txTitle || ''), info, 'warning', '#eab308', '#ca8a04', '৳ ' + fmt(data.amount || 0)); playNotifSound('warning'); vibrateNotif('warning'); }
+    else if(data.type === 'txn_delete'){ showActivityToast('🗑️', 'লেনদেন ডিলিট — ' + (data.txTitle || ''), info, 'danger', '#dc2626', '#991b1b', '৳ ' + fmt(data.amount || 0)); playNotifSound('danger'); vibrateNotif('danger'); }
+    else if(data.type === 'txn_accept'){ showActivityToast('✅', 'আউটলেট ট্রান্সফার গৃহীত', info, 'success', '#06b6d4', '#0891b2', '৳ ' + fmt(data.amount || 0)); playNotifSound('success'); vibrateNotif('success'); }
+    else if(data.type === 'txn_collect'){ showActivityToast('💰', 'ঋণ সংগ্রহ সম্পন্ন', info, 'success', '#a78bfa', '#7c3aed', '৳ ' + fmt(data.amount || 0)); playNotifSound('success'); vibrateNotif('success'); }
+    else if(data.type === 'user_add'){ showActivityToast('👥', 'নতুন ইউজার তৈরি — ' + esc(data.targetName || ''), info, 'info', '#3b82f6', '#2563eb'); playNotifSound('info'); vibrateNotif('info'); }
+    else if(data.type === 'user_update'){ showActivityToast('👤', 'ইউজার আপডেট — ' + esc(data.targetName || ''), info, 'warning', '#eab308', '#ca8a04'); playNotifSound('warning'); vibrateNotif('warning'); }
+    else if(data.type === 'user_delete'){ showActivityToast('🗑️', 'ইউজার ডিলিট — ' + esc(data.targetName || ''), info, 'danger', '#dc2626', '#991b1b'); playNotifSound('danger'); vibrateNotif('danger'); }
+    else if(data.type === 'password_change'){ showActivityToast('🔑', 'পাসওয়ার্ড পরিবর্তন — ' + esc(data.targetName || ''), info, 'warning', '#eab308', '#ca8a04'); playNotifSound('warning'); vibrateNotif('warning'); }
+    else if(data.type === 'vault_update'){ showActivityToast('🗄️', 'ভল্ট আপডেট — ' + esc(data.targetName || ''), info, 'info', '#06b6d4', '#0891b2'); playNotifSound('info'); vibrateNotif('info'); }
+    else if(data.type === 'backup_create'){ showActivityToast('💾', 'নতুন ব্যাকআপ তৈরি', info, 'info', '#06b6d4', '#0891b2'); }
+    else if(data.type === 'backup_restore'){ showActivityToast('📤', 'ব্যাকআপ রিস্টোর', info, 'warning', '#f59e0b', '#d97706'); playNotifSound('warning'); vibrateNotif('warning'); }
+    else if(data.type === 'cloud_restore'){ showActivityToast('☁️', 'Cloud থেকে রিস্টোর', info, 'warning', '#f59e0b', '#d97706'); playNotifSound('warning'); vibrateNotif('warning'); }
+    else if(data.type === 'clear_all'){ showActivityToast('🚨', 'সব ডেটা মুছে ফেলা হয়েছে', info, 'danger', '#dc2626', '#991b1b'); playNotifSound('danger'); vibrateNotif('danger'); }
+  }catch(e){}
+}
+function showActivityToast(icon, title, info, type, color1, color2, extraBadge){
+  try{
+    if(window.__bumpActivity) window.__bumpActivity();
+    let container = document.getElementById('activityContainer');
+    if(!container){
+      container = document.createElement('div');
+      container.id = 'activityContainer';
+      container.style.cssText = 'position:fixed;top:78px;right:18px;z-index:99998;display:flex;flex-direction:column;gap:12px;max-width:440px;width:calc(100% - 36px);pointer-events:none';
+      document.body.appendChild(container);
+    }
+    const card = document.createElement('div');
+    card.style.cssText = 'pointer-events:auto;position:relative;overflow:hidden;border-radius:18px;padding:16px 18px;background:linear-gradient(150deg,' + color1 + 'E6,' + color2 + 'CC),linear-gradient(150deg,#0f1428,#06091a);background-blend-mode:overlay;border:1.5px solid ' + color1 + ';box-shadow:0 24px 60px rgba(0,0,0,.95);animation:notifSlide .35s cubic-bezier(.2,1,.3,1);display:flex;gap:14px;align-items:flex-start;backdrop-filter:blur(14px);cursor:pointer';
+    const roleBadge = info.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার';
+    card.innerHTML = '<div style="width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:24px;flex-shrink:0;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.4)">' + icon + '</div>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-size:14.5px;font-weight:900;color:#fff;line-height:1.45;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">' + esc(title) + (extraBadge ? '<span style="font-size:11.5px;padding:3px 9px;border-radius:7px;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);font-weight:800">' + extraBadge + '</span>' : '') + '</div>' +
+        '<div style="display:grid;gap:5px;font-size:12.5px;color:#fff">' +
+          '<div style="display:flex;align-items:center;gap:8px"><span style="width:18px;text-align:center">👤</span><span><b>' + esc(info.user) + '</b> <span style="opacity:.85;font-size:11.5px">(' + roleBadge + ')</span></span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px"><span style="width:18px;text-align:center">🏦</span><span>' + esc(info.branch) + '</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px"><span style="width:18px;text-align:center">📍</span><span>' + esc(info.location) + '</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px"><span style="width:18px;text-align:center">📱</span><span style="font-size:11.5px;opacity:.92">' + esc(info.device) + '</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px"><span style="width:18px;text-align:center">🕐</span><span style="font-size:11.5px;opacity:.92">' + esc(info.time) + '</span></div>' +
+        '</div>' +
+      '</div>' +
+      '<button class="act-close" style="background:rgba(255,255,255,.18);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;flex-shrink:0">✕</button>' +
+      '<div style="position:absolute;bottom:0;left:0;height:3px;background:rgba(255,255,255,.6);animation:notifProgress linear forwards;animation-duration:9000ms;width:100%"></div>';
+    container.appendChild(card);
+    const closeIt = () => { card.style.transition = 'all .3s'; card.style.transform = 'translateX(420px)'; card.style.opacity = '0'; setTimeout(() => card.remove(), 320); };
+    card.querySelector('.act-close').addEventListener('click', (e) => { e.stopPropagation(); closeIt(); });
+    card.addEventListener('click', (e) => { if(e.target.closest('button')) return; closeIt(); });
+    setTimeout(closeIt, 9000);
+    while(container.children.length > 5) container.firstChild.remove();
+  }catch(e){}
+}
+
+/* ============ Cloud Backup System ============ */
+async function createCloudBackup(reason){
+  try{
+    if(!__isRemoteReady || !__supabaseClient) return null;
+    if(!navigator.onLine) return null;
+    if(!window.__hasSyncedOnce) return null;
+    const now = new Date();
+    const stamp = String(now.getFullYear()) + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '_' + String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0') + String(now.getSeconds()).padStart(2,'0') + '_' + Math.random().toString(36).slice(2,5);
+    const backupId = 'cc_agent_bank_bak_' + stamp;
+    const dbCopy = JSON.parse(JSON.stringify(DB()));
+    dbCopy.__backupInfo = {
+      reason: reason || 'auto',
+      createdAt: now.toISOString(),
+      createdBy: session?.name || 'সিস্টেম',
+      username: session?.username || '',
+      branch: session?.role === 'admin' ? 'অ্যাডমিন' : (BRANCHES[session?.branch]?.name || ''),
+      device: getDeviceName(),
+      location: (window.__geoCache && window.__geoCache.label) || '',
+      txCount: (dbCopy.txs||[]).length,
+      customerCount: (dbCopy.customers||[]).length,
+      userCount: (dbCopy.users||[]).length,
+      totalCapital: dbCopy.totalCapital || 0
+    };
+    const payload = { id: backupId, data: dbCopy, updated_at: now.toISOString() };
+    const res = await withTimeout(__supabaseClient.from(window.SUPABASE_TABLE).upsert(payload, { onConflict: 'id' }), 20000, { error: { message: 'timeout' } });
+    if(res && res.error) throw new Error(res.error.message);
+    await cleanupOldCloudBackups();
+    try{ broadcastActivity({ type: 'backup_create', reason: reason || 'auto' }); }catch(e){}
+    addActivityLog({ type: 'backup_create', title: '💾 Cloud ব্যাকআপ তৈরি', detail: backupReasonLabel(reason || 'auto') });
+    console.log('✅ Cloud backup created:', backupId);
+    return backupId;
+  }catch(e){
+    console.warn('❌ Backup failed:', e);
+    return null;
+  }
+}
+async function listCloudBackups(){
+  try{
+    if(!__isRemoteReady || !__supabaseClient) return [];
+    if(!navigator.onLine) return [];
+    const res = await withTimeout(__supabaseClient.from(window.SUPABASE_TABLE).select('id, data, updated_at').like('id', 'cc_agent_bank_bak_%').order('updated_at', { ascending: false }).limit(150), 15000, { data: null });
+    if(!res || !res.data) return [];
+    return res.data.map(row => {
+      const d = row.data || {};
+      const info = d.__backupInfo || {};
+      return {
+        id: row.id,
+        updatedAt: row.updated_at || info.createdAt,
+        reason: info.reason || 'auto',
+        createdBy: info.createdBy || '—',
+        username: info.username || '',
+        branch: info.branch || '—',
+        device: info.device || '—',
+        location: info.location || '—',
+        txCount: (d.txs || []).length,
+        customerCount: (d.customers || []).length,
+        userCount: (d.users || []).length,
+        totalCapital: d.totalCapital || 0,
+        raw: d
+      };
+    });
+  }catch(e){ return []; }
+}
+async function cleanupOldCloudBackups(){
+  try{
+    if(!__isRemoteReady || !__supabaseClient) return;
+    const res = await withTimeout(__supabaseClient.from(window.SUPABASE_TABLE).select('id, updated_at').like('id', 'cc_agent_bank_bak_%').order('updated_at', { ascending: false }), 12000, { data: null });
+    if(!res || !res.data || res.data.length <= MAX_BACKUPS) return;
+    const toDelete = res.data.slice(MAX_BACKUPS).map(r => r.id);
+    if(toDelete.length === 0) return;
+    await __supabaseClient.from(window.SUPABASE_TABLE).delete().in('id', toDelete);
+  }catch(e){}
+}
+function startAutoCloudBackup(){
+  if(__autoBackupInterval) clearInterval(__autoBackupInterval);
+  __autoBackupInterval = setInterval(() => {
+    try{
+      if(navigator.onLine && window.__hasSyncedOnce && session){
+        createCloudBackup('auto-5min');
+      }
+    }catch(e){}
+  }, BACKUP_INTERVAL_MS);
+  console.log('✅ Auto cloud backup started (every 5 min)');
+}
+function backupReasonLabel(reason){
+  const map = {
+    'auto-5min': '⏰ অটো (৫ মিনিট)',
+    'auto-6h': '⏰ অটো (৬ ঘণ্টা)',
+    'login': '🔓 লগইন',
+    'logout': '🔒 লগআউট',
+    'manual': '👤 ম্যানুয়াল',
+    'before-clear': '⚠️ ক্লিয়ার-পূর্ব',
+    'before-restore': '🔄 রিস্টোর-পূর্ব',
+    'daily': '📅 দৈনিক'
+  };
+  return map[reason] || '📦 ' + reason;
+}
+
 /* ============ Supabase ============ */
 function initSupabase(){
   try{
@@ -956,15 +1217,16 @@ function initSupabase(){
     const ind = document.getElementById('syncIndicator');
     if(ind){ ind.textContent = 'ক্লাউড ✓'; ind.classList.add('active'); setTimeout(()=>{ ind.classList.remove('active'); ind.textContent = 'সিঙ্ক'; }, 2000); }
     setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 100);
+    setTimeout(() => { try{ setupActivityChannel(); }catch(e){} }, 200);
     pullRemoteDB().catch(()=> { setTimeout(() => pullRemoteDB().catch(()=>{}), 3000); });
     startAutoPush();
+    startAutoCloudBackup();
   }catch(e){
     __supabaseClient = null; __isRemoteReady = false;
     setTimeout(() => { try{ initSupabase(); }catch(e2){} }, 5000);
   }
 }
 
-/* ✅ প্রতি ০.৫ সেকেন্ডে Supabase-এ পরিবর্তন থাকলে auto-push */
 function startAutoPush(){
   if(__autoPushInterval) clearInterval(__autoPushInterval);
   __autoPushInterval = setInterval(() => {
@@ -1017,7 +1279,7 @@ function queueRemoteSave(){
   if(!__isRemoteReady || !__supabaseClient) return;
   if(!window.__hasSyncedOnce){ return; }
   if(__remoteSaveTimer) clearTimeout(__remoteSaveTimer);
-  __remoteSaveTimer = setTimeout(pushRemoteDB, AUTO_PUSH_DELAY_MS); /* ✅ ০.৫ সেকেন্ড */
+  __remoteSaveTimer = setTimeout(pushRemoteDB, AUTO_PUSH_DELAY_MS);
 }
 function setupRealtime(){
   if(!__isRemoteReady || !__supabaseClient) return;
@@ -1076,15 +1338,9 @@ function handleRealtimeUpdate(payload){
           showNativeNotif('💸 নতুন লেনদেন — ৳ ' + fmt(tx.amount), (TX_CFG[tx.type]?.title || tx.type) + ' • ' + (BRANCHES[tx.branch]?.name || '') + (tx.custName ? ' • ' + tx.custName : ''), null);
         }, idx * 600);
       });
+      showDetailedRTToast({ device: updateInfo.device || 'অজানা ডিভাইস', user: updateInfo.user || 'অজানা ইউজার', branch: updateInfo.branch || 'অজানা', role: updateInfo.role || 'user', location: updateInfo.location || 'Kalaroa, Satkhira, BD', time: updateInfo.at ? fmtDateTime(updateInfo.at) : 'এইমাত্র', txCount: newTxs.length, txTypes: newTxs.map(t => TX_CFG[t.type]?.title || t.type) });
     } else {
-      showDetailedRTToast({
-        device: updateInfo.device || 'অজানা ডিভাইস',
-        user: updateInfo.user || 'অজানা ইউজার',
-        branch: updateInfo.branch || 'অজানা',
-        role: updateInfo.role || 'user',
-        location: updateInfo.location || 'Kalaroa, Satkhira, BD',
-        time: updateInfo.at ? fmtDateTime(updateInfo.at) : 'এইমাত্র'
-      });
+      showDetailedRTToast({ device: updateInfo.device || 'অজানা ডিভাইস', user: updateInfo.user || 'অজানা ইউজার', branch: updateInfo.branch || 'অজানা', role: updateInfo.role || 'user', location: updateInfo.location || 'Kalaroa, Satkhira, BD', time: updateInfo.at ? fmtDateTime(updateInfo.at) : 'এইমাত্র', txCount: 0, txTypes: [] });
     }
     __isApplyingRemote = false;
   }catch(e){ __isApplyingRemote = false; }
@@ -1107,7 +1363,8 @@ function showDetailedRTToast(info){
     el.id = 'rtDetailToast'; el.className = 'rt-toast';
     el.style.cssText = 'position:fixed;top:78px;right:18px;z-index:9999;padding:16px 20px;border-radius:18px;background:linear-gradient(135deg,rgba(34,197,94,.96),rgba(59,130,246,.94));color:#fff;font-weight:700;font-size:13.5px;box-shadow:0 16px 50px rgba(0,0,0,.9);display:flex;flex-direction:column;gap:10px;max-width:440px;border:1.5px solid rgba(255,255,255,.3);animation:slideInRT .35s;';
     const roleBadge = info.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার';
-    el.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:22px;flex-shrink:0">🔄</div><div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:900;line-height:1.4">অন্য ডিভাইস থেকে আপডেট এসেছে</div><div style="font-size:11.5px;opacity:.9;margin-top:2px">'+esc(info.time)+'</div></div><button id="rtDetailClose" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;flex-shrink:0">✕</button></div><div style="padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.2);display:grid;gap:8px;font-size:12.5px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">👤</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ইউজার</div><div style="font-weight:900;font-size:13px">'+esc(info.user)+' <span style="font-size:11px;opacity:.85">('+roleBadge+')</span></div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">🏦</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">আউটলেট</div><div style="font-weight:800;font-size:12.5px">'+esc(info.branch)+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📍</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">লোকেশন</div><div style="font-weight:800;font-size:12.5px">'+esc(info.location || 'Kalaroa, Satkhira, BD')+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📱</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ডিভাইস</div><div style="font-weight:800;font-size:12.5px">'+esc(info.device)+'</div></div></div></div>';
+    const txInfo = (info.txCount && info.txCount > 0) ? '<div style="margin-top:8px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);font-size:12.5px"><b>📊 ' + toBn(info.txCount) + ' টি লেনদেন</b></div>' : '';
+    el.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:22px;flex-shrink:0">🔄</div><div style="flex:1;min-width:0"><div style="font-size:14.5px;font-weight:900;line-height:1.4">অন্য ডিভাইস থেকে আপডেট এসেছে</div><div style="font-size:11.5px;opacity:.9;margin-top:2px">'+esc(info.time)+'</div></div><button id="rtDetailClose" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;flex-shrink:0">✕</button></div><div style="padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.2);display:grid;gap:8px;font-size:12.5px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">👤</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ইউজার</div><div style="font-weight:900;font-size:13px">'+esc(info.user)+' <span style="font-size:11px;opacity:.85">('+roleBadge+')</span></div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">🏦</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">আউটলেট</div><div style="font-weight:800;font-size:12.5px">'+esc(info.branch)+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📍</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">লোকেশন</div><div style="font-weight:800;font-size:12.5px">'+esc(info.location || 'Kalaroa, Satkhira, BD')+'</div></div></div><div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px">📱</span><div><div style="font-size:10.5px;opacity:.75;text-transform:uppercase;font-weight:800;letter-spacing:.4px">ডিভাইস</div><div style="font-weight:800;font-size:12.5px">'+esc(info.device)+'</div></div></div></div>'+txInfo;
     document.body.appendChild(el);
     el.querySelector('#rtDetailClose').addEventListener('click', () => { el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; setTimeout(() => el.remove(), 350); });
     setTimeout(() => { if(el.parentNode){ el.style.transition = '.4s'; el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; setTimeout(() => el.remove(), 420); } }, 9000);
@@ -1163,15 +1420,7 @@ function decideNotifIcon(tx){ const cfg = TX_CFG[tx.type] || { icon: '🔔' }; r
 function notifyTransaction(tx, sourceLabel){
   if(!tx) return;
   const type = decideNotifType(tx);
-  showNotifToast({
-    type, icon: decideNotifIcon(tx), badge: sourceLabel || 'নতুন',
-    title: '💸 নতুন লেনদেন', body: buildTxNotifBody(tx),
-    duration: type === 'danger' ? 12000 : 9000,
-    actions: [
-      { label: '👁️ বিস্তারিত', cls: '', onClick: () => { openTxDetail(tx.id); } },
-      { label: '📋 সব লেনদেন', cls: 'primary', onClick: () => { openAllData(); } }
-    ]
-  });
+  showNotifToast({ type, icon: decideNotifIcon(tx), badge: sourceLabel || 'নতুন', title: '💸 নতুন লেনদেন', body: buildTxNotifBody(tx), duration: type === 'danger' ? 12000 : 9000, actions: [ { label: '👁️ বিস্তারিত', cls: '', onClick: () => { openTxDetail(tx.id); } }, { label: '📋 সব লেনদেন', cls: 'primary', onClick: () => { openAllData(); } } ] });
 }
 async function requestNotifPermission(){
   try{ if(!('Notification' in window)) return false; if(Notification.permission === 'granted') return true; if(Notification.permission === 'denied') return false; const p = await Notification.requestPermission(); return p === 'granted'; }catch(e){ return false; }
@@ -1281,7 +1530,7 @@ function attachNetworkListeners(){
   window.addEventListener('online', () => {
     __isOnline = true; __retryCount = 0;
     showNetBanner(true, '✅ ইন্টারনেট ফিরে এসেছে — সিঙ্ক হচ্ছে...');
-    setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 500);
+    setTimeout(() => { try{ setupRealtime(); setupActivityChannel(); }catch(e){} }, 500);
     setTimeout(() => forceSyncNow(), 800);
   });
   window.addEventListener('offline', () => {
@@ -1297,7 +1546,7 @@ function attachNetworkListeners(){
         const isSwitch = (oldType === 'wifi' && newType === 'cellular') || (oldType === 'cellular' && newType === 'wifi') || (oldType !== newType && newType !== 'unknown');
         if(isSwitch && !__switchInProgress){
           __switchInProgress = true; __lastNetType = newType;
-          setTimeout(() => { try{ setupRealtime(); }catch(e){} }, 300);
+          setTimeout(() => { try{ setupRealtime(); setupActivityChannel(); }catch(e){} }, 300);
           setTimeout(() => { forceSyncNow(); __switchInProgress = false; }, 1200);
           return;
         }
@@ -1659,7 +1908,7 @@ async function saveDB(){
   try{
     if(!DB()){ __savePending = false; return; }
     DB().__lastUpdate = new Date().toISOString();
-    DB().__version = APP_VERSION;
+    DB().__version = window.APP_VERSION;
     if(DB().branchCapital) DB().totalCapital = Object.values(DB().branchCapital).reduce((s,v)=> s + (Number(v)||0), 0);
     saveLocalDB();
     if(window.__hasSyncedOnce){ queueRemoteSave(); }
@@ -1668,6 +1917,8 @@ async function saveDB(){
     if(__saveAgain){ __saveAgain = false; setTimeout(saveDB, 50); }
   }
 }
+
+
 
 /* ============ মডাল ============ */
 function openModal({ title, bodyHTML, wide=false, xwide=false, onMount }){
@@ -1779,10 +2030,11 @@ function printDashboardSnapshot(){
 /* ============ অডিট লগ ============ */
 function openAuditLogModal(){
   const logs = getAllTxLogs();
-  if(!logs.length){ openModal({ title: '📜 সব লেনদেনের ইতিহাস', wide: true, bodyHTML: '<div class="empty">📭 এখনো কোনো ইতিহাস নেই</div>' }); return; }
+  const activity = getAllActivityLogs();
+  if(!logs.length && !activity.length){ openModal({ title: '📜 সব লেনদেনের ইতিহাস', wide: true, bodyHTML: '<div class="empty">📭 এখনো কোনো ইতিহাস নেই</div>' }); return; }
   const actionLabels = { create:{label:'🆕 তৈরি',color:'#22c55e'}, update:{label:'✏️ আপডেট',color:'#facc15'}, delete:{label:'🗑️ ডিলিট',color:'#dc2626'}, accept:{label:'✅ গ্রহণ',color:'#06b6d4'}, collect:{label:'💰 সংগ্রহ',color:'#a78bfa'} };
-  let filterAction = 'all', filterUser = 'all', filterTxId = '';
-  function buildTable(){
+  let filterAction = 'all', filterUser = 'all', filterTxId = '', activeTab = 'txn';
+  function buildTxnTable(){
     let filtered = logs.slice();
     if(filterAction !== 'all') filtered = filtered.filter(l => l.action === filterAction);
     if(filterUser !== 'all') filtered = filtered.filter(l => l.username === filterUser);
@@ -1802,14 +2054,36 @@ function openAuditLogModal(){
       return '<div style="padding:10px 12px;border-radius:10px;background:linear-gradient(145deg,#0f1428,#07091a);border:1px solid ' + a.color.replace(')', ',.35)').replace('rgb','rgba') + ';margin-bottom:8px;cursor:pointer" data-log-txid="' + esc(log.txId) + '"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:900;color:' + a.color + ';background:' + a.color.replace(')', ',.15)').replace('rgb','rgba') + ';border:1px solid ' + a.color + '">' + a.label + '</div><div style="margin-top:6px;font-size:12.5px;color:#fff;font-weight:800">👤 ' + esc(log.user) + ' <span style="color:#7a8ab8;font-weight:600;font-size:11px">(' + (log.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার') + ')</span></div><div style="margin-top:3px;font-size:11.5px;color:#a5b4d8">🏦 ' + esc(log.branch) + ' • 📱 ' + esc(log.device) + (log.location ? ' • 📍 ' + esc(log.location) : '') + '</div><div style="margin-top:5px;font-size:12px;color:#fde047"><b>' + txLabel + '</b> • <b style="color:#4ade80">' + txAmt + '</b>' + (changeSummary ? ' <span style="color:#7a8ab8">|</span> ' + changeSummary : '') + '</div></div><div style="text-align:right;font-size:11px;color:#93c5fd;font-weight:700;white-space:nowrap">' + esc(fmtDateTime(log.at)) + '</div></div></div>';
     }).join('') + '</div>';
   }
-  const users = [...new Set(logs.map(l => l.username).filter(Boolean))];
+  function buildActivityTable(){
+    let filtered = activity.slice();
+    if(filterUser !== 'all') filtered = filtered.filter(l => l.username === filterUser);
+    if(!filtered.length) return '<div class="empty">📭 কোনো এন্ট্রি নেই</div>';
+    return '<div style="max-height:60vh;overflow-y:auto">' + filtered.slice(0, 500).map(log => {
+      const typeColors = { login:'#22c55e', logout:'#f59e0b', txn_create:'#3b82f6', txn_update:'#eab308', txn_delete:'#dc2626', txn_accept:'#06b6d4', txn_collect:'#a78bfa', user_add:'#3b82f6', user_update:'#eab308', user_delete:'#dc2626', password_change:'#eab308', vault_update:'#06b6d4', backup_create:'#06b6d4', backup_restore:'#f59e0b', cloud_restore:'#f59e0b', clear_all:'#dc2626' };
+      const col = typeColors[log.type] || '#7a8ab8';
+      return '<div style="padding:10px 12px;border-radius:10px;background:linear-gradient(145deg,#0f1428,#07091a);border:1px solid ' + col + '55;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="font-size:13px;color:#fff;font-weight:800">' + esc(log.title || log.type) + '</div>' + (log.detail ? '<div style="margin-top:4px;font-size:12px;color:#a5b4d8">' + esc(log.detail) + '</div>' : '') + '<div style="margin-top:5px;font-size:11.5px;color:#93c5fd">👤 ' + esc(log.user) + ' • 🏦 ' + esc(log.branch) + ' • 📱 ' + esc(log.device) + '</div>' + (log.location ? '<div style="margin-top:3px;font-size:11px;color:#7a8ab8">📍 ' + esc(log.location) + '</div>' : '') + '</div><div style="text-align:right;font-size:11px;color:#93c5fd;font-weight:700;white-space:nowrap">' + esc(fmtDateTime(log.at)) + '</div></div></div>';
+    }).join('') + '</div>';
+  }
+  const users = [...new Set([...logs.map(l => l.username), ...activity.map(l => l.username)].filter(Boolean))];
   const userOptions = '<option value="all">— সব ইউজার —</option>' + users.map(u => '<option value="' + esc(u) + '">' + esc(u) + '</option>').join('');
-  openModal({ title: '📜 সব লেনদেনের ইতিহাস (' + toBn(logs.length) + ' এন্ট্রি)', xwide: true,
-    bodyHTML: '<div class="accept-head" style="margin-bottom:12px"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px"><div><div style="color:#a5b4d8;font-size:12px;font-weight:700">📊 মোট এন্ট্রি</div><div style="color:#fff;font-size:20px;font-weight:900">' + toBn(logs.length) + '</div></div><div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🆕 তৈরি</div><div style="color:#4ade80;font-size:20px;font-weight:900">' + toBn(logs.filter(l=>l.action==='create').length) + '</div></div><div><div style="color:#a5b4d8;font-size:12px;font-weight:700">✏️ আপডেট</div><div style="color:#facc15;font-size:20px;font-weight:900">' + toBn(logs.filter(l=>l.action==='update').length) + '</div></div><div><div style="color:#a5b4d8;font-size:12px;font-weight:700">🗑️ ডিলিট</div><div style="color:#f87171;font-size:20px;font-weight:900">' + toBn(logs.filter(l=>l.action==='delete').length) + '</div></div></div></div><div class="form-row" style="margin-bottom:12px"><div class="field"><label>কাজ</label><select id="al_action"><option value="all">— সব —</option><option value="create">🆕 তৈরি</option><option value="update">✏️ আপডেট</option><option value="delete">🗑️ ডিলিট</option><option value="accept">✅ গ্রহণ</option><option value="collect">💰 সংগ্রহ</option></select></div><div class="field"><label>ইউজার</label><select id="al_user">' + userOptions + '</select></div><div class="field"><label>Tx ID</label><input type="text" id="al_txid" placeholder="আইডি লিখুন..." autocomplete="off"></div></div><div id="al_body"></div>',
+  openModal({ title: '📜 সম্পূর্ণ ইতিহাস (' + toBn(logs.length + activity.length) + ' এন্ট্রি)', xwide: true,
+    bodyHTML: '<div class="db-tabs" style="margin-bottom:12px"><button class="db-tab-btn active" data-hist-tab="txn">💸 লেনদেন ইতিহাস <span class="cnt">' + toBn(logs.length) + '</span></button><button class="db-tab-btn" data-hist-tab="activity">🔔 ইউজার অ্যাক্টিভিটি <span class="cnt">' + toBn(activity.length) + '</span></button></div><div id="hist_filter_row"><div class="form-row" style="margin-bottom:12px"><div class="field" id="hf_action_wrap"><label>কাজ</label><select id="al_action"><option value="all">— সব —</option><option value="create">🆕 তৈরি</option><option value="update">✏️ আপডেট</option><option value="delete">🗑️ ডিলিট</option><option value="accept">✅ গ্রহণ</option><option value="collect">💰 সংগ্রহ</option></select></div><div class="field"><label>ইউজার</label><select id="al_user">' + userOptions + '</select></div><div class="field" id="hf_txid_wrap"><label>Tx ID</label><input type="text" id="al_txid" placeholder="আইডি লিখুন..." autocomplete="off"></div></div></div><div id="al_body"></div>',
     onMount: (w) => {
       const bodyEl = w.querySelector('#al_body');
-      function refresh(){ bodyEl.innerHTML = buildTable(); bindRows(); }
-      function bindRows(){ bodyEl.querySelectorAll('[data-log-txid]').forEach(el => { el.addEventListener('click', () => { const txId = el.dataset.logTxid; if(findTxAnywhere(txId)) openTxHistoryModal(txId); else toast('❌ লেনদেন পাওয়া যায়নি'); }); }); }
+      function refresh(){
+        if(activeTab === 'txn'){ bodyEl.innerHTML = buildTxnTable(); bindTxnRows(); }
+        else { bodyEl.innerHTML = buildActivityTable(); }
+      }
+      function bindTxnRows(){ bodyEl.querySelectorAll('[data-log-txid]').forEach(el => { el.addEventListener('click', () => { const txId = el.dataset.logTxid; if(findTxAnywhere(txId)) openTxHistoryModal(txId); else toast('❌ লেনদেন পাওয়া যায়নি'); }); }); }
+      w.querySelectorAll('[data-hist-tab]').forEach(btn => btn.addEventListener('click', () => {
+        w.querySelectorAll('[data-hist-tab]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTab = btn.dataset.histTab;
+        const aw = w.querySelector('#hf_action_wrap'), tw = w.querySelector('#hf_txid_wrap');
+        if(activeTab === 'activity'){ aw.style.display = 'none'; tw.style.display = 'none'; }
+        else { aw.style.display = ''; tw.style.display = ''; }
+        refresh();
+      }));
       w.querySelector('#al_action').addEventListener('change', e => { filterAction = e.target.value; refresh(); });
       w.querySelector('#al_user').addEventListener('change', e => { filterUser = e.target.value; refresh(); });
       w.querySelector('#al_txid').addEventListener('input', e => { filterTxId = e.target.value; refresh(); });
@@ -1911,6 +2185,7 @@ async function receiveTransferDirect(id){
   const nowISO = new Date().toISOString();
   updateTxAnywhere(id, { accepted: true, acceptedDate: todayStr(), acceptedAt: nowISO, acceptedBy: session.name, updatedAt: nowISO });
   addTxLog(id, 'accept', { accepted: { from: false, to: true }, acceptedBy: { from: '', to: session.name } }, t);
+  addActivityLog({ type: 'txn_accept', title: '✅ আউটলেট ট্রান্সফার গৃহীত', detail: (BRANCHES[t.from]?.name||'') + ' ➜ ' + (BRANCHES[t.to]?.name||''), amount: t.amount, targetId: id });
   recomputeLive(); await saveDB();
   try{ await pushRemoteDB(true); }catch(e){}
   toast('✅ গ্রহণ — ৳ ' + fmt(t.amount));
@@ -2001,12 +2276,13 @@ function renderTopbar(){
   const bf = currentBranchFilter();
   const bl = bf === 'all' ? 'উভয় আউটলেট' : (BRANCHES[bf]?.name || bf);
   const isAdmin = session.role === 'admin';
-  $('#topbar').innerHTML = '<div class="tb-left"><button class="tb-menu-btn" id="btnMenu">☰</button><div class="brand"><div class="logo"><svg viewBox="0 0 100 100" style="width:38px;height:38px;"><circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="3"/><g transform="translate(50,50)" fill="#fff"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g></svg></div><div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>কলারোয়া আউটলেট • ঝাউডাঙ্গা আউটলেট</p></div></div></div><div class="tb-right"><span class="presence-badge" id="presenceBadge" title="অনলাইন ইউজার">👥 <b id="presenceCount">০</b></span><span class="queue-badge" id="queueBadge" title="অপেক্ষমাণ সিঙ্ক"><span class="sync-spinner"></span>⏳ <b id="queueCount">০</b></span>' + (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় আউটলেট</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া আউটলেট</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা আউটলেট</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') + '<input type="date" class="tb-date" id="dashDateInput" value="' + dashDate + '"><span class="tb-time"><span class="dot"></span><span id="liveClock">--:--:-- --</span></span></div>';
+  $('#topbar').innerHTML = '<div class="tb-left"><button class="tb-menu-btn" id="btnMenu">☰</button><div class="brand"><div class="logo"><svg viewBox="0 0 100 100" style="width:38px;height:38px;"><circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="3"/><g transform="translate(50,50)" fill="#fff"><path d="M -22 -12 L 0 -28 L 22 -12 Z"/><rect x="-18" y="-8" width="4" height="22" rx="1"/><rect x="-8" y="-8" width="4" height="22" rx="1"/><rect x="4" y="-8" width="4" height="22" rx="1"/><rect x="14" y="-8" width="4" height="22" rx="1"/><rect x="-22" y="14" width="44" height="4" rx="1.5"/></g></svg></div><div><h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1><p>কলারোয়া আউটলেট • ঝাউডাঙ্গা আউটলেট</p></div></div></div><div class="tb-right"><span class="presence-badge" id="presenceBadge" title="অনলাইন ইউজার">👥 <b id="presenceCount">০</b></span><span class="presence-badge" id="activityBadge" title="লাইভ অ্যাক্টিভিটি" style="background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.5);color:#4ade80;cursor:pointer;transition:transform .25s">🔔 <b id="activityCount">০</b></span><span class="queue-badge" id="queueBadge" title="অপেক্ষমাণ সিঙ্ক"><span class="sync-spinner"></span>⏳ <b id="queueCount">০</b></span>' + (isAdmin ? '<select class="tb-select" id="tbBranchSel"><option value="all" ' + (viewBranch==='all'?'selected':'') + '>🏦 উভয় আউটলেট</option><option value="kalaroa" ' + (viewBranch==='kalaroa'?'selected':'') + '>🏦 কলারোয়া আউটলেট</option><option value="jhaudanga" ' + (viewBranch==='jhaudanga'?'selected':'') + '>🏦 ঝাউডাঙ্গা আউটলেট</option></select>' : '<span class="tb-branch">🏦 <b>' + esc(bl) + '</b></span>') + '<input type="date" class="tb-date" id="dashDateInput" value="' + dashDate + '"><span class="tb-time"><span class="dot"></span><span id="liveClock">--:--:-- --</span></span></div>';
   $('#dashDateInput').addEventListener('change', e=>{ dashDate = e.target.value || todayStr(); isDateViewMode = dashDate !== todayStr(); renderDashboard(); });
   document.getElementById('btnMenu').addEventListener('click', openSidebar);
   const bs = document.getElementById('tbBranchSel');
   if(bs) bs.addEventListener('change', e=>{ viewBranch = e.target.value; renderTopbar(); renderDashboard(); renderSidebar(); });
   document.getElementById('queueBadge')?.addEventListener('click', () => forceSyncNow());
+  document.getElementById('activityBadge')?.addEventListener('click', () => { __activityCount = 0; const el = document.getElementById('activityCount'); if(el) el.textContent = '০'; openAuditLogModal(); });
   updateQueueBadge(); startClock();
 }
 function renderSidebar(){
@@ -2017,7 +2293,7 @@ function renderSidebar(){
   const totalPendingCount = pendingAll.totalCount;
   const box = document.getElementById('sidebarBody');
   if(!box) return;
-  box.innerHTML = '<div class="sb-user"><div class="name">👤 ' + esc(session.name) + '</div><div class="role">' + (isAdmin ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • ' + esc(bf==='all'?'উভয় আউটলেট':(BRANCHES[bf]?.name||bf)) + '</div></div><div class="sb-section">📊 ড্যাশবোর্ড</div><button class="sb-btn primary" data-sb="all-data"><span class="sb-ico">📋</span><span class="sb-lbl">সব ডেটা<span class="sb-sub">সম্পূর্ণ লেনদেন তালিকা</span></span></button><button class="sb-btn warn" data-sb="due-list"><span class="sb-ico">⚠️</span><span class="sb-lbl">বকেয়া তালিকা<span class="sb-sub">গ্রাহক বকেয়া</span></span></button><button class="sb-btn" data-sb="all-pending" style="border-color:rgba(220,38,38,.5)"><span class="sb-ico">⏳</span><span class="sb-lbl" style="color:#ef4444">অপেক্ষমাণ<span class="sb-sub">গ্রহণ ও সংগ্রহ বাকি</span></span>' + (totalPendingCount > 0 ? '<span class="sb-badge">' + toBn(totalPendingCount) + '</span>' : '') + '</button><div class="sb-section">🖨️ প্রিন্ট (A4)</div><button class="sb-btn primary" data-sb="print-dashboard"><span class="sb-ico">🖨️</span><span class="sb-lbl">ড্যাশবোর্ড প্রিন্ট<span class="sb-sub">আজকের পূর্ণ রিপোর্ট</span></span></button><div class="sb-section">📜 অডিট ট্রেইল</div><button class="sb-btn primary" data-sb="audit-log"><span class="sb-ico">📜</span><span class="sb-lbl">সব লেনদেনের ইতিহাস<span class="sb-sub">কে কখন কী করল</span></span></button>' + (isAdmin ? '<div class="sb-section">⚙️ ম্যানেজমেন্ট</div><button class="sb-btn" data-sb="branch-mgmt"><span class="sb-ico">🏢</span><span class="sb-lbl">আউটলেট ম্যানেজমেন্ট<span class="sb-sub">মূলধন ও ভল্ট</span></span></button><button class="sb-btn" data-sb="user-mgr"><span class="sb-ico">👥</span><span class="sb-lbl">ইউজার ম্যানেজমেন্ট<span class="sb-sub">ইউজার ও পাসওয়ার্ড</span></span></button><button class="sb-btn primary" data-sb="backup"><span class="sb-ico">💾</span><span class="sb-lbl">ব্যাকআপ / ক্লাউড রিস্টোর<span class="sb-sub">Supabase থেকে রিস্টোর</span></span></button><button class="sb-btn" data-sb="db-browser"><span class="sb-ico">🗄️</span><span class="sb-lbl">ডেটাবেস ব্রাউজার<span class="sb-sub">সব table দেখুন</span></span></button><button class="sb-btn" data-sb="year-archive"><span class="sb-ico">📚</span><span class="sb-lbl">বছর আর্কাইভ<span class="sb-sub">পুরনো ডেটা</span></span></button>' : '') + '<div class="sb-section">🔔 নোটিফিকেশন</div><button class="sb-btn" data-sb="notif-settings"><span class="sb-ico">🔔</span><span class="sb-lbl">নোটিফিকেশন সেটিংস<span class="sb-sub">সাউন্ড, ভাইব্রেশন</span></span></button><div class="sb-section">🖥️ সেশন</div><button class="sb-btn danger" data-sb="logout"><span class="sb-ico">🚪</span><span class="sb-lbl">লগআউট<span class="sb-sub">সেশন শেষ</span></span></button>';
+  box.innerHTML = '<div class="sb-user"><div class="name">👤 ' + esc(session.name) + '</div><div class="role">' + (isAdmin ? '👑 অ্যাডমিন' : '👤 ইউজার') + ' • ' + esc(bf==='all'?'উভয় আউটলেট':(BRANCHES[bf]?.name||bf)) + '</div></div><div class="sb-section">📊 ড্যাশবোর্ড</div><button class="sb-btn primary" data-sb="all-data"><span class="sb-ico">📋</span><span class="sb-lbl">সব ডেটা<span class="sb-sub">সম্পূর্ণ লেনদেন তালিকা</span></span></button><button class="sb-btn warn" data-sb="due-list"><span class="sb-ico">⚠️</span><span class="sb-lbl">বকেয়া তালিকা<span class="sb-sub">গ্রাহক বকেয়া</span></span></button><button class="sb-btn" data-sb="all-pending" style="border-color:rgba(220,38,38,.5)"><span class="sb-ico">⏳</span><span class="sb-lbl" style="color:#ef4444">অপেক্ষমাণ<span class="sb-sub">গ্রহণ ও সংগ্রহ বাকি</span></span>' + (totalPendingCount > 0 ? '<span class="sb-badge">' + toBn(totalPendingCount) + '</span>' : '') + '</button><div class="sb-section">🖨️ প্রিন্ট (A4)</div><button class="sb-btn primary" data-sb="print-dashboard"><span class="sb-ico">🖨️</span><span class="sb-lbl">ড্যাশবোর্ড প্রিন্ট<span class="sb-sub">আজকের পূর্ণ রিপোর্ট</span></span></button><div class="sb-section">📜 অডিট ট্রেইল</div><button class="sb-btn primary" data-sb="audit-log"><span class="sb-ico">📜</span><span class="sb-lbl">সম্পূর্ণ ইতিহাস<span class="sb-sub">লেনদেন ও অ্যাক্টিভিটি</span></span></button>' + (isAdmin ? '<div class="sb-section">⚙️ ম্যানেজমেন্ট</div><button class="sb-btn" data-sb="branch-mgmt"><span class="sb-ico">🏢</span><span class="sb-lbl">আউটলেট ম্যানেজমেন্ট<span class="sb-sub">মূলধন ও ভল্ট</span></span></button><button class="sb-btn" data-sb="user-mgr"><span class="sb-ico">👥</span><span class="sb-lbl">ইউজার ম্যানেজমেন্ট<span class="sb-sub">ইউজার ও পাসওয়ার্ড</span></span></button><button class="sb-btn primary" data-sb="backup"><span class="sb-ico">💾</span><span class="sb-lbl">ব্যাকআপ / ক্লাউড রিস্টোর<span class="sb-sub">Supabase থেকে রিস্টোর</span></span></button><button class="sb-btn" data-sb="db-browser"><span class="sb-ico">🗄️</span><span class="sb-lbl">ডেটাবেস ব্রাউজার<span class="sb-sub">সব table দেখুন</span></span></button><button class="sb-btn" data-sb="year-archive"><span class="sb-ico">📚</span><span class="sb-lbl">বছর আর্কাইভ<span class="sb-sub">পুরনো ডেটা</span></span></button>' : '') + '<div class="sb-section">🔔 নোটিফিকেশন</div><button class="sb-btn" data-sb="notif-settings"><span class="sb-ico">🔔</span><span class="sb-lbl">নোটিফিকেশন সেটিংস<span class="sb-sub">সাউন্ড, ভাইব্রেশন</span></span></button><div class="sb-section">🖥️ সেশন</div><button class="sb-btn danger" data-sb="logout"><span class="sb-ico">🚪</span><span class="sb-lbl">লগআউট<span class="sb-sub">সেশন শেষ</span></span></button>';
   box.querySelectorAll('[data-sb]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const a = btn.dataset.sb;
@@ -2288,6 +2564,7 @@ function setupTransferForm(wrap, editing, close){
       const isCreating = !editing;
       if(!editing){ DB().txs.push(tx); } else { const i = DB().txs.findIndex(x => x.id === editing.id); if(i >= 0) DB().txs[i] = tx; }
       addTxLog(tx.id, isCreating ? 'create' : 'update', isCreating ? { action: 'new transaction' } : computeTxChanges(editing, tx), tx);
+      if(isCreating) addActivityLog({ type: 'txn_create', title: '🔁 আউটলেট ট্রান্সফার তৈরি', detail: (BRANCHES[from]?.name||'') + ' ➜ ' + (BRANCHES[to]?.name||''), amount: amt, targetId: tx.id });
       recomputeLive(); await saveDB();
       try{ if(!editing) await pushRemoteDB(true, [tx]); }catch(e){}
       close(); renderDashboard(); renderTopbar(); renderSidebar();
@@ -2427,16 +2704,9 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       const dir = wrap.querySelector('#f_dir')?.value || null;
       const osL = isOS(), onL = isOn();
       const cNT = isLG && !!cTick?.checked;
-
       const _anyNote = Object.keys(on).length > 0 || Object.keys(inN).length > 0;
-      const _anySpecial = 
-        (isBO && parseNum(wrap.querySelector('#bt_amount')?.value) > 0) ||
-        (cNT && parseNum(cAmt?.value) > 0) ||
-        (isLG && wrap.querySelector('#f_onlineTransferTick')?.checked && parseNum(wrap.querySelector('#f_onlineAmount')?.value) > 0) ||
-        (osL && parseNum(wrap.querySelector('#support_amount')?.value) > 0) ||
-        (onL && parseNum(wrap.querySelector('#online_amount')?.value) > 0);
+      const _anySpecial = (isBO && parseNum(wrap.querySelector('#bt_amount')?.value) > 0) || (cNT && parseNum(cAmt?.value) > 0) || (isLG && wrap.querySelector('#f_onlineTransferTick')?.checked && parseNum(wrap.querySelector('#f_onlineAmount')?.value) > 0) || (osL && parseNum(wrap.querySelector('#support_amount')?.value) > 0) || (onL && parseNum(wrap.querySelector('#online_amount')?.value) > 0);
       if(!_anyNote && !_anySpecial){ sorryNoNote(); sBtn.disabled = false; sBtn.innerHTML = orig; return; }
-
       let cNTA = 0;
       if(cNT){ cNTA = parseNum(cAmt?.value); if(cNTA <= 0){ alert('পরিমাণ দিন'); sBtn.disabled = false; sBtn.innerHTML = orig; return; } if(!wrap.querySelector('#f_name')?.value.trim() || !wrap.querySelector('#f_acc')?.value.trim()){ alert('নাম ও অ্যাকাউন্ট দিন'); sBtn.disabled = false; sBtn.innerHTML = orig; return; } }
       let osA = 0, onA = 0;
@@ -2500,6 +2770,7 @@ function setupTxForm(wrap, type, editing, close, activeBranchForForm){
       if(cfg.cust && (tx.custAcc || tx.custName)){ const c = upsertCustomer({ accountNo: tx.custAcc, name: tx.custName, mobile: tx.custMobile, address: tx.custAddr, branch: cB }); if(c) tx.custAcc = c.accountNo; }
       if(type === 'support' && tx.custAcc) updateCustomerDueInDB(tx.custAcc, false);
       addTxLog(tx.id, isCreating ? 'create' : 'update', isCreating ? { action: 'new transaction' } : computeTxChanges(editing, tx), tx);
+      addActivityLog({ type: isCreating ? 'txn_create' : 'txn_update', title: (isCreating ? '💸 ' : '✏️ ') + (cfg.title || type) + (isCreating ? ' তৈরি' : ' আপডেট'), detail: tx.custName || '', amount: tA, targetId: tx.id });
       recomputeLive(); await saveDB();
       try{ if(!editing) await pushRemoteDB(true, [tx]); }catch(e){}
       close(); toast('✅ সংরক্ষিত — ৳ ' + fmt(tA));
@@ -2551,6 +2822,7 @@ function openMoneyExchange(){
           const tx = { id: uid(), type: 'money_exchange', date: dV, branch: br, custBranch: br, bank: bk, dir: dv, amount: Math.round(a*100)/100, onlineAmount: io ? Math.round(oa*100)/100 : null, onlineRef: io ? orf : null, notesOutSum: Math.round(os*100)/100, notesInSum: Math.round(is*100)/100, notesOut: on, notesIn: inN, note: w.querySelector('#me_desc').value.trim() || 'মানি এক্সচেঞ্জ', user: session.name, userUsername: session.username, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), year: dV.slice(0,4), accepted: true, acceptedDate: dV };
           DB().txs.push(tx);
           addTxLog(tx.id, 'create', { action: 'money exchange' }, tx);
+          addActivityLog({ type: 'txn_create', title: '💱 মানি এক্সচেঞ্জ', detail: BRANCHES[br]?.name || '', amount: a, targetId: tx.id });
           recomputeLive(); await saveDB();
           try{ await pushRemoteDB(true, [tx]); }catch(e){}
           close(); renderDashboard(); renderSidebar();
@@ -2599,6 +2871,7 @@ function openCollectionChildModal(parentId, mode){
           updateTxAnywhere(parent.id, { collectedAmount: nc, collectionStatus: ns, updatedAt: new Date().toISOString() });
           addTxLog(parent.id, 'collect', { collectedAmount: { from: collected, to: nc }, collectionStatus: { from: parent.collectionStatus, to: ns } }, parent);
           addTxLog(child.id, 'create', { action: 'collection entry created' }, child);
+          addActivityLog({ type: 'txn_collect', title: '💰 ঋণ সংগ্রহ', detail: parent.custName || '', amount: amt, targetId: parent.id });
           recomputeLive(); await saveDB();
           try{ await pushRemoteDB(true, [child]); }catch(e){}
           close(); renderDashboard(); renderSidebar();
@@ -2708,6 +2981,7 @@ async function deleteTx(id){
   DB().deletedTxIds[id] = new Date().toISOString();
   DB().txs = DB().txs.filter(x=>x.id !== id);
   addTxLog(id, 'delete', { deleted: { from: 'active', to: 'deleted' } }, t);
+  addActivityLog({ type: 'txn_delete', title: '🗑️ লেনদেন ডিলিট', detail: (TX_CFG[t?.type]?.title || ''), amount: t?.amount || 0, targetId: id });
   recomputeLive(); await saveDB();
   try{ await pushRemoteDB(true); }catch(e){}
   renderDashboard(); renderSidebar();
@@ -2730,41 +3004,35 @@ function openYearArchive(){
   });
 }
 
-/* ============ ✅ নতুন: Backup + Cloud Restore ============ */
+
+
+/* ============ Backup + Cloud Restore ============ */
 function openBackupModal(){
   if(session.role !== 'admin'){ toast('শুধু অ্যাডমিন'); return; }
-  openModal({ title: '💾 ব্যাকআপ ও রিস্টোর', wide: true,
-    bodyHTML: '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">' +
+  openModal({ title: '💾 ব্যাকআপ ও ক্লাউড রিস্টোর', xwide: true,
+    bodyHTML:
+      '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">' +
         '<button class="btn green" id="bk_down" style="flex:1;min-width:160px">📥 JSON ডাউনলোড</button>' +
         '<button class="btn" id="bk_up_btn" style="flex:1;min-width:160px">📤 ফাইল থেকে রিস্টোর</button>' +
+        '<button class="btn cyan" id="bk_new_cloud" style="flex:1;min-width:180px">➕ এখনই Cloud ব্যাকআপ তৈরি করুন</button>' +
         '<input type="file" id="bk_file" accept=".json" style="display:none">' +
       '</div>' +
-      '<div style="margin-bottom:16px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(59,130,246,.14),rgba(34,197,94,.06));border:1.5px solid rgba(59,130,246,.6)">' +
-        '<div style="font-size:15px;font-weight:900;color:#93c5fd;margin-bottom:10px">☁️ Supabase Cloud থেকে রিস্টোর</div>' +
-        '<div style="font-size:12.5px;color:#e0eaff;line-height:1.9;margin-bottom:14px;padding:10px 12px;border-radius:10px;background:rgba(0,0,0,.3)">' +
-          '📌 আপনার সিস্টেমের সব ডেটা <b style="color:#4ade80">প্রতি ০.৫ সেকেন্ডে</b> Supabase-এ auto-save হচ্ছে।<br>' +
-          'নিচের বাটনে ক্লিক করলে <b style="color:#facc15">Supabase-এর সর্বশেষ ব্যাকআপ</b> এই ডিভাইসে চলে আসবে।<br>' +
-          '<b style="color:#f87171">⚠️ সতর্কতা:</b> বর্তমান লোকাল ডেটা মুছে যাবে।' +
-        '</div>' +
-        '<div id="bk_cloud_info" style="font-size:12px;color:#93c5fd;font-weight:700;margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(59,130,246,.1);border:1px dashed rgba(59,130,246,.4)">ℹ️ Supabase-এর সর্বশেষ অবস্থা লোড হচ্ছে...</div>' +
-        '<button class="btn cyan" id="bk_cloud_restore" style="width:100%;padding:14px;font-size:15px">☁️ Supabase থেকে সর্বশেষ ব্যাকআপ রিস্টোর করুন</button>' +
+      '<div style="margin-bottom:16px;padding:16px;border-radius:14px;background:linear-gradient(145deg,rgba(34,197,94,.12),rgba(59,130,246,.06));border:1.5px solid rgba(34,197,94,.5)">' +
+        '<div style="font-size:14px;font-weight:900;color:#4ade80;margin-bottom:8px">⚡ Main Row (লাইভ ডেটা)</div>' +
+        '<div id="bk_main_info" style="font-size:12.5px;color:#c9d5f0;line-height:1.8">লোড হচ্ছে...</div>' +
+        '<button class="btn gray sm" id="bk_main_restore" style="width:100%;margin-top:10px;padding:10px">⚡ Main Row থেকেই রিস্টোর করুন</button>' +
       '</div>' +
-      '<div class="bank-hint">💡 JSON ফাইলে সম্পূর্ণ ডেটাবেস থাকে। ফাইল থেকে রিস্টোর করতে উপরের দ্বিতীয় বাটন ব্যবহার করুন।</div>' +
-      '<div class="field" style="margin-top:16px"><label>📊 বর্তমান লোকাল স্ট্যাটাস</label>' +
-        '<div style="font-size:13px;color:#a5b4d8;line-height:1.9">' +
-          'লেনদেন: <b style="color:#fff">' + toBn(DB().txs.length) + '</b> • ' +
-          'গ্রাহক: <b style="color:#fff">' + toBn(DB().customers.length) + '</b> • ' +
-          'ইউজার: <b style="color:#fff">' + toBn((DB().users||[]).length) + '</b> • ' +
-          'অডিট: <b style="color:#fff">' + toBn((DB().txEditLog||[]).length) + '</b>' +
+      '<div style="margin-bottom:16px;padding:16px;border-radius:14px;background:linear-gradient(145deg,rgba(59,130,246,.1),rgba(34,197,94,.04));border:1.5px solid rgba(59,130,246,.5)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">' +
+          '<div style="font-size:14px;font-weight:900;color:#93c5fd">📚 সব Cloud ব্যাকআপ</div>' +
+          '<div style="display:flex;gap:8px"><button class="btn gray sm" id="bk_refresh_list" style="padding:6px 12px">🔄 রিফ্রেশ</button></div>' +
         '</div>' +
+        '<div id="bk_list_status" style="font-size:12px;color:#a5b4d8;margin-bottom:10px">লোড হচ্ছে...</div>' +
+        '<div id="bk_list_container" style="max-height:520px;overflow-y:auto;padding-right:4px"></div>' +
       '</div>' +
-      '<div style="margin-top:20px;padding:16px;border-radius:14px;background:linear-gradient(145deg,rgba(220,38,38,.12),rgba(220,38,38,.03));border:1.5px solid rgba(220,38,38,.5)">' +
-        '<div style="font-size:14px;font-weight:800;color:#f87171;margin-bottom:12px">⚠️ সব ডেটা মুছুন</div>' +
-        '<div style="font-size:12.5px;color:#e0eaff;line-height:1.85;margin-bottom:12px;padding:10px;border-radius:10px;background:rgba(0,0,0,.3)">🚨 লোকাল ও ক্লাউড সব মুছে যাবে (admin থাকবে)।</div>' +
-        '<button class="btn red" id="bk_clear_all" style="width:100%;padding:12px">🗑️ সব ডেটা মুছুন</button>' +
-      '</div>',
+      '<div class="field" style="margin-top:16px"><label>📊 বর্তমান লোকাল স্ট্যাটাস</label><div style="font-size:13px;color:#a5b4d8;line-height:1.9">লেনদেন: <b style="color:#fff">' + toBn(DB().txs.length) + '</b> • গ্রাহক: <b style="color:#fff">' + toBn(DB().customers.length) + '</b> • ইউজার: <b style="color:#fff">' + toBn((DB().users||[]).length) + '</b> • অডিট: <b style="color:#fff">' + toBn((DB().txEditLog||[]).length) + '</b></div></div>' +
+      '<div style="margin-top:20px;padding:16px;border-radius:14px;background:linear-gradient(145deg,rgba(220,38,38,.12),rgba(220,38,38,.03));border:1.5px solid rgba(220,38,38,.5)"><div style="font-size:14px;font-weight:800;color:#f87171;margin-bottom:12px">⚠️ সব ডেটা মুছুন</div><div style="font-size:12.5px;color:#e0eaff;line-height:1.85;margin-bottom:12px;padding:10px;border-radius:10px;background:rgba(0,0,0,.3)">🚨 লোকাল ও ক্লাউড সব মুছে যাবে (admin থাকবে)।</div><button class="btn red" id="bk_clear_all" style="width:100%;padding:12px">🗑️ সব ডেটা মুছুন</button></div>',
     onMount: (w, close) => {
-      /* ---- JSON ডাউনলোড ---- */
       w.querySelector('#bk_down').addEventListener('click', async ()=>{
         await saveDB();
         const blob = new Blob([JSON.stringify(DB(), null, 2)], { type:'application/json' });
@@ -2772,12 +3040,9 @@ function openBackupModal(){
         const a = document.createElement('a');
         a.href = url;
         a.download = 'cc_backup_' + todayStr() + '_' + Date.now() + '.json';
-        a.click();
-        URL.revokeObjectURL(url);
+        a.click(); URL.revokeObjectURL(url);
         toast('📥 JSON ডাউনলোড হয়েছে');
       });
-
-      /* ---- ফাইল থেকে রিস্টোর ---- */
       w.querySelector('#bk_up_btn').addEventListener('click', () => w.querySelector('#bk_file').click());
       w.querySelector('#bk_file').addEventListener('change', e => {
         const f = e.target.files[0]; if(!f) return;
@@ -2787,8 +3052,9 @@ function openBackupModal(){
             const data = JSON.parse(ev.target.result);
             if(!data.users || !data.baseVault){ alert('❌ ভুল ফাইল'); return; }
             if(!confirm('📤 ফাইল থেকে রিস্টোর করবেন?\n\nবর্তমান ডেটা মুছে যাবে।')) return;
+            await createCloudBackup('before-restore');
             window.db = data;
-            __lastAutoPushTs = data.__lastUpdate || '';
+            __lastAutoPushTs = '';
             normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive();
             await saveDB();
             try{ await pushRemoteDB(true); }catch(e){}
@@ -2798,101 +3064,157 @@ function openBackupModal(){
         };
         r.readAsText(f);
       });
-
-      /* ---- ☁️ Supabase Cloud Restore ---- */
-      const cloudInfo = w.querySelector('#bk_cloud_info');
-      async function loadCloudInfo(){
-        if(!__isRemoteReady || !__supabaseClient){
-          cloudInfo.innerHTML = '❌ Supabase সংযোগ নেই';
-          cloudInfo.style.color = '#f87171';
-          return;
-        }
-        if(!navigator.onLine){
-          cloudInfo.innerHTML = '📵 ইন্টারনেট নেই — অনলাইনে এসে চেষ্টা করুন';
-          cloudInfo.style.color = '#facc15';
-          return;
-        }
+      w.querySelector('#bk_new_cloud').addEventListener('click', async ()=>{
+        const btn = w.querySelector('#bk_new_cloud');
+        const orig = btn.innerHTML;
+        btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> তৈরি হচ্ছে...';
         try{
-          const res = await withTimeout(
-            __supabaseClient.from(window.SUPABASE_TABLE).select('data, updated_at').eq('id', window.SUPABASE_ROW_ID).maybeSingle(),
-            10000, { data: null }
-          );
+          await saveDB();
+          const id = await createCloudBackup('manual');
+          if(id){ toast('✅ নতুন Cloud ব্যাকআপ তৈরি হয়েছে'); await renderBackupList(); }
+          else { toast('❌ ব্যাকআপ তৈরি ব্যর্থ'); }
+        }catch(e){ toast('❌ ' + e.message); }
+        finally { btn.disabled = false; btn.innerHTML = orig; }
+      });
+      async function loadMainInfo(){
+        const el = w.querySelector('#bk_main_info');
+        if(!__isRemoteReady || !__supabaseClient){ el.innerHTML = '❌ Supabase সংযোগ নেই'; el.style.color = '#f87171'; return; }
+        if(!navigator.onLine){ el.innerHTML = '📵 ইন্টারনেট নেই'; el.style.color = '#facc15'; return; }
+        try{
+          const res = await withTimeout(__supabaseClient.from(window.SUPABASE_TABLE).select('data, updated_at').eq('id', window.SUPABASE_ROW_ID).maybeSingle(), 10000, { data: null });
           if(res && res.data && res.data.data){
             const rd = res.data.data;
-            const tx = (rd.txs || []).length;
-            const cu = (rd.customers || []).length;
-            const us = (rd.users || []).length;
+            const tx = (rd.txs || []).length, cu = (rd.customers || []).length, us = (rd.users || []).length;
             const lu = rd.__lastUpdate ? fmtDateTime(rd.__lastUpdate) : '—';
             const dev = rd.__lastDevice || {};
-            cloudInfo.innerHTML = '☁️ <b style="color:#4ade80">Cloud Backup পাওয়া গেছে</b><br>' +
-              '💸 লেনদেন: <b>' + toBn(tx) + '</b> • 🧑 গ্রাহক: <b>' + toBn(cu) + '</b> • 👥 ইউজার: <b>' + toBn(us) + '</b><br>' +
-              '📅 শেষ আপডেট: <b style="color:#facc15">' + lu + '</b><br>' +
-              (dev.user ? '👤 শেষ আপডেটকারী: <b>' + esc(dev.user) + '</b>' : '');
-            cloudInfo.style.color = '#93c5fd';
-          } else {
-            cloudInfo.innerHTML = '⚠️ Supabase-এ কোনো ডেটা নেই';
-            cloudInfo.style.color = '#facc15';
-          }
-        }catch(err){
-          cloudInfo.innerHTML = '❌ লোড ব্যর্থ: ' + (err.message || 'Unknown');
-          cloudInfo.style.color = '#f87171';
-        }
+            el.innerHTML = '💸 লেনদেন: <b>' + toBn(tx) + '</b> • 🧑 গ্রাহক: <b>' + toBn(cu) + '</b> • 👥 ইউজার: <b>' + toBn(us) + '</b><br>📅 শেষ আপডেট: <b style="color:#facc15">' + lu + '</b><br>' + (dev.user ? '👤 শেষ আপডেটকারী: <b>' + esc(dev.user) + '</b>' : '');
+            el.style.color = '#c9d5f0';
+          } else { el.innerHTML = '⚠️ Main row-এ কোনো ডেটা নেই'; el.style.color = '#facc15'; }
+        }catch(err){ el.innerHTML = '❌ লোড ব্যর্থ: ' + (err.message || 'Unknown'); el.style.color = '#f87171'; }
       }
-      loadCloudInfo();
-
-      w.querySelector('#bk_cloud_restore').addEventListener('click', async () => {
-        if(!__isRemoteReady || !__supabaseClient){ alert('❌ Supabase সংযোগ নেই'); return; }
-        if(!navigator.onLine){ alert('❌ ইন্টারনেট নেই'); return; }
-        if(!confirm('☁️ Supabase থেকে সর্বশেষ ব্যাকআপ রিস্টোর করবেন?\n\n⚠️ আপনার বর্তমান লোকাল ডেটা মুছে যাবে।')) return;
-        const typed = prompt('🚨 নিশ্চিত করুন। টাইপ করুন: RESTORE');
-        if(typed !== 'RESTORE'){ toast('বাতিল'); return; }
-
-        const btn = w.querySelector('#bk_cloud_restore');
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span> Cloud থেকে লোড হচ্ছে...';
+      const listStatus = w.querySelector('#bk_list_status');
+      const listContainer = w.querySelector('#bk_list_container');
+      async function renderBackupList(){
+        listStatus.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px"></span> লোড হচ্ছে...';
+        listStatus.style.color = '#a5b4d8';
+        listContainer.innerHTML = '';
+        if(!__isRemoteReady || !__supabaseClient){ listStatus.innerHTML = '❌ Supabase সংযোগ নেই'; listStatus.style.color = '#f87171'; return; }
+        if(!navigator.onLine){ listStatus.innerHTML = '📵 ইন্টারনেট নেই — অনলাইনে এসে রিফ্রেশ করুন'; listStatus.style.color = '#facc15'; return; }
         try{
-          const res = await withTimeout(
-            __supabaseClient.from(window.SUPABASE_TABLE).select('data').eq('id', window.SUPABASE_ROW_ID).maybeSingle(),
-            20000, { data: null }
-          );
-          if(!res || !res.data || !res.data.data){ throw new Error('Supabase-এ ডেটা নেই'); }
-          const remote = res.data.data;
-          if(!remote.users || !remote.baseVault){ throw new Error('ভুল ফরম্যাটের ডেটা'); }
-
+          const backups = await listCloudBackups();
+          if(!backups.length){
+            listStatus.innerHTML = '📭 এখনো কোনো ব্যাকআপ তৈরি হয়নি। উপরের <b>"এখনই Cloud ব্যাকআপ তৈরি করুন"</b> বাটনে ক্লিক করুন।';
+            listStatus.style.color = '#facc15';
+            return;
+          }
+          listStatus.innerHTML = '📚 মোট <b style="color:#4ade80">' + toBn(backups.length) + '</b> টি ব্যাকআপ পাওয়া গেছে';
+          listStatus.style.color = '#a5b4d8';
+          listContainer.innerHTML = backups.map((b, idx) => {
+            const stamp = b.updatedAt ? fmtDateTime(b.updatedAt) : '—';
+            const reasonLbl = backupReasonLabel(b.reason);
+            const sizeKB = Math.round(JSON.stringify(b.raw).length / 1024);
+            return '<div style="padding:14px 16px;border-radius:14px;background:linear-gradient(145deg,#0f1428,#07091a);border:1.5px solid rgba(59,130,246,.4);margin-bottom:10px" data-bak-id="' + esc(b.id) + '"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:8px"><div style="flex:1;min-width:200px"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px"><span style="font-size:12px;font-weight:900;color:#93c5fd;background:rgba(59,130,246,.18);border:1px solid rgba(59,130,246,.5);padding:3px 9px;border-radius:6px">#' + toBn(idx+1) + '</span><span style="font-size:12px;font-weight:800;color:#4ade80">' + reasonLbl + '</span></div><div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:4px">🕐 ' + esc(stamp) + '</div><div style="font-size:11.5px;color:#a5b4d8;line-height:1.75">👤 ' + esc(b.createdBy) + (b.branch ? ' • 🏦 ' + esc(b.branch) : '') + '<br>📱 ' + esc(b.device) + '<br>' + (b.location ? '📍 ' + esc(b.location) + '<br>' : '') + '🆔 <span style="font-family:monospace;font-size:10.5px;color:#7a8ab8">' + esc(b.id) + '</span></div><div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:11px;padding:3px 9px;border-radius:6px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.4);color:#4ade80;font-weight:700">💸 ' + toBn(b.txCount) + ' লেনদেন</span><span style="font-size:11px;padding:3px 9px;border-radius:6px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.4);color:#93c5fd;font-weight:700">🧑 ' + toBn(b.customerCount) + ' গ্রাহক</span><span style="font-size:11px;padding:3px 9px;border-radius:6px;background:rgba(250,204,21,.15);border:1px solid rgba(250,204,21,.4);color:#facc15;font-weight:700">💰 ৳ ' + fmt(b.totalCapital) + '</span><span style="font-size:11px;padding:3px 9px;border-radius:6px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.4);color:#c084fc;font-weight:700">📦 ' + sizeKB + ' KB</span></div></div></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn green sm" data-bak-restore="' + esc(b.id) + '" style="flex:1;min-width:140px">🔄 এই ব্যাকআপ রিস্টোর করুন</button><button class="btn cyan sm" data-bak-preview="' + esc(b.id) + '" style="flex:1;min-width:110px">👁️ বিস্তারিত</button><button class="btn red sm" data-bak-delete="' + esc(b.id) + '" style="min-width:80px">🗑️</button></div></div>';
+          }).join('');
+          listContainer.querySelectorAll('[data-bak-restore]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+              const id = btn.dataset.bakRestore;
+              const bak = backups.find(x => x.id === id);
+              if(!bak) return;
+              if(!confirm('🔄 এই ব্যাকআপ থেকে রিস্টোর করবেন?\n\n📅 তারিখ: ' + fmtDateTime(bak.updatedAt) + '\n💸 লেনদেন: ' + toBn(bak.txCount) + '\n🧑 গ্রাহক: ' + toBn(bak.customerCount) + '\n\n⚠️ বর্তমান লোকাল ডেটা মুছে যাবে!')) return;
+              const typed = prompt('🚨 নিশ্চিত করুন। টাইপ করুন: RESTORE');
+              if(typed !== 'RESTORE'){ toast('বাতিল'); return; }
+              const orig = btn.innerHTML;
+              btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> রিস্টোর হচ্ছে...';
+              try{
+                await createCloudBackup('before-restore');
+                __isApplyingRemote = true;
+                window.db = JSON.parse(JSON.stringify(bak.raw));
+                __lastAutoPushTs = '';
+                normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive();
+                await saveDB();
+                __isApplyingRemote = false;
+                try{ await pushRemoteDB(true); }catch(e){}
+                close(); renderTopbar(); renderDashboard(); renderSidebar();
+                broadcastActivity({ type: 'cloud_restore', amount: bak.txCount });
+                showNotifToast({ type: 'success', icon: '✅', badge: 'Cloud Restore', title: '✅ ব্যাকআপ সফলভাবে রিস্টোর হয়েছে', body: '📅 ' + esc(fmtDateTime(bak.updatedAt)) + '<br>💸 লেনদেন: <b>' + toBn(bak.txCount) + '</b><br>🧑 গ্রাহক: <b>' + toBn(bak.customerCount) + '</b>', duration: 10000 });
+                toast('✅ রিস্টোর সফল');
+              }catch(err){ alert('❌ রিস্টোর ব্যর্থ:\n\n' + (err.message || 'Unknown')); btn.disabled = false; btn.innerHTML = orig; }
+            });
+          });
+          listContainer.querySelectorAll('[data-bak-preview]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.dataset.bakPreview;
+              const bak = backups.find(x => x.id === id);
+              if(!bak) return;
+              openCloudBackupPreview(bak);
+            });
+          });
+          listContainer.querySelectorAll('[data-bak-delete]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+              const id = btn.dataset.bakDelete;
+              if(!confirm('🗑️ এই ব্যাকআপ মুছে ফেলবেন?\n\n' + id)) return;
+              try{ await __supabaseClient.from(window.SUPABASE_TABLE).delete().eq('id', id); toast('🗑️ ব্যাকআপ মুছে ফেলা হয়েছে'); await renderBackupList(); }
+              catch(e){ alert('❌ ' + e.message); }
+            });
+          });
+        }catch(err){ listStatus.innerHTML = '❌ লোড ব্যর্থ: ' + (err.message || 'Unknown'); listStatus.style.color = '#f87171'; }
+      }
+      function openCloudBackupPreview(bak){
+        const raw = bak.raw || {};
+        const txTypes = {};
+        (raw.txs || []).forEach(t => { txTypes[t.type] = (txTypes[t.type] || 0) + 1; });
+        const txTypeRows = Object.entries(txTypes).map(([k, c]) => {
+          const cfg = TX_CFG[k] || { title: k, icon: '📌' };
+          return '<div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:6px;background:rgba(0,0,0,.25);margin-bottom:4px;font-size:12px"><span>' + cfg.icon + ' ' + esc(cfg.title) + '</span><span style="color:#4ade80;font-weight:800">' + toBn(c) + '</span></div>';
+        }).join('');
+        openModal({
+          title: '👁️ ব্যাকআপ বিস্তারিত', wide: true,
+          bodyHTML: '<div class="accept-head" style="margin-bottom:16px"><div style="font-size:14px;font-weight:900;color:#93c5fd;margin-bottom:10px">🆔 ' + esc(bak.id) + '</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;font-size:13px"><div><span style="color:#a5b4d8">📅 তারিখ:</span> <b>' + esc(fmtDateTime(bak.updatedAt)) + '</b></div><div><span style="color:#a5b4d8">🎯 কারণ:</span> <b>' + backupReasonLabel(bak.reason) + '</b></div><div><span style="color:#a5b4d8">👤 তৈরি:</span> <b>' + esc(bak.createdBy) + '</b></div><div><span style="color:#a5b4d8">🏦 আউটলেট:</span> <b>' + esc(bak.branch) + '</b></div><div><span style="color:#a5b4d8">📱 ডিভাইস:</span> <b>' + esc(bak.device) + '</b></div><div><span style="color:#a5b4d8">📍 লোকেশন:</span> <b>' + esc(bak.location) + '</b></div></div></div><div class="section-title"><span class="bar"></span> 📊 ডেটা সারসংক্ষেপ</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px"><div class="balance-cell green"><div class="bc-ico">💸</div><div class="bc-lbl">লেনদেন</div><div class="bc-val">' + toBn(bak.txCount) + '</div></div><div class="balance-cell blue"><div class="bc-ico">🧑</div><div class="bc-lbl">গ্রাহক</div><div class="bc-val">' + toBn(bak.customerCount) + '</div></div><div class="balance-cell purple"><div class="bc-ico">👥</div><div class="bc-lbl">ইউজার</div><div class="bc-val">' + toBn(bak.userCount) + '</div></div><div class="balance-cell yellow"><div class="bc-ico">💰</div><div class="bc-lbl">মূলধন</div><div class="bc-val">৳ ' + fmt(bak.totalCapital) + '</div></div></div>' + (txTypeRows ? '<div class="section-title"><span class="bar"></span> 📋 লেনদেনের ধরন</div><div style="max-height:280px;overflow-y:auto;padding:8px;border-radius:12px;background:rgba(0,0,0,.2);border:1px solid rgba(59,130,246,.25);margin-bottom:16px">' + txTypeRows + '</div>' : '') + '<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap"><button class="btn green" id="cp_restore_now" style="flex:1;min-width:160px">🔄 এই ব্যাকআপ থেকে রিস্টোর</button></div>',
+          onMount: (mw, mclose) => {
+            mw.querySelector('#cp_restore_now').addEventListener('click', async () => {
+              if(!confirm('🔄 এই ব্যাকআপ থেকে রিস্টোর করবেন?')) return;
+              const typed = prompt('🚨 নিশ্চিত করুন। টাইপ করুন: RESTORE');
+              if(typed !== 'RESTORE'){ toast('বাতিল'); return; }
+              try{
+                await createCloudBackup('before-restore');
+                __isApplyingRemote = true;
+                window.db = JSON.parse(JSON.stringify(bak.raw));
+                __lastAutoPushTs = '';
+                normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive();
+                await saveDB();
+                __isApplyingRemote = false;
+                try{ await pushRemoteDB(true); }catch(e){}
+                mclose(); close(); renderTopbar(); renderDashboard(); renderSidebar();
+                toast('✅ রিস্টোর সফল');
+              }catch(err){ alert('❌ ' + err.message); }
+            });
+          }
+        });
+      }
+      w.querySelector('#bk_main_restore').addEventListener('click', async () => {
+        if(!confirm('⚡ Main Row (লাইভ) থেকে রিস্টোর করবেন?\n\nবর্তমান লোকাল ডেটা মুছে যাবে।')) return;
+        const typed = prompt('🚨 টাইপ করুন: RESTORE');
+        if(typed !== 'RESTORE'){ toast('বাতিল'); return; }
+        try{
+          await createCloudBackup('before-restore');
+          const res = await withTimeout(__supabaseClient.from(window.SUPABASE_TABLE).select('data').eq('id', window.SUPABASE_ROW_ID).maybeSingle(), 15000, { data: null });
+          if(!res || !res.data || !res.data.data){ alert('❌ ডেটা নেই'); return; }
           __isApplyingRemote = true;
-          window.db = remote;
-          __lastAutoPushTs = remote.__lastUpdate || '';
+          window.db = JSON.parse(JSON.stringify(res.data.data));
+          __lastAutoPushTs = '';
           normalizeDB(); forceFixAdmin(); recalcAllCustomerDues(false); recomputeLive();
           saveLocalDB();
           __isApplyingRemote = false;
-
-          close();
-          renderTopbar(); renderDashboard(); renderSidebar();
-
-          const txCount = (remote.txs || []).length;
-          const custCount = (remote.customers || []).length;
-          const lastUpdate = remote.__lastUpdate ? fmtDateTime(remote.__lastUpdate) : '—';
-
-          showNotifToast({
-            type: 'success', icon: '☁️', badge: 'Cloud Restore',
-            title: '✅ Supabase থেকে রিস্টোর সফল',
-            body: '💸 লেনদেন: <b>' + toBn(txCount) + '</b><br>🧑 গ্রাহক: <b>' + toBn(custCount) + '</b><br>📅 ' + esc(lastUpdate),
-            duration: 10000
-          });
-          toast('✅ Cloud রিস্টোর সফল — ' + txCount + ' লেনদেন');
-        }catch(err){
-          alert('❌ রিস্টোর ব্যর্থ:\n\n' + (err.message || 'Unknown error'));
-          btn.disabled = false;
-          btn.innerHTML = '☁️ Supabase থেকে সর্বশেষ ব্যাকআপ রিস্টোর করুন';
-        }
+          close(); renderTopbar(); renderDashboard(); renderSidebar();
+          toast('✅ Main Row থেকে রিস্টোর সফল');
+        }catch(err){ alert('❌ ' + err.message); }
       });
-
-      /* ---- সব ডেটা মুছুন ---- */
+      w.querySelector('#bk_refresh_list').addEventListener('click', () => renderBackupList());
       w.querySelector('#bk_clear_all').addEventListener('click', async () => {
         if(!confirm('⚠️ সব ডেটা মুছে যাবে (লোকাল + ক্লাউড)?')) return;
         if(!confirm('🚨 শেষবার নিশ্চিত?')) return;
         const t = prompt('টাইপ: CLEAR'); if(t !== 'CLEAR'){ toast('বাতিল'); return; }
-
+        try{ await createCloudBackup('before-clear'); }catch(e){}
         const admins = DB().users.filter(u => u.username === 'admin');
         const fresh = defaultDB();
         fresh.users = admins.length ? admins : defaultUsers();
@@ -2900,9 +3222,12 @@ function openBackupModal(){
         normalizeDB(); forceFixAdmin(); recomputeLive();
         await saveDB();
         try{ await pushRemoteDB(true); }catch(e){}
+        broadcastActivity({ type: 'clear_all' });
         close(); renderTopbar(); renderDashboard(); renderSidebar();
         toast('✅ সব ডেটা মুছে ফেলা হয়েছে');
       });
+      loadMainInfo();
+      renderBackupList();
     }
   });
 }
@@ -2940,6 +3265,8 @@ function openUserManager(){
           u.__hashed = true;
           u.updatedAt = new Date().toISOString();
           await saveDB(); render();
+          broadcastActivity({ type: 'password_change', targetName: u.name });
+          addActivityLog({ type: 'password_change', title: '🔑 পাসওয়ার্ড পরিবর্তন', detail: u.name });
           toast('✅ পাসওয়ার্ড — ' + u.username + ' → ' + trimmed);
         }));
         lb.querySelectorAll('[data-edit]').forEach(b => b.addEventListener('click', async () => {
@@ -2954,6 +3281,8 @@ function openUserManager(){
           u.role = nr.trim().toLowerCase();
           u.updatedAt = new Date().toISOString();
           await saveDB(); render();
+          broadcastActivity({ type: 'user_update', targetName: u.name });
+          addActivityLog({ type: 'user_update', title: '👤 ইউজার আপডেট', detail: u.name });
           toast('✅ আপডেট — ' + u.username);
         }));
         lb.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
@@ -2961,6 +3290,8 @@ function openUserManager(){
           if(u.role === 'admin' && DB().users.filter(x => x.role === 'admin').length <= 1){ alert('❌ শেষ অ্যাডমিন'); return; }
           if(u.id === session.id){ alert('❌ নিজেকে ডিলিট করা যাবে না'); return; }
           if(!confirm('🗑️ ডিলিট: ' + u.name + '?')) return;
+          broadcastActivity({ type: 'user_delete', targetName: u.name });
+          addActivityLog({ type: 'user_delete', title: '🗑️ ইউজার ডিলিট', detail: u.name });
           DB().users = DB().users.filter(x => x.id !== u.id);
           await saveDB(); render();
           toast('🗑️ ডিলিট — ' + u.username);
@@ -2980,6 +3311,8 @@ function openUserManager(){
         if(role === 'admin') branch = 'all';
         DB().users.push({ id: uid(), name, username, password: hashPassword(password), encryptedPassword: encryptPlain(password), role, branch, __hashed: true, createdAt: new Date().toISOString(), createdBy: session.name });
         await saveDB(); render();
+        broadcastActivity({ type: 'user_add', targetName: name });
+        addActivityLog({ type: 'user_add', title: '👥 নতুন ইউজার', detail: name + ' (' + username + ')' });
         w.querySelector('#u_name').value = ''; w.querySelector('#u_user').value = ''; w.querySelector('#u_pass').value = '';
         showNotifToast({ type: 'success', icon: '✅', badge: 'নতুন ইউজার', title: '👥 ইউজার তৈরি সফল', body: '<b>' + esc(name) + '</b><br>🆔 ' + esc(username) + '<br>🔑 <b style="color:#4ade80">' + esc(password) + '</b>', duration: 10000 });
         toast('✅ তৈরি — লগইন: ' + username + ' / ' + password);
@@ -3019,6 +3352,8 @@ function openBranchManagement(){
           DB().totalCapital = Object.values(DB().branchCapital).reduce((s,v) => s + (Number(v)||0), 0);
           recomputeLive(); await saveDB();
           try{ await pushRemoteDB(true); }catch(e){}
+          broadcastActivity({ type: 'vault_update', targetName: BRANCHES[br].name });
+          addActivityLog({ type: 'vault_update', title: '🗄️ ভল্ট আপডেট', detail: BRANCHES[br].name + ' — মূলধন ৳ ' + fmt(cap) });
           renderDashboard();
           toast('✅ সেভ — মূলধন ৳ ' + fmt(cap));
         });
@@ -3031,6 +3366,7 @@ function openBranchManagement(){
           DB().totalCapital = Object.values(DB().branchCapital).reduce((s,v) => s + (Number(v)||0), 0);
           recomputeLive(); await saveDB();
           try{ await pushRemoteDB(true); }catch(e){}
+          broadcastActivity({ type: 'vault_update', targetName: BRANCHES[br].name + ' (রিসেট)' });
           renderDashboard(); render(br);
           toast('🔄 রিসেট');
         });
@@ -3074,7 +3410,7 @@ function openNotifSettings(){
 }
 
 /* ============ ডেটাবেস ব্রাউজার ============ */
-const DB_TABLES = { txs:{label:'💸 লেনদেন',icon:'💸'}, txEditLog:{label:'📜 অডিট লগ',icon:'📜'}, customers:{label:'🧑 গ্রাহক',icon:'🧑'}, users:{label:'👥 ইউজার',icon:'👥'}, branchCapital:{label:'💵 মূলধন',icon:'💵'}, baseVault:{label:'🗄️ বেস ভল্ট',icon:'🗄️'}, baseAccounts:{label:'🏦 বেস অ্যাকাউন্ট',icon:'🏦'}, liveVault:{label:'⚡ লাইভ ভল্ট',icon:'⚡'}, liveAccounts:{label:'💵 লাইভ অ্যাকাউন্ট',icon:'💵'}, yearlyArchive:{label:'📚 আর্কাইভ',icon:'📚'}, deletedTxIds:{label:'🗑️ ডিলিটেড',icon:'🗑️'} };
+const DB_TABLES = { txs:{label:'💸 লেনদেন',icon:'💸'}, txEditLog:{label:'📜 অডিট লগ',icon:'📜'}, activityLog:{label:'🔔 অ্যাক্টিভিটি',icon:'🔔'}, customers:{label:'🧑 গ্রাহক',icon:'🧑'}, users:{label:'👥 ইউজার',icon:'👥'}, branchCapital:{label:'💵 মূলধন',icon:'💵'}, baseVault:{label:'🗄️ বেস ভল্ট',icon:'🗄️'}, baseAccounts:{label:'🏦 বেস অ্যাকাউন্ট',icon:'🏦'}, liveVault:{label:'⚡ লাইভ ভল্ট',icon:'⚡'}, liveAccounts:{label:'💵 লাইভ অ্যাকাউন্ট',icon:'💵'}, yearlyArchive:{label:'📚 আর্কাইভ',icon:'📚'}, deletedTxIds:{label:'🗑️ ডিলিটেড',icon:'🗑️'} };
 function getTableData(n){ const d = DB(); if(!d) return null; return d[n]; }
 function getTableCount(n){ const d = getTableData(n); if(d == null) return 0; if(Array.isArray(d)) return d.length; if(typeof d === 'object') return Object.keys(d).length; return 1; }
 function openDatabaseBrowser(){
@@ -3206,12 +3542,25 @@ async function doLogin(){
     dashDate = todayStr();
     try{ fetchGeoLocation().then(g => { window.__geoCache = g; }).catch(()=>{}); }catch(ex){}
     try{ setTimeout(() => { showNotifToast({ type: 'success', icon: '👋', badge: 'স্বাগতম', title: '✅ লগইন সফল', body: '<b>' + esc(user.name) + '</b><br>' + (user.role === 'admin' ? '👑 অ্যাডমিন' : '👤 ইউজার'), duration: 4000 }); }, 300); }catch(ex){}
+    setTimeout(() => {
+      try{
+        broadcastActivity({ type: 'login' });
+        addActivityLog({ type: 'login', title: '🔓 ইউজার লগইন', detail: user.name + ' (' + user.username + ')' });
+        createCloudBackup('login').catch(()=>{});
+      }catch(ex){}
+    }, 1500);
     startApp();
   }catch(err){ e.textContent = '❌ ' + (err.message || 'Error'); b.disabled = false; b.innerHTML = '🔐 লগইন করুন'; }
 }
 async function logout(){
   try{ if(DB()) await saveDB(); }catch(e){}
+  try{
+    broadcastActivity({ type: 'logout' });
+    addActivityLog({ type: 'logout', title: '🔒 ইউজার লগআউট', detail: session?.name || '' });
+    await createCloudBackup('logout');
+  }catch(e){}
   try{ if(__realtimeChannel && __supabaseClient){ await __realtimeChannel.untrack(); __supabaseClient.removeChannel(__realtimeChannel); __realtimeChannel = null; } }catch(e){}
+  try{ if(__activityChannel && __supabaseClient){ __supabaseClient.removeChannel(__activityChannel); __activityChannel = null; } }catch(e){}
   try{ if(window.__topbarScrollHandler){ window.removeEventListener('scroll', window.__topbarScrollHandler); window.removeEventListener('touchmove', window.__topbarScrollHandler); window.__topbarScrollHandler = null; } }catch(e){}
   const tb = document.getElementById('topbar'); if(tb) tb.classList.remove('hidden-scroll','scrolled');
   updatePresenceUI([]);
