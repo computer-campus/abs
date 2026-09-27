@@ -31,39 +31,6 @@
                     "onlineBankName": null,
                     "onlineTransfer": false,
                     "cashNotTakenAmount": null
-                },
-                {
-                    "id": "w5md0vfsxxm",
-                    "dir": "in",
-                    "bank": null,
-                    "date": "2026-09-26",
-                    "note": "",
-                    "type": "support",
-                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
-                    "year": "2026",
-                    "amount": 8500,
-                    "branch": "kalaroa",
-                    "custAcc": "8888205037948001",
-                    "notesIn": {
-                        "500": 1,
-                        "1000": 8
-                    },
-                    "accepted": true,
-                    "custAddr": "",
-                    "custName": "SABIHA ENTERPRISES",
-                    "notesOut": {},
-                    "createdAt": "2026-09-26T16:00:14.026Z",
-                    "updatedAt": "2026-09-26T16:00:14.026Z",
-                    "cashAmount": null,
-                    "custBranch": "kalaroa",
-                    "custMobile": "",
-                    "acceptedDate": "2026-09-26",
-                    "cashNotTaken": false,
-                    "onlineAmount": null,
-                    "userUsername": "admin",
-                    "onlineBankName": null,
-                    "onlineTransfer": false,
-                    "cashNotTakenAmount": null
                 }
             ],
             "users": [
@@ -155,10 +122,10 @@
                     "address": "",
                     "accountNo": "8888205037948001",
                     "createdAt": "2026-09-26T09:52:58.361Z",
-                    "supportDue": 30000,
+                    "supportDue": 38500,
                     "supportPaid": 38500,
-                    "supportCount": 2,
-                    "supportRefund": 8500
+                    "supportCount": 1,
+                    "supportRefund": 0
                 }
             ],
             "liveVault": {
@@ -171,8 +138,8 @@
                     "50": 51,
                     "100": 280,
                     "200": 153,
-                    "500": 1304,
-                    "1000": 806
+                    "500": 1303,
+                    "1000": 798
                 },
                 "jhaudanga": {
                     "1": 0,
@@ -713,6 +680,862 @@
                         "onlineBankName": null,
                         "onlineTransfer": false,
                         "cashNotTakenAmount": null
+                    }
+                },
+                {
+                    "at": "2026-09-26T18:42:29.649Z",
+                    "id": "2kyjmhillzl",
+                    "role": "admin",
+                    "txId": "w5md0vfsxxm",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "w5md0vfsxxm",
+                        "dir": "in",
+                        "bank": null,
+                        "date": "2026-09-26",
+                        "note": "",
+                        "type": "support",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 8500,
+                        "branch": "kalaroa",
+                        "custAcc": "8888205037948001",
+                        "notesIn": {
+                            "500": 1,
+                            "1000": 8
+                        },
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "SABIHA ENTERPRISES",
+                        "notesOut": {},
+                        "createdAt": "2026-09-26T16:00:14.026Z",
+                        "updatedAt": "2026-09-26T16:00:14.026Z",
+                        "cashAmount": null,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-26",
+                        "cashNotTaken": false,
+                        "onlineAmount": null,
+                        "userUsername": "admin",
+                        "onlineBankName": null,
+                        "onlineTransfer": false,
+                        "cashNotTakenAmount": null
+                    }
+                },
+                {
+                    "at": "2026-09-26T19:10:54.849Z",
+                    "id": "jcbih5nm5q9",
+                    "role": "user",
+                    "txId": "3d3poitm5q8",
+                    "user": "Jahangir Kabir",
+                    "action": "create",
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "jahangir",
+                    "txSnapshot": {
+                        "id": "3d3poitm5q8",
+                        "dir": "in",
+                        "bank": null,
+                        "date": "2026-09-27",
+                        "note": "",
+                        "type": "support",
+                        "user": "Jahangir Kabir",
+                        "year": "2026",
+                        "amount": 38000,
+                        "branch": "kalaroa",
+                        "custAcc": "8888205037948001",
+                        "notesIn": {
+                            "1000": 38
+                        },
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "SABIHA ENTERPRISES",
+                        "notesOut": {},
+                        "createdAt": "2026-09-26T19:10:54.848Z",
+                        "updatedAt": "2026-09-26T19:10:54.848Z",
+                        "cashAmount": null,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-27",
+                        "cashNotTaken": false,
+                        "onlineAmount": null,
+                        "userUsername": "jahangir",
+                        "onlineBankName": null,
+                        "onlineTransfer": false,
+                        "cashNotTakenAmount": null
+                    }
+                },
+                {
+                    "at": "2026-09-26T19:13:30.926Z",
+                    "id": "6toguk6pi5q",
+                    "role": "admin",
+                    "txId": "3d3poitm5q8",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "3d3poitm5q8",
+                        "dir": "in",
+                        "bank": null,
+                        "date": "2026-09-27",
+                        "note": "",
+                        "type": "support",
+                        "user": "Jahangir Kabir",
+                        "year": "2026",
+                        "amount": 38000,
+                        "branch": "kalaroa",
+                        "custAcc": "8888205037948001",
+                        "notesIn": {
+                            "1000": 38
+                        },
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "SABIHA ENTERPRISES",
+                        "notesOut": {},
+                        "createdAt": "2026-09-26T19:10:54.848Z",
+                        "updatedAt": "2026-09-26T19:10:54.848Z",
+                        "cashAmount": null,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-27",
+                        "cashNotTaken": false,
+                        "onlineAmount": null,
+                        "userUsername": "jahangir",
+                        "onlineBankName": null,
+                        "onlineTransfer": false,
+                        "cashNotTakenAmount": null
+                    }
+                },
+                {
+                    "at": "2026-09-26T19:15:48.763Z",
+                    "id": "o4gq64nsgij",
+                    "role": "user",
+                    "txId": "utaaknrsgij",
+                    "user": "Masum",
+                    "action": "create",
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "masum",
+                    "txSnapshot": {
+                        "id": "utaaknrsgij",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 22000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "100": 50,
+                            "200": 20,
+                            "500": 6,
+                            "1000": 10
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "100": 50,
+                            "200": 20,
+                            "500": 6,
+                            "1000": 10
+                        },
+                        "createdAt": "2026-09-26T19:15:48.763Z",
+                        "updatedAt": "2026-09-26T19:15:48.763Z",
+                        "custBranch": "jhaudanga",
+                        "acceptedDate": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T19:29:49.460Z",
+                    "id": "l09zak0ah78",
+                    "role": "admin",
+                    "txId": "utaaknrsgij",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "cancelled": {
+                            "to": true,
+                            "from": false
+                        },
+                        "cancelledBy": {
+                            "to": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                            "from": ""
+                        },
+                        "cancelReason": {
+                            "to": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                            "from": ""
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "utaaknrsgij",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 22000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "100": 50,
+                            "200": 20,
+                            "500": 6,
+                            "1000": 10
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "100": 50,
+                            "200": 20,
+                            "500": 6,
+                            "1000": 10
+                        },
+                        "createdAt": "2026-09-26T19:15:48.763Z",
+                        "updatedAt": "2026-09-26T19:15:48.763Z",
+                        "custBranch": "jhaudanga",
+                        "acceptedDate": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T19:30:25.846Z",
+                    "id": "tkhhbz2b99y",
+                    "role": "admin",
+                    "txId": "utaaknrsgij",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "utaaknrsgij",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 22000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "100": 50,
+                            "200": 20,
+                            "500": 6,
+                            "1000": 10
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "100": 50,
+                            "200": 20,
+                            "500": 6,
+                            "1000": 10
+                        },
+                        "cancelled": true,
+                        "createdAt": "2026-09-26T19:15:48.763Z",
+                        "updatedAt": "2026-09-26T19:29:49.458Z",
+                        "custBranch": "jhaudanga",
+                        "cancelledAt": "2026-09-26T19:29:49.458Z",
+                        "cancelledBy": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "acceptedDate": null,
+                        "cancelReason": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T20:15:12.693Z",
+                    "id": "j846ifrwugl",
+                    "role": "admin",
+                    "txId": "sf1r3p7wugk",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "create",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "sf1r3p7wugk",
+                        "to": "jhaudanga",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "kalaroa",
+                        "note": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 798000,
+                        "branch": "kalaroa",
+                        "notesIn": {
+                            "1000": 798
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 798
+                        },
+                        "createdAt": "2026-09-26T20:15:12.692Z",
+                        "updatedAt": "2026-09-26T20:15:12.692Z",
+                        "custBranch": "kalaroa",
+                        "acceptedDate": null,
+                        "userUsername": "admin"
+                    }
+                },
+                {
+                    "at": "2026-09-26T20:28:26.585Z",
+                    "id": "e9ggojvdv15",
+                    "role": "user",
+                    "txId": "sf1r3p7wugk",
+                    "user": "Masum",
+                    "action": "delete",
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "cancelled": {
+                            "to": true,
+                            "from": false
+                        },
+                        "cancelledBy": {
+                            "to": "Masum",
+                            "from": ""
+                        },
+                        "cancelReason": {
+                            "to": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                            "from": ""
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "masum",
+                    "txSnapshot": {
+                        "id": "sf1r3p7wugk",
+                        "to": "jhaudanga",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "kalaroa",
+                        "note": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 798000,
+                        "branch": "kalaroa",
+                        "notesIn": {
+                            "1000": 798
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 798
+                        },
+                        "createdAt": "2026-09-26T20:15:12.692Z",
+                        "updatedAt": "2026-09-26T20:15:12.692Z",
+                        "custBranch": "kalaroa",
+                        "acceptedDate": null,
+                        "userUsername": "admin"
+                    }
+                },
+                {
+                    "at": "2026-09-26T20:28:53.715Z",
+                    "id": "q9li7mgefyr",
+                    "role": "user",
+                    "txId": "c6zsiiiefyr",
+                    "user": "Masum",
+                    "action": "create",
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "masum",
+                    "txSnapshot": {
+                        "id": "c6zsiiiefyr",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 15000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "1000": 15
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 15
+                        },
+                        "createdAt": "2026-09-26T20:28:53.715Z",
+                        "updatedAt": "2026-09-26T20:28:53.715Z",
+                        "custBranch": "jhaudanga",
+                        "acceptedDate": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T20:29:58.734Z",
+                    "id": "iunjdnjfu4u",
+                    "role": "user",
+                    "txId": "c6zsiiiefyr",
+                    "user": "Jahangir Kabir",
+                    "action": "delete",
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "cancelled": {
+                            "to": true,
+                            "from": false
+                        },
+                        "cancelledBy": {
+                            "to": "Jahangir Kabir",
+                            "from": ""
+                        },
+                        "cancelReason": {
+                            "to": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                            "from": ""
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "jahangir",
+                    "txSnapshot": {
+                        "id": "c6zsiiiefyr",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 15000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "1000": 15
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 15
+                        },
+                        "createdAt": "2026-09-26T20:28:53.715Z",
+                        "updatedAt": "2026-09-26T20:28:53.715Z",
+                        "custBranch": "jhaudanga",
+                        "acceptedDate": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T20:36:40.903Z",
+                    "id": "uef6be7ogg7",
+                    "role": "user",
+                    "txId": "ldb8b54ogg6",
+                    "user": "Masum",
+                    "action": "create",
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "masum",
+                    "txSnapshot": {
+                        "id": "ldb8b54ogg6",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 16000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "1000": 16
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 16
+                        },
+                        "createdAt": "2026-09-26T20:36:40.902Z",
+                        "updatedAt": "2026-09-26T20:36:40.902Z",
+                        "custBranch": "jhaudanga",
+                        "acceptedDate": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T20:37:29.741Z",
+                    "id": "olcdxt4pi4t",
+                    "role": "user",
+                    "txId": "ldb8b54ogg6",
+                    "user": "Jahangir Kabir",
+                    "action": "delete",
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "cancelled": {
+                            "to": true,
+                            "from": false
+                        },
+                        "cancelledBy": {
+                            "to": "Jahangir Kabir",
+                            "from": ""
+                        },
+                        "cancelReason": {
+                            "to": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                            "from": ""
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "jahangir",
+                    "txSnapshot": {
+                        "id": "ldb8b54ogg6",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 16000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "1000": 16
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 16
+                        },
+                        "createdAt": "2026-09-26T20:36:40.902Z",
+                        "updatedAt": "2026-09-26T20:36:40.902Z",
+                        "custBranch": "jhaudanga",
+                        "acceptedDate": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T20:38:02.654Z",
+                    "id": "t11n3znq7j2",
+                    "role": "user",
+                    "txId": "rm0xj3qq7j1",
+                    "user": "Jahangir Kabir",
+                    "action": "create",
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "jahangir",
+                    "txSnapshot": {
+                        "id": "rm0xj3qq7j1",
+                        "to": "jhaudanga",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "kalaroa",
+                        "note": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Jahangir Kabir",
+                        "year": "2026",
+                        "amount": 798000,
+                        "branch": "kalaroa",
+                        "notesIn": {
+                            "1000": 798
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 798
+                        },
+                        "createdAt": "2026-09-26T20:38:02.653Z",
+                        "updatedAt": "2026-09-26T20:38:02.653Z",
+                        "custBranch": "kalaroa",
+                        "acceptedDate": null,
+                        "userUsername": "jahangir"
+                    }
+                },
+                {
+                    "at": "2026-09-26T20:41:44.268Z",
+                    "id": "dczumunuyj0",
+                    "role": "admin",
+                    "txId": "rm0xj3qq7j1",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "cancelled": {
+                            "to": true,
+                            "from": false
+                        },
+                        "cancelledBy": {
+                            "to": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                            "from": ""
+                        },
+                        "cancelReason": {
+                            "to": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                            "from": ""
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "rm0xj3qq7j1",
+                        "to": "jhaudanga",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "kalaroa",
+                        "note": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Jahangir Kabir",
+                        "year": "2026",
+                        "amount": 798000,
+                        "branch": "kalaroa",
+                        "notesIn": {
+                            "1000": 798
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 798
+                        },
+                        "createdAt": "2026-09-26T20:38:02.653Z",
+                        "updatedAt": "2026-09-26T20:38:02.653Z",
+                        "custBranch": "kalaroa",
+                        "acceptedDate": null,
+                        "userUsername": "jahangir"
+                    }
+                },
+                {
+                    "at": "2026-09-26T21:00:19.625Z",
+                    "id": "rnri3ftiv55",
+                    "role": "admin",
+                    "txId": "rm0xj3qq7j1",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "rm0xj3qq7j1",
+                        "to": "jhaudanga",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "kalaroa",
+                        "note": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Jahangir Kabir",
+                        "year": "2026",
+                        "amount": 798000,
+                        "branch": "kalaroa",
+                        "notesIn": {
+                            "1000": 798
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 798
+                        },
+                        "cancelled": true,
+                        "createdAt": "2026-09-26T20:38:02.653Z",
+                        "updatedAt": "2026-09-26T20:41:44.267Z",
+                        "custBranch": "kalaroa",
+                        "cancelledAt": "2026-09-26T20:41:44.267Z",
+                        "cancelledBy": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "acceptedDate": null,
+                        "cancelReason": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                        "userUsername": "jahangir"
+                    }
+                },
+                {
+                    "at": "2026-09-26T21:00:24.181Z",
+                    "id": "8xit345iynp",
+                    "role": "admin",
+                    "txId": "ldb8b54ogg6",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "ldb8b54ogg6",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 16000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "1000": 16
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 16
+                        },
+                        "cancelled": true,
+                        "createdAt": "2026-09-26T20:36:40.902Z",
+                        "updatedAt": "2026-09-26T20:37:29.740Z",
+                        "custBranch": "jhaudanga",
+                        "cancelledAt": "2026-09-26T20:37:29.740Z",
+                        "cancelledBy": "Jahangir Kabir",
+                        "acceptedDate": null,
+                        "cancelReason": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T21:00:28.156Z",
+                    "id": "fozfgstj1q3",
+                    "role": "admin",
+                    "txId": "c6zsiiiefyr",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "c6zsiiiefyr",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 15000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "1000": 15
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 15
+                        },
+                        "cancelled": true,
+                        "createdAt": "2026-09-26T20:28:53.715Z",
+                        "updatedAt": "2026-09-26T20:29:58.733Z",
+                        "custBranch": "jhaudanga",
+                        "cancelledAt": "2026-09-26T20:29:58.733Z",
+                        "cancelledBy": "Jahangir Kabir",
+                        "acceptedDate": null,
+                        "cancelReason": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-26T21:00:32.062Z",
+                    "id": "u1jxtobj4qm",
+                    "role": "admin",
+                    "txId": "sf1r3p7wugk",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "sf1r3p7wugk",
+                        "to": "jhaudanga",
+                        "dir": "out",
+                        "date": "2026-09-27",
+                        "from": "kalaroa",
+                        "note": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 798000,
+                        "branch": "kalaroa",
+                        "notesIn": {
+                            "1000": 798
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "1000": 798
+                        },
+                        "cancelled": true,
+                        "createdAt": "2026-09-26T20:15:12.692Z",
+                        "updatedAt": "2026-09-26T20:28:26.583Z",
+                        "custBranch": "kalaroa",
+                        "cancelledAt": "2026-09-26T20:28:26.583Z",
+                        "cancelledBy": "Masum",
+                        "acceptedDate": null,
+                        "cancelReason": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                        "userUsername": "admin"
                     }
                 }
             ],
@@ -1391,17 +2214,782 @@
                     "location": "Dhaka, Dhaka Division, BD",
                     "targetId": null,
                     "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T18:15:41.503Z",
+                    "id": "9apdnkcn54v",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T18:52:20.389Z",
+                    "id": "6pfzdvjy9t1",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T18:53:38.289Z",
+                    "id": "nk3bre0zxwx",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T19:08:17.743Z",
+                    "id": "mrp9cblisi7",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T19:10:54.850Z",
+                    "id": "00xlnzhm5qa",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udcb8 \u09b8\u09be\u09aa\u09cb\u09b0\u09cd\u099f \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 38000,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "SABIHA ENTERPRISES",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "3d3poitm5q8",
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T19:12:59.630Z",
+                    "id": "0q1lmhjou0e",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T19:13:10.345Z",
+                    "id": "vfzzkcmp2a1",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T19:13:30.927Z",
+                    "id": "he6vveipi5r",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\uddd1\ufe0f \u09b2\u09c7\u09a8\u09a6\u09c7\u09a8 \u09a1\u09bf\u09b2\u09bf\u099f",
+                    "amount": 38000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09b8\u09be\u09aa\u09cb\u09b0\u09cd\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "3d3poitm5q8",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T19:14:15.611Z",
+                    "id": "mte8wjkqgmz",
+                    "role": "admin",
+                    "type": "logout",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T19:14:22.661Z",
+                    "id": "z9sn2x1qm2t",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T19:15:48.764Z",
+                    "id": "carjd99sgik",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Masum",
+                    "title": "\ud83d\udd01 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 22000,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "utaaknrsgij",
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T19:16:31.330Z",
+                    "id": "8sfwk32tdcy",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Masum",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T19:16:38.083Z",
+                    "id": "ob3zbnjtikj",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T19:17:30.109Z",
+                    "id": "r49i2kyumpp",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T19:23:37.385Z",
+                    "id": "759z27c2i3t",
+                    "role": "admin",
+                    "type": "logout",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T19:28:43.550Z",
+                    "id": "iznj76s92ce",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T19:29:05.652Z",
+                    "id": "c3oi7a69jec",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T19:29:49.461Z",
+                    "id": "iw6rbt6ah79",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd34 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09ac\u09be\u09a4\u09bf\u09b2",
+                    "amount": 22000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u2014 \u0995\u09be\u09b0\u09a3: \u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "utaaknrsgij",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T19:30:25.847Z",
+                    "id": "r0s7y46b99z",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\uddd1\ufe0f \u09b2\u09c7\u09a8\u09a6\u09c7\u09a8 \u09a1\u09bf\u09b2\u09bf\u099f",
+                    "amount": 22000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0986\u0989\u099f\u09b2\u09c7\u099f-\u09a5\u09c7\u0995\u09c7-\u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "utaaknrsgij",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T20:13:26.744Z",
+                    "id": "2z324mcukpk",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T20:15:12.694Z",
+                    "id": "drcjakewugm",
+                    "role": "admin",
+                    "type": "txn_create",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd01 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 798000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "sf1r3p7wugk",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T20:15:24.698Z",
+                    "id": "zacxpicx3q2",
+                    "role": "admin",
+                    "type": "logout",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T20:27:34.167Z",
+                    "id": "4rwmyc9cql3",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:28:26.586Z",
+                    "id": "4baa11edv16",
+                    "role": "user",
+                    "type": "txn_delete",
+                    "user": "Masum",
+                    "title": "\ud83d\udd34 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09ac\u09be\u09a4\u09bf\u09b2",
+                    "amount": 798000,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u2014 \u0995\u09be\u09b0\u09a3: \u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "sf1r3p7wugk",
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:28:53.716Z",
+                    "id": "rbzjvdiefys",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Masum",
+                    "title": "\ud83d\udd01 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 15000,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "c6zsiiiefyr",
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:28:58.904Z",
+                    "id": "zqmfmxcejyw",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Masum",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:29:11.520Z",
+                    "id": "rgkecuqetpc",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T20:29:58.735Z",
+                    "id": "1zqf1blfu4v",
+                    "role": "user",
+                    "type": "txn_delete",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd34 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09ac\u09be\u09a4\u09bf\u09b2",
+                    "amount": 15000,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u2014 \u0995\u09be\u09b0\u09a3: \u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "c6zsiiiefyr",
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T20:30:05.886Z",
+                    "id": "o67dcq2fzni",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T20:36:40.905Z",
+                    "id": "bucb1l2ogg9",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Masum",
+                    "title": "\ud83d\udd01 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 16000,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "ldb8b54ogg6",
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:37:01.588Z",
+                    "id": "nq647xhowes",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Masum",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:37:10.640Z",
+                    "id": "j542q7zp3e8",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T20:37:29.742Z",
+                    "id": "uwisd1ppi4u",
+                    "role": "user",
+                    "type": "txn_delete",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd34 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09ac\u09be\u09a4\u09bf\u09b2",
+                    "amount": 16000,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u2014 \u0995\u09be\u09b0\u09a3: \u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "ldb8b54ogg6",
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T20:38:02.655Z",
+                    "id": "qt3lweaq7j3",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd01 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 798000,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "rm0xj3qq7j1",
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T20:38:29.006Z",
+                    "id": "oclyis9qrv2",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T20:41:09.141Z",
+                    "id": "losuqyeu7f9",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Masum",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:41:16.572Z",
+                    "id": "gppkjm8ud5o",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:41:25.947Z",
+                    "id": "v0s733iuke3",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Masum",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:41:33.392Z",
+                    "id": "r12sz6kuq4w",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T20:41:44.269Z",
+                    "id": "m16oamiuyj1",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd34 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09ac\u09be\u09a4\u09bf\u09b2",
+                    "amount": 798000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u2014 \u0995\u09be\u09b0\u09a3: \u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "rm0xj3qq7j1",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T20:42:10.387Z",
+                    "id": "zknsoc1vioj",
+                    "role": "admin",
+                    "type": "logout",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T20:55:33.287Z",
+                    "id": "cb1n4z7cq7a",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:55:54.040Z",
+                    "id": "oayq78id67s",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Masum",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:56:23.632Z",
+                    "id": "tfmxz57dt1s",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:56:49.406Z",
+                    "id": "obykdrkecxq",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Masum",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-26T20:56:57.764Z",
+                    "id": "hr1ij2qejdw",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T20:58:50.124Z",
+                    "id": "50xo2bdgy30",
+                    "role": "user",
+                    "type": "logout",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-26T21:00:19.626Z",
+                    "id": "rxd1zq7iv56",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\uddd1\ufe0f \u09b2\u09c7\u09a8\u09a6\u09c7\u09a8 \u09a1\u09bf\u09b2\u09bf\u099f",
+                    "amount": 798000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0986\u0989\u099f\u09b2\u09c7\u099f-\u09a5\u09c7\u0995\u09c7-\u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "rm0xj3qq7j1",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T21:00:24.182Z",
+                    "id": "3hjg5j8iynq",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\uddd1\ufe0f \u09b2\u09c7\u09a8\u09a6\u09c7\u09a8 \u09a1\u09bf\u09b2\u09bf\u099f",
+                    "amount": 16000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0986\u0989\u099f\u09b2\u09c7\u099f-\u09a5\u09c7\u0995\u09c7-\u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "ldb8b54ogg6",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T21:00:28.157Z",
+                    "id": "3otqslvj1q5",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\uddd1\ufe0f \u09b2\u09c7\u09a8\u09a6\u09c7\u09a8 \u09a1\u09bf\u09b2\u09bf\u099f",
+                    "amount": 15000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0986\u0989\u099f\u09b2\u09c7\u099f-\u09a5\u09c7\u0995\u09c7-\u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "c6zsiiiefyr",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-26T21:00:32.063Z",
+                    "id": "ke9ip7wj4qn",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\uddd1\ufe0f \u09b2\u09c7\u09a8\u09a6\u09c7\u09a8 \u09a1\u09bf\u09b2\u09bf\u099f",
+                    "amount": 798000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0986\u0989\u099f\u09b2\u09c7\u099f-\u09a5\u09c7\u0995\u09c7-\u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Dhaka, Dhaka Division, BD",
+                    "targetId": "sf1r3p7wugk",
+                    "username": "admin"
                 }
             ],
             "__lastDevice": {
-                "role": "user",
-                "user": "Jahangir Kabir",
-                "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                "role": "admin",
+                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
                 "location": "Dhaka, Dhaka Division, BD",
-                "username": "jahangir"
+                "username": "admin"
             },
-            "__lastUpdate": "2026-09-26T18:03:59.915Z",
+            "__lastUpdate": "2026-09-26T21:00:32.063Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 2393989.66,
@@ -1415,16 +3003,23 @@
                 }
             },
             "deletedTxIds": {
+                "3d3poitm5q8": "2026-09-26T19:13:30.926Z",
                 "3mjlf6ukosb": "2026-09-26T15:30:01.368Z",
                 "6s1l0maqgjs": "2026-09-26T15:59:10.872Z",
+                "c6zsiiiefyr": "2026-09-26T21:00:28.155Z",
                 "hbgpebnabz9": "2026-09-26T15:30:07.793Z",
-                "p1hmz0ly6kb": "2026-09-26T09:15:59.641Z"
+                "ldb8b54ogg6": "2026-09-26T21:00:24.181Z",
+                "p1hmz0ly6kb": "2026-09-26T09:15:59.641Z",
+                "rm0xj3qq7j1": "2026-09-26T21:00:19.624Z",
+                "sf1r3p7wugk": "2026-09-26T21:00:32.062Z",
+                "utaaknrsgij": "2026-09-26T19:30:25.845Z",
+                "w5md0vfsxxm": "2026-09-26T18:42:29.647Z"
             },
             "lastBaseDate": "2026-09-27",
             "liveAccounts": {
                 "kalaroa": {
                     "bank": 2355489.66,
-                    "cash": 1522391,
+                    "cash": 1513891,
                     "other": 20457.63
                 },
                 "jhaudanga": {
@@ -1441,16 +3036,16 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-09-26T18:04:00.436Z",
-                "role": "user",
-                "user": "Jahangir Kabir",
+                "at": "2026-09-26T21:00:32.630Z",
+                "role": "admin",
+                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
                 "txIds": [],
-                "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
                 "txCount": 0,
                 "txTypes": [],
                 "location": "Dhaka, Dhaka Division, BD",
-                "username": "jahangir"
+                "username": "admin"
             },
             "__lastRolloverDate": "2026-09-27"
         }
