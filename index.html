@@ -273,9 +273,9 @@ main{max-width:1500px;margin:0 auto;padding:26px 20px 80px;display:flex;flex-dir
 
 /* ============ Tables ============ */
 .table-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--line-2);width:100%;max-width:100%;-webkit-overflow-scrolling:touch;display:block}
-table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:100%}
 table.tbl th{background:linear-gradient(180deg,rgba(59,130,246,.18),rgba(59,130,246,.06));padding:14px;text-align:left;font-weight:700;color:var(--blue-3);font-size:13px;border-bottom:1px solid var(--line-3);text-transform:uppercase;white-space:nowrap}
-table.tbl td{padding:12px 14px;border-top:1px solid var(--line);color:#e0e8ff;line-height:1.7;font-size:13.5px}
+table.tbl td{padding:8px 10px;border-top:1px solid var(--line);color:#e0e8ff;line-height:1.5;font-size:12px}
 table.tbl td.amt{font-weight:800;color:var(--green-2);white-space:nowrap}
 table.tbl tr:hover td{background:rgba(59,130,246,.04)}
 table.tbl tr.clickable-row{cursor:pointer}
@@ -408,6 +408,37 @@ table.tbl tr.clickable-row:hover td{background:rgba(236,72,153,.08)!important}
 }
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 ::selection{background:var(--blue);color:#fff}
+
+/* ============ All Data Modal Fit Fix ============ */
+@media (max-width: 768px) {
+  /* মোডালের বডি প্যাডিং কমানো */
+  .modal-body {
+    padding: 12px !important;
+  }
+  
+  /* সব ডেটা টেবিলের ফন্ট এবং প্যাডিং আরও ছোট করা */
+  #ad_body table.tbl td,
+  #ad_body table.tbl th {
+    font-size: 10px !important;
+    padding: 6px 4px !important;
+    word-break: break-word;
+  }
+  
+  /* টেবিলের ভেতরের বাটনগুলো ছোট করা */
+  #ad_body .mini {
+    padding: 4px 6px !important;
+    font-size: 10px !important;
+  }
+  
+  /* গ্রাহকের নাম, তারিখ, বিবরণ কলামগুলো ছোট করা */
+  #ad_body table.tbl td:nth-child(1) { white-space: nowrap; } /* তারিখ */
+  #ad_body table.tbl td:nth-child(2) { font-size: 10px; } /* ধরন */
+  #ad_body table.tbl td:nth-child(3) { max-width: 90px; } /* গ্রাহক */
+  #ad_body table.tbl td:nth-child(4) { max-width: 110px; } /* বিবরণ */
+  #ad_body table.tbl td:nth-child(6) { max-width: 60px; }  /* ইউজার */
+  #ad_body table.tbl td:nth-child(7) { font-size: 9px; }   /* সময় */
+}
+
 </style>
 </head>
 <body>
@@ -2897,7 +2928,7 @@ function txListHTML(list, opts){
     const sb = t.type === 'branch_transfer' ? (t.cancelled ? '<span class="badge due">🔴 বাতিল</span>' : t.accepted ? '<span class="badge accepted">✅</span>' : '<span class="badge pending">⏳</span>') : '';
     const ab = isAdminUser ? '<button class="mini" data-edit="' + t.id + '">✏️</button><button class="mini danger" data-del="' + t.id + '">🗑️</button><button class="mini print-btn" data-print="' + t.id + '">🖨️</button>' : '<button class="mini" data-edit="' + t.id + '">✏️</button><button class="mini print-btn" data-print="' + t.id + '">🖨️</button>';
     const cn = t.custName || '', ca = t.custAcc || '', cl = !!ca;
-    const noteHtml = t.note ? '<div style="font-size:11.5px;color:#a5b4d8;margin-top:5px;line-height:1.6">📝 ' + esc(t.note) + '</div>' : '';
+    const noteHtml = t.note ? '<div style="font-size:10px;color:#a5b4d8;margin-top:3px;line-height:1.4;word-break:break-word;white-space:normal;max-width:120px;">📝 ' + esc(t.note) + '</div>' : '';
     return '<tr class="' + (cl?'clickable-row':'') + '" ' + (cl ? 'data-cust-acc="' + esc(ca) + '" data-cust-name="' + esc(cn) + '"' : '') + '><td>' + toBn(t.date) + '</td><td>' + (dirInfo.icon||'') + ' ' + esc(dirInfo.label||t.type) + (dirInfo.badge ? '<div style="margin-top:4px">' + dirInfo.badge + '</div>' : '') + '</td><td>' + (cl ? '👤 <b style="color:#4ade80">' + esc(cn) + '</b><br><small>' + esc(ca) + '</small>' : '—') + '</td><td>' + extra + sb + noteHtml + '</td><td class="amt">৳ ' + fmt(t.amount) + '</td><td>' + esc(t.user||'-') + '</td><td style="font-size:12px">' + esc(fmtDateTime(t.createdAt)) + '</td><td>' + ab + '</td></tr>';
   }).join('');
   return '<div class="table-wrap"><table class="tbl"><thead><tr><th>তারিখ</th><th>ধরন</th><th>গ্রাহক</th><th>বিবরণ</th><th>টাকা</th><th>ইউজার</th><th>সময়</th><th>অ্যাকশন</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
@@ -2905,7 +2936,7 @@ function txListHTML(list, opts){
 function openAllData(){
   const bf = currentBranchFilter();
   const isAdminUser = session.role === 'admin';
-  openModal({ title: '📋 সব ডেটা', wide: true,
+  openModal({ title: '📋 সব ডেটা', xwide: true,
     bodyHTML: '<div class="form-row"><div class="field"><label>ধরন</label><select id="ad_type"><option value="all">— সব —</option>' + Object.entries(TX_CFG).map(([k,v])=>'<option value="' + k + '">' + v.icon + ' ' + v.title + '</option>').join('') + '</select></div><div class="field"><label>শুরু</label><input type="date" id="ad_from"></div><div class="field"><label>শেষ</label><input type="date" id="ad_to"></div></div><div id="ad_body" style="margin-top:16px"></div>',
     onMount: (w) => {
       function render(){
