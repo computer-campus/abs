@@ -1735,60 +1735,6 @@
                     "acceptedDate": "2026-09-28",
                     "onlineAmount": 1500,
                     "userUsername": "jahangir"
-                },
-                {
-                    "id": "i607yy28wes",
-                    "dir": null,
-                    "bank": null,
-                    "date": "2026-09-28",
-                    "note": "",
-                    "type": "deposit",
-                    "user": "Masum",
-                    "year": "2026",
-                    "amount": 15000,
-                    "branch": "kalaroa",
-                    "custAcc": "1081848010001",
-                    "notesIn": {},
-                    "accepted": true,
-                    "custAddr": "",
-                    "custName": "MISS NUR NAHAR",
-                    "notesOut": {
-                        "500": 30
-                    },
-                    "createdAt": "2026-09-28T06:00:07.444Z",
-                    "updatedAt": "2026-09-28T06:00:07.444Z",
-                    "custBranch": "kalaroa",
-                    "custMobile": "",
-                    "acceptedDate": "2026-09-28",
-                    "onlineAmount": null,
-                    "userUsername": "masum"
-                },
-                {
-                    "id": "7pj2w8la6zu",
-                    "dir": null,
-                    "bank": null,
-                    "date": "2026-09-28",
-                    "note": "",
-                    "type": "withdrawal",
-                    "user": "Masum",
-                    "year": "2026",
-                    "amount": 15000,
-                    "branch": "jhaudanga",
-                    "custAcc": "1081848010001",
-                    "notesIn": {},
-                    "accepted": true,
-                    "custAddr": "",
-                    "custName": "MISS NUR NAHAR",
-                    "notesOut": {
-                        "500": 30
-                    },
-                    "createdAt": "2026-09-28T06:01:07.818Z",
-                    "updatedAt": "2026-09-28T06:01:07.820Z",
-                    "custBranch": "jhaudanga",
-                    "custMobile": "",
-                    "acceptedDate": "2026-09-28",
-                    "onlineAmount": null,
-                    "userUsername": "masum"
                 }
             ],
             "users": [
@@ -2443,19 +2389,6 @@
                     "supportPaid": 0,
                     "supportCount": 0,
                     "supportRefund": 0
-                },
-                {
-                    "id": "2bwbof48wes",
-                    "name": "MISS NUR NAHAR",
-                    "branch": "jhaudanga",
-                    "mobile": "",
-                    "address": "",
-                    "accountNo": "1081848010001",
-                    "createdAt": "2026-09-28T06:00:07.444Z",
-                    "supportDue": 0,
-                    "supportPaid": 0,
-                    "supportCount": 0,
-                    "supportRefund": 0
                 }
             ],
             "liveVault": {
@@ -2468,7 +2401,7 @@
                     "50": 52,
                     "100": 972,
                     "200": 448,
-                    "500": 2321,
+                    "500": 2351,
                     "1000": 630
                 },
                 "jhaudanga": {
@@ -2480,7 +2413,7 @@
                     "50": 0,
                     "100": 26,
                     "200": 13,
-                    "500": 434,
+                    "500": 464,
                     "1000": 148
                 }
             },
@@ -6953,90 +6886,6 @@
                         "onlineAmount": 1500,
                         "userUsername": "jahangir"
                     }
-                },
-                {
-                    "at": "2026-09-28T06:00:07.449Z",
-                    "id": "lf14boa8wex",
-                    "role": "user",
-                    "txId": "i607yy28wes",
-                    "user": "Masum",
-                    "action": "create",
-                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
-                    "changes": {
-                        "action": "new transaction"
-                    },
-                    "location": "Kalaroa, Satkhira, BD",
-                    "username": "masum",
-                    "txSnapshot": {
-                        "id": "i607yy28wes",
-                        "dir": null,
-                        "bank": null,
-                        "date": "2026-09-28",
-                        "note": "",
-                        "type": "deposit",
-                        "user": "Masum",
-                        "year": "2026",
-                        "amount": 15000,
-                        "branch": "kalaroa",
-                        "custAcc": "1081848010001",
-                        "notesIn": {},
-                        "accepted": true,
-                        "custAddr": "",
-                        "custName": "MISS NUR NAHAR",
-                        "notesOut": {
-                            "500": 30
-                        },
-                        "createdAt": "2026-09-28T06:00:07.444Z",
-                        "updatedAt": "2026-09-28T06:00:07.444Z",
-                        "custBranch": "kalaroa",
-                        "custMobile": "",
-                        "acceptedDate": "2026-09-28",
-                        "onlineAmount": null,
-                        "userUsername": "masum"
-                    }
-                },
-                {
-                    "at": "2026-09-28T06:01:07.822Z",
-                    "id": "2emqj5va6zy",
-                    "role": "user",
-                    "txId": "7pj2w8la6zu",
-                    "user": "Masum",
-                    "action": "create",
-                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
-                    "changes": {
-                        "action": "new transaction"
-                    },
-                    "location": "Kalaroa, Satkhira, BD",
-                    "username": "masum",
-                    "txSnapshot": {
-                        "id": "7pj2w8la6zu",
-                        "dir": null,
-                        "bank": null,
-                        "date": "2026-09-28",
-                        "note": "",
-                        "type": "withdrawal",
-                        "user": "Masum",
-                        "year": "2026",
-                        "amount": 15000,
-                        "branch": "jhaudanga",
-                        "custAcc": "1081848010001",
-                        "notesIn": {},
-                        "accepted": true,
-                        "custAddr": "",
-                        "custName": "MISS NUR NAHAR",
-                        "notesOut": {
-                            "500": 30
-                        },
-                        "createdAt": "2026-09-28T06:01:07.818Z",
-                        "updatedAt": "2026-09-28T06:01:07.820Z",
-                        "custBranch": "jhaudanga",
-                        "custMobile": "",
-                        "acceptedDate": "2026-09-28",
-                        "onlineAmount": null,
-                        "userUsername": "masum"
-                    }
                 }
             ],
             "activityLog": [
@@ -8406,75 +8255,36 @@
                     "username": "admin"
                 },
                 {
-                    "at": "2026-09-28T05:50:23.378Z",
-                    "id": "81577y5wdqq",
+                    "at": "2026-09-28T11:11:22.736Z",
+                    "id": "wxzrp7id6cw",
                     "role": "admin",
-                    "type": "logout",
+                    "type": "login",
                     "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
-                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
                     "amount": null,
                     "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
                     "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
                     "location": "Kalaroa, Satkhira, BD",
                     "targetId": null,
                     "username": "admin"
-                },
-                {
-                    "at": "2026-09-28T05:50:31.341Z",
-                    "id": "k475vzwwjvx",
-                    "role": "user",
-                    "type": "login",
-                    "user": "Jahangir Kabir",
-                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
-                    "amount": null,
-                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                    "detail": "Jahangir Kabir (jahangir)",
-                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
-                    "location": "Kalaroa, Satkhira, BD",
-                    "targetId": null,
-                    "username": "jahangir"
-                },
-                {
-                    "at": "2026-09-28T06:00:07.449Z",
-                    "id": "97kb8wt8wex",
-                    "role": "user",
-                    "type": "txn_create",
-                    "user": "Masum",
-                    "title": "\ud83d\udcb8 \u099c\u09ae\u09be \u09a4\u09c8\u09b0\u09bf",
-                    "amount": 15000,
-                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                    "detail": "MISS NUR NAHAR",
-                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
-                    "location": "Kalaroa, Satkhira, BD",
-                    "targetId": "i607yy28wes",
-                    "username": "masum"
-                },
-                {
-                    "at": "2026-09-28T06:01:07.822Z",
-                    "id": "hsxo01ba6zy",
-                    "role": "user",
-                    "type": "txn_create",
-                    "user": "Masum",
-                    "title": "\ud83d\udcb8 \u0989\u09a4\u09cd\u09a4\u09cb\u09b2\u09a8 \u09a4\u09c8\u09b0\u09bf",
-                    "amount": 15000,
-                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                    "detail": "MISS NUR NAHAR",
-                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
-                    "location": "Kalaroa, Satkhira, BD",
-                    "targetId": "7pj2w8la6zu",
-                    "username": "masum"
                 }
             ],
+            "__backupMeta": {
+                "at": "2026-09-28T05:45:11.442Z",
+                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "reason": "auto",
+                "username": "admin"
+            },
             "__lastDevice": {
-                "role": "user",
-                "user": "Masum",
-                "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                "role": "admin",
+                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
                 "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
                 "location": "Kalaroa, Satkhira, BD",
-                "username": "masum"
+                "username": "admin"
             },
-            "__lastUpdate": "2026-09-28T06:01:07.823Z",
+            "__lastUpdate": "2026-09-28T11:11:22.736Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 2393989.66,
@@ -8508,13 +8318,13 @@
             "lastBaseDate": "2026-09-28",
             "liveAccounts": {
                 "kalaroa": {
-                    "bank": -530280.3399999999,
-                    "cash": 1983161,
+                    "bank": -515280.33999999985,
+                    "cash": 1998161,
                     "other": 20457.63
                 },
                 "jhaudanga": {
-                    "bank": -489699.41,
-                    "cash": 372200,
+                    "bank": -504699.41,
+                    "cash": 387200,
                     "other": 0
                 }
             },
@@ -8526,16 +8336,16 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-09-28T06:05:38.432Z",
-                "role": "user",
-                "user": "Masum",
+                "at": "2026-09-28T11:11:23.250Z",
+                "role": "admin",
+                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
                 "txIds": [],
-                "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
                 "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
                 "txCount": 0,
                 "txTypes": [],
                 "location": "Kalaroa, Satkhira, BD",
-                "username": "masum"
+                "username": "admin"
             },
             "__lastRolloverDate": "2026-09-28"
         }
