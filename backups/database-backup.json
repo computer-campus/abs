@@ -1735,6 +1735,58 @@
                     "acceptedDate": "2026-09-28",
                     "onlineAmount": 1500,
                     "userUsername": "jahangir"
+                },
+                {
+                    "id": "4vrtdfaslgt",
+                    "dir": "in",
+                    "bank": null,
+                    "date": "2026-09-28",
+                    "note": "",
+                    "type": "support",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "year": "2026",
+                    "amount": 500,
+                    "branch": "kalaroa",
+                    "custAcc": "1041335540002",
+                    "notesIn": {
+                        "500": 1
+                    },
+                    "accepted": true,
+                    "custAddr": "",
+                    "custName": "REZWAN (BBL SME, KALAROA)",
+                    "notesOut": {},
+                    "createdAt": "2026-09-28T12:47:21.005Z",
+                    "updatedAt": "2026-09-28T12:47:21.005Z",
+                    "custBranch": "kalaroa",
+                    "custMobile": "01713110353",
+                    "acceptedDate": "2026-09-28",
+                    "onlineAmount": null,
+                    "userUsername": "admin"
+                },
+                {
+                    "id": "oky8kd2u8y9",
+                    "dir": "online_support_in",
+                    "bank": null,
+                    "date": "2026-09-28",
+                    "note": "",
+                    "type": "support",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "year": "2026",
+                    "amount": 3000,
+                    "branch": "kalaroa",
+                    "custAcc": "1043459100002",
+                    "notesIn": {},
+                    "accepted": true,
+                    "custAddr": "",
+                    "custName": "GOLAM ROBBANI (BBL SME, KALAROA)",
+                    "notesOut": {},
+                    "createdAt": "2026-09-28T12:48:38.098Z",
+                    "updatedAt": "2026-09-28T12:48:38.098Z",
+                    "custBranch": "kalaroa",
+                    "custMobile": "",
+                    "acceptedDate": "2026-09-28",
+                    "onlineAmount": 3000,
+                    "userUsername": "admin"
                 }
             ],
             "users": [
@@ -1790,7 +1842,7 @@
                     "encryptedPassword": "U2FsdGVkX19hdhZqd9wbDPKZi+M01NyT9IItfi/ChCQ="
                 }
             ],
-            "__version": "ccbank",
+            "__version": "ccbank-v2",
             "baseVault": {
                 "kalaroa": {
                     "1": 0,
@@ -2268,10 +2320,10 @@
                     "address": "",
                     "accountNo": "1041335540002",
                     "createdAt": "2026-09-27T10:13:47.998Z",
-                    "supportDue": 2000,
+                    "supportDue": 1500,
                     "supportPaid": 2000,
-                    "supportCount": 2,
-                    "supportRefund": 0
+                    "supportCount": 3,
+                    "supportRefund": 500
                 },
                 {
                     "id": "irod44nalo1",
@@ -2359,10 +2411,10 @@
                     "address": "",
                     "accountNo": "1043459100002",
                     "createdAt": "2026-09-27T12:20:11.282Z",
-                    "supportDue": 3000,
+                    "supportDue": 0,
                     "supportPaid": 3000,
-                    "supportCount": 2,
-                    "supportRefund": 0
+                    "supportCount": 3,
+                    "supportRefund": 3000
                 },
                 {
                     "id": "xqdztqjgh0g",
@@ -2401,7 +2453,7 @@
                     "50": 52,
                     "100": 972,
                     "200": 448,
-                    "500": 2351,
+                    "500": 2352,
                     "1000": 630
                 },
                 "jhaudanga": {
@@ -6886,6 +6938,88 @@
                         "onlineAmount": 1500,
                         "userUsername": "jahangir"
                     }
+                },
+                {
+                    "at": "2026-09-28T12:47:21.007Z",
+                    "id": "2coexkaslgv",
+                    "role": "admin",
+                    "txId": "4vrtdfaslgt",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "create",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "4vrtdfaslgt",
+                        "dir": "in",
+                        "bank": null,
+                        "date": "2026-09-28",
+                        "note": "",
+                        "type": "support",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 500,
+                        "branch": "kalaroa",
+                        "custAcc": "1041335540002",
+                        "notesIn": {
+                            "500": 1
+                        },
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "REZWAN (BBL SME, KALAROA)",
+                        "notesOut": {},
+                        "createdAt": "2026-09-28T12:47:21.005Z",
+                        "updatedAt": "2026-09-28T12:47:21.005Z",
+                        "custBranch": "kalaroa",
+                        "custMobile": "01713110353",
+                        "acceptedDate": "2026-09-28",
+                        "onlineAmount": null,
+                        "userUsername": "admin"
+                    }
+                },
+                {
+                    "at": "2026-09-28T12:48:38.100Z",
+                    "id": "x86keaiu8yc",
+                    "role": "admin",
+                    "txId": "oky8kd2u8y9",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "create",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "oky8kd2u8y9",
+                        "dir": "online_support_in",
+                        "bank": null,
+                        "date": "2026-09-28",
+                        "note": "",
+                        "type": "support",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 3000,
+                        "branch": "kalaroa",
+                        "custAcc": "1043459100002",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "GOLAM ROBBANI (BBL SME, KALAROA)",
+                        "notesOut": {},
+                        "createdAt": "2026-09-28T12:48:38.098Z",
+                        "updatedAt": "2026-09-28T12:48:38.098Z",
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-28",
+                        "onlineAmount": 3000,
+                        "userUsername": "admin"
+                    }
                 }
             ],
             "activityLog": [
@@ -8268,14 +8402,113 @@
                     "location": "Kalaroa, Satkhira, BD",
                     "targetId": null,
                     "username": "admin"
+                },
+                {
+                    "at": "2026-09-28T12:46:40.541Z",
+                    "id": "vvw9h4brq8t",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-28T12:47:21.008Z",
+                    "id": "uq7xyizslgw",
+                    "role": "admin",
+                    "type": "txn_create",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udcb8 \u09b8\u09be\u09aa\u09cb\u09b0\u09cd\u099f \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 500,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "REZWAN (BBL SME, KALAROA)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "4vrtdfaslgt",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-28T12:48:38.101Z",
+                    "id": "bsoq9i3u8yd",
+                    "role": "admin",
+                    "type": "txn_create",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udcb8 \u09b8\u09be\u09aa\u09cb\u09b0\u09cd\u099f \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 3000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "GOLAM ROBBANI (BBL SME, KALAROA)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "oky8kd2u8y9",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-28T13:00:56.442Z",
+                    "id": "t2elhbra2nu",
+                    "role": "admin",
+                    "type": "logout",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd12 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-28T16:30:41.960Z",
+                    "id": "imrlslurtpk",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-28T16:57:31.899Z",
+                    "id": "gox3pzeqby3",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-28T17:26:48.508Z",
+                    "id": "5djmqq6rzcs",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u0987\u0989\u099c\u09be\u09b0 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
                 }
             ],
-            "__backupMeta": {
-                "at": "2026-09-28T05:45:11.442Z",
-                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
-                "reason": "auto",
-                "username": "admin"
-            },
             "__lastDevice": {
                 "role": "admin",
                 "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
@@ -8284,7 +8517,7 @@
                 "location": "Kalaroa, Satkhira, BD",
                 "username": "admin"
             },
-            "__lastUpdate": "2026-09-28T11:11:22.736Z",
+            "__lastUpdate": "2026-09-28T17:26:48.508Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 2393989.66,
@@ -8318,8 +8551,8 @@
             "lastBaseDate": "2026-09-28",
             "liveAccounts": {
                 "kalaroa": {
-                    "bank": -515280.33999999985,
-                    "cash": 1998161,
+                    "bank": -512280.33999999985,
+                    "cash": 1998661,
                     "other": 20457.63
                 },
                 "jhaudanga": {
@@ -8336,7 +8569,7 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-09-28T11:11:23.250Z",
+                "at": "2026-09-28T17:42:03.730Z",
                 "role": "admin",
                 "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
                 "txIds": [],
