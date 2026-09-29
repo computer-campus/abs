@@ -5138,6 +5138,48 @@ const __autofillObserver = new MutationObserver((mutations) => {
 window.addEventListener('beforeunload', () => { try{ if(__realtimeChannel && __supabaseClient){ __realtimeChannel.untrack().catch(()=>{}); } }catch(e){} });
 
 (async function init(){
+
+// ═══════════════════════════════════════════════════════════════
+  // 🧹 AUTO LOCAL CLEAR — App load হলেই সব Local DB মুছে যাবে
+  // ═══════════════════════════════════════════════════════════════
+  try{
+    console.log('🧹 Auto Local Clear চালু হচ্ছে...');
+    
+    // ✅ Step 1: LocalStorage clear (শুধু cc_ prefix)
+    let cleared = 0;
+    Object.keys(localStorage).forEach(k => {
+      if(k.indexOf('cc_') === 0){
+        localStorage.removeItem(k);
+        cleared++;
+      }
+    });
+    console.log('✅ LocalStorage: ' + cleared + ' items মুছে ফেলা হয়েছে');
+    
+    // ✅ Step 2: SessionStorage clear
+    sessionStorage.clear();
+    console.log('✅ SessionStorage clear');
+    
+    // ✅ Step 3: IndexedDB backups delete
+    try{
+      if(window.indexedDB){
+        indexedDB.deleteDatabase('cc_agent_bank_backups');
+        console.log('✅ IndexedDB backups delete');
+      }
+    }catch(e){ console.warn('IndexedDB clear failed:', e); }
+    
+    // ✅ Step 4: Memory cache reset
+    window.__hasSyncedOnce = false;
+    window.__lastAutoPushTs = '';
+    window.__cachedAllTxs = null;
+    window.__cachedAllTxsVersion = '';
+    window.__customerDueCache = null;
+    window.__customerDueCacheVersion = '';
+    
+    console.log('✅ Auto Local Clear সম্পন্ন');
+  }catch(e){
+    console.error('❌ Auto clear error:', e);
+  }
+
     // ═══════════════════════════════════════════════════════════════
   // ✅ CLEAN MODE — URL-এ ?clean=1 থাকলে সব clear করে fresh start
   // ═══════════════════════════════════════════════════════════════
