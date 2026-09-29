@@ -1502,6 +1502,17 @@ function openLoanReceivedForm(editId, prefill){
         '<div id="splitTotalBoth" style="font-size:20px;font-weight:900;color:#4ade80">৳ 0.00</div>' +
       '</div>' +
       '<div id="splitMismatchWarning" style="display:none;margin-top:10px"></div>' +
+          // ✅ Change (Ferot) Section
+    '<div style="padding:14px;border-radius:14px;background:linear-gradient(145deg,rgba(250,204,21,.06),rgba(0,0,0,.3));border:1.5px solid rgba(250,204,21,.35);margin-bottom:14px">' +
+      '<div style="font-size:13px;font-weight:900;color:#facc15;margin-bottom:12px;text-transform:uppercase">🔄 ফেরত (Change)</div>' +
+      '<div style="padding:14px;border-radius:12px;background:linear-gradient(145deg,rgba(250,204,21,.1),rgba(0,0,0,.2));border:1.5px solid rgba(250,204,21,.4)">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">' +
+          '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px">🔄</span><span style="font-size:13px;font-weight:900;color:#facc15;text-transform:uppercase">গ্রাহককে ফেরত দিতে হবে</span></div>' +
+          '<div id="changeTotal" style="font-size:16px;font-weight:900;color:#facc15">৳ 0.00</div>' +
+        '</div>' +
+        notesRowHTML('change_out', {}, {}) +
+      '</div>' +
+    '</div>' +
     '</div>' +
     '<div class="field" style="margin-top:14px"><label>📝 মন্তব্য</label><input type="text" id="f_note" value="' + (editing?.note || '') + '" autocomplete="off"></div>' +
     '<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap"><button class="btn green" id="f_save" style="flex:1;min-width:160px">💾 সংরক্ষণ</button></div>' +
@@ -1530,26 +1541,37 @@ function setupLoanReceivedForm(wrap, editing, close, defaultBranch){
   if(totalInput) attachAmountInput(totalInput, { decimal: true });
   const getBranchKey = () => { const b = wrap.querySelector('#f_branch'); return b?.value || defaultBranch; };
   
-  function updateSplitTotals(){
+    function updateSplitTotals(){
     const splitK = readNotes(wrap, 'in_k');
     const splitJ = readNotes(wrap, 'in_j');
+    const changeNotes = readNotes(wrap, 'change_out');
     const totalK = noteSum(splitK);
     const totalJ = noteSum(splitJ);
     const both = totalK + totalJ;
+    const changeAmt = noteSum(changeNotes);
     if(splitTotalK) splitTotalK.textContent = '৳ ' + fmt(totalK);
     if(splitTotalJ) splitTotalJ.textContent = '৳ ' + fmt(totalJ);
     if(splitTotalBoth) splitTotalBoth.textContent = '৳ ' + fmt(both);
-    return { totalK, totalJ, both, splitK, splitJ };
+    const changeTotalEl = wrap.querySelector('#changeTotal');
+    if(changeTotalEl) changeTotalEl.textContent = '৳ ' + fmt(changeAmt);
+    return { totalK, totalJ, both, splitK, splitJ, changeNotes, changeAmt };
   }
   
-  function updateSummary(){
-    // ✅ Auto-calculate: total = sum of two branches
+    function updateSummary(){
+    // ✅ Auto-calculate
     const splits = updateSplitTotals();
     const received = splits.both;
+    const changeAmt = splits.changeAmt;
+    const netDeposit = received - changeAmt;
     
-    // ✅ Auto-update total input field
+    // Auto-update total input field (Net)
     if(totalInput){
-      if(received > 0){
+      if(netDeposit > 0){
+        totalInput.value = netDeposit.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        totalInput.style.borderColor = 'rgba(34,197,94,.6)';
+        totalInput.style.background = 'rgba(34,197,94,.08)';
+        totalInput.style.color = '#4ade80';
+      } else if(received > 0){
         totalInput.value = received.toLocaleString('en-US', { maximumFractionDigits: 2 });
         totalInput.style.borderColor = 'rgba(34,197,94,.6)';
         totalInput.style.background = 'rgba(34,197,94,.08)';
@@ -1567,9 +1589,13 @@ function setupLoanReceivedForm(wrap, editing, close, defaultBranch){
       let html = '';
       html += '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.08)"><span>🏦 কলারোয়ায় জমা:</span><b style="color:#93c5fd;font-size:15px">৳ ' + fmt(splits.totalK) + '</b></div>';
       html += '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.08)"><span>🏦 ঝাউডাঙ্গায় জমা:</span><b style="color:#4ade80;font-size:15px">৳ ' + fmt(splits.totalJ) + '</b></div>';
-      html += '<div style="display:flex;justify-content:space-between;padding:6px 0;margin-top:4px;padding-top:8px;border-top:2px solid rgba(34,197,94,.4)"><span style="font-weight:800;color:#4ade80">💰 মোট পরিমাণ (auto):</span><b style="color:#4ade80;font-size:18px;font-weight:900">৳ ' + fmt(received) + '</b></div>';
-      if(received > 0){
-        html += '<div style="margin-top:10px;padding:8px 12px;border-radius:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#4ade80;font-size:12px;font-weight:800;text-align:center">✅ স্বয়ংক্রিয় হিসাব — দুই আউটলেট যোগফল</div>';
+      html += '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.08)"><span>📥 দুই আউটলেট মোট:</span><b style="color:#4ade80;font-size:15px">৳ ' + fmt(received) + '</b></div>';
+      if(changeAmt > 0){
+        html += '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed rgba(250,204,21,.3)"><span>🔄 ফেরত (Change):</span><b style="color:#facc15;font-size:15px">− ৳ ' + fmt(changeAmt) + '</b></div>';
+      }
+      html += '<div style="display:flex;justify-content:space-between;padding:6px 0;margin-top:4px;padding-top:8px;border-top:2px solid rgba(34,197,94,.4)"><span style="font-weight:800;color:#4ade80">💰 Net জমা (auto):</span><b style="color:#4ade80;font-size:18px;font-weight:900">৳ ' + fmt(netDeposit) + '</b></div>';
+      if(netDeposit > 0){
+        html += '<div style="margin-top:10px;padding:8px 12px;border-radius:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);color:#4ade80;font-size:12px;font-weight:800;text-align:center">✅ স্বয়ংক্রিয় হিসাব (মোট − ফেরত)</div>';
       }
       summaryEl.innerHTML = html;
     }
@@ -1606,6 +1632,7 @@ function setupLoanReceivedForm(wrap, editing, close, defaultBranch){
   // Setup both branch inputs
   __setupDenomInputs(wrap, 'in_k', () => 'kalaroa', recalc);
   __setupDenomInputs(wrap, 'in_j', () => 'jhaudanga', recalc);
+  __setupDenomInputs(wrap, 'change_out', () => getBranchKey(), recalc);
   
   recalc();
   
@@ -1678,13 +1705,16 @@ function setupLoanReceivedForm(wrap, editing, close, defaultBranch){
     const tB = branchEl?.value || defaultBranch;
     const splitK = readNotes(wrap, 'in_k');
     const splitJ = readNotes(wrap, 'in_j');
+    const changeNotes = readNotes(wrap, 'change_out');
     const totalK = noteSum(splitK);
     const totalJ = noteSum(splitJ);
     const totalReceived = totalK + totalJ;
+    const changeAmt = noteSum(changeNotes);
+    const netDeposit = totalReceived - changeAmt;
     const allNotesIn = { ...splitK, ...splitJ };
     
-    // ✅ Auto-calc total
-    const total = totalReceived;
+    // ✅ Auto-calc: net = received - change
+    const total = netDeposit > 0 ? netDeposit : totalReceived;
     
     // Validation 1: Must have received something
     if(totalReceived <= 0){
@@ -1704,13 +1734,17 @@ function setupLoanReceivedForm(wrap, editing, close, defaultBranch){
       if(Object.keys(splitK).length > 0) branchSplits.push({ branch: 'kalaroa', notesIn: splitK });
       if(Object.keys(splitJ).length > 0) branchSplits.push({ branch: 'jhaudanga', notesIn: splitJ });
       
-      const tx = {
+            const tx = {
         id: editing ? editing.id : uid(),
         type: 'loan_received',
         date, branch: tB, custBranch: tB, dir: 'in',
         amount: Math.round(total * 100) / 100,
+        receivedAmount: Math.round(totalReceived * 100) / 100,
+        changeAmount: Math.round(changeAmt * 100) / 100,
+        netAmount: Math.round(netDeposit * 100) / 100,
         notesIn: allNotesIn,
         notesOut: {},
+        changeNotesOut: changeNotes,
         branchSplits: branchSplits,
         custAcc, custName,
         custMobile: wrap.querySelector('#f_mobile').value.trim(),
