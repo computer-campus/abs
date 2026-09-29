@@ -519,6 +519,69 @@
                     "acceptedDate": "2026-09-29",
                     "onlineAmount": null,
                     "userUsername": "admin"
+                },
+                {
+                    "id": "9vjsu5vzy1l",
+                    "to": "kalaroa",
+                    "dir": "out",
+                    "date": "2026-09-29",
+                    "from": "jhaudanga",
+                    "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "type": "branch_transfer",
+                    "user": "Masum",
+                    "year": "2026",
+                    "amount": 615000,
+                    "branch": "jhaudanga",
+                    "notesIn": {
+                        "50": 300,
+                        "500": 600,
+                        "1000": 300
+                    },
+                    "accepted": false,
+                    "notesOut": {
+                        "50": 300,
+                        "500": 600,
+                        "1000": 300
+                    },
+                    "cancelled": true,
+                    "createdAt": "2026-09-29T12:12:44.697Z",
+                    "updatedAt": "2026-09-29T12:18:36.882Z",
+                    "custBranch": "jhaudanga",
+                    "cancelledAt": "2026-09-29T12:18:36.882Z",
+                    "cancelledBy": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "acceptedDate": null,
+                    "cancelReason": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                    "userUsername": "masum"
+                },
+                {
+                    "id": "b9xypp04to4",
+                    "dir": null,
+                    "bank": null,
+                    "date": "2026-09-29",
+                    "note": "Salary - Masum",
+                    "type": "expense",
+                    "user": "Masum",
+                    "year": "2026",
+                    "amount": 11000,
+                    "branch": "jhaudanga",
+                    "custAcc": "",
+                    "notesIn": {},
+                    "accepted": true,
+                    "custAddr": "",
+                    "custName": "",
+                    "notesOut": {
+                        "100": 3,
+                        "200": 6,
+                        "500": 1,
+                        "1000": 9
+                    },
+                    "createdAt": "2026-09-29T12:16:32.308Z",
+                    "updatedAt": "2026-09-29T12:16:32.308Z",
+                    "custBranch": "jhaudanga",
+                    "custMobile": "",
+                    "acceptedDate": "2026-09-29",
+                    "onlineAmount": null,
+                    "userUsername": "masum"
                 }
             ],
             "users": [
@@ -571,7 +634,7 @@
                     "encryptedPassword": "U2FsdGVkX19ONo6NEBJQ0HwghtFyIehprTdaY2Tp8jU="
                 }
             ],
-            "__version": "ccbank-v5",
+            "__version": "ccbank-v7",
             "baseVault": {
                 "kalaroa": {
                     "1": 0,
@@ -778,9 +841,9 @@
                     "20": 158,
                     "50": 51,
                     "100": 1290,
-                    "200": 403,
-                    "500": 824,
-                    "1000": 683
+                    "200": 402,
+                    "500": 944,
+                    "1000": 693
                 },
                 "jhaudanga": {
                     "1": 0,
@@ -789,10 +852,10 @@
                     "10": 0,
                     "20": 0,
                     "50": 300,
-                    "100": 133,
-                    "200": 6,
+                    "100": 130,
+                    "200": 5,
                     "500": 609,
-                    "1000": 399
+                    "1000": 392
                 }
             },
             "txEditLog": [
@@ -1854,6 +1917,146 @@
                         "onlineAmount": null,
                         "userUsername": "admin"
                     }
+                },
+                {
+                    "at": "2026-09-29T12:12:44.698Z",
+                    "id": "sdg8kndzy1m",
+                    "role": "user",
+                    "txId": "9vjsu5vzy1l",
+                    "user": "Masum",
+                    "action": "create",
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "masum",
+                    "txSnapshot": {
+                        "id": "9vjsu5vzy1l",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-29",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 615000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "50": 300,
+                            "500": 600,
+                            "1000": 300
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "50": 300,
+                            "500": 600,
+                            "1000": 300
+                        },
+                        "createdAt": "2026-09-29T12:12:44.697Z",
+                        "updatedAt": "2026-09-29T12:12:44.697Z",
+                        "custBranch": "jhaudanga",
+                        "acceptedDate": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-29T12:16:32.311Z",
+                    "id": "mjkzayx4to7",
+                    "role": "user",
+                    "txId": "b9xypp04to4",
+                    "user": "Masum",
+                    "action": "create",
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "masum",
+                    "txSnapshot": {
+                        "id": "b9xypp04to4",
+                        "dir": null,
+                        "bank": null,
+                        "date": "2026-09-29",
+                        "note": "Salary - Masum",
+                        "type": "expense",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 11000,
+                        "branch": "jhaudanga",
+                        "custAcc": "",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "",
+                        "notesOut": {
+                            "100": 3,
+                            "200": 6,
+                            "500": 1,
+                            "1000": 9
+                        },
+                        "createdAt": "2026-09-29T12:16:32.308Z",
+                        "updatedAt": "2026-09-29T12:16:32.308Z",
+                        "custBranch": "jhaudanga",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-29",
+                        "onlineAmount": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-29T12:18:36.883Z",
+                    "id": "s711yv37hsj",
+                    "role": "admin",
+                    "txId": "9vjsu5vzy1l",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "changes": {
+                        "cancelled": {
+                            "to": true,
+                            "from": false
+                        },
+                        "cancelReason": {
+                            "to": "\u09a6\u09b0\u0995\u09be\u09b0 \u09a8\u09c7\u0987",
+                            "from": ""
+                        }
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "9vjsu5vzy1l",
+                        "to": "kalaroa",
+                        "dir": "out",
+                        "date": "2026-09-29",
+                        "from": "jhaudanga",
+                        "note": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                        "type": "branch_transfer",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 615000,
+                        "branch": "jhaudanga",
+                        "notesIn": {
+                            "50": 300,
+                            "500": 600,
+                            "1000": 300
+                        },
+                        "accepted": false,
+                        "notesOut": {
+                            "50": 300,
+                            "500": 600,
+                            "1000": 300
+                        },
+                        "createdAt": "2026-09-29T12:12:44.697Z",
+                        "updatedAt": "2026-09-29T12:12:44.697Z",
+                        "custBranch": "jhaudanga",
+                        "acceptedDate": null,
+                        "userUsername": "masum"
+                    }
                 }
             ],
             "activityLog": [
@@ -2711,17 +2914,347 @@
                     "location": "Kalaroa, Satkhira, BD",
                     "targetId": null,
                     "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-29T12:11:24.571Z",
+                    "id": "ac4pik2y87v",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T12:12:44.699Z",
+                    "id": "1wqcmjkzy1m",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Masum",
+                    "title": "\ud83d\udd01 \u0986\u0989\u099f\u09b2\u09c7\u099f \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 615000,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "9vjsu5vzy1l",
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T12:16:32.312Z",
+                    "id": "w08reo14to8",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Masum",
+                    "title": "\ud83d\udcb8 \u0995\u09cd\u09af\u09be\u09b6 \u09a5\u09c7\u0995\u09c7 \u0996\u09b0\u099a \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 11000,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "b9xypp04to4",
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T12:18:11.120Z",
+                    "id": "xuooowo6xww",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-29T12:18:30.417Z",
+                    "id": "qqzxh097csx",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-29T12:18:36.884Z",
+                    "id": "bi5o3wz7hsk",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd34 \u099f\u09cd\u09b0\u09be\u09a8\u09cd\u09b8\u09ab\u09be\u09b0 \u09ac\u09be\u09a4\u09bf\u09b2",
+                    "amount": 615000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f \u279c \u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "9vjsu5vzy1l",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-29T12:33:14.624Z",
+                    "id": "f9aaz8uqb28",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T15:26:38.207Z",
+                    "id": "hrn58utxain",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T15:30:57.889Z",
+                    "id": "c54pqyc2uw1",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-29T15:33:03.713Z",
+                    "id": "xqvb1i25jz5",
+                    "role": "admin",
+                    "type": "logout",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd12 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-29T15:33:09.403Z",
+                    "id": "14qjdex5od7",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-29T16:34:47.782Z",
+                    "id": "2hw2s1xcy1y",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-29T16:37:32.285Z",
+                    "id": "bbwzy4cggzh",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T17:06:34.343Z",
+                    "id": "unavvufht5z",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-29T17:06:44.296Z",
+                    "id": "9sjl2bbi0ug",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T17:09:32.413Z",
+                    "id": "kp9o6ldlmkd",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-29T17:17:07.491Z",
+                    "id": "hjcf18cvdpf",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T17:50:10.337Z",
+                    "id": "ao66qq41voh",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T17:58:37.723Z",
+                    "id": "2j85kfdcr6j",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-29T17:59:16.989Z",
+                    "id": "9egbwcbdlh9",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-29T18:00:50.046Z",
+                    "id": "slwrwyafla6",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir Kabir",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir Kabir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-29T18:01:03.938Z",
+                    "id": "4vaafdufw02",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
                 }
             ],
             "__lastDevice": {
                 "role": "user",
-                "user": "Jahangir Kabir",
-                "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                "user": "Masum",
+                "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
                 "location": "Kalaroa, Satkhira, BD",
-                "username": "jahangir"
+                "username": "masum"
             },
-            "__lastUpdate": "2026-09-29T11:42:27.805Z",
+            "__lastUpdate": "2026-09-29T18:06:11.433Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 2863693.46,
@@ -2739,16 +3272,16 @@
                 "61wuto3ywi9": "2026-09-29T11:17:06.254Z",
                 "z1xqhrhi4xl": "2026-09-29T07:52:36.722Z"
             },
-            "lastBaseDate": "2026-09-29",
+            "lastBaseDate": "2026-09-30",
             "liveAccounts": {
                 "kalaroa": {
-                    "bank": 1559698.46,
-                    "cash": 1310406,
+                    "bank": 1489698.46,
+                    "cash": 1380206,
                     "other": 20457.63
                 },
                 "jhaudanga": {
-                    "bank": -239799.40999999997,
-                    "cash": 733000,
+                    "bank": -243299.40999999997,
+                    "cash": 725500,
                     "other": 0
                 }
             },
@@ -2760,18 +3293,18 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-09-29T11:42:27.990Z",
+                "at": "2026-09-29T18:06:11.660Z",
                 "role": "user",
-                "user": "Jahangir Kabir",
+                "user": "Masum",
                 "txIds": [],
-                "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u098f\u099c \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
                 "txCount": 0,
                 "txTypes": [],
                 "location": "Kalaroa, Satkhira, BD",
-                "username": "jahangir"
+                "username": "masum"
             },
-            "__lastRolloverDate": "2026-09-29"
+            "__lastRolloverDate": "2026-09-30"
         }
     }
 ]
