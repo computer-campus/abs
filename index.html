@@ -5137,69 +5137,60 @@ const __autofillObserver = new MutationObserver((mutations) => {
 });
 window.addEventListener('beforeunload', () => { try{ if(__realtimeChannel && __supabaseClient){ __realtimeChannel.untrack().catch(()=>{}); } }catch(e){} });
 
-
+(async function init(){
   
   // ═══════════════════════════════════════════════════════════════
-  // 🧹 VERSION-BASED AUTO CLEAR (Fixed)
+  // 🧹 SMART AUTO LOCAL CLEAR
+  // — Login session রাখবে, বাকি সব clear করবে
   // ═══════════════════════════════════════════════════════════════
   try{
-    // ✅ Version এখানে manually set করুন — যেটা প্রতিবার change করবেন
-    const CURRENT_VERSION = 'v7.1';  // ← এইটা change করলেই clear হবে
+    console.log('🧹 Smart Auto Clear চালু...');
     
-    const storedVersion = localStorage.getItem('cc_stored_version');
+    // ✅ Step 1: Login session আগে save করে রাখি
+    const savedSession = sessionStorage.getItem('cc_agent_bank_session');
+    const savedLocalSession = localStorage.getItem('cc_agent_bank_session');
     
-    console.log('📌 Current Version:', CURRENT_VERSION);
-    console.log('📌 Stored Version:', storedVersion);
+    // ✅ Step 2: LocalStorage clear (কিন্তু session বাদ)
+    let cleared = 0;
+    Object.keys(localStorage).forEach(k => {
+      if(k.indexOf('cc_') === 0 && k !== 'cc_agent_bank_session'){
+        localStorage.removeItem(k);
+        cleared++;
+      }
+    });
+    console.log('✅ LocalStorage: ' + cleared + ' items clear (session রাখা হয়েছে)');
     
-    if(storedVersion !== CURRENT_VERSION){
-      console.log('🆕 Version পরিবর্তন হয়েছে — Clear করা হচ্ছে...');
-      
-      // ✅ Step 1: Login session save করি
-      const savedSession = sessionStorage.getItem('cc_agent_bank_session');
-      const savedLocalSession = localStorage.getItem('cc_agent_bank_session');
-      
-      // ✅ Step 2: LocalStorage clear (session বাদে + version key)
-      let cleared = 0;
-      Object.keys(localStorage).forEach(k => {
-        if(k.indexOf('cc_') === 0 && 
-           k !== 'cc_agent_bank_session' && 
-           k !== 'cc_stored_version'){
-          localStorage.removeItem(k);
-          cleared++;
-        }
-      });
-      console.log('✅ LocalStorage: ' + cleared + ' items clear');
-      
-      // ✅ Step 3: SessionStorage clear
-      sessionStorage.clear();
-      
-      // ✅ Step 4: Login session restore
-      if(savedSession) sessionStorage.setItem('cc_agent_bank_session', savedSession);
-      if(savedLocalSession) localStorage.setItem('cc_agent_bank_session', savedLocalSession);
-      
-      // ✅ Step 5: IndexedDB delete
-      try{ 
-        indexedDB.deleteDatabase('cc_agent_bank_backups'); 
-        console.log('✅ IndexedDB clear');
-      }catch(e){}
-      
-      // ✅ Step 6: Memory reset
-      window.__hasSyncedOnce = false;
-      window.__lastAutoPushTs = '';
-      window.__cachedAllTxs = null;
-      window.__cachedAllTxsVersion = '';
-      window.__customerDueCache = null;
-      window.__customerDueCacheVersion = '';
-      
-      // ✅ Step 7: নতুন version save করি
-      localStorage.setItem('cc_stored_version', CURRENT_VERSION);
-      
-      console.log('✅ Version-based clear সম্পন্ন');
-    } else {
-      console.log('ℹ️ একই version — clear দরকার নেই');
+    // ✅ Step 3: SessionStorage পুরো clear
+    sessionStorage.clear();
+    
+    // ✅ Step 4: Login session ফিরিয়ে আনি
+    if(savedSession){
+      sessionStorage.setItem('cc_agent_bank_session', savedSession);
+      console.log('✅ Login session restore করা হয়েছে');
     }
+    if(savedLocalSession){
+      localStorage.setItem('cc_agent_bank_session', savedLocalSession);
+    }
+    
+    // ✅ Step 5: IndexedDB backups delete (এটা session-এ প্রভাব ফেলে না)
+    try{
+      if(window.indexedDB){
+        indexedDB.deleteDatabase('cc_agent_bank_backups');
+        console.log('✅ IndexedDB backups delete');
+      }
+    }catch(e){ console.warn('IndexedDB clear failed:', e); }
+    
+    // ✅ Step 6: Memory cache reset
+    window.__hasSyncedOnce = false;
+    window.__lastAutoPushTs = '';
+    window.__cachedAllTxs = null;
+    window.__cachedAllTxsVersion = '';
+    window.__customerDueCache = null;
+    window.__customerDueCacheVersion = '';
+    
+    console.log('✅ Smart Auto Clear সম্পন্ন — session অক্ষত');
   }catch(e){
-    console.error('❌ Version check error:', e);
+    console.error('❌ Auto clear error:', e);
   }
 
     // ═══════════════════════════════════════════════════════════════
