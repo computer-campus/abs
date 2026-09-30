@@ -337,6 +337,105 @@
                     "acceptedDate": "2026-09-30",
                     "onlineAmount": null,
                     "userUsername": "masum"
+                },
+                {
+                    "id": "r9ups7ihi6w",
+                    "dir": "out",
+                    "bank": "al_arafah_jhaudanga",
+                    "date": "2026-09-30",
+                    "note": "",
+                    "type": "other_bank",
+                    "user": "Masum",
+                    "year": "2026",
+                    "amount": 1100000,
+                    "branch": "jhaudanga",
+                    "custAcc": "",
+                    "notesIn": {},
+                    "accepted": true,
+                    "custAddr": "",
+                    "custName": "",
+                    "notesOut": {
+                        "50": 300,
+                        "100": 201,
+                        "200": 212,
+                        "500": 977,
+                        "1000": 534
+                    },
+                    "createdAt": "2026-09-30T06:10:09.368Z",
+                    "updatedAt": "2026-09-30T06:10:09.368Z",
+                    "custBranch": "jhaudanga",
+                    "custMobile": "",
+                    "acceptedDate": "2026-09-30",
+                    "onlineAmount": null,
+                    "userUsername": "masum"
+                },
+                {
+                    "id": "l68ke7ins62",
+                    "dir": "out",
+                    "date": "2026-09-30",
+                    "note": "Tk. 500 for A/C- 2081205590001, Account Title- M/S MAHI VARIETIES",
+                    "type": "withdrawal",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "year": "2026",
+                    "amount": 2000,
+                    "branch": "kalaroa",
+                    "custAcc": "1067438020001",
+                    "notesIn": {},
+                    "accepted": true,
+                    "custAddr": "",
+                    "custName": "RIADUS SALEHIN",
+                    "notesOut": {
+                        "500": 3
+                    },
+                    "createdAt": "2026-09-30T06:43:01.850Z",
+                    "updatedAt": "2026-09-30T07:10:21.723Z",
+                    "cashAmount": 1500,
+                    "custBranch": "kalaroa",
+                    "custMobile": "",
+                    "acceptedDate": "2026-09-30",
+                    "userUsername": "admin",
+                    "customerAccountAmount": 500
+                },
+                {
+                    "id": "a0l03af7bur",
+                    "dir": "in",
+                    "date": "2026-09-30",
+                    "note": "Riasus Salehin paid Tk. 500 from his account",
+                    "type": "loan_received",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "year": "2026",
+                    "amount": 700,
+                    "branch": "kalaroa",
+                    "custAcc": "2081205590001",
+                    "notesIn": {
+                        "100": 2
+                    },
+                    "accepted": true,
+                    "custAddr": "",
+                    "custName": "M/S MAHI VARIETIES",
+                    "notesOut": {},
+                    "createdAt": "2026-09-30T06:58:13.827Z",
+                    "netAmount": 700,
+                    "updatedAt": "2026-09-30T06:58:13.827Z",
+                    "cashAmount": 200,
+                    "custBranch": "kalaroa",
+                    "custMobile": "",
+                    "mainBranch": "kalaroa",
+                    "acceptedDate": "2026-09-30",
+                    "branchSplits": [
+                        {
+                            "branch": "kalaroa",
+                            "notesIn": {
+                                "100": 2
+                            }
+                        }
+                    ],
+                    "changeAmount": 0,
+                    "onlineAmount": 500,
+                    "userUsername": "admin",
+                    "changeNotesOut": {},
+                    "oppositeBranch": "jhaudanga",
+                    "receivedAmount": 700
                 }
             ],
             "users": [
@@ -533,6 +632,32 @@
                     "supportPaid": 0,
                     "supportCount": 0,
                     "supportRefund": 0
+                },
+                {
+                    "id": "61tv8bzgdz2",
+                    "name": "RIADUS SALEHIN",
+                    "branch": "kalaroa",
+                    "mobile": "",
+                    "address": "",
+                    "accountNo": "1067438020001",
+                    "createdAt": "2026-09-30T06:37:16.862Z",
+                    "supportDue": 0,
+                    "supportPaid": 0,
+                    "supportCount": 0,
+                    "supportRefund": 0
+                },
+                {
+                    "id": "thmjng97bur",
+                    "name": "M/S MAHI VARIETIES",
+                    "branch": "kalaroa",
+                    "mobile": "",
+                    "address": "",
+                    "accountNo": "2081205590001",
+                    "createdAt": "2026-09-30T06:58:13.827Z",
+                    "supportDue": 0,
+                    "supportPaid": 0,
+                    "supportCount": 0,
+                    "supportRefund": 0
                 }
             ],
             "liveVault": {
@@ -543,7 +668,7 @@
                     "10": 9,
                     "20": 163,
                     "50": 79,
-                    "100": 1467,
+                    "100": 1469,
                     "200": 246,
                     "500": 1295,
                     "1000": 1017
@@ -554,11 +679,11 @@
                     "5": 0,
                     "10": 0,
                     "20": 0,
-                    "50": 300,
-                    "100": 246,
-                    "200": 212,
-                    "500": 980,
-                    "1000": 559
+                    "50": 0,
+                    "100": 45,
+                    "200": 0,
+                    "500": 3,
+                    "1000": 25
                 }
             },
             "txEditLog": [
@@ -1464,6 +1589,331 @@
                         "acceptedDate": "2026-09-30",
                         "onlineAmount": null,
                         "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-30T06:10:09.369Z",
+                    "id": "qo9qex5hi6w",
+                    "role": "user",
+                    "txId": "r9ups7ihi6w",
+                    "user": "Masum",
+                    "action": "create",
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new transaction"
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "masum",
+                    "txSnapshot": {
+                        "id": "r9ups7ihi6w",
+                        "dir": "out",
+                        "bank": "al_arafah_jhaudanga",
+                        "date": "2026-09-30",
+                        "note": "",
+                        "type": "other_bank",
+                        "user": "Masum",
+                        "year": "2026",
+                        "amount": 1100000,
+                        "branch": "jhaudanga",
+                        "custAcc": "",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "",
+                        "notesOut": {
+                            "50": 300,
+                            "100": 201,
+                            "200": 212,
+                            "500": 977,
+                            "1000": 534
+                        },
+                        "createdAt": "2026-09-30T06:10:09.368Z",
+                        "updatedAt": "2026-09-30T06:10:09.368Z",
+                        "custBranch": "jhaudanga",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-30",
+                        "onlineAmount": null,
+                        "userUsername": "masum"
+                    }
+                },
+                {
+                    "at": "2026-09-30T06:37:16.863Z",
+                    "id": "g113vuygdz3",
+                    "role": "user",
+                    "txId": "g1c7nodgdz2",
+                    "user": "Jahangir",
+                    "action": "create",
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new withdrawal"
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "jahangir",
+                    "txSnapshot": {
+                        "id": "g1c7nodgdz2",
+                        "dir": "out",
+                        "date": "2026-09-30",
+                        "note": "",
+                        "type": "withdrawal",
+                        "user": "Jahangir",
+                        "year": "2026",
+                        "amount": 2000,
+                        "branch": "kalaroa",
+                        "custAcc": "1067438020001",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "RIADUS SALEHIN",
+                        "notesOut": {
+                            "500": 1
+                        },
+                        "createdAt": "2026-09-30T06:37:16.862Z",
+                        "updatedAt": "2026-09-30T06:37:16.862Z",
+                        "cashAmount": 500,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-30",
+                        "userUsername": "jahangir",
+                        "customerAccountAmount": 1500
+                    }
+                },
+                {
+                    "at": "2026-09-30T06:40:41.010Z",
+                    "id": "hinp22kkrhu",
+                    "role": "admin",
+                    "txId": "g1c7nodgdz2",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "update",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "cashAmount": {
+                            "to": 1500,
+                            "from": 500
+                        },
+                        "customerAccountAmount": {
+                            "to": 500,
+                            "from": 1500
+                        }
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "g1c7nodgdz2",
+                        "dir": "out",
+                        "date": "2026-09-30",
+                        "note": "",
+                        "type": "withdrawal",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 2000,
+                        "branch": "kalaroa",
+                        "custAcc": "1067438020001",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "RIADUS SALEHIN",
+                        "notesOut": {
+                            "500": 3
+                        },
+                        "createdAt": "2026-09-30T06:37:16.862Z",
+                        "updatedAt": "2026-09-30T06:40:41.009Z",
+                        "cashAmount": 1500,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-30",
+                        "userUsername": "admin",
+                        "customerAccountAmount": 500
+                    }
+                },
+                {
+                    "at": "2026-09-30T06:41:21.443Z",
+                    "id": "fh5erzvlmoz",
+                    "role": "admin",
+                    "txId": "g1c7nodgdz2",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "delete",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "deleted": {
+                            "to": "deleted",
+                            "from": "active"
+                        }
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "g1c7nodgdz2",
+                        "dir": "out",
+                        "date": "2026-09-30",
+                        "note": "",
+                        "type": "withdrawal",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 2000,
+                        "branch": "kalaroa",
+                        "custAcc": "1067438020001",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "RIADUS SALEHIN",
+                        "notesOut": {
+                            "500": 3
+                        },
+                        "createdAt": "2026-09-30T06:37:16.862Z",
+                        "updatedAt": "2026-09-30T06:40:41.009Z",
+                        "cashAmount": 1500,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-30",
+                        "userUsername": "admin",
+                        "customerAccountAmount": 500
+                    }
+                },
+                {
+                    "at": "2026-09-30T06:43:01.850Z",
+                    "id": "a6jb6wbns62",
+                    "role": "admin",
+                    "txId": "l68ke7ins62",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "create",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new withdrawal"
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "l68ke7ins62",
+                        "dir": "out",
+                        "date": "2026-09-30",
+                        "note": "",
+                        "type": "withdrawal",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 2000,
+                        "branch": "kalaroa",
+                        "custAcc": "1067438020001",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "RIADUS SALEHIN",
+                        "notesOut": {
+                            "500": 3
+                        },
+                        "createdAt": "2026-09-30T06:43:01.850Z",
+                        "updatedAt": "2026-09-30T06:43:01.850Z",
+                        "cashAmount": 1500,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-30",
+                        "userUsername": "admin",
+                        "customerAccountAmount": 500
+                    }
+                },
+                {
+                    "at": "2026-09-30T06:58:13.827Z",
+                    "id": "kgn5naq7bur",
+                    "role": "admin",
+                    "txId": "a0l03af7bur",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "create",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "action": "new loan received"
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "a0l03af7bur",
+                        "dir": "in",
+                        "date": "2026-09-30",
+                        "note": "Riasus Salehin paid Tk. 500 from his account",
+                        "type": "loan_received",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 700,
+                        "branch": "kalaroa",
+                        "custAcc": "2081205590001",
+                        "notesIn": {
+                            "100": 2
+                        },
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "M/S MAHI VARIETIES",
+                        "notesOut": {},
+                        "createdAt": "2026-09-30T06:58:13.827Z",
+                        "netAmount": 700,
+                        "updatedAt": "2026-09-30T06:58:13.827Z",
+                        "cashAmount": 200,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "mainBranch": "kalaroa",
+                        "acceptedDate": "2026-09-30",
+                        "branchSplits": [
+                            {
+                                "branch": "kalaroa",
+                                "notesIn": {
+                                    "100": 2
+                                }
+                            }
+                        ],
+                        "changeAmount": 0,
+                        "onlineAmount": 500,
+                        "userUsername": "admin",
+                        "changeNotesOut": {},
+                        "oppositeBranch": "jhaudanga",
+                        "receivedAmount": 700
+                    }
+                },
+                {
+                    "at": "2026-09-30T07:10:21.724Z",
+                    "id": "8d38pwpmxi4",
+                    "role": "admin",
+                    "txId": "l68ke7ins62",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "action": "update",
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "changes": {
+                        "note": {
+                            "to": "Tk. 500 for A/C- 2081205590001, Account Title- M/S MAHI VARIETIES",
+                            "from": ""
+                        }
+                    },
+                    "location": "Kalaroa, Satkhira, BD",
+                    "username": "admin",
+                    "txSnapshot": {
+                        "id": "l68ke7ins62",
+                        "dir": "out",
+                        "date": "2026-09-30",
+                        "note": "Tk. 500 for A/C- 2081205590001, Account Title- M/S MAHI VARIETIES",
+                        "type": "withdrawal",
+                        "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                        "year": "2026",
+                        "amount": 2000,
+                        "branch": "kalaroa",
+                        "custAcc": "1067438020001",
+                        "notesIn": {},
+                        "accepted": true,
+                        "custAddr": "",
+                        "custName": "RIADUS SALEHIN",
+                        "notesOut": {
+                            "500": 3
+                        },
+                        "createdAt": "2026-09-30T06:43:01.850Z",
+                        "updatedAt": "2026-09-30T07:10:21.723Z",
+                        "cashAmount": 1500,
+                        "custBranch": "kalaroa",
+                        "custMobile": "",
+                        "acceptedDate": "2026-09-30",
+                        "userUsername": "admin",
+                        "customerAccountAmount": 500
                     }
                 }
             ],
@@ -2472,17 +2922,257 @@
                     "location": "Kalaroa, Satkhira, BD",
                     "targetId": "50rrvrefhf2",
                     "username": "masum"
+                },
+                {
+                    "at": "2026-09-30T06:10:09.369Z",
+                    "id": "2yzohzohi6x",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Masum",
+                    "title": "\ud83d\udcb8 \u0985\u09a8\u09cd\u09af \u09ac\u09cd\u09af\u09be\u0999\u09cd\u0995\u09c7 \u09b2\u09c7\u09a8\u09a6\u09c7\u09a8 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 1100000,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "r9ups7ihi6w",
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-30T06:33:34.287Z",
+                    "id": "i9atuorbm8f",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Jahangir",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Jahangir (jahangir)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-30T06:37:16.863Z",
+                    "id": "eppq0hegdz3",
+                    "role": "user",
+                    "type": "txn_create",
+                    "user": "Jahangir",
+                    "title": "\ud83d\udcb5 \u0989\u09a4\u09cd\u09a4\u09cb\u09b2\u09a8 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 2000,
+                    "branch": "\u0995\u09b2\u09be\u09b0\u09cb\u09af\u09bc\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "RIADUS SALEHIN",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "g1c7nodgdz2",
+                    "username": "jahangir"
+                },
+                {
+                    "at": "2026-09-30T06:39:29.803Z",
+                    "id": "gpwlpkvj8jv",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T06:40:41.010Z",
+                    "id": "kthf70skrhu",
+                    "role": "admin",
+                    "type": "txn_update",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\u270f\ufe0f \u0989\u09a4\u09cd\u09a4\u09cb\u09b2\u09a8 \u0986\u09aa\u09a1\u09c7\u099f",
+                    "amount": 2000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "RIADUS SALEHIN",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "g1c7nodgdz2",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T06:41:21.443Z",
+                    "id": "khcqnunlmoz",
+                    "role": "admin",
+                    "type": "txn_delete",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\uddd1\ufe0f \u09b2\u09c7\u09a8\u09a6\u09c7\u09a8 \u09a1\u09bf\u09b2\u09bf\u099f",
+                    "amount": 2000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u0989\u09a4\u09cd\u09a4\u09cb\u09b2\u09a8 \u2014 RIADUS SALEHIN",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "g1c7nodgdz2",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T06:43:01.850Z",
+                    "id": "pm4e478ns62",
+                    "role": "admin",
+                    "type": "txn_create",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udcb5 \u0989\u09a4\u09cd\u09a4\u09cb\u09b2\u09a8 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 2000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "RIADUS SALEHIN",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "l68ke7ins62",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T06:58:13.828Z",
+                    "id": "nvsin8j7bus",
+                    "role": "admin",
+                    "type": "txn_create",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udce5 \u098b\u09a3 \u0997\u09cd\u09b0\u09b9\u09a3 \u09a4\u09c8\u09b0\u09bf",
+                    "amount": 700,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "M/S MAHI VARIETIES",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "a0l03af7bur",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T07:10:21.725Z",
+                    "id": "nb13laqmxi5",
+                    "role": "admin",
+                    "type": "txn_update",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\u270f\ufe0f \u0989\u09a4\u09cd\u09a4\u09cb\u09b2\u09a8 \u0986\u09aa\u09a1\u09c7\u099f",
+                    "amount": 2000,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "RIADUS SALEHIN",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": "l68ke7ins62",
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T07:18:07.040Z",
+                    "id": "69nfmmswwjk",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-30T07:43:24.685Z",
+                    "id": "zn4gkv7tfkd",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-09-30T07:45:26.251Z",
+                    "id": "w8j3tgxw1d7",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T08:21:13.174Z",
+                    "id": "y3eqs5661xy",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T08:59:50.732Z",
+                    "id": "8n7n1vtjq6k",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T09:00:20.890Z",
+                    "id": "l4u48f7kdga",
+                    "role": "admin",
+                    "type": "logout",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd12 \u09b2\u0997\u0986\u0989\u099f",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
+                },
+                {
+                    "at": "2026-09-30T11:35:05.112Z",
+                    "id": "zar8ub63d7c",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
                 }
             ],
             "__lastDevice": {
-                "role": "user",
-                "user": "Masum",
-                "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                "role": "admin",
+                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
                 "location": "Kalaroa, Satkhira, BD",
-                "username": "masum"
+                "username": "admin"
             },
-            "__lastUpdate": "2026-09-30T06:07:24.082Z",
+            "__lastUpdate": "2026-09-30T11:35:47.098Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 1417798.46,
@@ -2497,19 +3187,20 @@
             },
             "deletedTxIds": {
                 "6aed3el4hh6": "2026-09-29T20:53:52.425Z",
+                "g1c7nodgdz2": "2026-09-30T06:41:21.443Z",
                 "rohg8kn00ks": "2026-09-30T02:43:41.774Z",
                 "zc6fc7ly6fz": "2026-09-30T02:44:58.718Z"
             },
             "lastBaseDate": "2026-09-30",
             "liveAccounts": {
                 "kalaroa": {
-                    "bank": 1271398.46,
-                    "cash": 1867711,
+                    "bank": 1272698.46,
+                    "cash": 1867911,
                     "other": 17252.63
                 },
                 "jhaudanga": {
-                    "bank": 601200.59,
-                    "cash": 1131000,
+                    "bank": -498799.41000000003,
+                    "cash": 31000,
                     "other": 3205
                 }
             },
@@ -2521,20 +3212,16 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-09-30T06:08:35.067Z",
-                "role": "user",
-                "user": "Masum",
-                "txIds": [
-                    "50rrvrefhf2"
-                ],
-                "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
-                "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
-                "txCount": 1,
-                "txTypes": [
-                    "deposit"
-                ],
+                "at": "2026-09-30T11:35:47.103Z",
+                "role": "admin",
+                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "txIds": [],
+                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                "txCount": 0,
+                "txTypes": [],
                 "location": "Kalaroa, Satkhira, BD",
-                "username": "masum"
+                "username": "admin"
             },
             "__lastRolloverDate": "2026-09-30"
         }
