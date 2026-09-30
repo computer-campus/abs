@@ -5138,28 +5138,41 @@ const __autofillObserver = new MutationObserver((mutations) => {
 window.addEventListener('beforeunload', () => { try{ if(__realtimeChannel && __supabaseClient){ __realtimeChannel.untrack().catch(()=>{}); } }catch(e){} });
 
 (async function init(){
-
-// ═══════════════════════════════════════════════════════════════
-  // 🧹 AUTO LOCAL CLEAR — App load হলেই সব Local DB মুছে যাবে
+  
+  // ═══════════════════════════════════════════════════════════════
+  // 🧹 SMART AUTO LOCAL CLEAR
+  // — Login session রাখবে, বাকি সব clear করবে
   // ═══════════════════════════════════════════════════════════════
   try{
-    console.log('🧹 Auto Local Clear চালু হচ্ছে...');
+    console.log('🧹 Smart Auto Clear চালু...');
     
-    // ✅ Step 1: LocalStorage clear (শুধু cc_ prefix)
+    // ✅ Step 1: Login session আগে save করে রাখি
+    const savedSession = sessionStorage.getItem('cc_agent_bank_session');
+    const savedLocalSession = localStorage.getItem('cc_agent_bank_session');
+    
+    // ✅ Step 2: LocalStorage clear (কিন্তু session বাদ)
     let cleared = 0;
     Object.keys(localStorage).forEach(k => {
-      if(k.indexOf('cc_') === 0){
+      if(k.indexOf('cc_') === 0 && k !== 'cc_agent_bank_session'){
         localStorage.removeItem(k);
         cleared++;
       }
     });
-    console.log('✅ LocalStorage: ' + cleared + ' items মুছে ফেলা হয়েছে');
+    console.log('✅ LocalStorage: ' + cleared + ' items clear (session রাখা হয়েছে)');
     
-    // ✅ Step 2: SessionStorage clear
+    // ✅ Step 3: SessionStorage পুরো clear
     sessionStorage.clear();
-    console.log('✅ SessionStorage clear');
     
-    // ✅ Step 3: IndexedDB backups delete
+    // ✅ Step 4: Login session ফিরিয়ে আনি
+    if(savedSession){
+      sessionStorage.setItem('cc_agent_bank_session', savedSession);
+      console.log('✅ Login session restore করা হয়েছে');
+    }
+    if(savedLocalSession){
+      localStorage.setItem('cc_agent_bank_session', savedLocalSession);
+    }
+    
+    // ✅ Step 5: IndexedDB backups delete (এটা session-এ প্রভাব ফেলে না)
     try{
       if(window.indexedDB){
         indexedDB.deleteDatabase('cc_agent_bank_backups');
@@ -5167,7 +5180,7 @@ window.addEventListener('beforeunload', () => { try{ if(__realtimeChannel && __s
       }
     }catch(e){ console.warn('IndexedDB clear failed:', e); }
     
-    // ✅ Step 4: Memory cache reset
+    // ✅ Step 6: Memory cache reset
     window.__hasSyncedOnce = false;
     window.__lastAutoPushTs = '';
     window.__cachedAllTxs = null;
@@ -5175,7 +5188,7 @@ window.addEventListener('beforeunload', () => { try{ if(__realtimeChannel && __s
     window.__customerDueCache = null;
     window.__customerDueCacheVersion = '';
     
-    console.log('✅ Auto Local Clear সম্পন্ন');
+    console.log('✅ Smart Auto Clear সম্পন্ন — session অক্ষত');
   }catch(e){
     console.error('❌ Auto clear error:', e);
   }
