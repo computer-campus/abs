@@ -492,8 +492,12 @@
                     "name": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
                     "role": "admin",
                     "branch": "all",
-                    "password": "8182",
-                    "username": "admin"
+                    "__hashed": true,
+                    "password": "9fec3c581e1814488c907d95321ad501a35d67c324e8b36d60526ed768f1ead4",
+                    "username": "admin",
+                    "createdAt": "2026-10-01T06:54:09.904Z",
+                    "plainPassword": "",
+                    "encryptedPassword": ""
                 }
             ],
             "__version": "ccbank-v7",
@@ -3200,17 +3204,47 @@
                     "location": "Kalaroa, Satkhira, BD",
                     "targetId": null,
                     "username": "admin"
+                },
+                {
+                    "at": "2026-10-01T06:54:10.438Z",
+                    "id": "e7i82bbhypy",
+                    "role": "user",
+                    "type": "login",
+                    "user": "Masum",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "Masum (masum)",
+                    "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "masum"
+                },
+                {
+                    "at": "2026-10-01T07:53:03.518Z",
+                    "id": "q9xs5q8lov2",
+                    "role": "admin",
+                    "type": "login",
+                    "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                    "title": "\ud83d\udd13 \u09b2\u0997\u0987\u09a8",
+                    "amount": null,
+                    "branch": "\u0989\u09ad\u09af\u09bc \u0986\u0989\u099f\u09b2\u09c7\u099f",
+                    "detail": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8 (admin)",
+                    "device": "\ud83d\udcf1 \u09ae\u09cb\u09ac\u09be\u0987\u09b2 \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0985\u09cd\u09af\u09be\u09a8\u09cd\u09a1\u09cd\u09b0\u09af\u09bc\u09c7\u09a1",
+                    "location": "Kalaroa, Satkhira, BD",
+                    "targetId": null,
+                    "username": "admin"
                 }
             ],
             "__lastDevice": {
-                "role": "admin",
-                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
-                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "role": "user",
+                "user": "Masum",
+                "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
                 "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
                 "location": "Kalaroa, Satkhira, BD",
-                "username": "admin"
+                "username": "masum"
             },
-            "__lastUpdate": "2026-10-01T05:19:28.057Z",
+            "__lastUpdate": "2026-10-01T08:57:49.622Z",
             "baseAccounts": {
                 "kalaroa": {
                     "bank": 1417798.46,
@@ -3250,16 +3284,16 @@
             "yearlyArchive": {},
             "__firstSetupDone": false,
             "__lastUpdateInfo": {
-                "at": "2026-10-01T05:19:28.182Z",
-                "role": "admin",
-                "user": "\u09aa\u09cd\u09b0\u09a7\u09be\u09a8 \u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "at": "2026-10-01T09:52:53.074Z",
+                "role": "user",
+                "user": "Masum",
                 "txIds": [],
-                "branch": "\u0985\u09cd\u09af\u09be\u09a1\u09ae\u09bf\u09a8",
+                "branch": "\u099d\u09be\u0989\u09a1\u09be\u0999\u09cd\u0997\u09be \u0986\u0989\u099f\u09b2\u09c7\u099f",
                 "device": "\ud83d\udcbb \u09a1\u09c7\u09b8\u09cd\u0995\u099f\u09aa \u2022 \u0995\u09cd\u09b0\u09cb\u09ae \u2022 \u0989\u0987\u09a8\u09cd\u09a1\u09cb\u099c",
                 "txCount": 0,
                 "txTypes": [],
                 "location": "Kalaroa, Satkhira, BD",
-                "username": "admin"
+                "username": "masum"
             },
             "__lastRolloverDate": "2026-10-01"
         }
