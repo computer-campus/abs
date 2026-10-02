@@ -1,0 +1,72 @@
+╔═══════════════════════════════════════════════════════════════╗
+║  🎯 CCBANK v7.8 — FULL CONTEXT HANDOFF                        ║
+╠═══════════════════════════════════════════════════════════════╣
+║                                                                ║
+║  📦 PROJECT:                                                   ║
+║     কম্পিউটার ক্যাম্পাস — এজেন্ট ব্যাংকিং সিস্টেম            ║
+║     Version: v7.8                                              ║
+║     Live: https://computercampus-bblaboutlet.netlify.app      ║
+║     GitHub: (user's GitHub repo — cc-bank)                    ║
+║     Stack: Vanilla JS + Supabase + Noto Sans Bengali          ║
+║                                                                ║
+║  🎯 CORE FEATURES:                                             ║
+║     ✅ Cloud First + Local Second + Duplicate Skip            ║
+║     ✅ 11 Transaction Types (all working)                     ║
+║     ✅ Realtime Sync (multi-device)                           ║
+║     ✅ Auto Backup (daily)                                    ║
+║     ✅ Complete Reset (Cloud + Local + IndexedDB + Memory)    ║
+║     ✅ Performance Optimized (v7.6-7.8)                       ║
+║                                                                ║
+║  🔑 LOGIN:                                                     ║
+║     Admin: admin / 8182                                       ║
+║     (User changed password — ASK user for new one)           ║
+║                                                                ║
+║  📁 FILE STRUCTURE:                                            ║
+║     cc-bank/                                                   ║
+║     ├── index.html                                             ║
+║     ├── css/style.css                                          ║
+║     └── js/                                                    ║
+║         ├── 01-config.js (v7.8)                                ║
+║         ├── 02-utils.js                                        ║
+║         ├── 03-security.js                                     ║
+║         ├── 04-db-core.js (optimized)                          ║
+║         ├── 05-cloud-sync.js (Cloud First + Duplicate Skip)    ║
+║         ├── 06-realtime.js                                     ║
+║         ├── 07-notifications.js                                ║
+║         ├── 08-modal-helper.js (optimized)                     ║
+║         ├── 09-customer.js                                     ║
+║         ├── 10-print.js                                        ║
+║         ├── 11-db-engine.js                                    ║
+║         ├── 90-login.js (fast logout)                          ║
+║         ├── 99-init.js (v7.8)                                  ║
+║         ├── tx/ (12 files)                                     ║
+║         ├── managers/ (9 files)                                ║
+║         └── render/ (4 files)                                  ║
+║                                                                ║
+║  🚀 DEPLOYMENT:                                                ║
+║     Git push → Netlify auto-deploy + GitHub Pages              ║
+║     Command:                                                   ║
+║       git add .                                                ║
+║       git commit -m "Update message"                           ║
+║       git push                                                 ║
+║                                                                ║
+║  ⚡ RECENT FIXES (v7.5-7.8):                                   ║
+║     v7.5 → Supabase window scope fix                          ║
+║     v7.6 → Sidebar performance (spinner + debounce)           ║
+║     v7.7 → Instant logout (skip spinner)                      ║
+║     v7.8 → Date picker optimization                           ║
+║                                                                ║
+║  🐛 PENDING / KNOWN ISSUES:                                    ║
+║     (User will mention — currently testing v7.8)              ║
+║                                                                ║
+║  📊 USER PREFERS:                                              ║
+║     - Bengali responses                                       ║
+║     - Step-by-step guides                                     ║
+║     - Complete file replaces (copy-paste)                     ║
+║     - Short, direct answers                                   ║
+║     - No sidebar (prefers original simple design)             ║
+║                                                                ║
+║  ▶️ NEXT ACTION:                                               ║
+║     User testing v7.8 fixes — waiting for feedback           ║
+║                                                                ║
+╚═══════════════════════════════════════════════════════════════╝
