@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংকিং সিস্টেম</title>
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+<!-- CDN Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- LOGIN SCREEN -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="loginScreen" class="login-wrap">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:78px;height:78px;">
+        <circle cx="50" cy="50" r="47" fill="#000" stroke="#fff" stroke-width="2.5"/>
+        <g transform="translate(50,50)" fill="#fff">
+          <path d="M -22 -12 L 0 -28 L 22 -12 Z"/>
+          <rect x="-18" y="-8" width="4" height="22" rx="1"/>
+          <rect x="-8" y="-8" width="4" height="22" rx="1"/>
+          <rect x="4" y="-8" width="4" height="22" rx="1"/>
+          <rect x="14" y="-8" width="4" height="22" rx="1"/>
+          <rect x="-22" y="14" width="44" height="4" rx="1.5"/>
+        </g>
+      </svg>
+    </div>
+    <h1 class="rgb">কম্পিউটার ক্যাম্পাস</h1>
+    <h2>এজেন্ট ব্যাংকিং সিস্টেম • কলারোয়া ও ঝাউডাঙ্গা আউটলেট</h2>
+    <div class="field"><label>ইউজার আইডি</label><input type="text" id="loginUser" placeholder="আপনার আইডি" autocomplete="off"></div>
+    <div class="field"><label>পাসওয়ার্ড</label><input type="password" id="loginPass" placeholder="পাসওয়ার্ড" autocomplete="new-password"></div>
+    <button class="btn block pink" id="loginBtn">🔐 লগইন করুন</button>
+    <div id="loginErr" style="color:#fff;font-size:13px;text-align:center;margin-top:10px;min-height:18px"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MAIN APP -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="app" class="hidden">
+  <header class="topbar" id="topbar"></header>
+  <main>
+    <section class="section" id="dateBannerSection"></section>
+    <section class="section" id="statsSection"></section>
+    <section class="section" id="vaultSection"></section>
+    <section class="section" id="balanceSection"></section>
+    <div class="dual-sections-wrap">
+      <section class="section" id="dueSection"></section>
+      <section class="section" id="collectionPendingSection"></section>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SIDEBAR -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-head">
+    <h3>⚙️ মেনু</h3>
+    <button class="sb-close" id="sidebarClose">✕</button>
+  </div>
+  <div class="sidebar-body" id="sidebarBody"></div>
+</aside>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MODAL ROOT + SYNC INDICATOR -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="modalRoot"></div>
+<div id="syncIndicator" class="sync-indicator">সিঙ্ক</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- JS FILES — Load in Order -->
+<!-- ═══════════════════════════════════════════ -->
+
+<!-- Phase 1: Core -->
+<script src="js/01-config.js"></script>
+<script src="js/02-utils.js"></script>
+<script src="js/03-security.js"></script>
+<script src="js/04-db-core.js"></script>
+
+<!-- Phase 2: Cloud + Realtime -->
+<script src="js/05-cloud-sync.js"></script>
+<script src="js/06-realtime.js"></script>
+<script src="js/07-notifications.js"></script>
+
+<!-- Phase 3: Helpers -->
+<script src="js/08-modal-helper.js"></script>
+<script src="js/09-customer.js"></script>
+<script src="js/10-print.js"></script>
+<script src="js/12-tx-detail.js"></script>
+<script src="js/11-db-engine.js"></script>
+<script src="js/98-fix-loan-received-engine.js"></script>
+
+<!-- Phase 4: Transactions -->
+<script src="js/tx/tx-dispatcher.js"></script>
+<script src="js/tx/tx-loan-given.js"></script>
+<script src="js/tx/tx-loan-received.js"></script>
+<script src="js/tx/tx-loan-collection.js"></script>
+<script src="js/tx/tx-withdrawal.js"></script>
+<script src="js/tx/tx-deposit.js"></script>
+<script src="js/tx/tx-branch-transfer.js"></script>
+<script src="js/tx/tx-bank-transfer.js"></script>
+<script src="js/tx/tx-other-bank.js"></script>
+<script src="js/tx/tx-support.js"></script>
+<script src="js/tx/tx-expense.js"></script>
+<script src="js/tx/tx-money-exchange.js"></script>
+
+<!-- Phase 5: Managers -->
+<script src="js/managers/mgr-all-data.js"></script>
+<script src="js/managers/mgr-audit.js"></script>
+<script src="js/managers/mgr-db-browser.js"></script>
+<script src="js/managers/mgr-user.js"></script>
+<script src="js/managers/mgr-branch.js"></script>
+<script src="js/managers/mgr-backup.js"></script>
+<script src="js/managers/mgr-pending.js"></script>
+<script src="js/managers/mgr-export-import.js"></script>
+<script src="js/managers/mgr-snapshot.js"></script>
+
+<!-- Phase 6: Render -->
+<script src="js/render/render-topbar.js"></script>
+<script src="js/render/render-sidebar.js"></script>
+<script src="js/render/render-dashboard.js"></script>
+<script src="js/render/render-due.js"></script>
+
+<!-- Phase 7: Login + Init -->
+<script src="js/90-login.js"></script>
+<script src="js/95-perf-overrides.js"></script>
+<script src="js/96-fix-live-sync.js"></script>
+<script src="js/97-instant-save.js"></script>
+<script src="js/98-bank-transfer-auto.js"></script>
+<script src="js/98-fix-delete-and-history.js"></script>
+<script src="js/98-fix-branch-fast.js"></script>
+<script src="js/98-fix-menu-speed.js"></script>
+<script src="js/99-init.js"></script>
+
+</body>
+</html>
