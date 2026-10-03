@@ -47,7 +47,7 @@ function openWithdrawalForm(editId, prefill){
     '</div>' +
     
     '<div class="notes-col out" style="margin-bottom:14px">' +
-      '<h4>💵 গ্রাহক ক্যাশ দিল</h4>' +
+      '<h4>💵 গ্রাহককে ক্যাশ দেয়া হলঃ </h4>' +
       notesRowHTML('out', editing?.notesOut || null, branchVault) +
       '<div class="sum-line"><span>মোট ক্যাশ</span><b id="sumOut">৳ 0.00</b></div>' +
     '</div>' +
