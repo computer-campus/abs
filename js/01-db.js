@@ -116,13 +116,41 @@ function loadLocal(){
 /* ──── CLOUD ──── */
 function initSupa(){
   try{
-    if(!window.supabase) return;
+    if(!window.supabase){
+      console.log('⏳ Supabase library loading...');
+      setTimeout(initSupa, 500);
+      return;
+    }
+    if(!SUPABASE_URL || !SUPABASE_KEY){
+      console.warn('⚠️ Supabase credentials missing');
+      return;
+    }
+
     SUPA = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
       realtime: { params: { eventsPerSecond: 5 } },
       auth: { persistSession: false }
     });
+
+    // ⚡ Global এ expose (notifications module এর জন্য)
+    window.SUPA = SUPA;
+
     console.log('✅ Supabase connected');
-  } catch(e){ console.warn('Supa init', e); }
+
+    // ⚡ Notifications channel শুরু করো
+    if(typeof setupActivityChannel === 'function'){
+      setTimeout(function(){
+        try {
+          setupActivityChannel();
+        } catch(e){
+          console.warn('Channel setup error:', e);
+        }
+      }, 800);
+    }
+
+  } catch(e){
+    console.error('❌ Supa init error:', e);
+    setTimeout(initSupa, 2000);
+  }
 }
 
 async function pullCloud(){
@@ -276,8 +304,19 @@ function logActivity(type, title, detail, amount){
   });
   if(DB.activity.length > 300) DB.activity = DB.activity.slice(-300);
 
-  // ⚡ Real-time broadcast to other users
+  // ⚡ Broadcast to other devices
   if(typeof broadcastActivity === 'function'){
-    broadcastActivity({ type: type, title: title, detail: detail, amount: amount });
+    try {
+      broadcastActivity({
+        type: type,
+        detail: detail || '',
+        amount: amount || null
+      });
+      console.log('📡 Broadcast sent:', type, '|', detail);
+    } catch(e){
+      console.warn('Broadcast error:', e);
+    }
+  } else {
+    console.log('⚠️ broadcastActivity not ready yet');
   }
 }

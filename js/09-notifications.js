@@ -15,27 +15,68 @@ window.__notifCount = 0;
    SETUP CHANNEL
    ═══════════════════════════════════════════════════════════ */
 function setupActivityChannel(){
-  if(!window.SUPA) return;
+  if(!window.SUPA){
+    console.log('⚠️ SUPA not ready, retrying...');
+    setTimeout(setupActivityChannel, 500);
+    return;
+  }
+
+  // ⚡ পুরনো channel clean
   if(window.__activityChannel){
     try { window.__activityChannel.unsubscribe(); } catch(e){}
+    try { window.SUPA.removeChannel(window.__activityChannel); } catch(e){}
+    window.__activityChannel = null;
   }
-  window.__activityChannel = SUPA.channel('cc_activity_v1', {
-    config: { broadcast: { self: false } }
-  });
-  window.__activityChannel
-    .on('broadcast', { event: 'activity' }, function(payload){
-      handleRemoteActivity(payload.payload);
-    })
-    .subscribe(function(status){
-      console.log('📡 Activity channel:', status);
+
+  try {
+    window.__activityChannel = window.SUPA.channel('cc_activity_v1', {
+      config: { broadcast: { self: false } }
     });
+
+    window.__activityChannel
+      .on('broadcast', { event: 'activity' }, function(payload){
+        try {
+          console.log('📨 Incoming activity:', payload);
+          handleRemoteActivity(payload.payload);
+        } catch(e){
+          console.warn('handleRemoteActivity error:', e);
+        }
+      })
+      .subscribe(function(status){
+        console.log('📡 Activity channel:', status);
+        if(status === 'SUBSCRIBED'){
+          console.log('✅ Notification channel READY');
+        } else if(status === 'CHANNEL_ERROR' || status === 'TIMED_OUT'){
+          // Retry after 3s
+          setTimeout(function(){
+            if(!window.__activityChannel || window.__activityChannel.state !== 'joined'){
+              setupActivityChannel();
+            }
+          }, 3000);
+        }
+      });
+
+  } catch(e){
+    console.error('❌ setupActivityChannel error:', e);
+    setTimeout(setupActivityChannel, 500);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
    BROADCAST
    ═══════════════════════════════════════════════════════════ */
 function broadcastActivity(data){
-  if(!window.__activityChannel) return;
+  if(!window.__activityChannel){
+    console.log('⚠️ No channel — cannot broadcast');
+    return;
+  }
+
+  // Channel ready না হলে queue তে রাখো
+  if(window.__activityChannel.state !== 'joined'){
+    console.log('⏳ Channel not joined yet, state:', window.__activityChannel.state);
+    return;
+  }
+
   try {
     window.__activityChannel.send({
       type: 'broadcast',
@@ -48,8 +89,14 @@ function broadcastActivity(data){
         senderBranch: SESSION ? (SESSION.branch === 'all' ? 'সব' : (BRANCHES[SESSION.branch]?.name || SESSION.branch)) : '—',
         at: new Date().toISOString()
       })
+    }).then(function(){
+      console.log('✅ Broadcast delivered:', data.type);
+    }).catch(function(e){
+      console.warn('Broadcast send error:', e);
     });
-  } catch(e){ console.warn('Broadcast error:', e); }
+  } catch(e){
+    console.warn('Broadcast error:', e);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -262,14 +309,31 @@ setInterval(function(){
    INIT
    ═══════════════════════════════════════════════════════════ */
 function initNotifications(){
+  // ⚡ window.SUPA এর জন্য অপেক্ষা করো
   if(!window.SUPA){
+    console.log('⏳ Waiting for Supabase...');
     setTimeout(initNotifications, 500);
     return;
   }
-  if(!window.__activityChannel){
+
+  // ⚡ Channel exists হলে skip
+  if(window.__activityChannel){
+    return;
+  }
+
+  console.log('📡 Initializing notification channel...');
+  try {
     setupActivityChannel();
+  } catch(e){
+    console.warn('Channel error:', e);
+    setTimeout(initNotifications, 500);
   }
 }
+
+// ⚡ Multiple trigger points
+setTimeout(initNotifications, 500);
+setTimeout(initNotifications, 500);
+setTimeout(initNotifications,500);
 
 setTimeout(initNotifications, 1500);
 
