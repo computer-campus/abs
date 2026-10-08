@@ -1,0 +1,104 @@
+তুমি আমাকে চিনবে। আমি "কম্পিউটার ক্যাম্পাস — এজেন্ট ব্যাংকিং সিস্টেম" বানাচ্ছি।
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 প্রজেক্ট
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- নাম: কম্পিউটার ক্যাম্পাস
+- টাইপ: এজেন্ট ব্যাংকিং ম্যানেজমেন্ট সিস্টেম
+- ভাষা: বাংলা UI, বাংলায় কথা বলা
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛠️ টেক স্ট্যাক
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Frontend: HTML + CSS + Vanilla JS (কোনো framework নেই)
+- Backend: Supabase (table: agent_bank, row: cc_agent_bank_main)
+- Auth: crypto-js SHA256, salt = "ccbank_salt_"
+- Password verify: verifyPass() — database only, no hardcoded
+- Hosting: Local file:// (C:\Users\Admin\Desktop\BrandNew\)
+- Login: শুধু database থেকে verify, master override নেই
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 ফাইল স্ট্রাকচার
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+index.html
+css/style.css (clean minimal version)
+js/00-core.js         — config + utils + mobile guard
+js/01-db.js           — DB state + cloud sync + tombstones
+js/02-engine.js       — transaction engine + computeStateAtDate
+js/03-ui.js           — modal + toast + topbar + dashboard
+js/04-login.js        — login/logout
+js/05-customer.js     — customer + due
+js/06-dispatcher.js   — openTxForm router
+js/07-audit.js        — all data + audit + showTxDetail
+js/08-managers.js     — branch + user + backup
+js/09-notifications.js — real-time activity broadcast
+js/10-sidebar.js      — sidebar (admin only, user mode hide)
+js/99-init.js
+js/tx/tx-deposit.js, tx-expense.js, tx-support.js,
+      tx-other-bank.js, tx-withdrawal.js, tx-loan-given.js,
+      tx-loan-received.js, tx-loan-collection.js,
+      tx-branch-transfer.js, tx-bank-transfer.js,
+      tx-money-exchange.js, tx-simple-form.js
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏦 ব্যবসার তথ্য
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Branch: kalaroa (কলারোয়া), jhaudanga (ঝাউডাঙ্গা)
+- Denomination: 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1
+
+TX_TYPES (নাম):
+- loan_given      → "ঋণের টাকা বিতরণ" 💸
+- loan_received   → "ঋণ কিস্তি গ্রহণ" 📥
+- loan_collection → "ঋণ সংগ্রহ" 💰
+- deposit         → "নগদ জমা" 🏦
+- withdrawal      → "নগদ উত্তোলন" 💵
+- branch_transfer → "আউটলেট টু আউটলেট ট্রান্সফার" 🔁
+- bank_transfer   → "ইন্টারনাল অনলাইন ট্রান্সফার" 🏛️
+- other_bank      → "অন্য ব্যাংক লেনদেন" 🏦
+- support         → "সাপোর্ট প্রদান/ফেরত" 🤝
+- expense         → "ক্যাশ থেকে খরচ" 🧾
+- money_exchange  → "মানি এক্সচেঞ্জ" 💱
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 UI/UX সিদ্ধান্ত
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Font: সব জায়গায় "Noto Sans Bengali"
+- Sidebar: শুধু admin দেখে | user এ sidebar নেই, topbar এ user info + সব ডেটা + লগআউট button
+- Dashboard cards: 6×2 grid (12 cards 2 lines)
+- Vault: 10 columns, full width justify
+- Modal: Modal body তে auto History (form এর নিচে) + calendar (আজ/সব button)
+- Form এ: Date + Time দুটোই (Time auto = এখনকার)
+- Future date block: সব date input এ max=today
+- Notifications: real-time broadcast অন্য device এ
+- Audit log: শুধু admin
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ যা যা করা হয়েছে (সম্পূর্ণ)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Mobile read-only (bulletproof detection)
+- Cloud data overwrite protection
+- Branch transfer double-deduct fix
+- Tombstone system (tx + customer + user)
+- Fresh clean 22-file system
+- Real-time notification broadcast
+- Support due + Cash pending hub modal (2 tabs)
+- Date-wise dashboard (past date এ state calculate)
+- Customer instant search (typing → dropdown)
+- Note/comment সব জায়গায় visible
+- Pending hub সব branch এর data দেখায়
+- Noto Sans Bengali global font
+- User mode এ sidebar hidden + topbar এ buttons
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 পরের কাজ (চলমান/বাকি)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[এখানে বলো কী কাজ করতে চাও]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 আমার স্টাইল
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- বাংলায় কথা বলি
+- কোড ব্লকে দিই, ছোট ছোট step এ
+- Complete file replace করি, partial edit কম
+- প্রতি step এ "এখন করো" list
+- Bug হলে Console command দিয়ে debug

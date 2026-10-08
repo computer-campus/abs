@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e1a">
+<title>কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংকিং</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="login" class="hidden">
+  <div class="lbox">
+    <h1>কম্পিউটার ক্যাম্পাস</h1>
+    <h2>এজেন্ট ব্যাংকিং সিস্টেম</h2>
+    <input type="text" id="login-user" placeholder="ইউজার আইডি" autocomplete="off" spellcheck="false">
+    <input type="password" id="login-pass" placeholder="পাসওয়ার্ড" autocomplete="new-password">
+    <button class="btn green block" id="login-btn">🔐 লগইন</button>
+    <div id="login-err"></div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <header id="topbar"></header>
+  <main id="main"></main>
+</div>
+
+<div id="sb-overlay"></div>
+<aside id="sidebar">
+  <div class="sb-head">
+    <h3>⚙️ মেনু</h3>
+    <button class="mini danger" onclick="closeSidebar()">✕</button>
+  </div>
+  <div class="sb-body" id="sb-body"></div>
+</aside>
+
+<div id="modal-root"></div>
+<div id="toast-box"></div>
+
+<!-- ═══════ PHASE 1: CORE ═══════ -->
+<script src="js/00-core.js"></script>
+
+<!-- ═══════ PHASE 2: DB + ENGINE ═══════ -->
+<script src="js/01-db.js"></script>
+<script src="js/02-engine.js"></script>
+
+<!-- ═══════ PHASE 3: UI HELPERS ═══════ -->
+<script src="js/03-ui.js"></script>
+<script src="js/10-sidebar.js"></script>
+
+<!-- ═══════ PHASE 4: LOGIN + CUSTOMER ═══════ -->
+<script src="js/04-login.js"></script>
+<script src="js/05-customer.js"></script>
+
+<!-- ═══════ PHASE 5: DISPATCHER ═══════ -->
+<script src="js/06-dispatcher.js"></script>
+
+<!-- ═══════ PHASE 6: TRANSACTIONS (প্রতিটি আলাদা) ═══════ -->
+<script src="js/tx/tx-simple-form.js"></script>   <!-- ⚡ নতুন -->
+<script src="js/tx/tx-deposit.js"></script>
+<script src="js/tx/tx-expense.js"></script>
+<script src="js/tx/tx-support.js"></script>
+<script src="js/tx/tx-other-bank.js"></script>
+<script src="js/tx/tx-withdrawal.js"></script>
+<script src="js/tx/tx-loan-given.js"></script>
+<script src="js/tx/tx-loan-received.js"></script>
+<script src="js/tx/tx-loan-collection.js"></script>
+<script src="js/tx/tx-branch-transfer.js"></script>
+<script src="js/tx/tx-bank-transfer.js"></script>
+<script src="js/tx/tx-money-exchange.js"></script>
+
+<!-- ═══════ PHASE 7: MANAGERS ═══════ -->
+<script src="js/07-audit.js"></script>
+<script src="js/08-managers.js"></script>
+<script src="js/09-notifications.js"></script>
+
+<!-- ═══════ PHASE 8: INIT ═══════ -->
+<script src="js/99-init.js"></script>
+
+</body>
+</html>
