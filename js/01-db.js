@@ -176,27 +176,48 @@ async function pullCloud(){
 }
 
 async function pushCloud(){
-  if(READ_ONLY){ return false; }
+  if(READ_ONLY) return false;
   if(!SUPA || !navigator.onLine) return false;
   if(PUSHING) return false;
+
   PUSHING = true;
-  try{
+  try {
+    // ⚡ Step 1: Fetch cloud (to merge txs)
     const res = await SUPA.from(TABLE).select('data').eq('id', ROW_ID).maybeSingle();
     const cloud = res.data && res.data.data ? res.data.data : null;
+
+    // ⚡ Step 2: Merge cloud + local (txs, customers, users only)
     if(cloud){
       DB = mergeCloudLocal(cloud, DB);
       normalizeDB();
-      recomputeLive();
     }
+
+    // ⚡ Step 3: ALWAYS recompute live from base + txs (ignore old live values)
+    recomputeLive();
+
+    // ⚡ Step 4: Update timestamp
     DB.__updated = new Date().toISOString();
-    const payload = { id: ROW_ID, data: DB, updated_at: new Date().toISOString() };
+
+    // ⚡ Step 5: Push — but strip live values (they're derived, will be recomputed on pull)
+    const toPush = JSON.parse(JSON.stringify(DB));
+
+    // Base + tx are source of truth; live values are just for display
+    // But we keep them for offline-first — they'll be recomputed after merge anyway
+
+    const payload = {
+      id: ROW_ID,
+      data: toPush,
+      updated_at: new Date().toISOString()
+    };
+
     const up = await SUPA.from(TABLE).upsert(payload, { onConflict: 'id' });
     if(up.error) throw up.error;
+
     saveLocal();
     console.log('☁️ Pushed. Txs:', DB.txs.length);
     return true;
   } catch(e){
-    console.warn('Push', e);
+    console.warn('Push error:', e);
     return false;
   } finally {
     PUSHING = false;
@@ -285,6 +306,23 @@ function mergeCloudLocal(cloud, local){
   out.deletedCustomerAccounts = dCustAcc;
   out.deletedUserIds = dUserId;
   out.deletedUsernames = dUserNames;
+
+  // ⚡ CRITICAL: liveAccounts/liveVault সবসময় local রাখো
+  // এগুলো derived — base + txs থেকে হিসাব হবে
+  if(local){
+    out.liveAccounts = JSON.parse(JSON.stringify(local.liveAccounts || {}));
+    out.liveVault = JSON.parse(JSON.stringify(local.liveVault || {}));
+  } else {
+    // local নেই → base থেকে নতুন করে বানাও
+    out.liveAccounts = {};
+    out.liveVault = {};
+    Object.keys(BRANCHES).forEach(function(b){
+      out.liveAccounts[b] = { bank: 0, cash: 0, other: 0 };
+      out.liveVault[b] = {};
+      DENOMS.forEach(function(d){ out.liveVault[b][d] = 0; });
+    });
+  }
+
   out.__updated = new Date(Math.max(cloudTs, localTs)).toISOString();
   return out;
 }

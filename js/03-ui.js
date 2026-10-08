@@ -389,14 +389,27 @@ function readNotes(scope, prefix){
   return o;
 }
 
-function setupDenomInputs(scope, prefix, recalc){
-  scope.querySelectorAll('[id^="' + prefix + '_"]').forEach(inp => {
+function setupDenomInputs(scope, prefix, arg3, arg4){
+  // ⚡ Support both signatures:
+  // setupDenomInputs(scope, prefix, recalc)              → 3 args
+  // setupDenomInputs(scope, prefix, branchFn, recalc)    → 4 args
+  var recalc = null;
+  if(typeof arg4 === 'function'){
+    recalc = arg4;        // 4th arg is callback
+  } else if(typeof arg3 === 'function'){
+    recalc = arg3;        // 3rd arg is callback
+  }
+
+  scope.querySelectorAll('[id^="' + prefix + '_"]').forEach(function(inp){
     if(!inp.dataset.denom || inp.__setup) return;
     inp.__setup = true;
-    inp.addEventListener('input', e => {
-      let v = e.target.value.replace(/[^0-9]/g, '').slice(0, 5);
+
+    inp.addEventListener('input', function(e){
+      var v = e.target.value.replace(/[^0-9]/g, '').slice(0, 5);
       if(e.target.value !== v) e.target.value = v;
-      if(recalc) recalc();
+      if(recalc){
+        try { recalc(); } catch(err){ console.warn('recalc error:', err); }
+      }
     });
   });
 }
@@ -1135,6 +1148,62 @@ function closeSidebar(){
   var ov = document.getElementById('sb-overlay');
   if(ov) ov.classList.remove('on');
 }
+
+/* ============================================================
+   🛡️ GLOBAL TX VALIDATION — Negative block
+   ============================================================ */
+(function(){
+  'use strict';
+
+  // ⚡ Form save button এ validator attach
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('#f-save, #c-save, #cc-save, #me_save');
+    if(!btn) return;
+
+    var modal = btn.closest('.modal');
+    if(!modal) return;
+
+    // Vault out values check করো
+    var prefix = null;
+    modal.querySelectorAll('input[data-denom]').forEach(function(inp){
+      if(inp.dataset.prefix) prefix = inp.dataset.prefix;
+    });
+
+    // ⚡ সব number input check
+    var errors = [];
+    modal.querySelectorAll('input[inputmode="decimal"], input[inputmode="numeric"]').forEach(function(inp){
+      var v = parseNum(inp.value);
+      if(v < 0){
+        errors.push('❌ Negative পরিমাণ: ' + inp.value);
+        inp.style.borderColor = '#dc2626';
+      }
+    });
+
+    if(errors.length > 0){
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      alert(errors.join('\n') + '\n\nধনাত্মক সংখ্যা দিন।');
+      return false;
+    }
+  }, true);
+
+  // ⚡ Negative value typed হলে সাথে সাথে block
+  document.addEventListener('input', function(e){
+    var inp = e.target;
+    if(!inp) return;
+    if(inp.tagName !== 'INPUT') return;
+    if(inp.inputMode !== 'decimal' && inp.inputMode !== 'numeric') return;
+
+    var val = inp.value;
+    if(val && val.indexOf('-') !== -1){
+      inp.value = val.replace(/-/g, '');
+      if(typeof toast === 'function') toast('⚠️ Negative value allowed না', 'warn');
+    }
+  }, true);
+
+  console.log('✅ Global negative input block active');
+})();
 
   console.log('✅ Future-date blocker active');
 })();
