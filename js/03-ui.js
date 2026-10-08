@@ -67,11 +67,11 @@ function openModal(opts){
    ═══════════════════════════════════════════════════════════ */
 function detectTxTypeFromTitle(title){
   if(!title) return null;
-  const patterns = [
+  var patterns = [
     ['loan_given',      '💸 ঋণের টাকা বিতরণ'],
     ['loan_received',   '📥 ঋণ কিস্তি গ্রহণ'],
     ['withdrawal',      '💵 নগদ উত্তোলন'],
-    ['deposit',         '🏦 নগদ জমা'],
+    ['deposit',         '🏦 নগদ/অনলাইনে জমা'],     // ⚡ নতুন
     ['expense',         '🧾 ক্যাশ থেকে খরচ'],
     ['support',         '🤝 সাপোর্ট'],
     ['other_bank',      '🏦 অন্য ব্যাংক'],
@@ -79,7 +79,7 @@ function detectTxTypeFromTitle(title){
     ['bank_transfer',   '🏛️ ইন্টারনাল'],
     ['money_exchange',  '💱 মানি']
   ];
-  for(let i = 0; i < patterns.length; i++){
+  for(var i = 0; i < patterns.length; i++){
     if(title.indexOf(patterns[i][1]) === 0) return patterns[i][0];
   }
   return null;

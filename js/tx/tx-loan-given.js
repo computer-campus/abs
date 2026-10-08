@@ -208,7 +208,7 @@ function setupLoanGivenForm(wrap, editing, close, defaultBranch){
     try{
       const mainLoan = getMainLoan();
       const withdrawal = getWithdrawal();
-      const totalLoan = mainLoan + withdrawal;
+      const totalLoan = Number(editing?.totalLoanAmount) || (mainLoan + withdrawal);
       const online = getOnline();
       const outN = readNotes(wrap, 'out');
       const cashGiven = sumNotes(outN);

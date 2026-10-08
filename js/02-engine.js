@@ -118,9 +118,14 @@ function applyTx(tx, phase){
     // 🏦 DEPOSIT — customer জমা দেয়
     // ═══════════════════════════════════════════════════════
     case 'deposit': {
+      // 🏦 Mother account always decreases
       DB.liveAccounts[bb].bank -= amt;
-      addNotes(DB.liveVault[vb], nIn, +1);
-      addNotes(DB.liveVault[vb], nOut, -1);
+
+      // 💵 Vault only updated for cash deposit
+      if(tx.depositType !== 'online'){
+        addNotes(DB.liveVault[vb], nIn, +1);
+        addNotes(DB.liveVault[vb], nOut, -1);
+      }
       break;
     }
 
@@ -359,8 +364,10 @@ function computeStateAtDate(bf, targetDate){
       }
       case 'deposit': {
         state.accounts[bb].bank -= amt;
-        addNotesState(state.vault[vb], nIn, +1);
-        addNotesState(state.vault[vb], nOut, -1);
+        if(tx.depositType !== 'online'){
+          addNotesState(state.vault[vb], nIn, +1);
+          addNotesState(state.vault[vb], nOut, -1);
+        }
         break;
       }
       case 'withdrawal': {

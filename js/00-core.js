@@ -21,7 +21,7 @@ const TX_TYPES = {
   loan_given:      { title: 'ঋণের টাকা বিতরণ', icon: '💸' },
   loan_received:   { title: 'ঋণ কিস্তি গ্রহণ', icon: '📥' },
   loan_collection: { title: 'ঋণ সংগ্রহ', icon: '💰' },
-  deposit:         { title: 'নগদ জমা', icon: '🏦' },
+  deposit:         { title: 'নগদ/অনলাইনে জমা', icon: '🏦' },
   withdrawal:      { title: 'নগদ উত্তোলন', icon: '💵' },
   branch_transfer: { title: 'আউটলেট টু আউটলেট ট্রান্সফার', icon: '🔁' },
   bank_transfer:   { title: 'ইন্টারনাল অনলাইন ট্রান্সফার', icon: '🏛️' },

@@ -1,6 +1,7 @@
 /* ============================================================
    FILE: js/07-audit.js — COMPLETE
-   PURPOSE: All Data + Audit Log + Tx Detail + Delete
+   PURPOSE: All Data + Audit Log + Tx Detail + Delete + Restore
+   VERSION: v5.0
    ============================================================ */
 'use strict';
 
@@ -8,27 +9,30 @@
    📋 ALL DATA MODAL
    ═══════════════════════════════════════════════════════════ */
 function openAllData(){
-  const bf = currentBranch();
-  let filterDate = todayStr();
-  let filterType = 'all';
+  var bf = currentBranch();
+  var filterDate = todayStr();
+  var filterType = 'all';
 
-  const typeOptions = Object.entries(TX_TYPES)
-    .filter(([k]) => k !== 'loan_collection')
-    .map(([k, v]) => '<option value="' + k + '">' + v.icon + ' ' + v.title + '</option>')
+  var typeOptions = Object.entries(TX_TYPES)
+    .filter(function(e){ return e[0] !== 'loan_collection'; })
+    .map(function(e){ return '<option value="' + e[0] + '">' + e[1].icon + ' ' + e[1].title + '</option>'; })
     .join('');
 
   function render(){
-    let list = DB.txs.slice().reverse();
-    if(filterDate) list = list.filter(t => t.date === filterDate);
-    if(filterType !== 'all') list = list.filter(t => t.type === filterType);
-    if(bf !== 'all') list = list.filter(t => t.branch === bf || t.from === bf || t.to === bf);
+    var list = DB.txs.slice().reverse();
+    if(filterDate) list = list.filter(function(t){ return t.date === filterDate; });
+    if(filterType !== 'all') list = list.filter(function(t){ return t.type === filterType; });
+    if(bf !== 'all') list = list.filter(function(t){
+      return t.branch === bf || t.from === bf || t.to === bf;
+    });
 
-    const limited = list.slice(0, 200);
-    let rows = '';
-    limited.forEach(t => {
-      const cfg = TX_TYPES[t.type] || { icon: '📌', title: t.type };
-      const noteText = (t.note && String(t.note).trim()) ? String(t.note).trim() : '';
-      const noteHtml = noteText
+    var limited = list.slice(0, 200);
+    var rows = '';
+
+    limited.forEach(function(t){
+      var cfg = TX_TYPES[t.type] || { icon: '📌', title: t.type };
+      var noteText = (t.note && String(t.note).trim()) ? String(t.note).trim() : '';
+      var noteHtml = noteText
         ? '<div style="font-size:11.5px;color:#93c5fd;font-style:italic;padding:3px 8px;border-radius:5px;background:rgba(59,130,246,.1);display:inline-block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px" title="' + esc(noteText) + '">📝 ' + esc(noteText) + '</div>'
         : '<span style="color:#4a5878;font-size:11px">—</span>';
 
@@ -43,11 +47,11 @@ function openAllData(){
       '</tr>';
     });
 
-    return (list.length > 200 ?
-        '<div style="padding:8px;text-align:center;color:#facc15;font-size:12px;font-weight:700;margin-bottom:8px">প্রথম ২০০ (মোট ' + toBn(list.length) + ')</div>'
+    return (list.length > 200
+        ? '<div style="padding:8px;text-align:center;color:#facc15;font-size:12px;font-weight:700;margin-bottom:8px">প্রথম ২০০ (মোট ' + toBn(list.length) + ')</div>'
         : '') +
-      (rows ?
-        '<div class="table-wrap"><table><thead><tr><th>তারিখ</th><th>ধরন</th><th>গ্রাহক</th><th>📝 মন্তব্য</th><th>টাকা</th><th>ইউজার</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+      (rows
+        ? '<div class="table-wrap"><table><thead><tr><th>তারিখ</th><th>ধরন</th><th>গ্রাহক</th><th>📝 মন্তব্য</th><th>টাকা</th><th>ইউজার</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>'
         : '<div class="empty">📭 নেই</div>');
   }
 
@@ -60,17 +64,23 @@ function openAllData(){
       '</div>' +
       '<div id="ad-body">' + render() + '</div>',
     xwide: true,
-    onMount: (root) => {
-      const bodyEl = root.querySelector('#ad-body');
-      const refresh = () => {
+    onMount: function(root){
+      var bodyEl = root.querySelector('#ad-body');
+      var refresh = function(){
         bodyEl.innerHTML = render();
-        bodyEl.querySelectorAll('[data-tx-detail]').forEach(b => {
-          b.addEventListener('click', () => showTxDetail(b.dataset.txDetail));
+        bodyEl.querySelectorAll('[data-tx-detail]').forEach(function(b){
+          b.addEventListener('click', function(){ showTxDetail(b.dataset.txDetail); });
         });
       };
       refresh();
-      root.querySelector('#ad-date').addEventListener('change', e => { filterDate = e.target.value || ''; refresh(); });
-      root.querySelector('#ad-type').addEventListener('change', e => { filterType = e.target.value; refresh(); });
+      root.querySelector('#ad-date').addEventListener('change', function(e){
+        filterDate = e.target.value || '';
+        refresh();
+      });
+      root.querySelector('#ad-type').addEventListener('change', function(e){
+        filterType = e.target.value;
+        refresh();
+      });
     }
   });
 }
@@ -79,12 +89,13 @@ function openAllData(){
    👁️ SHOW TX DETAIL
    ═══════════════════════════════════════════════════════════ */
 function showTxDetail(id){
-  const t = DB.txs.find(x => x.id === id);
+  var t = DB.txs.find(function(x){ return x.id === id; });
   if(!t){ toast('❌ নেই'); return; }
-  const cfg = TX_TYPES[t.type] || { icon: '📌', title: t.type };
+
+  var cfg = TX_TYPES[t.type] || { icon: '📌', title: t.type };
 
   // ═══ HEADER ═══
-  let html = '';
+  var html = '';
   html += '<div style="padding:16px;border-radius:14px;background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(34,197,94,.05));border:1.5px solid rgba(59,130,246,.4);margin-bottom:16px">' +
     '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">' +
       '<span style="font-size:38px;line-height:1">' + cfg.icon + '</span>' +
@@ -96,14 +107,13 @@ function showTxDetail(id){
     '</div>' +
   '</div>';
 
-  // ═══ BASIC INFO — 2 COLUMN GRID ═══
+  // ═══ BASIC INFO — 2 COLUMN ═══
   html += '<div style="padding:14px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(59,130,246,.25);margin-bottom:16px">';
   html += '<div style="font-size:11px;color:#93c5fd;font-weight:900;text-transform:uppercase;margin-bottom:10px;letter-spacing:.5px">📋 মৌলিক তথ্য</div>';
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-size:13px">';
 
   html += '<div style="display:flex;justify-content:space-between;gap:8px"><span style="color:#93c5fd;font-weight:700">📅 তারিখ:</span><b style="color:#fff">' + toBn(t.date) + '</b></div>';
 
-  // Time from createdAt
   var timeStr = '—';
   if(t.createdAt){
     try {
@@ -135,12 +145,12 @@ function showTxDetail(id){
   html += '</div>';
 
   // ═══════════════════════════════════════════════════════════
-  // 💸 LOAN GIVEN — Side by Side Breakdown
+  // 💸 LOAN GIVEN — Side by Side
   // ═══════════════════════════════════════════════════════════
   if(t.type === 'loan_given'){
-    var mainLoan = Number(t.mainLoanAmount) || (Number(t.amount) - (Number(t.withdrawalAmount) || 0));
+    var mainLoan = Number(t.mainLoanAmount) || Number(t.amount) || 0;
     var withdrawal = Number(t.withdrawalAmount) || 0;
-    var total = Number(t.amount) || 0;
+    var total = mainLoan + withdrawal;
     var online = Number(t.onlineAmount) || 0;
     var cash = Number(t.cashAmount) || 0;
     var notTaken = Number(t.cashNotTakenAmount) || 0;
@@ -148,7 +158,7 @@ function showTxDetail(id){
     html += '<div style="padding:14px;border-radius:14px;background:linear-gradient(145deg,rgba(250,204,21,.08),rgba(0,0,0,.3));border:1.5px solid rgba(250,204,21,.4);margin-bottom:16px">';
     html += '<div style="font-size:13px;color:#facc15;font-weight:900;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px">💸 ঋণ বিতরণ বিবরণ</div>';
 
-    // ROW 1: মূল ঋণ + নগদ উত্তোলন (pasha pashi)
+    // ROW 1: মূল ঋণ + নগদ উত্তোলন
     html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">';
 
     html += '<div style="padding:12px 14px;border-radius:11px;background:rgba(59,130,246,.12);border:1.5px solid rgba(59,130,246,.4)">';
@@ -163,7 +173,7 @@ function showTxDetail(id){
 
     html += '</div>';
 
-    // ROW 2: মোট ঋণ (full width)
+    // ROW 2: মোট ঋণ
     html += '<div style="padding:12px 16px;border-radius:11px;background:linear-gradient(145deg,rgba(34,197,94,.18),rgba(34,197,94,.06));border:2px solid rgba(34,197,94,.5);margin-bottom:10px">';
     html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">';
     html += '<div style="font-size:13px;color:#4ade80;font-weight:900">= মোট ঋণ</div>';
@@ -188,13 +198,11 @@ function showTxDetail(id){
     html += '<div style="font-size:14px;color:#facc15;font-weight:900;letter-spacing:-.3px">৳ ' + fmt(notTaken) + '</div>';
     html += '</div>';
 
-    html += '</div>';
-
-    html += '</div>';
+    html += '</div></div>';
   }
 
   // ═══════════════════════════════════════════════════════════
-  // 📥 LOAN RECEIVED breakdown
+  // 📥 LOAN RECEIVED
   // ═══════════════════════════════════════════════════════════
   if(t.type === 'loan_received'){
     var lrOnline = Number(t.onlineAmount) || 0;
@@ -213,7 +221,7 @@ function showTxDetail(id){
   }
 
   // ═══════════════════════════════════════════════════════════
-  // 🌟 DENOMINATION — Side by Side
+  // 🗄️ DENOMINATION
   // ═══════════════════════════════════════════════════════════
   var hasOut = t.notesOut && Object.keys(t.notesOut).length > 0;
   var hasIn = t.notesIn && Object.keys(t.notesIn).length > 0;
@@ -253,20 +261,19 @@ function showTxDetail(id){
   }
   html += '</div>';
 
-  const m = openModal({ title: '👁️ লেনদেন বিস্তারিত', bodyHTML: html, wide: true });
+  var m = openModal({ title: '👁️ লেনদেন বিস্তারিত', bodyHTML: html, wide: true });
 
-  setTimeout(() => {
-    const root = m.bg.querySelector('.modal-body');
+  setTimeout(function(){
+    var root = m.bg.querySelector('.modal-body');
 
-    const pb = root.querySelector('#tx-print');
-    if(pb) pb.addEventListener('click', () => {
+    var pb = root.querySelector('#tx-print');
+    if(pb) pb.addEventListener('click', function(){
       if(typeof printSingleTransaction === 'function') printSingleTransaction(t);
       else toast('❌ Print function নেই');
     });
 
-    const db = root.querySelector('#tx-delete');
-    if(db) db.addEventListener('click', async () => {
-      if(!confirm('🗑️ ডিলিট করবেন?')) return;
+    var db = root.querySelector('#tx-delete');
+    if(db) db.addEventListener('click', async function(){
       m.close();
       await deleteTx(t.id);
     });
@@ -277,16 +284,16 @@ function showTxDetail(id){
    🗄️ Build Denomination Box
    ═══════════════════════════════════════════════════════════ */
 function buildDenomBox(title, notes, color, bg, border){
-  const keys = Object.keys(notes || {}).filter(k => Number(notes[k]) > 0).sort((a, b) => b - a);
+  var keys = Object.keys(notes || {}).filter(function(k){ return Number(notes[k]) > 0; }).sort(function(a, b){ return b - a; });
   if(!keys.length) return '';
 
-  let total = 0;
-  keys.forEach(d => { total += Number(d) * Number(notes[d]); });
+  var total = 0;
+  keys.forEach(function(d){ total += Number(d) * Number(notes[d]); });
 
-  let itemsHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:5px">';
-  keys.forEach(d => {
-    const count = Number(notes[d]);
-    const amt = Number(d) * count;
+  var itemsHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:5px">';
+  keys.forEach(function(d){
+    var count = Number(notes[d]);
+    var amt = Number(d) * count;
     itemsHtml += '<div style="padding:6px 8px;border-radius:6px;background:rgba(0,0,0,.4);text-align:center">' +
       '<div style="font-size:11px;color:' + color + ';font-weight:900;white-space:nowrap">৳ ' + toBn(d) + ' × ' + toBn(count) + '</div>' +
       '<div style="font-size:12px;color:#fff;font-weight:900;margin-top:2px;white-space:nowrap">৳ ' + fmt(amt) + '</div>' +
@@ -306,17 +313,17 @@ function buildDenomBox(title, notes, color, bg, border){
    📜 AUDIT LOG MODAL — Admin only
    ═══════════════════════════════════════════════════════════ */
 function openAuditLog(){
-  // ⚡ Admin check
   if(!SESSION || SESSION.role !== 'admin'){
     if(typeof toast === 'function') toast('🔒 শুধু অ্যাডমিন এই লগ দেখতে পারবেন');
     return;
   }
 
-  const logs = DB.activity.slice().reverse().slice(0, 100);
-  let rows = '';
-  logs.forEach(l => {
-    const noteText = (l.detail && String(l.detail).trim()) ? String(l.detail).trim() : '';
-    const noteHtml = noteText
+  var logs = DB.activity.slice().reverse().slice(0, 100);
+  var rows = '';
+
+  logs.forEach(function(l){
+    var noteText = (l.detail && String(l.detail).trim()) ? String(l.detail).trim() : '';
+    var noteHtml = noteText
       ? '<span style="color:#93c5fd;font-style:italic">' + esc(noteText) + '</span>'
       : '<span style="color:#4a5878">—</span>';
 
@@ -338,7 +345,32 @@ function openAuditLog(){
 }
 
 /* ═══════════════════════════════════════════════════════════
-   🗑️ DELETE TX — Full removal + recompute
+   💾 BACKUP HELPERS
+   ═══════════════════════════════════════════════════════════ */
+function backupDeletedTx(t){
+  try {
+    var backupKey = 'cc_deleted_tx_backup';
+    var backups = {};
+    try {
+      backups = JSON.parse(localStorage.getItem(backupKey) || '{}');
+    } catch(e){}
+
+    backups[t.id] = JSON.parse(JSON.stringify(t));
+
+    var keys = Object.keys(backups);
+    if(keys.length > 200){
+      keys.slice(0, keys.length - 200).forEach(function(k){ delete backups[k]; });
+    }
+
+    localStorage.setItem(backupKey, JSON.stringify(backups));
+    console.log('💾 Backup saved:', t.id);
+  } catch(e){
+    console.warn('Backup error:', e);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🗑️ DELETE TX
    ═══════════════════════════════════════════════════════════ */
 async function deleteTx(id){
   if(!id) return;
@@ -356,23 +388,47 @@ async function deleteTx(id){
     return;
   }
 
-  if(!confirm('🗑️ ডিলিট করবেন?\n\n' +
-    (TX_TYPES[t.type]?.title || t.type) + '\n' +
-    '৳ ' + fmt(t.amount) + '\n' +
-    (t.custName ? '👤 ' + t.custName : '') +
-    '\n\n⚠️ এটা undo করা যাবে না।')){
-    return;
+  // Find related txs
+  var related = [];
+  if(t.type === 'loan_given'){
+    related = (DB.txs || []).filter(function(x){
+      return x.linkedFrom === 'loan_given' && x.linkedParentId === id;
+    });
+    var collections = (DB.txs || []).filter(function(x){
+      return x.type === 'loan_collection' && x.linkedParentId === id;
+    });
+    related = related.concat(collections);
   }
 
+  var confirmMsg = '🗑️ ডিলিট করবেন?\n\n' +
+    (TX_TYPES[t.type]?.title || t.type) + '\n' +
+    '৳ ' + fmt(t.amount) + '\n' +
+    (t.custName ? '👤 ' + t.custName : '');
+
+  if(related.length > 0){
+    confirmMsg += '\n\n⚠️ সাথে ' + related.length + ' টি রিলেটেড লেনদেনও মুছে যাবে:';
+    related.forEach(function(r){
+      confirmMsg += '\n  • ' + (TX_TYPES[r.type]?.title || r.type) + ' — ৳ ' + fmt(r.amount);
+    });
+  }
+
+  confirmMsg += '\n\n⚠️ এটা undo করা যাবে না (backup থেকে restore সম্ভব)।';
+
+  if(!confirm(confirmMsg)) return;
+
   try {
-    // 1. Tombstone
+    // Backup
+    backupDeletedTx(t);
+    related.forEach(function(r){ backupDeletedTx(r); });
+
+    // Tombstone
     if(!DB.deletedTxIds) DB.deletedTxIds = {};
     DB.deletedTxIds[id] = new Date().toISOString();
 
-    // 2. Remove from txs
+    // Remove main
     DB.txs = (DB.txs || []).filter(function(x){ return x.id !== id; });
 
-    // 3. Remove from archive
+    // Remove from archive
     if(DB.yearlyArchive){
       Object.keys(DB.yearlyArchive).forEach(function(y){
         if(Array.isArray(DB.yearlyArchive[y])){
@@ -381,18 +437,21 @@ async function deleteTx(id){
       });
     }
 
-    // 4. If loan_given, also delete linked withdrawal
-    if(t.type === 'loan_given'){
-      var linked = (DB.txs || []).filter(function(x){
-        return x.linkedFrom === 'loan_given' && x.linkedParentId === id;
-      });
-      linked.forEach(function(wtx){
-        DB.deletedTxIds[wtx.id] = new Date().toISOString();
-        DB.txs = DB.txs.filter(function(x){ return x.id !== wtx.id; });
-      });
-    }
+    // Remove related
+    related.forEach(function(r){
+      DB.deletedTxIds[r.id] = new Date().toISOString();
+      DB.txs = DB.txs.filter(function(x){ return x.id !== r.id; });
 
-    // 5. If loan_collection, revert parent's collectedAmount
+      if(DB.yearlyArchive){
+        Object.keys(DB.yearlyArchive).forEach(function(y){
+          if(Array.isArray(DB.yearlyArchive[y])){
+            DB.yearlyArchive[y] = DB.yearlyArchive[y].filter(function(x){ return x.id !== r.id; });
+          }
+        });
+      }
+    });
+
+    // Revert parent collectedAmount
     if(t.type === 'loan_collection' && t.linkedParentId){
       var parent = (DB.txs || []).find(function(x){ return x.id === t.linkedParentId; });
       if(parent){
@@ -407,34 +466,30 @@ async function deleteTx(id){
       }
     }
 
-    // 6. Invalidate caches
+    // Invalidate caches
     if(typeof __invalidateCaches === 'function') __invalidateCaches();
-
-    // 7. Recalc customer dues
     if(typeof recalcAllCustomerDues === 'function') recalcAllCustomerDues(false);
-
-    // 8. FULL recompute from base + remaining txs
     if(typeof recomputeLive === 'function') recomputeLive();
 
-    // 9. Log
+    // Log
     if(typeof logActivity === 'function'){
       logActivity('txn_delete', '🗑️ লেনদেন ডিলিট',
-        (TX_TYPES[t.type]?.title || '') + (t.custName ? ' — ' + t.custName : ''),
+        (TX_TYPES[t.type]?.title || '') + (t.custName ? ' — ' + t.custName : '') +
+        (related.length > 0 ? ' (+ ' + related.length + ' related)' : ''),
         t.amount || 0);
     }
 
-    // 10. Save + Push
+    // Save + Push
     DB.__updated = new Date().toISOString();
     if(typeof saveLocal === 'function') saveLocal();
     if(typeof pushCloud === 'function'){
       try { await pushCloud(); } catch(e){ console.warn('Push error:', e); }
     }
 
-    // 11. UI refresh
+    // UI refresh
     if(typeof renderDashboard === 'function') renderDashboard();
     if(typeof renderSidebar === 'function') renderSidebar();
 
-    // 12. Refresh any open customer modal
     document.querySelectorAll('.modal-bg').forEach(function(m){
       if(m.__reloadCustomerPopup && typeof m.__reloadCustomerPopup === 'function'){
         try { m.__reloadCustomerPopup(); } catch(e){}
@@ -442,7 +497,11 @@ async function deleteTx(id){
     });
 
     if(typeof toast === 'function'){
-      toast('🗑️ ডিলিট — ৳ ' + fmt(t.amount), 'ok');
+      var msg = '🗑️ ডিলিট — ৳ ' + fmt(t.amount);
+      if(related.length > 0){
+        msg += ' (+ ' + related.length + ' related)';
+      }
+      toast(msg, 'ok');
     }
 
   } catch(e){
@@ -451,4 +510,78 @@ async function deleteTx(id){
   }
 }
 
-console.log('✅ Audit module loaded — v3.0 (side-by-side layout)');
+/* ═══════════════════════════════════════════════════════════
+   🔄 RESTORE DELETED TX
+   ═══════════════════════════════════════════════════════════ */
+async function restoreDeletedTx(txId){
+  if(!SESSION || SESSION.role !== 'admin'){
+    if(typeof toast === 'function') toast('🔒 শুধু অ্যাডমিন');
+    return false;
+  }
+
+  var backupKey = 'cc_deleted_tx_backup';
+  var backups = {};
+  try {
+    backups = JSON.parse(localStorage.getItem(backupKey) || '{}');
+  } catch(e){}
+
+  var tx = backups[txId];
+  if(!tx){
+    if(typeof toast === 'function') toast('❌ Backup পাওয়া যায়নি');
+    return false;
+  }
+
+  if(!DB.txs.find(function(x){ return x.id === txId; })){
+    DB.txs.push(tx);
+  }
+  if(DB.deletedTxIds) delete DB.deletedTxIds[txId];
+
+  if(typeof __invalidateCaches === 'function') __invalidateCaches();
+  if(typeof recomputeLive === 'function') recomputeLive();
+
+  DB.__updated = new Date().toISOString();
+  if(typeof saveLocal === 'function') saveLocal();
+  if(typeof pushCloud === 'function'){
+    try { await pushCloud(); } catch(e){}
+  }
+
+  if(typeof renderDashboard === 'function') renderDashboard();
+  if(typeof toast === 'function') toast('✅ Restored — ৳ ' + fmt(tx.amount), 'ok');
+  return true;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🧪 DEBUG HELPERS
+   ═══════════════════════════════════════════════════════════ */
+window.__listDeletedTxs = function(){
+  var backups = {};
+  try {
+    backups = JSON.parse(localStorage.getItem('cc_deleted_tx_backup') || '{}');
+  } catch(e){}
+
+  console.log('═══════════════════════════════════════');
+  console.log('🗑️ Deleted Tx Backups');
+  console.log('═══════════════════════════════════════');
+  var keys = Object.keys(backups);
+  console.log('Total backups:', keys.length);
+  keys.forEach(function(k){
+    var b = backups[k];
+    console.log('  • ' + b.type + ' — ৳ ' + fmt(b.amount) + ' — ' + (b.custName || '—') + ' — ' + b.date);
+  });
+  console.log('═══════════════════════════════════════');
+  return backups;
+};
+
+window.__restoreLastDeleted = async function(){
+  var backups = window.__listDeletedTxs();
+  var keys = Object.keys(backups);
+  if(!keys.length){
+    console.log('❌ No backups');
+    return;
+  }
+  var lastKey = keys[keys.length - 1];
+  console.log('Restoring:', lastKey);
+  await restoreDeletedTx(lastKey);
+};
+
+console.log('✅ Audit module loaded — v5.0 (loan total = main + withdrawal)');
