@@ -591,8 +591,14 @@ function renderDashboard(){
     '<div class="amt sm"><span>ফেরত:</span><span>৳ ' + fmt(st.support.in) + '</span></div></div>';
 
   html += '<div class="card" data-type="money_exchange"><div class="ico">' + TX_TYPES.money_exchange.icon + '</div><h3>' + TX_TYPES.money_exchange.title + '</h3>' +
-    '<div class="amt sm"><span>প্রদান:</span><span>৳ ' + fmt(st.money_exchange.out) + '</span></div>' +
-    '<div class="amt sm"><span>গ্রহণ:</span><span>৳ ' + fmt(st.money_exchange.in) + '</span></div></div>';
+    (st.money_exchange.online > 0 ?
+      '<div class="amt sm"><span>🌐 Online:</span><span>৳ ' + fmt(st.money_exchange.online) + '</span></div>' : '') +
+    (st.money_exchange.out > 0 ?
+      '<div class="amt sm"><span>💸 প্রদান:</span><span>৳ ' + fmt(st.money_exchange.out) + '</span></div>' : '') +
+    (st.money_exchange.in > 0 ?
+      '<div class="amt sm"><span>📥 গ্রহণ:</span><span>৳ ' + fmt(st.money_exchange.in) + '</span></div>' : '') +
+    '<div class="sub">মোট: <b>' + toBn(st.money_exchange.cnt) + '</b> টি</div>' +
+  '</div>';
 
   // ⚡ Collect + Support Due Card
   // ⚡ সব branch এর count (informed থাকার জন্য)

@@ -215,8 +215,14 @@ function applyTx(tx, phase){
     // 💱 MONEY EXCHANGE
     // ═══════════════════════════════════════════════════════
     case 'money_exchange': {
-      addNotes(DB.liveVault[vb], nOut, -1);
-      addNotes(DB.liveVault[vb], nIn, +1);
+      if(tx.exchangeType === 'online'){
+        // ⚡ Online Receipt → mother account +=
+        DB.liveAccounts[bb].bank += amt;
+      } else {
+        // ⚡ Physical Exchange → vault only
+        addNotes(DB.liveVault[vb], nOut, -1);
+        addNotes(DB.liveVault[vb], nIn, +1);
+      }
       break;
     }
   }
@@ -432,8 +438,12 @@ function computeStateAtDate(bf, targetDate){
         break;
       }
       case 'money_exchange': {
-        addNotesState(state.vault[vb], nOut, -1);
-        addNotesState(state.vault[vb], nIn, +1);
+        if(tx.exchangeType === 'online'){
+          state.accounts[bb].bank += amt;
+        } else {
+          addNotesState(state.vault[vb], nOut, -1);
+          addNotesState(state.vault[vb], nIn, +1);
+        }
         break;
       }
     }
@@ -499,7 +509,7 @@ function calcStats(bf, date){
     bank_transfer: { in: 0, out: 0, cnt: 0 },
     other: { in: 0, out: 0, onlineIn: 0, onlineOut: 0 },
     support: { in: 0, out: 0, cnt: 0 },
-    money_exchange: { in: 0, out: 0, cnt: 0 }
+    money_exchange: { in: 0, out: 0, online: 0, cnt: 0 }
   };
 
   var isAll = bf === 'all';
@@ -541,9 +551,14 @@ function calcStats(bf, date){
         else r.support.in += amt;
         r.support.cnt++;
         break;
+
       case 'money_exchange':
-        r.money_exchange.out += Number(t.notesOutSum) || 0;
-        r.money_exchange.in += Number(t.notesInSum) || 0;
+        if(t.exchangeType === 'online'){
+          r.money_exchange.online += amt;   // ⚡ Online receipt
+        } else {
+          r.money_exchange.out += Number(t.notesOutSum) || 0;
+          r.money_exchange.in += Number(t.notesInSum) || 0;
+        }
         r.money_exchange.cnt++;
         break;
     }

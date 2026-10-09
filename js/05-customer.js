@@ -322,14 +322,26 @@ function openCustomerDetail(acc){
       '<span style="font-size:11px;color:#93c5fd;font-style:italic">📝 ' + esc(noteText) + '</span>' :
       '<span style="color:#4a5878;font-size:10.5px">—</span>';
 
-    rows += '<tr>' +
+    var canEdit = (typeof canEditTx === 'function') ? canEditTx(t) : false;
+    var canDel = (SESSION && SESSION.role === 'admin');
+    var actionBtns = '<button class="mini" data-cust-tx-view="' + t.id + '" title="বিস্তারিত">👁️</button>';
+    if(canEdit){
+      actionBtns += ' <button class="mini" data-cust-tx-edit="' + t.id + '" title="এডিট">✏️</button>';
+    }
+    if(canDel){
+      actionBtns += ' <button class="mini danger" data-cust-tx-del="' + t.id + '" title="ডিলিট">🗑️</button>';
+    }
+
+    rows += '<tr data-tx-row="' + t.id + '">' +
       '<td style="white-space:nowrap;font-size:12px">' + toBn(t.date) + '</td>' +
       '<td style="font-size:12.5px">' + cfg.icon + ' ' + esc(cfg.title) + '</td>' +
       '<td style="max-width:180px">' + noteHtml + '</td>' +
       '<td class="amt" style="color:#4ade80">৳ ' + fmt(t.amount) + '</td>' +
       '<td style="font-size:10.5px;color:#7a8ab8">' + esc(t.user || '—') + '</td>' +
+      '<td style="white-space:nowrap">' + actionBtns + '</td>' +
     '</tr>';
   });
+
 
   openModal({
     title: '👤 ' + esc(c ? c.name : acc),

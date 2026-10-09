@@ -1,0 +1,4 @@
+[উপরের Identity Card পুরোটা paste করো]
+
+পরের কাজ: Deposit form এ history fix করো
+(কারণ detectTxTypeFromTitle এ "নগদ/অনলাইনে জমা" নেই)

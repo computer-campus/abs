@@ -139,3 +139,17 @@ console.log('%c📱 ' + (IS_MOBILE ? 'MOBILE → READ-ONLY' : 'DESKTOP → FULL 
 if(IS_MOBILE){
   window.__MOBILE_BLOCK = true;
 }
+
+/* ───── BANKS ───── */
+const BANKS = {
+  brac_outlet_kalaroa:   { name: 'ব্র্যাক ব্যাংক আউটলেট (কলারোয়া)' },
+  brac_outlet_jhaudanga: { name: 'ব্র্যাক ব্যাংক আউটলেট (ঝাউডাঙ্গা)' },
+  brac_satkhira:         { name: 'ব্র্যাক ব্যাংক (সাতক্ষীরা)' },
+  brac_other:            { name: 'ব্র্যাক ব্যাংক (অন্যান্য শাখা)' },
+  al_arafah_kalaroa:     { name: 'আল আরাফাহ ব্যাংক (কলারোয়া)' },
+  al_arafah_jhaudanga:   { name: 'আল আরাফাহ ব্যাংক (ঝাউডাঙ্গা)' },
+  dutch_bangla_kalaroa:  { name: 'ডাচ বাংলা ব্যাংক (কলারোয়া)' },
+  other_bank_branch:     { name: 'অন্যান্য ব্যাংক (অন্যান্য শাখা)' }
+};
+
+console.log('✅ BANKS loaded:', Object.keys(BANKS).length);

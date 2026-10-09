@@ -1,56 +1,62 @@
-তুমি আমাকে চিনবে। আমি "কম্পিউটার ক্যাম্পাস — এজেন্ট ব্যাংকিং সিস্টেম" বানাচ্ছি।
+তুমি আগের চ্যাট থেকে আমাকে চিনবে। এই তথ্যগুলো মনে রাখো।
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 প্রজেক্ট
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- নাম: কম্পিউটার ক্যাম্পাস
-- টাইপ: এজেন্ট ব্যাংকিং ম্যানেজমেন্ট সিস্টেম
-- ভাষা: বাংলা UI, বাংলায় কথা বলা
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 প্রজেক্ট: কম্পিউটার ক্যাম্পাস — এজেন্ট ব্যাংকিং সিস্টেম
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🛠️ টেক স্ট্যাক
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛠️ টেক স্ট্যাক:
 - Frontend: HTML + CSS + Vanilla JS (কোনো framework নেই)
 - Backend: Supabase (table: agent_bank, row: cc_agent_bank_main)
 - Auth: crypto-js SHA256, salt = "ccbank_salt_"
-- Password verify: verifyPass() — database only, no hardcoded
+- Password verify: শুধু database থেকে (কোনো hardcoded নেই)
 - Hosting: Local file:// (C:\Users\Admin\Desktop\BrandNew\)
-- Login: শুধু database থেকে verify, master override নেই
+- Font: সব জায়গায় "Noto Sans Bengali"
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📁 ফাইল স্ট্রাকচার
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 ফাইল স্ট্রাকচার (মোট ২২টা file)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 index.html
-css/style.css (clean minimal version)
-js/00-core.js         — config + utils + mobile guard
-js/01-db.js           — DB state + cloud sync + tombstones
-js/02-engine.js       — transaction engine + computeStateAtDate
-js/03-ui.js           — modal + toast + topbar + dashboard
-js/04-login.js        — login/logout
-js/05-customer.js     — customer + due
-js/06-dispatcher.js   — openTxForm router
-js/07-audit.js        — all data + audit + showTxDetail
-js/08-managers.js     — branch + user + backup
+css/style.css (clean minimal)
+
+js/00-core.js          — config + utils + mobile guard
+js/01-db.js            — DB state + cloud sync + tombstones
+js/02-engine.js        — transaction engine + computeStateAtDate
+js/03-ui.js            — modal + toast + topbar + dashboard
+js/04-login.js         — login/logout
+js/05-customer.js      — customer + due
+js/06-dispatcher.js    — openTxForm router
+js/07-audit.js         — all data + audit + showTxDetail + deleteTx
+js/08-managers.js      — branch + user + backup
 js/09-notifications.js — real-time activity broadcast
-js/10-sidebar.js      — sidebar (admin only, user mode hide)
+js/10-sidebar.js       — sidebar (শুধু admin)
 js/99-init.js
-js/tx/tx-deposit.js, tx-expense.js, tx-support.js,
-      tx-other-bank.js, tx-withdrawal.js, tx-loan-given.js,
-      tx-loan-received.js, tx-loan-collection.js,
-      tx-branch-transfer.js, tx-bank-transfer.js,
-      tx-money-exchange.js, tx-simple-form.js
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+js/tx/tx-deposit.js
+js/tx/tx-expense.js
+js/tx/tx-support.js
+js/tx/tx-other-bank.js
+js/tx/tx-withdrawal.js
+js/tx/tx-loan-given.js
+js/tx/tx-loan-received.js
+js/tx/tx-loan-collection.js
+js/tx/tx-branch-transfer.js
+js/tx/tx-bank-transfer.js
+js/tx/tx-money-exchange.js
+js/tx/tx-simple-form.js
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🏦 ব্যবসার তথ্য
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- Branch: kalaroa (কলারোয়া), jhaudanga (ঝাউডাঙ্গা)
-- Denomination: 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-TX_TYPES (নাম):
+Branch: kalaroa (কলারোয়া), jhaudanga (ঝাউডাঙ্গা)
+Denomination: 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1
+
+TX_TYPES (শেষ আপডেট):
 - loan_given      → "ঋণের টাকা বিতরণ" 💸
 - loan_received   → "ঋণ কিস্তি গ্রহণ" 📥
 - loan_collection → "ঋণ সংগ্রহ" 💰
-- deposit         → "নগদ জমা" 🏦
+- deposit         → "নগদ/অনলাইনে জমা" 🏦   ⚡ (নতুন)
 - withdrawal      → "নগদ উত্তোলন" 💵
 - branch_transfer → "আউটলেট টু আউটলেট ট্রান্সফার" 🔁
 - bank_transfer   → "ইন্টারনাল অনলাইন ট্রান্সফার" 🏛️
@@ -59,46 +65,109 @@ TX_TYPES (নাম):
 - expense         → "ক্যাশ থেকে খরচ" 🧾
 - money_exchange  → "মানি এক্সচেঞ্জ" 💱
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📐 গুরুত্বপূর্ণ Business Logic
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💸 Loan Given (ঋণ বিতরণ):
+- ৩টা field side by side: মূল ঋণ | অনলাইন | নগদ উত্তোলন
+- মোট ঋণ = মূল ঋণ + নগদ উত্তোলন
+- ক্যাশ নেয়নি = মোট ঋণ − অনলাইন − ক্যাশ
+- **২টা আলাদা txn তৈরি হয়:**
+  1. loan_given txn (amount = মূল ঋণ)
+  2. withdrawal txn (amount = নগদ উত্তোলন, linkedFrom: 'loan_given')
+- মাদার অ্যাকাউন্টে ২বার আলাদা যোগ: + মূল ঋণ, + নগদ উত্তোলন
+- Detail popup layout:
+  🏦 মূল ঋণ | 💵 নগদ উত্তোলন (pasha pashi)
+  = মোট ঋণ (full width)
+  🌐 অনলাইন | 💸 ক্যাশ | 💰 ক্যাশ নেয়নি (3 columns)
+
+🏦 Deposit (নগদ/অনলাইনে জমা):
+- ধরন dropdown: 💵 ক্যাশ / 🌐 অনলাইন
+- ক্যাশ → notes grid + vault += notes + মাদার account -=
+- অনলাইন → only amount field + মাদার account -= only
+
+📥 Loan Received:
+- main + opposite + change branch splits
+
+💰 Loan Collection:
+- ক্যাশ (notes) বা অনলাইন
+- parent loan এর collectedAmount update
+
+🏛️ Bank Transfer:
+- শুধু mother account থেকে mother account
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎨 UI/UX সিদ্ধান্ত
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- Font: সব জায়গায় "Noto Sans Bengali"
-- Sidebar: শুধু admin দেখে | user এ sidebar নেই, topbar এ user info + সব ডেটা + লগআউট button
-- Dashboard cards: 6×2 grid (12 cards 2 lines)
-- Vault: 10 columns, full width justify
-- Modal: Modal body তে auto History (form এর নিচে) + calendar (আজ/সব button)
-- Form এ: Date + Time দুটোই (Time auto = এখনকার)
-- Future date block: সব date input এ max=today
-- Notifications: real-time broadcast অন্য device এ
-- Audit log: শুধু admin
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Sidebar: শুধু admin দেখে | user এ sidebar নেই
+- User topbar এ: 👤 নাম/role + 📋 সব ডেটা + 🚪 লগআউট button
+- Dashboard cards: 6×2 grid (12 cards 2 lines), big font
+- Vault items: 10 columns, full width justify
+- Modal এ auto History (form এর নিচে) + calendar (সব/আজ)
+- Form এ Date + Time দুটোই (Time auto)
+- Future date block (max=today)
+- Real-time notification (Supabase Broadcast)
+- Audit log শুধু admin
+- Form এর date field এ arrow key দিয়ে date change
+- প্রতিটা date input এ max=today
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ যা যা করা হয়েছে (সম্পূর্ণ)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- Mobile read-only (bulletproof detection)
-- Cloud data overwrite protection
-- Branch transfer double-deduct fix
-- Tombstone system (tx + customer + user)
-- Fresh clean 22-file system
-- Real-time notification broadcast
-- Support due + Cash pending hub modal (2 tabs)
-- Date-wise dashboard (past date এ state calculate)
-- Customer instant search (typing → dropdown)
-- Note/comment সব জায়গায় visible
-- Pending hub সব branch এর data দেখায়
-- Noto Sans Bengali global font
-- User mode এ sidebar hidden + topbar এ buttons
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 পরের কাজ (চলমান/বাকি)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[এখানে বলো কী কাজ করতে চাও]
+1. Mobile read-only (bulletproof detection)
+2. Cloud data overwrite protection
+3. Branch transfer double-deduct fix
+4. Tombstone system (tx + customer + user)
+5. Fresh clean 22-file system
+6. Real-time notification broadcast
+7. Support due + Cash pending hub modal (2 tabs)
+8. Date-wise dashboard (past date এ state calculate)
+9. Customer instant search (typing → dropdown)
+10. Note/comment সব জায়গায় visible
+11. Pending hub সব branch এর data দেখায়
+12. Noto Sans Bengali global font
+13. User mode এ sidebar hidden + topbar এ buttons
+14. Loan given: ৩ field + auto withdrawal txn
+15. Delete tx: linked txs + backup + restore
+16. Deposit: cash/online dual mode
+17. Global negative value protection
+18. Arrow key date navigation
+19. Loan given detail: side-by-side layout
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 আমার স্টাইল
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 শেষ কাজ (Last session):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Deposit form এ customer field যোগ করা হয়েছে।
+detectTxTypeFromTitle আপডেট করতে হবে যাতে "🏦 নগদ/অনলাইনে জমা" 
+match করে history render হয়।
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 আমার স্টাইল:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 - বাংলায় কথা বলি
 - কোড ব্লকে দিই, ছোট ছোট step এ
-- Complete file replace করি, partial edit কম
+- Complete file replace করতে বলি, partial edit কম
 - প্রতি step এ "এখন করো" list
 - Bug হলে Console command দিয়ে debug
+- সবসময় "Screenshot দাও" বলি
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 Admin Credentials:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Database এ admin user আছে। master override নেই।
+Login শুধু cloud/database এর user দিয়ে verify হয়।
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 এখন পরের কাজ:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[এখানে তোমার পরের কাজ লিখো — যেমন "deposit form এ history fix" 
+অথবা "নতুন feature যোগ করতে চাই" ইত্যাদি]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1199,3 +1199,242 @@ body.user-mode #topbar{
     display:none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   🗄️ VAULT ITEMS — Bigger Text
+   ═══════════════════════════════════════════════════════════ */
+
+.vault-row{
+  display:grid !important;
+  grid-template-columns:repeat(10, 1fr) !important;
+  gap:10px !important;
+}
+
+.vault-item{
+  padding:14px 10px !important;
+  border-radius:14px !important;
+  border-width:2px !important;
+}
+
+/* ৳ Denomination — বড় */
+.vault-item .d{
+  font-size:16px !important;
+  font-weight:900 !important;
+  margin-bottom:8px !important;
+  letter-spacing:.2px !important;
+}
+
+/* Count — বড় */
+.vault-item .c{
+  font-size:22px !important;
+  font-weight:900 !important;
+  line-height:1.1 !important;
+}
+
+/* Amount — বড় */
+.vault-item .a{
+  font-size:14px !important;
+  font-weight:800 !important;
+  margin-top:8px !important;
+  padding-top:6px !important;
+}
+
+/* Total footer — বড় */
+.section .vault-row + div{
+  padding:14px 20px !important;
+  font-size:15px !important;
+  font-weight:900 !important;
+  margin-top:12px !important;
+}
+
+/* ═══ Tablet ═══ */
+@media(max-width:1099px){
+  .vault-row{
+    grid-template-columns:repeat(5, 1fr) !important;
+    gap:10px !important;
+  }
+  .vault-item .d{ font-size:15px !important; }
+  .vault-item .c{ font-size:20px !important; }
+  .vault-item .a{ font-size:13px !important; }
+}
+
+/* ═══ Mobile ═══ */
+@media(max-width:640px){
+  .vault-row{
+    grid-template-columns:repeat(3, 1fr) !important;
+    gap:8px !important;
+  }
+  .vault-item{
+    padding:10px 6px !important;
+  }
+  .vault-item .d{ font-size:13px !important; margin-bottom:5px !important; }
+  .vault-item .c{ font-size:17px !important; }
+  .vault-item .a{ font-size:11.5px !important; margin-top:5px !important; padding-top:4px !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🏷️ MODAL LABELS — Bigger Text
+   ═══════════════════════════════════════════════════════════ */
+
+/* Labels */
+.modal .field label,
+.modal-body .field label,
+.modal label{
+  font-size:14px !important;
+  font-weight:900 !important;
+  letter-spacing:.3px !important;
+  margin-bottom:8px !important;
+  color:#93c5fd !important;
+}
+
+/* Form row labels */
+.modal .form-row .field label{
+  font-size:13.5px !important;
+}
+
+/* Notes column headers (💸 প্রদান / 📥 গ্রহণ) */
+.notes-col h4{
+  font-size:15px !important;
+  font-weight:900 !important;
+  margin-bottom:12px !important;
+  letter-spacing:.3px !important;
+}
+
+/* Note-item labels (৳1000, ৳500) */
+.note-item label{
+  font-size:13px !important;
+  font-weight:900 !important;
+  margin-bottom:5px !important;
+  color:#93c5fd !important;
+}
+
+/* Vault stock text (আছে ১৭০৩ / নেই) */
+.note-item div[style*="font-size:10px"],
+.note-item div[style*="font-size: 10px"]{
+  font-size:12px !important;
+  font-weight:900 !important;
+  margin-top:5px !important;
+}
+
+/* Sum line */
+.sum-line{
+  font-size:14px !important;
+  font-weight:900 !important;
+  padding:12px 14px !important;
+}
+
+/* Input text */
+.modal input,
+.modal select,
+.modal textarea{
+  font-size:14.5px !important;
+}
+
+/* Denom input number */
+.note-item input{
+  font-size:15px !important;
+  padding:10px 6px !important;
+  font-weight:900 !important;
+}
+
+/* Modal head title */
+.modal-head h3{
+  font-size:17px !important;
+  font-weight:900 !important;
+}
+
+/* Section titles in modal */
+.modal .section-title{
+  font-size:15px !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   📱 Mobile — slightly smaller but still bigger
+   ═══════════════════════════════════════════════════════════ */
+@media(max-width:640px){
+  .modal .field label,
+  .modal-body .field label,
+  .modal label{
+    font-size:13px !important;
+  }
+  .notes-col h4{
+    font-size:14px !important;
+  }
+  .note-item label{
+    font-size:12px !important;
+  }
+  .note-item input{
+    font-size:14px !important;
+  }
+  .sum-line{
+    font-size:13px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🔘 SMALLER BUTTONS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Main buttons */
+.btn{
+  padding:11px 18px !important;
+  font-size:13px !important;
+  border-radius:10px !important;
+}
+
+.btn.sm{
+  padding:8px 13px !important;
+  font-size:12px !important;
+}
+
+/* Mini buttons */
+.mini{
+  padding:5px 11px !important;
+  font-size:12px !important;
+  border-radius:7px !important;
+}
+
+/* Topbar buttons */
+.tb-btn{
+  padding:7px 12px !important;
+  font-size:12.5px !important;
+  border-radius:8px !important;
+}
+
+/* Modal close ✕ button */
+.modal-head .x{
+  width:32px !important;
+  height:32px !important;
+  font-size:14px !important;
+  border-radius:8px !important;
+}
+
+/* Sidebar buttons */
+.sb-btn{
+  padding:10px 12px !important;
+  font-size:13px !important;
+  border-radius:9px !important;
+}
+
+/* Print preview buttons */
+#pv-print-btn,
+#pv-close-btn{
+  padding:11px 18px !important;
+  font-size:13px !important;
+}
+
+/* Small screen */
+@media(max-width:640px){
+  .btn{
+    padding:10px 14px !important;
+    font-size:12.5px !important;
+  }
+  .mini{
+    padding:4px 9px !important;
+    font-size:11.5px !important;
+  }
+  .tb-btn{
+    padding:7px 10px !important;
+    font-size:12px !important;
+  }
+}
