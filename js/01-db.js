@@ -233,10 +233,10 @@ function mergeCloudLocal(cloud, local){
   const dTx = { ...(cloud.deletedTxIds || {}), ...(local.deletedTxIds || {}) };
   const dCustId = { ...(cloud.deletedCustomerIds || {}), ...(local.deletedCustomerIds || {}) };
   const dCustAcc = { ...(cloud.deletedCustomerAccounts || {}), ...(local.deletedCustomerAccounts || {}) };
-  const dUserId = { ...(cloud.deletedUserIds || {}), ...(local.deletedUserIds || {}) };
+  // ⚡ User tombstones disabled — no tracking needed
+  const dUserId = {};
   const dUserNames = {};
-  [...Object.keys(cloud.deletedUsernames || {}), ...Object.keys(local.deletedUsernames || {})]
-    .forEach(u => dUserNames[u.toLowerCase()] = true);
+    
 
   // txs
   const txMap = new Map();
@@ -270,16 +270,23 @@ function mergeCloudLocal(cloud, local){
   });
   out.customers = Array.from(custMap.values());
 
-  // users
+    // users — NO tombstones, deduplicate by username (newest wins)
   const userMap = new Map();
   [...(cloud.users || []), ...(local.users || [])].forEach(u => {
     if(!u) return;
-    if(u.id && dUserId[u.id]) return;
-    if(u.username && dUserNames[String(u.username).toLowerCase()]) return;
+    if(!u.username && !u.id) return;
     const k = String(u.username || u.id).toLowerCase();
-    if(!userMap.has(k)) userMap.set(k, u);
+    const existing = userMap.get(k);
+    if(!existing){
+      userMap.set(k, u);
+    } else {
+      const oldTs = new Date(existing.createdAt || existing.updatedAt || 0).getTime() || 0;
+      const newTs = new Date(u.createdAt || u.updatedAt || 0).getTime() || 0;
+      if(newTs > oldTs){
+        userMap.set(k, u);
+      }
+    }
   });
- 
   out.users = Array.from(userMap.values());
 
   // activity
@@ -304,8 +311,8 @@ function mergeCloudLocal(cloud, local){
   out.deletedTxIds = dTx;
   out.deletedCustomerIds = dCustId;
   out.deletedCustomerAccounts = dCustAcc;
-  out.deletedUserIds = dUserId;
-  out.deletedUsernames = dUserNames;
+  out.deletedUserIds = {};
+  out.deletedUsernames = {};
 
   // ⚡ CRITICAL: liveAccounts/liveVault সবসময় local রাখো
   // এগুলো derived — base + txs থেকে হিসাব হবে

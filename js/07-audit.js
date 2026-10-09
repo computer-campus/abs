@@ -298,8 +298,49 @@ function showTxDetail(id){
   html += '</div>';
 
   // ═══════════════════════════════════════════════════════════
-  // ACTION BUTTONS — 3 small buttons
+  // ACTION BUTTONS
   // ═══════════════════════════════════════════════════════════
+
+  // ⚡ Pending Branch Transfer — Accept/Cancel block
+  var isPendingTransfer = (t.type === 'branch_transfer' && !t.accepted && !t.cancelled);
+
+  if(isPendingTransfer && !READ_ONLY){
+    html += '<div style="padding:14px;border-radius:12px;background:linear-gradient(145deg,rgba(250,204,21,.12),rgba(0,0,0,.3));border:1.5px solid rgba(250,204,21,.5);margin-bottom:14px">';
+
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">' +
+      '<span style="font-size:20px">⏳</span>' +
+      '<div style="flex:1">' +
+        '<div style="font-size:13px;color:#facc15;font-weight:900">অপেক্ষমাণ ট্রান্সফার</div>' +
+        '<div style="font-size:11px;color:#a5b4d8;font-weight:700">গ্রহণ বা বাতিল করুন</div>' +
+      '</div>' +
+    '</div>';
+
+    // Branch info
+    var fromN = BRANCHES[t.from]?.name || t.from || '—';
+    var toN = BRANCHES[t.to]?.name || t.to || '—';
+
+    html += '<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:12px">' +
+      '<div style="padding:8px 10px;border-radius:8px;background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.4);text-align:center">' +
+        '<div style="font-size:10px;color:#f87171;font-weight:800;margin-bottom:2px">📤 পাঠিয়েছে</div>' +
+        '<div style="font-size:12px;color:#fff;font-weight:900">' + esc(fromN) + '</div>' +
+      '</div>' +
+      '<div style="font-size:20px;color:#facc15">➜</div>' +
+      '<div style="padding:8px 10px;border-radius:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4);text-align:center">' +
+        '<div style="font-size:10px;color:#4ade80;font-weight:800;margin-bottom:2px">📥 গ্রহণ করবে</div>' +
+        '<div style="font-size:12px;color:#fff;font-weight:900">' + esc(toN) + '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Buttons
+    html += '<div style="display:flex;gap:8px">' +
+      '<button class="btn green" id="tx-accept-btn" style="flex:1;padding:12px;font-size:14px;font-weight:900">✅ গ্রহণ করুন</button>' +
+      '<button class="btn red" id="tx-cancel-btn" style="flex:1;padding:12px;font-size:14px;font-weight:900">❌ বাতিল করুন</button>' +
+    '</div>';
+
+    html += '</div>';
+  }
+
+  // ⚡ Other action buttons
   html += '<div id="tx-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">';
 
   // 🖨️ Print
@@ -370,6 +411,118 @@ function showTxDetail(id){
         e.stopPropagation();
         m.close();
         await deleteTx(t.id);
+      });
+    }
+
+    // ✅ ACCEPT pending transfer
+    var ab = root.querySelector('#tx-accept-btn');
+    if(ab){
+      ab.addEventListener('click', async function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        if(!confirm('✅ ট্রান্সফার গ্রহণ করবেন?\n\n' +
+          '📤 ' + (BRANCHES[t.from]?.name || t.from) + '\n' +
+          '📥 ' + (BRANCHES[t.to]?.name || t.to) + '\n' +
+          '💰 ৳ ' + fmt(t.amount))) return;
+
+        try {
+          // Find tx (may be anywhere)
+          var found = (typeof findTxAnywhere === 'function') ? findTxAnywhere(t.id) : null;
+          var txObj = found && found.tx ? found.tx : t;
+
+          if(txObj.accepted){
+            toast('⚠️ আগেই গৃহীত হয়েছে', 'warn');
+            m.close();
+            return;
+          }
+
+          txObj.accepted = true;
+          txObj.acceptedDate = todayStr();
+          txObj.acceptedAt = new Date().toISOString();
+          txObj.acceptedBy = SESSION ? SESSION.name : '—';
+          txObj.updatedAt = new Date().toISOString();
+
+          if(typeof logActivity === 'function'){
+            logActivity('txn_accept', '✅ ট্রান্সফার গৃহীত',
+              (BRANCHES[t.from]?.name || t.from) + ' ➜ ' + (BRANCHES[t.to]?.name || t.to),
+              t.amount);
+          }
+
+          if(typeof __invalidateCaches === 'function') __invalidateCaches();
+          if(typeof recomputeLive === 'function') recomputeLive();
+
+          DB.__updated = new Date().toISOString();
+          if(typeof saveLocal === 'function') saveLocal();
+          if(typeof pushCloud === 'function'){
+            try { await pushCloud(); } catch(e){}
+          }
+
+          if(typeof renderDashboard === 'function') renderDashboard();
+          if(typeof renderSidebar === 'function') renderSidebar();
+
+          m.close();
+          toast('✅ গৃহীত — ৳ ' + fmt(t.amount), 'ok');
+
+        } catch(err){
+          console.error('Accept error:', err);
+          toast('❌ ' + err.message, 'err');
+        }
+      });
+    }
+
+    // ❌ CANCEL pending transfer
+    var cb = root.querySelector('#tx-cancel-btn');
+    if(cb){
+      cb.addEventListener('click', async function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var reason = prompt('❌ বাতিলের কারণ?', 'দরকার নেই');
+        if(reason === null) return;
+
+        try {
+          var found = (typeof findTxAnywhere === 'function') ? findTxAnywhere(t.id) : null;
+          var txObj = found && found.tx ? found.tx : t;
+
+          if(txObj.accepted){
+            toast('⚠️ গৃহীত হয়ে গেছে', 'warn');
+            m.close();
+            return;
+          }
+
+          txObj.cancelled = true;
+          txObj.cancelledAt = new Date().toISOString();
+          txObj.cancelledBy = SESSION ? SESSION.name : '—';
+          txObj.cancelReason = reason || 'দরকার নেই';
+          txObj.updatedAt = new Date().toISOString();
+
+          if(typeof logActivity === 'function'){
+            logActivity('txn_delete', '❌ ট্রান্সফার বাতিল',
+              (BRANCHES[t.from]?.name || t.from) + ' ➜ ' + (BRANCHES[t.to]?.name || t.to) +
+              ' — ' + (reason || ''),
+              t.amount);
+          }
+
+          if(typeof __invalidateCaches === 'function') __invalidateCaches();
+          if(typeof recomputeLive === 'function') recomputeLive();
+
+          DB.__updated = new Date().toISOString();
+          if(typeof saveLocal === 'function') saveLocal();
+          if(typeof pushCloud === 'function'){
+            try { await pushCloud(); } catch(e){}
+          }
+
+          if(typeof renderDashboard === 'function') renderDashboard();
+          if(typeof renderSidebar === 'function') renderSidebar();
+
+          m.close();
+          toast('❌ বাতিল — ৳ ' + fmt(t.amount), 'ok');
+
+        } catch(err){
+          console.error('Cancel error:', err);
+          toast('❌ ' + err.message, 'err');
+        }
       });
     }
   }, 50);
