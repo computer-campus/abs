@@ -1438,3 +1438,39 @@ body.user-mode #topbar{
     font-size:12px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   📸 SCREENSHOT SAFE LAYOUT
+   html2canvas পুরো page capture করার জন্য
+   ═══════════════════════════════════════════════════════════ */
+
+/* ⚡ Body — scroll সবসময় allow */
+html, body{
+  min-height:100vh;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+}
+
+/* ⚡ App — full width */
+#app{
+  min-height:100vh;
+}
+
+/* ⚡ Main — bottom padding বাড়াও (screenshot এ না কাটার জন্য) */
+main{
+  padding-bottom:120px !important;
+}
+
+/* ⚡ Topbar — position changed during screenshot */
+@media screen{
+  body.screenshot-mode #topbar{
+    position:relative !important;
+  }
+}
+
+/* ⚡ NOTIFICATION STACK — screenshot এর জন্য ignore */
+#notif-stack,
+#toast-box,
+#ro-banner{
+  pointer-events:auto;
+}
