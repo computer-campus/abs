@@ -162,7 +162,53 @@ async function pullCloud(){
       console.warn('⚠️ Cloud এ কোনো data নেই');
       return false;
     }
-    DB = mergeCloudLocal(res.data.data, DB);
+
+    const cloudData = res.data.data;
+
+    // ⚡ MOBILE READ-ONLY: cloud data সরাসরি ব্যবহার করো
+    if(window.__READ_ONLY_MODE){
+      console.log('📱 Mobile mode — using cloud data directly');
+
+      // ⚡ Full replace (mobile এ all-in-one)
+      window.db = JSON.parse(JSON.stringify(cloudData));
+
+      if(typeof normalizeDB === 'function') normalizeDB();
+
+      // ⚡ FORCE cloud values (override anything)
+      if(cloudData.baseVault){
+        DB.baseVault = JSON.parse(JSON.stringify(cloudData.baseVault));
+      }
+      if(cloudData.baseAccounts){
+        DB.baseAccounts = JSON.parse(JSON.stringify(cloudData.baseAccounts));
+      }
+      if(cloudData.liveAccounts){
+        DB.liveAccounts = JSON.parse(JSON.stringify(cloudData.liveAccounts));
+      }
+      if(cloudData.liveVault){
+        DB.liveVault = JSON.parse(JSON.stringify(cloudData.liveVault));
+      }
+      if(cloudData.branchCapital){
+        DB.branchCapital = JSON.parse(JSON.stringify(cloudData.branchCapital));
+      }
+      if(typeof cloudData.totalCapital === 'number'){
+        DB.totalCapital = cloudData.totalCapital;
+      }
+
+      saveLocal();
+      HAS_SYNCED = true;
+
+      // ⚡ Debug log
+      console.log('☁️ Mobile pulled:');
+      console.log('  Bank:', DB.liveAccounts?.kalaroa?.bank);
+      console.log('  Cash:', DB.liveAccounts?.kalaroa?.cash);
+      console.log('  Vault 1000:', DB.liveVault?.kalaroa?.[1000]);
+      console.log('  Vault 500:', DB.liveVault?.kalaroa?.[500]);
+      console.log('  Vault 100:', DB.liveVault?.kalaroa?.[100]);
+      return true;
+    }
+
+    // Desktop: normal merge + recompute
+    DB = mergeCloudLocal(cloudData, DB);
     normalizeDB();
     recomputeLive();
     saveLocal();
