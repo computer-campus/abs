@@ -355,6 +355,102 @@ if(!window.__READ_ONLY_MODE){
     });
   };
 
+    /* ═══════════════════════════════════════════════════════════
+     🚀 AUTO PULL — Mobile এ page load এ cloud থেকে data আনো
+     ═══════════════════════════════════════════════════════════ */
+  var autoPullAttempts = 0;
+
+  function autoPullFromCloud(){
+    autoPullAttempts++;
+
+    if(autoPullAttempts > 20){
+      console.log('⚠️ Auto-pull timeout after 20 attempts');
+      return;
+    }
+
+    // Wait for SUPA
+    if(!window.SUPA){
+      console.log('⏳ Waiting for SUPA... (' + autoPullAttempts + ')');
+      setTimeout(autoPullFromCloud, 1000);
+      return;
+    }
+
+    // Wait for session
+    if(!window.SESSION){
+      console.log('⏳ Waiting for session... (' + autoPullAttempts + ')');
+      setTimeout(autoPullFromCloud, 1000);
+      return;
+    }
+
+    console.log('🚀 Mobile auto-pull starting...');
+
+    window.SUPA.from('agent_bank').select('data').eq('id', 'cc_agent_bank_main').maybeSingle()
+      .then(function(r){
+        if(!r.data || !r.data.data){
+          console.log('❌ Cloud এ data নেই');
+          return;
+        }
+
+        var c = r.data.data;
+        console.log('✅ Cloud data found:', (c.txs || []).length, 'txs');
+
+        // ⚡ Full replace
+        window.db = JSON.parse(JSON.stringify(c));
+
+        // Force cloud values (mobile-safe)
+        if(c.liveAccounts) DB.liveAccounts = JSON.parse(JSON.stringify(c.liveAccounts));
+        if(c.liveVault) DB.liveVault = JSON.parse(JSON.stringify(c.liveVault));
+        if(c.baseAccounts) DB.baseAccounts = JSON.parse(JSON.stringify(c.baseAccounts));
+        if(c.baseVault) DB.baseVault = JSON.parse(JSON.stringify(c.baseVault));
+        if(c.branchCapital) DB.branchCapital = JSON.parse(JSON.stringify(c.branchCapital));
+
+        // Fix negatives
+        if(DB.liveAccounts){
+          Object.keys(DB.liveAccounts).forEach(function(b){
+            var a = DB.liveAccounts[b];
+            if(a.bank < 0) a.bank = 0;
+            if(a.cash < 0) a.cash = 0;
+            if(a.other < 0) a.other = 0;
+          });
+        }
+        if(DB.liveVault){
+          Object.keys(DB.liveVault).forEach(function(b){
+            Object.keys(DB.liveVault[b] || {}).forEach(function(d){
+              if(DB.liveVault[b][d] < 0) DB.liveVault[b][d] = 0;
+            });
+          });
+        }
+
+        // Save local
+        if(typeof saveLocal === 'function') saveLocal();
+
+        // Refresh UI
+        if(typeof renderTopbar === 'function') renderTopbar();
+        if(typeof renderDashboard === 'function') renderDashboard(true);
+        if(typeof renderSidebar === 'function') renderSidebar();
+
+        console.log('✅ Mobile auto-pull complete');
+        console.log('   Bank:', DB.liveAccounts?.kalaroa?.bank);
+        console.log('   Vault 1000:', DB.liveVault?.kalaroa?.[1000]);
+
+        // Toast
+        if(typeof toast === 'function'){
+          toast('☁️ Cloud থেকে data sync হয়েছে', 'ok');
+        }
+
+      })
+      .catch(function(e){
+        console.warn('❌ Pull error:', e);
+        // Retry
+        setTimeout(autoPullFromCloud, 2000);
+      });
+  }
+
+  // ⚡ Multiple triggers
+  setTimeout(autoPullFromCloud, 2000);   // 2s
+  setTimeout(autoPullFromCloud, 5000);   // 5s (safety)
+  setTimeout(autoPullFromCloud, 10000);  // 10s (safety)
+
   console.log('%c✅ Mobile Read-Only v3.0 — no more minus!',
     'background:#16a34a;color:#fff;padding:4px 10px;border-radius:4px;font-weight:bold');
 }

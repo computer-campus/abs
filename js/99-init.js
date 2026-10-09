@@ -68,6 +68,77 @@ async function init(){
   console.log('%c✅ Ready', 'background:#22c55e;color:#fff;padding:4px 12px;border-radius:4px;font-weight:bold');
 }
 
+  /* ═══════════════════════════════════════════════════════════
+     📱 MOBILE AUTO-PULL — session থাকলে cloud থেকে data আনো
+     ═══════════════════════════════════════════════════════════ */
+  if(window.__READ_ONLY_MODE){
+    var mobilePullAttempts = 0;
+
+    function mobileAutoPull(){
+      mobilePullAttempts++;
+      if(mobilePullAttempts > 30) return;
+
+      // Need session
+      var savedSession = null;
+      try {
+        savedSession = JSON.parse(localStorage.getItem('cc_session_persist') || 'null');
+      } catch(e){}
+
+      if(!savedSession){
+        setTimeout(mobileAutoPull, 1000);
+        return;
+      }
+
+      // Need SUPA
+      if(!window.SUPA){
+        setTimeout(mobileAutoPull, 1000);
+        return;
+      }
+
+      console.log('📱 Mobile: pulling cloud data...');
+
+      SUPA.from('agent_bank').select('data').eq('id', 'cc_agent_bank_main').maybeSingle()
+        .then(function(r){
+          if(!r.data || !r.data.data) return;
+
+          var c = r.data.data;
+          window.db = JSON.parse(JSON.stringify(c));
+
+          if(c.liveAccounts) DB.liveAccounts = JSON.parse(JSON.stringify(c.liveAccounts));
+          if(c.liveVault) DB.liveVault = JSON.parse(JSON.stringify(c.liveVault));
+          if(c.baseAccounts) DB.baseAccounts = JSON.parse(JSON.stringify(c.baseAccounts));
+          if(c.baseVault) DB.baseVault = JSON.parse(JSON.stringify(c.baseVault));
+
+          // Fix negatives
+          if(DB.liveAccounts){
+            Object.keys(DB.liveAccounts).forEach(function(b){
+              var a = DB.liveAccounts[b];
+              if(a.bank < 0) a.bank = 0;
+              if(a.cash < 0) a.cash = 0;
+              if(a.other < 0) a.other = 0;
+            });
+          }
+
+          if(typeof saveLocal === 'function') saveLocal();
+
+          if(window.SESSION){
+            if(typeof renderTopbar === 'function') renderTopbar();
+            if(typeof renderDashboard === 'function') renderDashboard(true);
+          }
+
+          console.log('✅ Mobile auto-pull done');
+        })
+        .catch(function(e){
+          console.warn('❌', e);
+        });
+    }
+
+    // Start after 3s
+    setTimeout(mobileAutoPull, 3000);
+    // Refresh every 30s
+    setInterval(mobileAutoPull, 30000);
+  }
+
 if(document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', init);
 } else {
