@@ -216,8 +216,11 @@ function applyTx(tx, phase){
     // ═══════════════════════════════════════════════════════
     case 'money_exchange': {
       if(tx.exchangeType === 'online'){
-        // ⚡ Online Receipt → mother account +=
+        // ⚡ Online Receive → mother +=
         DB.liveAccounts[bb].bank += amt;
+        // ⚡ Cash give to customer → vault -
+        addNotes(DB.liveVault[vb], nOut, -1);
+        addNotes(DB.liveVault[vb], nIn, +1);
       } else {
         // ⚡ Physical Exchange → vault only
         addNotes(DB.liveVault[vb], nOut, -1);
@@ -439,7 +442,11 @@ function computeStateAtDate(bf, targetDate){
       }
       case 'money_exchange': {
         if(tx.exchangeType === 'online'){
+          // ⚡ Online receive → mother +=
           state.accounts[bb].bank += amt;
+          // ⚡ Cash give → vault -
+          addNotesState(state.vault[vb], nOut, -1);
+          addNotesState(state.vault[vb], nIn, +1);
         } else {
           addNotesState(state.vault[vb], nOut, -1);
           addNotesState(state.vault[vb], nIn, +1);

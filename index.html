@@ -16,12 +16,85 @@
 
 <div id="login" class="hidden">
   <div class="lbox">
+
+    <!-- 🏛️ LOGO -->
+    <div style="text-align:center;margin-bottom:18px">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:90px;height:90px;filter:drop-shadow(0 6px 20px rgba(59,130,246,.4))">
+        <defs>
+          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3b82f6"/>
+            <stop offset="50%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#ec4899"/>
+          </linearGradient>
+          <linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0f172a"/>
+            <stop offset="100%" stop-color="#020617"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Outer circle -->
+        <circle cx="50" cy="50" r="47" fill="url(#lg2)" stroke="url(#lg1)" stroke-width="2.5"/>
+
+        <!-- Inner ring -->
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(59,130,246,.3)" stroke-width=".5"/>
+
+        <!-- Building (Bank symbol) -->
+        <g transform="translate(50,50)">
+          <!-- Roof / Triangle -->
+          <path d="M -24 -14 L 0 -32 L 24 -14 Z" fill="url(#lg1)"/>
+
+          <!-- Pillars -->
+          <rect x="-20" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+          <rect x="-10" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+          <rect x="0" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+          <rect x="10" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+          <rect x="16" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+
+          <!-- Base / Steps -->
+          <rect x="-24" y="14" width="48" height="4" rx="1.5" fill="url(#lg1)"/>
+          <rect x="-20" y="18" width="40" height="3" rx="1.5" fill="#a78bfa" opacity=".8"/>
+
+          <!-- Taka symbol on top -->
+          <circle cx="0" cy="-22" r="4" fill="#facc15"/>
+          <text x="0" y="-19" font-family="Arial,sans-serif" font-size="7" font-weight="900" fill="#000" text-anchor="middle">৳</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Title -->
     <h1>কম্পিউটার ক্যাম্পাস</h1>
     <h2>এজেন্ট ব্যাংকিং সিস্টেম</h2>
+
+    <!-- Sub-title badge -->
+    <div style="display:flex;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap">
+      <span style="padding:4px 10px;border-radius:8px;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.35);color:#93c5fd;font-size:10.5px;font-weight:800;letter-spacing:.3px">
+        🏦 কলারোয়া
+      </span>
+      <span style="padding:4px 10px;border-radius:8px;background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.35);color:#c4b5fd;font-size:10.5px;font-weight:800;letter-spacing:.3px">
+        🏦 ঝাউডাঙ্গা
+      </span>
+    </div>
+
+    <!-- Inputs -->
     <input type="text" id="login-user" placeholder="ইউজার আইডি" autocomplete="off" spellcheck="false">
     <input type="password" id="login-pass" placeholder="পাসওয়ার্ড" autocomplete="new-password">
+
+    <!-- Login button -->
     <button class="btn green block" id="login-btn">🔐 লগইন</button>
+
+    <!-- Error -->
     <div id="login-err"></div>
+
+    <!-- Footer -->
+    <div style="text-align:center;margin-top:20px;padding-top:14px;border-top:1px solid rgba(59,130,246,.15)">
+      <div style="font-size:10.5px;color:#4a5878;font-weight:700;letter-spacing:.5px">
+        💻 Developed for Local Business
+      </div>
+      <div style="font-size:9.5px;color:#334155;font-weight:700;margin-top:3px">
+        v7.8 • Secure Agent Banking
+      </div>
+    </div>
+
   </div>
 </div>
 
