@@ -1,0 +1,54 @@
+{
+  "name": "কম্পিউটার ক্যাম্পাস — এজেন্ট ব্যাংকিং",
+  "short_name": "কম্পিউটার ক্যাম্পাস",
+  "description": "কলারোয়া ও ঝাউডাঙ্গা এজেন্ট ব্যাংকিং সিস্টেম",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0e1a",
+  "theme_color": "#0a0e1a",
+  "lang": "bn",
+  "dir": "ltr",
+  "categories": ["finance", "business", "productivity"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "নতুন ঋণ",
+      "short_name": "ঋণ",
+      "url": "./index.html?action=loan_given",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "নগদ উত্তোলন",
+      "short_name": "উত্তোলন",
+      "url": "./index.html?action=withdrawal",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

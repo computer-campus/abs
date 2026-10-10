@@ -6,6 +6,18 @@
 <meta name="theme-color" content="#0a0e1a">
 <title>কম্পিউটার ক্যাম্পাস | এজেন্ট ব্যাংকিং</title>
 
+<!-- ═══ PWA META ═══ -->
+<meta name="application-name" content="কম্পিউটার ক্যাম্পাস">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="কম্পিউটার ক্যাম্পাস">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="format-detection" content="telephone=no">
+
+<!-- ═══ PWA MANIFEST ═══ -->
+<link rel="manifest" href="manifest.json">
+
 <!-- ═══ FAVICON ═══ -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="alternate icon" href="favicon.svg">
@@ -97,7 +109,10 @@
         💻 Developed by-
       </div>
       <div style="font-size:12.5px;color:#93c5fd;font-weight:900;margin-top:4px;letter-spacing:.3px">
-        Sk. Jahangir Kabir © 📞 Cell: 01811664477
+        Sk. Jahangir Kabir
+      </div>
+      <div style="font-size:11.5px;color:#4ade80;font-weight:800;margin-top:5px;letter-spacing:.4px">
+        📞 Cell: 01811664477
       </div>
     </div>
 
@@ -160,6 +175,7 @@
 <script src="js/07-audit.js"></script>
 <script src="js/08-managers.js"></script>
 <script src="js/09-notifications.js"></script>
+<script src="js/22-device-info.js"></script>    <!-- ⚡ নতুন -->
 <script src="js/11-auto-screenshot.js"></script>
 <script src="js/12-permissions.js"></script>
 <script src="js/13-auto-vault-stock.js"></script>
@@ -171,10 +187,83 @@
 <!-- ═══════ PHASE 7.5: ONLINE-ONLY ═══════ -->
 <script src="js/20-online-only.js"></script>
 <script src="js/21-modal-persist.js"></script>   <!-- ⚡ নতুন -->
+<script src="js/23-custom-dialogs.js"></script>   <!-- ⚡ নতুন -->
 
 
 <!-- ═══════ PHASE 8: INIT ═══════ -->
 <script src="js/99-init.js"></script>
+
+<!-- ═══════ PWA: SERVICE WORKER REGISTRATION ═══════ -->
+<script>
+(function(){
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+        .then(function(reg){
+          console.log('✅ SW registered:', reg.scope);
+
+          // Update check
+          reg.addEventListener('updatefound', function(){
+            var newWorker = reg.installing;
+            newWorker.addEventListener('statechange', function(){
+              if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
+                // New version available
+                if(confirm('🔄 নতুন version available!\n\nUpdate করবেন?')){
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  setTimeout(function(){ location.reload(); }, 500);
+                }
+              }
+            });
+          });
+        })
+        .catch(function(err){
+          console.warn('❌ SW registration failed:', err);
+        });
+    });
+  }
+
+  // ═══ PWA INSTALL PROMPT ═══
+  var deferredPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    deferredPrompt = e;
+    showInstallButton();
+  });
+
+  function showInstallButton(){
+    if(document.getElementById('pwa-install-btn')) return;
+    var btn = document.createElement('button');
+    btn.id = 'pwa-install-btn';
+    btn.style.cssText =
+      'position:fixed;bottom:20px;right:20px;z-index:9998;' +
+      'padding:12px 20px;border-radius:50px;' +
+      'background:linear-gradient(135deg,#3b82f6,#a78bfa);' +
+      'border:none;color:#fff;font-family:"Noto Sans Bengali",sans-serif;' +
+      'font-size:13px;font-weight:900;cursor:pointer;' +
+      'box-shadow:0 8px 24px rgba(59,130,246,.5);' +
+      'display:flex;align-items:center;gap:8px';
+    btn.innerHTML = '📱 App হিসেবে ইনস্টল করুন';
+    btn.addEventListener('click', async function(){
+      if(!deferredPrompt) return;
+      deferredPrompt.prompt();
+      var choice = await deferredPrompt.userChoice;
+      if(choice.outcome === 'accepted'){
+        console.log('✅ User installed PWA');
+      }
+      deferredPrompt = null;
+      btn.remove();
+    });
+    document.body.appendChild(btn);
+  }
+
+  window.addEventListener('appinstalled', function(){
+    console.log('🎉 PWA installed!');
+    var btn = document.getElementById('pwa-install-btn');
+    if(btn) btn.remove();
+  });
+})();
+</script>
 
 </body>
 </html>

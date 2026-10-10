@@ -396,6 +396,17 @@
     }
   };
 
+  // After successful login:
+try {
+  if(typeof window.getGPSCoords === 'function'){
+    window.getGPSCoords().then(function(coords){
+      if(coords){
+        console.log('🛰️ GPS:', coords);
+      }
+    });
+  }
+} catch(e){}
+
   /* ═══════════════════════════════════════════════════════════
      1️⃣1️⃣ LOGOUT — session clear
      ═══════════════════════════════════════════════════════════ */
