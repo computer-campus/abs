@@ -1,0 +1,40 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="50%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="fg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#fg2)" stroke="url(#fg1)" stroke-width="3"/>
+
+  <!-- Inner ring -->
+  <circle cx="50" cy="50" r="43" fill="none" stroke="rgba(59,130,246,.3)" stroke-width="0.8"/>
+
+  <!-- Bank building -->
+  <g transform="translate(50,50)">
+    <!-- Roof -->
+    <path d="M -24 -14 L 0 -32 L 24 -14 Z" fill="url(#fg1)"/>
+
+    <!-- Pillars -->
+    <rect x="-20" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+    <rect x="-10" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+    <rect x="0" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+    <rect x="10" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+    <rect x="16" y="-10" width="4" height="24" rx="1" fill="#93c5fd"/>
+
+    <!-- Base -->
+    <rect x="-24" y="14" width="48" height="4" rx="1.5" fill="url(#fg1)"/>
+    <rect x="-20" y="18" width="40" height="3" rx="1.5" fill="#a78bfa" opacity="0.8"/>
+
+    <!-- Taka symbol -->
+    <circle cx="0" cy="-22" r="5" fill="#facc15"/>
+    <text x="0" y="-18.5" font-family="Arial,sans-serif" font-size="8" font-weight="900" fill="#000" text-anchor="middle">৳</text>
+  </g>
+</svg>
